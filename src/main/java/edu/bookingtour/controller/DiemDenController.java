@@ -15,11 +15,11 @@ public class DiemDenController {
     @Autowired
     private DiemDenRepository diemdenrp;
 
-    @GetMapping("/")
-    public String hienThiTrangChu(Model model) {
-        List<DiemDen> dsNoiBat = diemdenrp.findByNoiBat(true);
-        model.addAttribute("dsNoiBat", dsNoiBat);
-        return "index";
-    }
+//    @GetMapping("/home")
+//    public String hienThiTrangChu(Model model) {
+//        List<DiemDen> dsNoiBat = diemdenrp.findByNoibat(true);
+//        model.addAttribute("dsNoiBat", dsNoiBat);
+//        return "index";
+//    }
 
 }

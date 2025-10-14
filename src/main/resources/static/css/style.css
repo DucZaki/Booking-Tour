@@ -32,3 +32,23 @@ body {
 .btn-primary:hover {
     background-color: #0056b3;
 }
+/* Đưa nút điều hướng ra ngoài slide */
+.custom-carousel-btn {
+    top: 50%;
+    transform: translateY(-50%);
+    width: auto;
+}
+
+.carousel-control-prev.custom-carousel-btn {
+    left: -60px; /* chỉnh khoảng cách bên trái */
+}
+
+.carousel-control-next.custom-carousel-btn {
+    right: -60px; /* chỉnh khoảng cách bên phải */
+}
+
+/* Tùy chỉnh icon nếu muốn */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-size: 100% 100%;
+}
