@@ -1,13 +1,12 @@
 package edu.bookingtour.repo;
 
-import edu.bookingtour.entity.User;
+import edu.bookingtour.entity.DanhGia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
 @Repository
-public interface UserRepsitory extends JpaRepository<User, Integer>
+public interface DanhGiaRepository extends JpaRepository<DanhGia,Integer>
 {
-    List<User> findAll();
+    List<DanhGia> findAll();
 }

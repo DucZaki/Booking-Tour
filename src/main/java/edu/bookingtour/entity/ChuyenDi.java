@@ -18,9 +18,7 @@ public class ChuyenDi {
     @ManyToOne
     @JoinColumn(name="id_diem_den")
     private DiemDen id_diem_den;
-
     private Integer id_noi_luu_tru;
-
     @Column(precision = 10, scale = 2)
     private BigDecimal gia;
     private Integer id_phuong_tien;
