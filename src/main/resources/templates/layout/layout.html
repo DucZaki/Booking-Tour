@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
 <head>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Zaki Booking - Du lịch thông minh</title>
@@ -16,11 +17,69 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link active" href="#">Trang chủ</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Tour</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Điểm đến</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/}">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/tour}">Tour</a></li>
+
+                <!-- Dropdown Điểm đến -->
+                <li class="nav-item dropdown position-static">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Điểm đến</a>
+                    <div class="dropdown-menu border-0 shadow mt-0 p-4" style=" width: 70vw; left: 50%; transform: translateX(-50%);">
+
+                    <div class="row">
+
+                            <!-- TRONG NƯỚC -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold border-bottom pb-2">TRONG NƯỚC</h6>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <p class="fw-bold mb-1">Miền Bắc</p>
+                                        <a href="#" class="dropdown-item px-2">Hà Nội</a>
+                                        <a href="#" class="dropdown-item px-2">Sapa</a>
+                                        <a href="#" class="dropdown-item px-2">Hạ Long</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="fw-bold mb-1">Miền Trung</p>
+                                        <a href="#" class="dropdown-item px-2">Đà Nẵng</a>
+                                        <a href="#" class="dropdown-item px-2">Huế</a>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <p class="fw-bold mb-1">Miền Nam</p>
+                                        <a href="#" class="dropdown-item px-2">Phú Quốc</a>
+                                        <a href="#" class="dropdown-item px-2">Cần Thơ</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- NƯỚC NGOÀI -->
+                            <div class="col-md-6">
+                                <h6 class="fw-bold border-bottom pb-2">NƯỚC NGOÀI</h6>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <p class="fw-bold mb-1">Châu Á</p>
+                                        <a href="#" class="dropdown-item px-2">Thái Lan</a>
+                                        <a href="#" class="dropdown-item px-2">Singapore</a>
+                                        <a href="#" class="dropdown-item px-2">Hàn Quốc</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="fw-bold mb-1">Châu Âu</p>
+                                        <a href="#" class="dropdown-item px-2">Pháp</a>
+                                        <a href="#" class="dropdown-item px-2">Đức</a>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <p class="fw-bold mb-1">Châu Mỹ</p>
+                                        <a href="#" class="dropdown-item px-2">Mỹ</a>
+                                        <a href="#" class="dropdown-item px-2">Canada</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+
                 <li class="nav-item"><a class="nav-link" href="#">Tin tức</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
             </ul>
@@ -29,8 +88,11 @@
     </div>
 </nav>
 
+
 <!-- Nội dung trang -->
-<main class="pt-5 mt-4" th:replace="${content}"></main>
+<main class="pt-5 mt-4" th:replace="${content}">
+
+</main>
 
 <!-- Newsletter -->
 <section class="newsletter bg-primary text-white py-5 text-center">

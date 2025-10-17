@@ -1,6 +1,7 @@
 package edu.bookingtour.controller;
 
 import edu.bookingtour.entity.ChuyenDi;
+import edu.bookingtour.repo.DiemDenRepository;
 import org.springframework.ui.Model;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,8 @@ public class ChuyenDiController {
 
     @Autowired
     private ChuyenDiRepository chuyendirepository;
-//    @GetMapping("/all")
-//    public String getnoibat(Model model) {
-//        List<ChuyenDi> dsnoibat = chuyendirepository.findByNoiBat(true);
-//        model.addAttribute("dsnoibatcd", dsnoibat);
-//        return "index";
-//    }
+    @GetMapping("/tour")
+    public String viewDiemDenPage() {
+        return "chuyendi/tour";
+    }
 }

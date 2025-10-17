@@ -161,7 +161,16 @@
             from { width: 0; }
             to { width: 100%; }
         }
-
+        @media (max-width: 768px) {
+            #typing-text {
+                white-space: normal; /* Cho phép xuống dòng */
+                width: 100% !important; /* Luôn hiển thị toàn bộ chữ */
+                overflow: visible; /* Không ẩn phần dư */
+                animation: none;           /* Tắt hiệu ứng typing */
+                text-align: center;
+                font-size: 1.6rem; /* Nhỏ hơn để vừa khung */
+            }
+        }
 
     </style>
 

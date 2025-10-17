@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::content})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách Tour</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+<content>
+
+    <section class="container mt-5 pt-4">
+        <h2 class="fw-bold mb-4 text-primary">Danh sách Điểm Đến</h2>
+    </section>
+
+    <div class="container mb-5">
+        <div class="row align-items-start">
+
+            <!-- Bộ Lọc (Bên Trái) -->
+            <div class="col-md-3 border-end">
+                <h6 class="fw-bold mb-3">BỘ LỌC TÌM KIẾM</h6>
+
+                <div class="mb-3">
+                    <label class="form-label">Điểm đến</label>
+                    <select class="form-select">
+                        <option>Thái Lan</option>
+                        <option>Nhật Bản</option>
+                        <option>Hàn Quốc</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Khoảng giá</label>
+                    <select class="form-select">
+                        <option>Dưới 5 triệu</option>
+                        <option>5 - 10 triệu</option>
+                        <option>Trên 10 triệu</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary w-100">Áp dụng</button>
+            </div>
+
+            <!-- Danh sách Tour + Thanh sắp xếp (Bên Phải) -->
+            <div class="col-md-9">
+
+                <!-- Thanh sắp xếp -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <p class="mb-0">Tìm thấy <strong>128</strong> tour phù hợp</p>
+                    <select class="form-select w-auto">
+                        <option value="">Tất cả</option>
+                        <option value="priceAsc">Giá tăng dần</option>
+                        <option value="priceDesc">Giá giảm dần</option>
+                        <option value="startDate">Ngày khởi hành gần nhất</option>
+                    </select>
+                </div>
+
+                <!-- 1 Item -->
+                <div class="d-flex border rounded mb-3 shadow-sm">
+                    <img src="https://picsum.photos/200/150" class="rounded-start" alt="Tour">
+                    <div class="p-3 flex-grow-1">
+                        <h5 class="fw-bold">Thái Lan: Bangkok - Pattaya (5N4Đ)</h5>
+                        <p class="mb-1">Mã tour: <strong>NNCTH1600</strong> | Phương tiện: Máy bay</p>
+                        <p class="text-danger fw-bold">Giá: 7.990.000₫</p>
+                    </div>
+                    <div class="d-flex align-items-center px-3">
+                        <a href="#" class="btn btn-outline-primary">Xem chi tiết</a>
+                    </div>
+                </div>
+
+                <!-- Copy thêm các item khác nếu cần -->
+
+            </div>
+        </div>
+    </div>
+
+</content>
+</body>
+</html>

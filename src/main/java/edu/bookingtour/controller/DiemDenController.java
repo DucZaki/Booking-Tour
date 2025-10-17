@@ -12,14 +12,5 @@ import java.util.List;
 @Controller
 public class DiemDenController {
 
-    @Autowired
-    private DiemDenRepository diemdenrp;
-
-//    @GetMapping("/home")
-//    public String hienThiTrangChu(Model model) {
-//        List<DiemDen> dsNoiBat = diemdenrp.findByNoibat(true);
-//        model.addAttribute("dsNoiBat", dsNoiBat);
-//        return "index";
-//    }
 
 }
