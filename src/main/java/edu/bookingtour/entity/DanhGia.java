@@ -9,7 +9,6 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-
 @Getter
 @Setter
 public class DanhGia {
