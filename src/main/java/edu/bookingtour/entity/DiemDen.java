@@ -3,22 +3,35 @@ package edu.bookingtour.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.util.List;
-
-@Entity
 @Getter
 @Setter
+@Entity
 @Table(name = "diem_den")
 public class DiemDen {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
-    private String thanh_pho;
-    private String chau_luc;
-    private String mo_ta;
-    private String hinh_anh;
-    @Column(name="noi_bat")
-    private boolean noibat;
+
+    @Column(name = "thanh_pho")
+    private String thanhPho;
+
+    @Column(name = "quoc_gia")
+    private String quocGia;
+
+    @Column(name = "chau_luc")
+    private String chauLuc;
+
+    @Column(name = "hinh_anh")
+    private String hinhAnh;
+
+    @ColumnDefault("0")
+    @Column(name = "noi_bat")
+    private Boolean noiBat;
+
+    @Column(name = "mo_ta")
+    private String moTa;
 
 }

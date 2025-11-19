@@ -1,26 +1,38 @@
 package edu.bookingtour.entity;
+
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
+import java.time.Instant;
 
-@Entity
 @Getter
 @Setter
+@Entity
+@Table(name = "danh_gia")
 public class DanhGia {
-    private String binh_luan;
-    private int diem;
     @Id
-    private int id;
-    @ManyToOne
-    @JoinColumn(name="id_chuyen_di")
-    private ChuyenDi chuyenDi;
-    @ManyToOne
-    @JoinColumn(name="id_nguoi_dung")
-    private User nguoiDung;
-    private Date ngay_danh_gia;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Integer id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_chuyen_di", nullable = false)
+    private ChuyenDi idChuyenDi;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_nguoi_dung", nullable = false)
+    private NguoiDung idNguoiDung;
+
+    @Column(name = "diem")
+    private Integer diem;
+
+    @Column(name = "binh_luan")
+    private String binhLuan;
+
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "ngay_danh_gia")
+    private Instant ngayDanhGia;
+
 }

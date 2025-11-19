@@ -3,9 +3,10 @@ package edu.bookingtour.controller;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DanhGia;
 import edu.bookingtour.entity.DiemDen;
-import edu.bookingtour.entity.User;
+import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.repo.*;
 import edu.bookingtour.repo.ChuyenDiRepository;
+import edu.bookingtour.service.NguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,18 +23,18 @@ public class HomeController {
     @Autowired
     private DanhGiaRepository danhgiarepo;
     @Autowired
-    private UserRepsitory userrepo;
+    private NguoiDungService nguoidungservice;
     @GetMapping("/")
     public String hienThiTrangChu(Model model) {
-        List<DiemDen> dsNoiBat = diemdenrp.findByNoibat(true);
+        List<DiemDen> dsNoiBat = diemdenrp.findByNoiBat(true);
         model.addAttribute("dsNoiBat", dsNoiBat);
         List<ChuyenDi> dsnoibat = chuyendirepository.findByNoiBat(true);
         model.addAttribute("dsnoibatcd", dsnoibat);
         List<DanhGia> dsDanhGia = danhgiarepo.findAll();
         model.addAttribute("dsDanhGia", dsDanhGia);
-        List<User> dsuser = userrepo.findAll();
-        model.addAttribute("dsuser", dsuser);
+        List<String> dsnd= nguoidungservice.findhotenbinhluan();
         return "index";
+
     }
 
 }
