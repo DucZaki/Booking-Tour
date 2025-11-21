@@ -79,8 +79,8 @@
                              style="width:100%; height:250px; object-fit: cover;" />
                         <div class="card-body">
                             <h5 class="card-title" th:text="${ds.tieuDe}"></h5>
-                            <p th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 2, 'POINT')} + ' VND'" class="fw-bold text-danger fs-6 mb-2 fst-italic" ></p>
-                            <a href="#" class="btn btn-outline-primary">Xem chi tiết</a>
+                            <p th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'" class="fw-bold text-danger fs-6 mb-2 fst-italic" ></p>
+                            <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">Xem chi tiết</a>
                         </div>
                     </div>
                 </div>
@@ -103,8 +103,7 @@
                         <blockquote class="blockquote" style="background: none !important;">
                             <p class="mb-4" style =" margin-bottom: 0px;"th:text="${dsdg.binhLuan}"></p>
                             <footer class="blockquote-footer"
-                                    th:text="${dsnd.nguoiDung?.ho_ten != null ? dsdg.nguoiDung?.hoTen : 'Khách ẩn danh'}"></footer>
-
+                                    th:text="${dsdg.idNguoiDung.hoTen}"></footer>
                         </blockquote>
                     </div>
                 </div>

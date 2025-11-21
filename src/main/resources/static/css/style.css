@@ -179,12 +179,13 @@ footer {
     font-style: italic;
     font-size: 0.95rem;
 }
-.card .btn-outline-primary {
-    background-color: #F5F5F5 !important;
-    color: #FECF2F !important;
-    border-color: #000000 !important;
+.btn-outline-primary {
+    background-color:  #FECF2F !important;
+    color: #000000 !important;
+    border-color:  #FECF2F !important;
+    font-weight:40px;
 }
-.card .btn-outline-primary:hover {
+.btn-outline-primary:hover {
     background-color: #FECF2F !important;
     color: white !important;
 }

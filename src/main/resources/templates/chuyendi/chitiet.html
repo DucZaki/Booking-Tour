@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::content})}">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Chi tiết Tour - ' + ${id.tieuDe}">Chi tiết Tour</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* Đảm bảo các ngày trong lịch có kích thước đồng đều */
+        .row-cols-7>* {
+            flex: 0 0 auto;
+            width: 14.2857%;
+            padding-right: var(--bs-gutter-x, 0.25rem);
+            padding-left: var(--bs-gutter-x, 0.25rem);
+        }
+
+        .row-cols-7 .col>div {
+            min-height: 40px;
+            line-height: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            padding: 0.25rem 0;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<th:block th:fragment="content">
+    <div class="container pt-5 tour-detail-container">
+        <div class="row" style="margin-top:30px;">
+
+            <div class="col-lg-8">
+
+                <h1 class="h4 fw-bold" th:text="${id.tieuDe}">
+                </h1>
+                <hr>
+
+                <div class="row g-2">
+                    <div class="col-3 d-flex flex-column justify-content-start">
+                        <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__0_11904_hoa-do-quyen-do.webp" class="img-fluid rounded mb-2 border" alt="Ảnh nhỏ 1">
+                        <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__1_11904_the-village-cat-cat-in-sapa.webp" class="img-fluid rounded mb-2 border" alt="Ảnh nhỏ 2">
+                        <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__2_11904_beautiful-landscape-with-mountain-view-on-the-train-1.webp" class="img-fluid rounded mb-2 border" alt="Ảnh nhỏ 3">
+                    </div>
+                    <div class="col-9">
+                        <img th:src="${id.hinhAnh}" class="img-fluid rounded" alt="Ảnh chính Tour">
+                    </div>
+                </div>
+
+                <div class="card my-4 border-0">
+                    <div class="card-header bg-white border-0 ps-0">
+                        <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <div class="col-3 col-md-2 pe-3">
+                                <button class="btn btn-primary w-100 mb-2 active fw-bold small">11/2025</button>
+                                <button class="btn btn-outline-secondary w-100 small">12/2025</button>
+                            </div>
+                            <div class="col-9 col-md-10 border rounded p-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <i class="bi bi-arrow-left text-muted"></i>
+                                    <span class="fw-bold">THÁNG 11/2025</span>
+                                    <i class="bi bi-arrow-right text-muted"></i>
+                                </div>
+                                <div class="row row-cols-7 text-center g-2 small">
+                                    <div class="col fw-bold">T2</div>
+                                    <div class="col fw-bold">T3</div>
+                                    <div class="col fw-bold">T4</div>
+                                    <div class="col fw-bold">T5</div>
+                                    <div class="col fw-bold">T6</div>
+                                    <div class="col fw-bold">T7</div>
+                                    <div class="col fw-bold text-danger">CN</div>
+
+                                    <div class="col text-secondary">30</div>
+                                    <div class="col text-secondary">31</div>
+                                    <div class="col"><div class="border rounded">1</div></div>
+                                    <div class="col"><div class="border rounded">2</div></div>
+                                    <div class="col"><div class="border rounded">3</div></div>
+                                    <div class="col">
+                                        <div class="p-1 border border-danger rounded active-day">
+                                            22
+                                            <span class="text-danger fw-bold" style="font-size: 0.6rem;">
+                                                    7,190K
+                                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="col text-danger"><div class="border rounded">23</div></div>
+                                </div>
+                                <p class="text-center text-secondary mt-3 small">Quý khách vui lòng chọn ngày phù hợp</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 p-3 bg-light rounded border-start border-3 border-primary">
+                    <h3 class="h6 text-primary fw-bold">Điểm nhấn của chương trình</h3>
+                    <p class="small mb-0 text-muted">Lào Cai là tỉnh vùng cao phía Bắc Việt Nam. Đến đây, du khách sẽ được khám phá vẻ đẹp kỳ vĩ của Fansipan, trải nghiệm văn hóa độc đáo tại bản Cát Cát và thưởng thức ẩm thực đặc sắc của miền Tây Bắc.
+                        <a href="#" class="text-primary small fw-bold">Xem thêm</a>
+                    </p>
+                </div>
+
+                <hr>
+
+                <h3 class="h5 fw-bold text-center mt-4 mb-3">THÔNG TIN THÊM VỀ CHUYẾN ĐI</h3>
+                <div class="row text-center border-bottom pb-3 mb-3">
+                    <div class="col-4">
+                        <i class="bi bi-geo-alt fs-4 text-primary"></i>
+                        <p class="mb-1 fw-bold small">Điểm tham quan</p>
+                        <p class="small text-muted">Sapa, Lào Cai, Bản Cát Cát, Fansipan, Hà Nội</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-bus-front fs-4 text-primary"></i>
+                        <p class="mb-1 fw-bold small">Phương tiện</p>
+                        <p class="small text-muted">Máy bay, Xe du lịch</p>
+                    </div>
+                    <div class="col-4">
+                        <i class="bi bi-people fs-4 text-primary"></i>
+                        <p class="mb-1 fw-bold small">Đối tượng thích hợp</p>
+                        <p class="small text-muted">Cặp đôi, Gia đình, Thanh niên</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm p-3 sticky-price-box">
+                    <div class="card-body">
+                        <p class="mb-0 text-secondary small">Giá từ:</p>
+                        <h2 class="card-title text-danger fw-bold" th:text="${#numbers.formatDecimal(id.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+
+                            <span class="small text-secondary">/Khách</span>
+                        </h2>
+                        <p class="small text-muted mb-3">Mã chương trình: NDSGN1965</p>
+
+                        <button class="btn btn-primary w-100 mb-2 py-2 fw-bold">
+                            <i class="bi bi-calendar-check me-2"></i> Chọn ngày khởi hành
+                        </button>
+                        <button class="btn btn-outline-secondary w-100 py-2 fw-bold">
+                            <i class="bi bi-heart me-2"></i> Lưu lại chuyến đi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+
+</html>
