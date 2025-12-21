@@ -8,6 +8,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login"; // Trả về file login.html trong templates
+        return "login";
     }
 }

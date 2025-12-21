@@ -25,5 +25,8 @@ public class AdminController {
     public String manageDestinations() {
         return "admin/destinations";
     }
-
+//    @GetMapping("/login")
+//    public String login(){
+//        return "login";
+//    }
 }

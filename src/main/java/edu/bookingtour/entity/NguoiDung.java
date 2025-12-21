@@ -36,5 +36,6 @@ public class NguoiDung {
 
     @Column(name = "ho_ten")
     private String hoTen;
-
+    @Column(name ="number")
+    private String number;
 }
