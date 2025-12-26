@@ -14,17 +14,15 @@ import java.util.List;
 @Controller
 public class ChuyenDiController {
 
-    // @Autowired
-    // private ChuyenDiRepository chuyendirepository; // Bỏ Repository
 
     @Autowired
     private TourService tourService; // Thêm Service
 
     @GetMapping("/tour")
     public String viewDiemDenPage(Model model) {
-        // Có thể sửa: chuyendirepository.findAll() -> tourService.findAll()
-        List<ChuyenDi> dschuyendi = tourService.findAll(); // Cần thêm findAll() vào Service
-        long dem = tourService.count(); // Cần thêm count() vào Service
+
+        List<ChuyenDi> dschuyendi = tourService.findAll();
+        long dem = tourService.count();
         model.addAttribute("dschuyendi", dschuyendi);
         model.addAttribute("dem", dem);
         return "chuyendi/tour";
