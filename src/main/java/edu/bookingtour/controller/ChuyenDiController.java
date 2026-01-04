@@ -1,5 +1,6 @@
 package edu.bookingtour.controller;
 
+import edu.bookingtour.client.AmadeusClient;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.service.TourService;
@@ -9,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 @Controller
 public class ChuyenDiController {
 
@@ -34,7 +37,8 @@ public class ChuyenDiController {
         // SỬA: Lấy chi tiết tour và danh sách tour (nếu cần) thông qua Service
         List<ChuyenDi> dschuyendi = tourService.findAll();
         model.addAttribute("dschuyendi", dschuyendi);
-        model.addAttribute("id", tourService.findById(Math.toIntExact(id))); // Cần thêm findById vào Service
+        model.addAttribute("id", tourService.findById(Math.toIntExact(id)));
         return "chuyendi/chitiet";
     }
+
 }

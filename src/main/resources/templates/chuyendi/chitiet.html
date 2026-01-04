@@ -85,11 +85,11 @@
                                     <div class="col"><div class="border rounded">2</div></div>
                                     <div class="col"><div class="border rounded">3</div></div>
                                     <div class="col">
-                                        <div class="p-1 border border-danger rounded active-day">
+                                        <div class="p-1 border border-danger rounded active-day flight-date" data-date="2025-11-22">
                                             22
-                                            <span class="text-danger fw-bold" style="font-size: 0.6rem;">
-                                                    7,190K
-                                                </span>
+                                            <span class="text-danger fw-bold price-value" style="font-size: 0.6rem;">
+            ...
+        </span>
                                         </div>
                                     </div>
                                     <div class="col text-danger"><div class="border rounded">23</div></div>
@@ -151,6 +151,33 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Mặc định từ Sài Gòn đi Hà Nội (Bạn có thể sửa thành biến động)
+            const origin = "SGN";
+            const destination = "HAN";
+
+            // Tìm tất cả các ô ngày muốn hiển thị giá vé
+            const dateCells = document.querySelectorAll('.flight-date');
+
+            dateCells.forEach(cell => {
+                const travelDate = cell.getAttribute('data-date');
+                const priceSpan = cell.querySelector('.price-value');
+
+                // Gọi API nội bộ của chúng ta
+                fetch(`/api/flights/price?from=${origin}&to=${destination}&date=${travelDate}`)
+                    .then(res => res.text())
+                    .then(data => {
+                        if (data !== "N/A") {
+                            priceSpan.innerText = data;
+                        } else {
+                            priceSpan.innerText = "Hết vé";
+                        }
+                    })
+                    .catch(() => priceSpan.innerText = "Lỗi");
+            });
+        });
+    </script>
 </th:block>
 </body>
 
