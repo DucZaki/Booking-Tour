@@ -1,0 +1,135 @@
+a {
+    text-decoration: none;
+}
+
+.footer-top li {
+    margin-bottom: 0.5rem;
+}
+
+.item-grid .card:hover {
+    box-shadow: 0 4px 15px rgb(153 153 153 / 30%);
+    transition: 0.3s;
+}
+
+.item-grid .card:active {
+    box-shadow: inset 0 4px 15px rgb(153 153 153 / 30%);
+}
+
+/* category */
+
+.section-pagetop {
+    padding: 40px 0;
+}
+
+.padding-y {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+.filter-group {
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.filter-group:last-child {
+    border-bottom: 0;
+}
+
+.filter-group .card-header {
+    border-bottom: 0;
+    background-color: unset;
+}
+
+/* product */
+
+.section-pagetop-2 {
+    padding: 20px 0;
+}
+
+.section-pagetop-2 .breadcrumb {
+    margin-bottom: 0;
+}
+
+.rating-stars i {
+    color: #ccc;
+}
+
+.rating-stars i.active {
+    color: orange;
+}
+
+/* cart */
+
+.cart-table th, .cart-table td {
+    padding: 0.75rem 1rem;
+}
+
+header {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+header h3 {
+    font-weight: 700;
+    color: #495057;
+    margin: 0;
+}
+header form input {
+    border-radius: 50px;
+    padding-left: 1rem;
+}
+header form button {
+    border-radius: 50px;
+}
+
+nav {
+    background-color: #ffffff;
+    min-height: 100vh;
+    border-right: 1px solid #dee2e6;
+    padding: 1rem;
+    width: 240px;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.03);
+}
+nav .nav-link {
+    color: #495057;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+nav .nav-link:hover {
+    background-color: #f1f3f5;
+    color: #0d6efd;
+}
+nav .nav-link i {
+    font-size: 1.1rem;
+}
+.actor-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+}
+
+.actor-img {
+    width: 140px;       /* thay theo kích thước bạn muốn */
+    height: 140px;      /* nếu muốn chữ nhật khác tỉ lệ, chỉnh width/height */
+    border-radius: 12px;/* bo góc (chữ nhật bo góc). đặt 50% để thành tròn) */
+    object-fit: cover;  /* crop vừa đủ, giữ tỉ lệ hình */
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    background-color: #fff; /* nếu hình bị thiếu sẽ thấy nền */
+}
+.actor-name {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+    max-width: 160px;
+    word-break: break-word;
+}
+

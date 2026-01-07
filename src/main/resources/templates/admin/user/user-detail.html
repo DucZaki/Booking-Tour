@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('User Detail')}"></head>
+<body>
+<header th:replace="~{layout/admin_layout :: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4>User Detail</h4>
+            </div>
+            <div class="card-body">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-9">
+                        <p><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+                        <p><strong>Tên đăng nhập:</strong> <span th:text="${user.tenDangNhap}"></span></p>
+                        <p><strong>Họ và tên:</strong> <span th:text="${user.hoTen}"></span></p>
+                        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                        <p><strong>Số điện thoại:</strong> <span th:text="${user.number}"></span></p>
+                        <p><strong>Role:</strong> <span th:text="${user.vaiTro}"></span></p>
+                        <p><strong>Ngày tạo:</strong> <span th:text="${user.ngayTao}"></span></p>
+                    </div>
+                </div>
+                <div class="mt-4 d-flex justify-content-end">
+                    <a href="/admin/user" class="btn btn-secondary me-2">Back</a>
+                    <a th:href="@{'/admin/user/edit/' + ${user.id}}" class="btn btn-warning text-white me-2">Edit</a>
+                    <a th:href="@{'/admin/user/delete/' + ${user.id}}" class="btn btn-danger"
+                       onclick="return confirm('Bạn có chắc chắn muốn xóa người dùng này?');">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

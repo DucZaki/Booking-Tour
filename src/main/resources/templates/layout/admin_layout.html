@@ -1,0 +1,73 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+  <title th:text="${title}"></title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+  <!-- Bootstrap -->
+  <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
+  <script src="/js/bootstrap.bundle.js"></script>
+
+  <!-- Icons -->
+  <link href="/css/bootstrap-icons.css" rel="stylesheet" type="text/css">
+
+  <!-- Custom -->
+  <link href="/css/styles2.css" rel="stylesheet" type="text/css">
+</head>
+<header th:fragment="header()">
+  <section class="admin-header container-fluid py-2">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center g-5">
+        <h3 class="fw-bold text-primary mb-0" style="margin-right: 280px">Admin</h3>
+        <form class="search-bar" style="width: 260px;">
+          <input class="form-control ps-4 pe-5" type="search" placeholder="Search.." aria-label="Search">
+        </form>
+      </div>
+      <form th:action="@{/logout}" method="post" class="mb-0">
+        <button type="submit" class="btn btn-outline-danger d-flex align-items-center">
+          <i class="bi bi-box-arrow-right me-2"></i> Đăng xuất
+        </button>
+      </form>
+    </div>
+  </section>
+</header>
+
+<nav th:fragment="nav()">
+  <div class="container">
+    <div class="navbar-collapse">
+      <ul class="navbar-nav me-auto flex-column">
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/user}">
+            <i class="bi bi-align-start"></i>
+            Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/user}">
+            <i class="bi bi-people"></i>
+            Quản lý người dùng
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/tour}">
+            <i class="bi bi-tags"></i>
+            Quản lý tour
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/category}">
+            <i class="bi bi-card-list"></i>
+            Quản lý
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:href="@{/admin/comment}">
+            <i class="bi bi-star"></i>
+            Quản lý
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

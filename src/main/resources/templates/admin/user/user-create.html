@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Add User')}"></head>
+<body>
+<header th:replace="~{layout/admin_layout :: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4>Add New User</h4>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/admin/user/save}" method="post"
+                      enctype="multipart/form-data" th:object="${users}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" th:field="*{tenDangNhap}" class="form-control" placeholder="Nhập tên đăng nhập..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Họ và tên</label>
+                            <input type="text" th:field="*{hoTen}" class="form-control" placeholder="Nhập họ tên người dùng..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" placeholder="Nhập email..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Password</label>
+                            <input type="password" th:field="*{matKhau}" class="form-control" placeholder="Nhập password..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="number" th:field="*{number}" class="form-control" placeholder="Nhập số điện thoại..." required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Quyền</label>
+                            <select th:field="*{vaiTro}" class="form-select" required>
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex justify-content-end">
+                        <a href="/admin/user" class="btn btn-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
