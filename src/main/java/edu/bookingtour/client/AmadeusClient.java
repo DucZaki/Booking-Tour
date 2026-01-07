@@ -31,6 +31,7 @@ public class AmadeusClient {
         ObjectMapper mapper = new ObjectMapper();
         Map<String, Object> data = mapper.readValue(response.body(), Map.class);
         accessToken = (String) data.get("access_token");
+
         return accessToken;
     }
 
@@ -59,9 +60,35 @@ public class AmadeusClient {
         }
         return null;
     }
+    public String dictionaries( String origin ,  String destination, String date) throws Exception {
+        try{
+            String token = login();
+            HttpClient client = HttpClient.newHttpClient();
+            String url = String.format("%s?originLocationCode=%s&destinationLocationCode=%s&departureDate=%s&adults=1&max=1",
+                    FLIGHT_URL, origin, destination, date);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Authorization", "Bearer " + token)
+                    .GET().build();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            ObjectMapper mapper = new ObjectMapper();
+
+            Map<String, Object> json = mapper.readValue(response.body(), Map.class);
+            Map<String, Object> dictionarie = (Map<String, Object>) json.get("dictionaries");
+            Map<String, String> carrier = (Map<String, String>) dictionarie.get("carriers");
+            System.out.println("Dữ liệu hãng bay: " + carrier);
+            String carrierCode = carrier.entrySet().toString();
+            return carrierCode;
+        }
+        catch (Exception e){
+            System.out.println("Error: " + e.getMessage());
+        }
+        return "không tìm thấy dữ liệu";
+    }
 
     private String formatPriceToK(double price) {
         double kValue = price / 1000;
         return String.format("%,.0fK", kValue);
+
     }
 }
