@@ -1,12 +1,12 @@
 package edu.bookingtour.client;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -35,7 +35,7 @@ public class AmadeusClient {
         return accessToken;
     }
 
-    public String getCheapestPriceFormatted(String origin, String destination, String date) {
+    public double getCheapestPriceFormatted(String origin, String destination, String date) {
         try {
             String token = login();
             HttpClient client = HttpClient.newHttpClient();
@@ -46,19 +46,21 @@ public class AmadeusClient {
                     .header("Authorization", "Bearer " + token)
                     .GET().build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
             ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response.body());
-            JsonNode flightOffers = root.path("data");
+            double euroToVnd = 30712.00;
+            Map<String, Object> json = mapper.readValue(response.body(), Map.class);
+            List<Map<String, Object>> data = (List<Map<String, Object>>) json.get("data");
+            Map<String, Object> firstOffer= (Map<String, Object>) data.get(0);
+            Map<String, Object> priceMap = (Map<String, Object>) firstOffer.get("price");
+            String totalPrice=(String) priceMap.get("grandTotal");
+            double total=Double.parseDouble(totalPrice);
+            double price = total*euroToVnd;
+            return price;
 
-            if (flightOffers.isArray() && !flightOffers.isEmpty()) {
-                double totalPrice = flightOffers.get(0).path("price").path("total").asDouble();
-                return formatPriceToK(totalPrice);
-            }
         } catch (Exception e) {
             System.err.println("Lỗi API Amadeus: " + e.getMessage());
         }
-        return null;
+        return 0;
     }
     public String dictionaries( String origin ,  String destination, String date) throws Exception {
         try{

@@ -85,7 +85,7 @@
                                     <div class="col"><div class="border rounded">2</div></div>
                                     <div class="col"><div class="border rounded">3</div></div>
                                     <div class="col">
-                                        <div class="p-1 border border-danger rounded active-day flight-date" data-date="2026-01-12">
+                                        <div class="p-1 border border-danger rounded active-day flight-date text-danger " data-date="2026-01-12"  th:text="${#numbers.formatDecimal(price, 0, 'COMMA', 0, 'POINT')}">
                                             12
                                             <span class="text-danger fw-bold price-value" style="font-size: 0.6rem;">
             ...
@@ -151,40 +151,40 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 1. Lấy thông tin điểm đi/đến (có thể lấy từ thuộc tính của Tour)
-            const origin = "SGN";
-            const destination = "HAN";
+<!--    <script>-->
+<!--        document.addEventListener("DOMContentLoaded", function() {-->
+<!--            // 1. Lấy thông tin điểm đi/đến (có thể lấy từ thuộc tính của Tour)-->
+<!--            const origin = "SGN";-->
+<!--            const destination = "HAN";-->
 
-            // 2. Tìm tất cả các ô ngày có chứa class 'flight-date'
-            const dateCells = document.querySelectorAll('.flight-date');
+<!--            // 2. Tìm tất cả các ô ngày có chứa class 'flight-date'-->
+<!--            const dateCells = document.querySelectorAll('.flight-date');-->
 
-            dateCells.forEach(cell => {
-                // Lấy ngày từ thuộc tính data-date="2026-01-12"
-                const travelDate = cell.getAttribute('data-date');
-                const priceSpan = cell.querySelector('.price-value');
+<!--            dateCells.forEach(cell => {-->
+<!--                // Lấy ngày từ thuộc tính data-date="2026-01-12"-->
+<!--                const travelDate = cell.getAttribute('data-date');-->
+<!--                const priceSpan = cell.querySelector('.price-value');-->
 
-                if (travelDate) {
-                    // 3. Gọi API nội bộ (Proxy)
-                    fetch(`/api/flights/price?from=${origin}&to=${destination}&date=${travelDate}`)
-                        .then(res => res.text())
-                        .then(data => {
-                            // 4. Cập nhật giá tiền vào thẻ span
-                            if (data && data !== "") {
-                                priceSpan.innerText = data;
-                            } else {
-                                priceSpan.innerText = "Hết vé";
-                            }
-                        })
-                        .catch(err => {
-                            console.error("Lỗi gọi API:", err);
-                            priceSpan.innerText = "Lỗi";
-                        });
-                }
-            });
-        });
-    </script>
+<!--                if (travelDate) {-->
+<!--                    // 3. Gọi API nội bộ (Proxy)-->
+<!--                    fetch(`/api/flights/price?from=${origin}&to=${destination}&date=${travelDate}`)-->
+<!--                        .then(res => res.text())-->
+<!--                        .then(data => {-->
+<!--                            // 4. Cập nhật giá tiền vào thẻ span-->
+<!--                            if (data && data !== "") {-->
+<!--                                priceSpan.innerText = data;-->
+<!--                            } else {-->
+<!--                                priceSpan.innerText = "Hết vé";-->
+<!--                            }-->
+<!--                        })-->
+<!--                        .catch(err => {-->
+<!--                            console.error("Lỗi gọi API:", err);-->
+<!--                            priceSpan.innerText = "Lỗi";-->
+<!--                        });-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
 </th:block>
 </body>
 

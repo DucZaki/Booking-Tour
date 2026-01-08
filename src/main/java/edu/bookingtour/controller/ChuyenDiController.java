@@ -16,11 +16,10 @@ import java.util.List;
 
 @Controller
 public class ChuyenDiController {
-
-
     @Autowired
     private TourService tourService; // Thêm Service
-
+    @Autowired
+    private  AmadeusClient amadeusClient;
     @GetMapping("/tour")
     public String viewDiemDenPage(Model model) {
 
@@ -33,9 +32,21 @@ public class ChuyenDiController {
 
     // Phương thức viewChitietDenPage cũng nên sử dụng Service
     @GetMapping("/tour/{id}")
-    public String viewChitietDenPage(Model model, @PathVariable Long id) {
+    public String viewChitietDenPage(Model model, @PathVariable Long id) throws Exception {
         // SỬA: Lấy chi tiết tour và danh sách tour (nếu cần) thông qua Service
         List<ChuyenDi> dschuyendi = tourService.findAll();
+        String from = "HAN";
+        String to = "SGN";
+        String date = "2026-01-12";
+        try{
+            String carriers= amadeusClient.dictionaries(from, to, date);
+            double price = amadeusClient.getCheapestPriceFormatted(from, to, date);
+            model.addAttribute("price", carriers);
+            model.addAttribute("price", price);
+        }
+        catch(Exception e){
+            model.addAttribute("Lỗi", e.getMessage());
+        }
         model.addAttribute("dschuyendi", dschuyendi);
         model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
         return "chuyendi/chitiet";
