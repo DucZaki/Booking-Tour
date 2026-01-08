@@ -189,3 +189,60 @@ footer {
     background-color: #FECF2F !important;
     color: white !important;
 }
+/* ===================== DROPDOWN & MEGA MENU TỐI ƯU ===================== */
+
+/* 1. Mặc định cho MOBILE (Dưới 992px) */
+@media (max-width: 991.98px) {
+    .navbar .dropdown-menu {
+        width: 100% !important;
+        position: static !important; /* Quan trọng: Để nó đẩy các menu khác xuống thay vì nằm đè lên */
+        transform: none !important;
+        float: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    /* Chia lại cột trên mobile để không bị quá hẹp */
+    .mega-menu .col-6 {
+        width: 50%;
+    }
+
+    .mega-menu .col-md-6 {
+        margin-bottom: 20px;
+    }
+}
+
+/* 2. Cho DESKTOP (Từ 992px trở lên) */
+@media (min-width: 992px) {
+    /* Ép thẻ li cha phải có position static để menu con rộng theo container của Navbar */
+    .nav-item.dropdown.position-static-lg {
+        position: static !important;
+    }
+
+    .mega-menu {
+        width: 90vw !important; /* Tăng độ rộng để đẹp hơn */
+        max-width: 1100px;
+        left: 50% !important;
+        top: 100% !important;
+        transform: translateX(-50%) !important;
+        display: none; /* Mặc định ẩn, Bootstrap sẽ tự hiển thị khi click */
+    }
+
+    .navbar .nav-item.dropdown:hover .dropdown-menu {
+        display: block; /* (Tùy chọn) Hiện khi hover nếu muốn */
+    }
+}
+
+/* 3. Style nội dung bên trong (Dùng chung) */
+.navbar .dropdown-menu h6 {
+    color: #0077b6 !important;
+    font-weight: 700 !important;
+    font-size: 1rem;
+}
+
+.navbar .dropdown-item {
+    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    padding: 8px 12px !important;
+}
