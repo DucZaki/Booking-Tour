@@ -51,5 +51,4 @@ public class ChuyenDi {
 
     @Column(name = "hinh_anh")
     private String hinhAnh;
-
 }
