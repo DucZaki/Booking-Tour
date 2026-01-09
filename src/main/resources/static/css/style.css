@@ -246,3 +246,130 @@ footer {
     white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
     padding: 8px 12px !important;
 }
+/* Lưới lịch 7 cột */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.day-label {
+    font-weight: bold;
+    padding-bottom: 10px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* Ô ngày chung */
+.calendar-day {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    transition: all 0.2s ease;
+    background-color: #fff;
+}
+
+/* Ngày có tour và giá */
+.has-tour {
+    border-color: #dc3545; /* Màu đỏ bootstrap */
+    cursor: pointer;
+}
+
+.has-tour:hover {
+    background-color: #fff5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.1);
+}
+
+/* Ngày đang được chọn (Active) */
+.has-tour.active-day {
+    background-color: #fff;
+    border: 2px solid #dc3545;
+    position: relative;
+}
+
+/* Số ngày */
+.day-num {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Giá vé dưới số ngày */
+.price-sub {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #dc3545;
+    margin-top: 2px;
+}
+
+/* Ngày của tháng khác */
+.other-month {
+    color: #ccc;
+    background-color: #f9f9f9;
+    border: none;
+}
+.row-cols-7>* {
+    flex: 0 0 auto;
+    width: 14.2857%;
+    padding-right: var(--bs-gutter-x, 0.25rem);
+    padding-left: var(--bs-gutter-x, 0.25rem);
+}
+
+.row-cols-7 .col>div {
+    min-height: 40px;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.25rem 0;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+.calendar-day {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 60px; /* Phải có chiều cao để có diện tích click */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s;
+}
+/* Hiệu ứng khi di chuột */
+.calendar-day:hover {
+    border-color: #ffc107;
+    background-color: #fff9e6;
+}
+/* Màu sắc khi ngày được chọn */
+.calendar-day.active-day {
+    border: 2px solid #dc3545;
+    background-color: #fff5f5;
+}
+/* Màu sắc cho các ngày thuộc tháng khác (mờ đi) */
+.calendar-day.other-month {
+    color: #ccc;
+    background-color: #f9f9f9;
+    pointer-events: none; /* Không cho click vào ngày tháng khác */
+    border: none;
+}
+/* Màu sắc cho các nút chọn tháng khi được chọn */
+.month-btn.active {
+    background-color: #ffc107 !important; /* Màu vàng như trong ảnh */
+    color: #000 !important;
+    border: none;
+}
+

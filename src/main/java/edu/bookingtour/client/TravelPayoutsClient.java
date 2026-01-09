@@ -6,6 +6,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +45,7 @@ public class TravelPayoutsClient {
         try {
             List<Map<String, Object>> flights = getFlightsFromApi(origin, destination, departureDate);
             if (!flights.isEmpty()) {
-                return (String) flights.get(0).get("airline");
+                return (String) flights.get(0).get("airline") + flights.get(0).get("flight_number");
             }
         } catch (Exception e) {
             System.err.println("Lỗi lấy thông tin hãng bay: " + e.getMessage());
@@ -75,7 +77,33 @@ public class TravelPayoutsClient {
 
         return Collections.emptyList();
     }
+    public String takeorigin(String origin, String destination, String departureDate) {
+        try {
+            List<Map<String, Object>> flights = getFlightsFromApi(origin, destination, departureDate);
 
+            if (!flights.isEmpty()) {
+                return  (String)flights.get(0).get("origin");
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi TravelPayouts API: " + e.getMessage());
+        }
+        return "N/A";
+    }
+    public String getdeparture(String origin, String destination, String departureDate) {
+        try {
+            List<Map<String, Object>> flights = getFlightsFromApi(origin, destination, departureDate);
+            if (!flights.isEmpty()) {
+                String date = (String)flights.get(0).get("departure_at");
+                OffsetDateTime dateTime =  OffsetDateTime.parse(date);
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+                String daterender = dateTime.format(formatter);
+                return daterender;
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi lấy thông tin hãng bay: " + e.getMessage());
+        }
+        return "N/A";
+    }
     public String formatPriceToK(double price) {
         if (price == 0) return "N/A";
         double kValue = price / 1000;

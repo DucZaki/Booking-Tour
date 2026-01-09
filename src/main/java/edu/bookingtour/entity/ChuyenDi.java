@@ -51,4 +51,7 @@ public class ChuyenDi {
 
     @Column(name = "hinh_anh")
     private String hinhAnh;
+
+    @Column(name ="highlight")
+    private String highlight;
 }

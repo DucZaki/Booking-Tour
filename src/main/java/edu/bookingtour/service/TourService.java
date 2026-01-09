@@ -1,11 +1,16 @@
 package edu.bookingtour.service;
 
+import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,5 +68,34 @@ public class TourService {
 //                tour.getImages().add(img);
 //            }
 //        }
+    }
+    public List<Calendar> getCalendar(int month, int year, String selectedDateStr) {
+        List<Calendar> days = new ArrayList<>();
+        LocalDate firstOfMonth = LocalDate.of(year, month, 1);
+
+
+        LocalDate start = firstOfMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate selectedDate = null;
+        if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
+            selectedDate = LocalDate.parse(selectedDateStr);
+        }
+
+        for (int i = 0; i < 42; i++) {
+            LocalDate current = start.plusDays(i);
+            Calendar day = new Calendar();
+            day.setDate(current);
+            day.setCurrentMonth(current.getMonthValue() == month);
+
+            // Kiểm tra xem ngày này có đang được chọn không
+            if (selectedDate != null && current.equals(selectedDate)) {
+                day.setSelected(true);
+            } else {
+                day.setSelected(false);
+                day.setFlightPrice(0.0);
+            }
+
+            days.add(day);
+        }
+        return days;
     }
 }
