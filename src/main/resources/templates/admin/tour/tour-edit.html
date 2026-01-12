@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <h3 class="fw-bold text-primary mb-3">Cập nhật chuyến đi</h3>
+        <form th:action="@{'/admin/tour/update/' + ${tour.id}}"
+              th:object="${tour}" method="post"
+              enctype="multipart/form-data"
+              class="shadow p-4 rounded bg-light">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Tiêu đề</label>
+                    <input type="text" th:field="*{tieuDe}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Giá cả</label>
+                    <input type="text" th:field="*{gia}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Ngày khởi hành</label>
+                    <input th:field="*{ngayKhoiHanh}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Ngày kết thúc</label>
+                    <input th:field="*{ngayKetThuc}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Phương tiện</label>
+                    <select th:field="*{idPhuongTien.loai}" class="form-select" required>
+                        <option value="">Chọn phương tiện</option>
+                        <option value="PLANE">Plane</option>
+                        <option value="BUS">Bus</option>
+                        <option value="SHIP">Ship</option>
+                    </select>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Mô tả</label>
+                    <textarea th:field="*{moTa}" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Đổi ảnh mới (nếu có)</label>
+                    <input type="file" name="file" class="form-control" accept="image/*">
+                    <label class="form-label fw-bold">Ảnh hiện tại</label>
+                    <div>
+                        <img th:src="@{${tour.hinhAnh}}" alt="Tour Picture"
+                             class="rounded shadow-sm mt-2"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-save"></i> Cập nhật
+                    </button>
+                    <a th:href="@{'/admin/tour/' + ${tour.id}}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Hủy
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

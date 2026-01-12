@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold">Danh sách chuyến đi</h3>
+            <a th:href="@{/admin/tour/create}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Thêm chuyến đi
+            </a>
+        </div>
+        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
+            <div class="col" th:each="t : ${tour}">
+                <a th:href="@{'/admin/tour/' + ${t.id}}" class="text-decoration-none text-dark">
+                    <div class="card shadow-sm border-0 h-100">
+                        <img th:src="@{${t.hinhAnh}}"
+                             class="card-img-top"
+                             style="height: 250px; object-fit: cover;"
+                             alt="Tour picture">
+                        <div class="card-body text-center">
+                            <h6 class="fw-bold text-dark" th:text="${t.tieuDe}"></h6>
+                            <p class="card-title text-danger fw-bold" th:text="${#numbers.formatDecimal(t.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>

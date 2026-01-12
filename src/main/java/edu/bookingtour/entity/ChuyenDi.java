@@ -4,9 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,11 +28,13 @@ public class ChuyenDi {
     @Column(name = "gia", precision = 10, scale = 2)
     private BigDecimal gia;
 
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "ngay_khoi_hanh")
-    private Instant ngayKhoiHanh;
+    private LocalDate ngayKhoiHanh;
 
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Column(name = "ngay_ket_thuc")
-    private Instant ngayKetThuc;
+    private LocalDate ngayKetThuc;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_diem_den")
@@ -51,5 +54,4 @@ public class ChuyenDi {
 
     @Column(name = "hinh_anh")
     private String hinhAnh;
-
 }

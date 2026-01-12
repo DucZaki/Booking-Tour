@@ -37,7 +37,7 @@ public class ChuyenDiController {
         // SỬA: Lấy chi tiết tour và danh sách tour (nếu cần) thông qua Service
         List<ChuyenDi> dschuyendi = tourService.findAll();
         model.addAttribute("dschuyendi", dschuyendi);
-        model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
+        model.addAttribute("id", tourService.findById(Math.toIntExact(id)));
         return "chuyendi/chitiet";
     }
 
