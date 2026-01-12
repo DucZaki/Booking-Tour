@@ -372,4 +372,43 @@ footer {
     color: #000 !important;
     border: none;
 }
+     /* Ngày đã qua: mờ đi, gạch ngang số và không cho bấm */
+ .disabled-day {
+     background-color: #f1f3f5 !important;
+     color: #adb5bd !important;
+     cursor: not-allowed !important;
+     pointer-events: none; /* Chặn click chuột hoàn toàn */
+ }
 
+.disabled-day .day-num {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Giữ nguyên màu cho ngày thuộc tháng khác nhưng chưa qua */
+.other-month:not(.disabled-day) {
+    color: #ccc;
+}
+.card-header {
+    margin-top:20px;
+    margin-bottom: 20px;
+}
+.sticky-price-box {
+    /*position: -webkit-sticky; */
+    position: sticky;
+    top: 80px; /* Khoảng cách từ mép trên trình duyệt khi trôi (tùy chỉnh theo chiều cao navbar của mày) */
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* CSS cho ngày đã qua (như đã nói ở bước trước) */
+.disabled-day {
+    background-color: #f1f3f5 !important;
+    color: #adb5bd !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+.disabled-day .day-num {
+    text-decoration: line-through;
+    opacity: 0.5;
+}

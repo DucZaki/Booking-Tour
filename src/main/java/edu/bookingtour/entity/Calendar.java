@@ -11,5 +11,6 @@ public class Calendar {
     private boolean isCurrentMonth;
     private double flightPrice;
     private boolean isSelected;
+    private boolean isPast;
 
 }

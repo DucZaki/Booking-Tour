@@ -34,46 +34,50 @@ public class ChuyenDiController {
 
     // Phương thức viewChitietDenPage cũng nên sử dụng Service
     @GetMapping("/tour/{id}")
-    public String viewChitietDenPage(Model model, @PathVariable Long id,
-    @RequestParam(defaultValue="1") Integer month,
-    @RequestParam(defaultValue="2026") Integer year,
-    @RequestParam(required = false ) String selectedDate) throws Exception {
+    public String viewChitietDenPage(Model model,
+                                     @PathVariable Long id,
+                                     @RequestParam(defaultValue = "1") Integer month,
+                                     @RequestParam(defaultValue = "2026") Integer year,
+                                     @RequestParam(required = false) String selectedDate) throws Exception {
+
         int viewMonth = (month != null) ? month : LocalDate.now().getMonthValue();
         int viewYear = (year != null) ? year : LocalDate.now().getYear();
-        LocalDate localDate = LocalDate.of(viewYear, viewMonth, Integer.parseInt(selectedDate));
-        String Date = localDate.toString();
-        List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear,selectedDate);
+        // Nếu có ngày được chọn
+        LocalDate localDate;
+        if (selectedDate != null && !selectedDate.isEmpty()) {
+            localDate = LocalDate.parse(selectedDate); // ✅ Chuyển chuỗi "2026-01-10" thành LocalDate
+        } else {
+            localDate = LocalDate.now(); // nếu chưa chọn thì mặc định là ngày hiện tại
+        }
+
+        String Date = localDate.toString(); // yyyy-MM-dd
+        List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear, selectedDate);
         List<ChuyenDi> dschuyendi = tourService.findAll();
+
         String from = "HAN";
         String to = "SGN";
-        double flightPrice=0;
-        if (selectedDate != null) {
-            LocalDate selDate = LocalDate.parse(selectedDate);
-            for (Calendar day : calendar) {
-                if (day.getDate().equals(selDate)) {
-                    day.setSelected(true);
-                    double price = travelPayoutsClient.getCheapestPrice(from, to, Date);
-                    flightPrice=price;
-                }
-            }
-        }
-        try{
+
+        try {
             double FlightPrice = travelPayoutsClient.getCheapestPrice(from, to, Date);
             String carriers = travelPayoutsClient.getCarrierCode(from, to, Date);
-            String Origin= travelPayoutsClient.takeorigin(from, to, Date);
-            String departure =travelPayoutsClient.getdeparture(from, to, Date);
+            String Origin = travelPayoutsClient.takeorigin(from, to, Date);
+            String departure = travelPayoutsClient.getdeparture(from, to, Date);
+
             model.addAttribute("carrier", carriers);
             model.addAttribute("price", FlightPrice);
             model.addAttribute("date", departure);
             model.addAttribute("origin", Origin);
             model.addAttribute("calendar", calendar);
+            model.addAttribute("currentMonth", viewMonth);
+            model.addAttribute("currentYear", viewYear);
+            model.addAttribute("dschuyendi", dschuyendi);
+            model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
         }
-        catch(Exception e){
-            model.addAttribute("Lỗi", e.getMessage());
-        }
-        model.addAttribute("dschuyendi", dschuyendi);
-        model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
+
         return "chuyendi/chitiet";
     }
+
 
 }

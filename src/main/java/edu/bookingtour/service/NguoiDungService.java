@@ -13,7 +13,7 @@ public class NguoiDungService {
     @Autowired
     private NguoiDungRepository nguoiDungRepository;
     public List<String> findhotenbinhluan() {
-        return nguoiDungRepository.findTatCaHoTen();
+       return nguoiDungRepository.findTatCaHoTen();
     }
     public Optional<NguoiDung> findById(Integer id) {
         return nguoiDungRepository.findById(id);

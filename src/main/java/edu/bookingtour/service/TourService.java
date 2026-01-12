@@ -59,22 +59,14 @@ public class TourService {
         tour.setIdPhuongTien(chuyenDi.getIdPhuongTien());
         tour.setIdNoiLuuTru(chuyenDi.getIdNoiLuuTru());
         tour.setNoiBat(chuyenDi.getNoiBat());
-//        tour.getImages().clear();
-//        for (MultipartFile file : files) {
-//            if (!file.isEmpty()) {
-//                Image img = new Image();
-//                img.setImage_url(file.getOriginalFilename());
-//                img.setTour(tour);
-//                tour.getImages().add(img);
-//            }
-//        }
+
     }
     public List<Calendar> getCalendar(int month, int year, String selectedDateStr) {
         List<Calendar> days = new ArrayList<>();
+        LocalDate today = LocalDate.now(); // Ngày hiện tại: 2026-01-10
         LocalDate firstOfMonth = LocalDate.of(year, month, 1);
-
-
         LocalDate start = firstOfMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
         LocalDate selectedDate = null;
         if (selectedDateStr != null && !selectedDateStr.isEmpty()) {
             selectedDate = LocalDate.parse(selectedDateStr);
@@ -86,7 +78,11 @@ public class TourService {
             day.setDate(current);
             day.setCurrentMonth(current.getMonthValue() == month);
 
-            // Kiểm tra xem ngày này có đang được chọn không
+            // 1. Kiểm tra ngày đã qua (isPast)
+            // Nếu ngày hiện tại trong vòng lặp trước ngày hôm nay -> True
+            day.setPast(current.isBefore(today));
+
+            // 2. Kiểm tra ngày được chọn
             if (selectedDate != null && current.equals(selectedDate)) {
                 day.setSelected(true);
             } else {

@@ -38,4 +38,5 @@ public class NguoiDung {
     private String hoTen;
     @Column(name ="number")
     private String number;
+
 }

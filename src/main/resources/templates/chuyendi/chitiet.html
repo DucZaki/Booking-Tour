@@ -30,48 +30,64 @@
                         <img th:src="${id.hinhAnh}" class="img-fluid rounded" alt="Ảnh chính Tour">
                     </div>
                 </div>
-                <div class="card my-4 border-0">
-                    <div class="card-header bg-white border-0 ps-0">
-                        <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-3 col-md-2 pe-3" id="monthSidebar">
-                                <div class="col-3 col-md-2 pe-3">
-                                    <div th:each="m : ${ {1, 2, 3} }">
-                                        <a th:href="@{/tour/{id}(id=${id.id}, month=${m}, year=2026)}"
-                                           class="btn w-100 mb-2 small fw-bold"
-                                           th:classappend="${m == currentMonth} ? 'btn-warning active' : 'btn-outline-light border text-dark'"
-                                           th:text="${#numbers.formatInteger(m,2)} + '/2026'">
-                                        </a>
-                                    </div>
-                                </div>
+                <div class="card-header bg-white border-0 ps-0">
+
+                    <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-3 col-md-2 pe-3">
+                            <div th:each="m : ${ {1, 2, 3} }">
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${m}, year=2026)}"
+                                   class="btn w-100 mb-2 small fw-bold"
+                                   th:classappend="${m == currentMonth} ? 'btn-warning active' : 'btn-outline-light border text-dark'"
+                                   th:text="${#numbers.formatInteger(m,2)} + '/2026'">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-9 col-md-10 border rounded p-3 bg-white shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${(currentMonth ?: 1) == 1 ? 12 : (currentMonth ?: 1) - 1}, year=${(currentMonth ?: 1) == 1 ? (currentYear ?: 2026) - 1 : (currentYear ?: 2026)})}"
+                                   class="btn btn-sm btn-light border-0">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                                <span class="fw-bold text-uppercase" th:text="'Tháng ' + ${#numbers.formatInteger(currentMonth ?: 1, 2)} + '/' + ${currentYear ?: 2026}"></span>
+
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${(currentMonth ?: 1) == 12 ? 1 : (currentMonth ?: 1) + 1}, year=${(currentMonth ?: 1) == 12 ? (currentYear ?: 2026) + 1 : (currentYear ?: 2026)})}"
+                                   class="btn btn-sm btn-light border-0">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
                             </div>
 
-                            <div class="col-9 col-md-10 border rounded p-3 bg-white shadow-sm">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <button class="btn btn-sm btn-light border-0" onclick="changeMonth(-1)"><i class="bi bi-chevron-left"></i></button>
-                                    <span class="fw-bold text-uppercase" id="calendarTitle">Tháng 01/2026</span>
-                                    <button class="btn btn-sm btn-light border-0" onclick="changeMonth(1)"><i class="bi bi-chevron-right"></i></button>
-                                </div>
-                                <div class="calendar-grid">
-                                    <div class="day-label">T2</div>... <th:block th:each="day : ${calendar}">
-                                    <a th:href="@{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
+                            <div class="calendar-grid">
+                                <div class="day-label">T2</div>
+                                <div class="day-label">T3</div>
+                                <div class="day-label">T4</div>
+                                <div class="day-label">T5</div>
+                                <div class="day-label">T6</div>
+                                <div class="day-label">T7</div>
+                                <div class="day-label text-danger">CN</div>
+
+                                <th:block th:each="day : ${calendar}">
+                                    <a th:href="${day.isPast} ? 'javascript:void(0)' : @{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
                                        class="calendar-day text-decoration-none text-dark"
-                                       th:classappend="${day.isSelected ? 'active-day' : ''} + ${!day.isCurrentMonth ? ' other-month' : ''}">
+                                       th:classappend="${day.isSelected ? 'active-day' : ''}
+                     + ${!day.isCurrentMonth ? ' other-month' : ''}
+                     + ${day.isPast ? ' disabled-day' : ''}">
 
                                         <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
 
-                                        <span class="price-sub" th:if="${price > 0}"
+                                        <span class="price-sub" th:if="${!day.isPast and day.isSelected and price > 0}"
                                               th:text="${#numbers.formatDecimal(price/1000, 0, 'POINT', 0, 'POINT')} + 'K'">
-            </span>
+        </span>
                                     </a>
                                 </th:block>
-                                </div>
-                                <p class="text-center text-danger mt-4 small italic">
-                                    <i class="bi bi-info-circle me-1"></i> Quý khách vui lòng chọn ngày phù hợp
-                                </p>
                             </div>
+
+                            <p class="text-center text-danger mt-4 small italic">
+                                <i class="bi bi-info-circle me-1"></i> Quý khách vui lòng chọn ngày phù hợp
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -115,7 +131,7 @@
 
                             <span class="small text-secondary">/Khách</span>
                         </h2>
-                        <p class="small text-muted mb-3">Mã chương trình: NDSGN1965</p>
+<!--                        <p class="small text-muted mb-3">Mã chương trình: NDSGN1965</p>-->
                         <p class="small text-muted mb-3">
                             Khởi hành: <strong th:text="${origin}"></strong>
                         </p>
@@ -138,119 +154,6 @@
             </div>
         </div>
     </div>
-<!--    <script th:inline="javascript">-->
-<!--        let currentMonth = 1; // Tháng 1-->
-<!--        let currentYear = 2026;-->
-<!--        let tourBasePrice = [[${price}]];-->
-<!--        let currentSelectedDate = "";-->
-
-<!--        document.addEventListener("DOMContentLoaded", function() {-->
-<!--            renderMonthSidebar();-->
-<!--            renderCalendar(currentMonth, currentYear);-->
-<!--        });-->
-
-<!--        function renderMonthSidebar() {-->
-<!--            const sidebar = document.getElementById('monthSidebar');-->
-<!--            sidebar.innerHTML = '';-->
-
-<!--            // Giả định bạn muốn hiển thị 3 tháng tính từ tháng gốc (ví dụ tháng 1)-->
-<!--            // Nếu bạn muốn 3 tháng này là cố định, hãy dùng một biến gốc.-->
-<!--            // Ở đây tôi để mặc định hiển thị 3 tháng: 01, 02, 03 của năm 2026 như trong ảnh bạn gửi.-->
-<!--            const startM = 1;-->
-<!--            const startY = 2026;-->
-
-<!--            for (let i = 0; i < 3; i++) {-->
-<!--                let m = startM + i;-->
-<!--                let y = startY;-->
-<!--                if (m > 12) { m -= 12; y++; }-->
-
-<!--                let btn = document.createElement('button');-->
-
-<!--                // KIỂM TRA ĐIỀU KIỆN ĐỂ TÔ VÀNG:-->
-<!--                // Nếu tháng và năm của nút trùng với tháng và năm đang hiển thị trên lịch-->
-<!--                const isActive = (m === currentMonth && y === currentYear);-->
-
-<!--                // Nếu active thì dùng class 'btn-warning' (vàng), nếu không thì dùng 'btn-outline-light' (trắng)-->
-<!--                btn.className = `btn w-100 mb-2 small fw-bold ${isActive ? 'btn-warning text-dark active' : 'btn-outline-light text-dark border'}`;-->
-
-<!--                btn.innerText = `${String(m).padStart(2,'0')}/${y}`;-->
-
-<!--                btn.onclick = () => {-->
-<!--                    currentMonth = m;-->
-<!--                    currentYear = y;-->
-<!--                    // QUAN TRỌNG: Gọi lại cả 2 hàm để cập nhật lại giao diện nút và lịch-->
-<!--                    renderMonthSidebar();-->
-<!--                    renderCalendar(m, y);-->
-<!--                };-->
-<!--                sidebar.appendChild(btn);-->
-<!--            }-->
-<!--        }-->
-
-<!--        function renderCalendar(month, year) {-->
-<!--            const grid = document.getElementById('calendarGrid');-->
-<!--            const title = document.getElementById('calendarTitle');-->
-<!--            title.innerText = `THÁNG ${String(month).padStart(2, '0')}/${year}`;-->
-
-<!--            // Giữ lại tiêu đề T2-CN-->
-<!--            const labels = Array.from(grid.querySelectorAll('.day-label'));-->
-<!--            grid.innerHTML = '';-->
-<!--            labels.forEach(l => grid.appendChild(l));-->
-
-<!--            const firstDay = new Date(year, month - 1, 1).getDay(); // 0 là Chủ Nhật-->
-<!--            const daysInMonth = new Date(year, month, 0).getDate();-->
-
-<!--            // 1. Ô trống tháng trước-->
-<!--            let offset = (firstDay === 0) ? 6 : firstDay - 1;-->
-<!--            for (let i = 0; i < offset; i++) {-->
-<!--                grid.innerHTML += `<div class="calendar-day other-month"></div>`;-->
-<!--            }-->
-
-<!--            // 2. Render ngày thực tế-->
-<!--            for (let d = 1; d <= daysInMonth; d++) {-->
-<!--                const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;-->
-<!--                const dayCell = document.createElement('div');-->
-<!--                dayCell.className = 'calendar-day';-->
-<!--                dayCell.innerHTML = `<span class="day-num">${d}</span><span class="price-sub" id="p-${dateStr}"></span>`;-->
-
-<!--                dayCell.onclick = () => selectDate(dateStr, dayCell);-->
-<!--                grid.appendChild(dayCell);-->
-<!--            }-->
-<!--        }-->
-
-<!--        // function selectDate(date, element) {-->
-<!--        //     // Highlight-->
-<!--        //     document.querySelectorAll('.calendar-day').forEach(el => el.classList.remove('active-day'));-->
-<!--        //     element.classList.add('active-day');-->
-<!--        //     currentSelectedDate = date;-->
-<!--        //     document.getElementById('infoDate').innerText = date;-->
-<!--        //     const priceLabel = element.querySelector('.price-sub');-->
-<!--        //     priceLabel.innerHTML = '<span class="loading-price">...</span>';-->
-<!--        //     fetch(`/api/flights/price?origin=SGN&destination=HAN&date=${date}`)-->
-<!--        //         .then(res => res.json())-->
-<!--        //         .then(data => {-->
-<!--        //             const flightPrice = data.price || 0;-->
-<!--        //             const total = tourBasePrice + flightPrice;-->
-<!--        //-->
-<!--        //             // Cập nhật giá lên lịch-->
-<!--        //             priceLabel.innerText = (flightPrice / 1000).toFixed(0) + "K";-->
-<!--        //-->
-<!--        //             // Cập nhật giá tổng bên Box phải-->
-<!--        //             document.getElementById('displayTotalPrice').innerText = new Intl.NumberFormat('vi-VN').format(total);-->
-<!--        //             document.getElementById('infoCarrier').innerText = data.carrier || "VJ/VN";-->
-<!--        //         })-->
-<!--        //         .catch(err => {-->
-<!--        //             priceLabel.innerText = "Hết vé";-->
-<!--        //             console.error(err);-->
-<!--        //         });-->
-<!--        // }-->
-<!--        //-->
-<!--        // function changeMonth(step) {-->
-<!--        //     currentMonth += step;-->
-<!--        //     if (currentMonth > 12) { currentMonth = 1; currentYear++; }-->
-<!--        //     if (currentMonth < 1) { currentMonth = 12; currentYear&#45;&#45;; }-->
-<!--        //     renderCalendar(currentMonth, currentYear);-->
-<!--        // }-->
-<!--    </script>-->
 </th:block>
 </body>
 
