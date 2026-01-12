@@ -8,30 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    <style>
-        /* Đảm bảo các ngày trong lịch có kích thước đồng đều */
-        .row-cols-7>* {
-            flex: 0 0 auto;
-            width: 14.2857%;
-            padding-right: var(--bs-gutter-x, 0.25rem);
-            padding-left: var(--bs-gutter-x, 0.25rem);
-        }
-
-        .row-cols-7 .col>div {
-            min-height: 40px;
-            line-height: 1.2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-size: 0.9rem;
-            padding: 0.25rem 0;
-        }
-
-
-    </style>
 </head>
-
 <body>
 <th:block th:fragment="content">
     <div class="container pt-5 tour-detail-container">
@@ -53,56 +30,72 @@
                         <img th:src="${id.hinhAnh}" class="img-fluid rounded" alt="Ảnh chính Tour">
                     </div>
                 </div>
+                <div class="card-header bg-white border-0 ps-0">
 
-                <div class="card my-4 border-0">
-                    <div class="card-header bg-white border-0 ps-0">
-                        <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="row g-0">
-                            <div class="col-3 col-md-2 pe-3">
-                                <button class="btn btn-primary w-100 mb-2 active fw-bold small">11/2025</button>
-                                <button class="btn btn-outline-secondary w-100 small">12/2025</button>
+                    <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-3 col-md-2 pe-3">
+                            <div th:each="m : ${ {1, 2, 3} }">
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${m}, year=2026)}"
+                                   class="btn w-100 mb-2 small fw-bold"
+                                   th:classappend="${m == currentMonth} ? 'btn-warning active' : 'btn-outline-light border text-dark'"
+                                   th:text="${#numbers.formatInteger(m,2)} + '/2026'">
+                                </a>
                             </div>
-                            <div class="col-9 col-md-10 border rounded p-3">
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <i class="bi bi-arrow-left text-muted"></i>
-                                    <span class="fw-bold">THÁNG 11/2025</span>
-                                    <i class="bi bi-arrow-right text-muted"></i>
-                                </div>
-                                <div class="row row-cols-7 text-center g-2 small">
-                                    <div class="col fw-bold">T2</div>
-                                    <div class="col fw-bold">T3</div>
-                                    <div class="col fw-bold">T4</div>
-                                    <div class="col fw-bold">T5</div>
-                                    <div class="col fw-bold">T6</div>
-                                    <div class="col fw-bold">T7</div>
-                                    <div class="col fw-bold text-danger">CN</div>
+                        </div>
 
-                                    <div class="col text-secondary">30</div>
-                                    <div class="col text-secondary">31</div>
-                                    <div class="col"><div class="border rounded">1</div></div>
-                                    <div class="col"><div class="border rounded">2</div></div>
-                                    <div class="col"><div class="border rounded">3</div></div>
-                                    <div class="col">
-                                        <div class="p-1 border border-danger rounded active-day flight-date" data-date="2025-11-22">
-                                            22
-                                            <span class="text-danger fw-bold price-value" style="font-size: 0.6rem;">
-            ...
+                        <div class="col-9 col-md-10 border rounded p-3 bg-white shadow-sm">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${(currentMonth ?: 1) == 1 ? 12 : (currentMonth ?: 1) - 1}, year=${(currentMonth ?: 1) == 1 ? (currentYear ?: 2026) - 1 : (currentYear ?: 2026)})}"
+                                   class="btn btn-sm btn-light border-0">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                                <span class="fw-bold text-uppercase" th:text="'Tháng ' + ${#numbers.formatInteger(currentMonth ?: 1, 2)} + '/' + ${currentYear ?: 2026}"></span>
+
+                                <a th:href="@{/tour/{id}(id=${id.id}, month=${(currentMonth ?: 1) == 12 ? 1 : (currentMonth ?: 1) + 1}, year=${(currentMonth ?: 1) == 12 ? (currentYear ?: 2026) + 1 : (currentYear ?: 2026)})}"
+                                   class="btn btn-sm btn-light border-0">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </div>
+
+                            <div class="calendar-grid">
+                                <div class="day-label">T2</div>
+                                <div class="day-label">T3</div>
+                                <div class="day-label">T4</div>
+                                <div class="day-label">T5</div>
+                                <div class="day-label">T6</div>
+                                <div class="day-label">T7</div>
+                                <div class="day-label text-danger">CN</div>
+
+                                <th:block th:each="day : ${calendar}">
+                                    <a th:href="${day.isPast} ? 'javascript:void(0)' : @{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
+                                       class="calendar-day text-decoration-none text-dark"
+                                       th:classappend="${day.isSelected ? 'active-day' : ''}
+                     + ${!day.isCurrentMonth ? ' other-month' : ''}
+                     + ${day.isPast ? ' disabled-day' : ''}">
+
+                                        <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
+
+                                        <span class="price-sub" th:if="${!day.isPast and day.isSelected and price > 0}"
+                                              th:text="${#numbers.formatDecimal(price/1000, 0, 'POINT', 0, 'POINT')} + 'K'">
         </span>
-                                        </div>
-                                    </div>
-                                    <div class="col text-danger"><div class="border rounded">23</div></div>
-                                </div>
-                                <p class="text-center text-secondary mt-3 small">Quý khách vui lòng chọn ngày phù hợp</p>
+                                    </a>
+                                </th:block>
                             </div>
+
+                            <p class="text-center text-danger mt-4 small italic">
+                                <i class="bi bi-info-circle me-1"></i> Quý khách vui lòng chọn ngày phù hợp
+                            </p>
                         </div>
                     </div>
                 </div>
 
+
                 <div class="mt-4 p-3 bg-light rounded border-start border-3 border-primary">
                     <h3 class="h6 text-primary fw-bold">Điểm nhấn của chương trình</h3>
-                    <p class="small mb-0 text-muted">Lào Cai là tỉnh vùng cao phía Bắc Việt Nam. Đến đây, du khách sẽ được khám phá vẻ đẹp kỳ vĩ của Fansipan, trải nghiệm văn hóa độc đáo tại bản Cát Cát và thưởng thức ẩm thực đặc sắc của miền Tây Bắc.
+                    <p class="small mb-0 text-muted h7" th:text="${id.highlight}">
                         <a href="#" class="text-primary small fw-bold">Xem thêm</a>
                     </p>
                 </div>
@@ -114,12 +107,12 @@
                     <div class="col-4">
                         <i class="bi bi-geo-alt fs-4 text-primary"></i>
                         <p class="mb-1 fw-bold small">Điểm tham quan</p>
-                        <p class="small text-muted">Sapa, Lào Cai, Bản Cát Cát, Fansipan, Hà Nội</p>
+                        <p class="small text-muted" th:text="${id.moTa}"></p>
                     </div>
                     <div class="col-4">
                         <i class="bi bi-bus-front fs-4 text-primary"></i>
-                        <p class="mb-1 fw-bold small">Phương tiện</p>
-                        <p class="small text-muted">Máy bay, Xe du lịch</p>
+                        <p class="mb-1 fw-bold small" >Phương Tiện</p>
+                        <p class="small text-muted" th:text="${id.idPhuongTien.loai}"></p>
                     </div>
                     <div class="col-4">
                         <i class="bi bi-people fs-4 text-primary"></i>
@@ -134,11 +127,21 @@
                 <div class="card border-0 shadow-sm p-3 sticky-price-box">
                     <div class="card-body">
                         <p class="mb-0 text-secondary small">Giá từ:</p>
-                        <h2 class="card-title text-danger fw-bold" th:text="${#numbers.formatDecimal(id.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                        <h2 class="card-title text-danger fw-bold" th:text="${#numbers.formatDecimal(id.gia+price, 0, 'COMMA', 0, 'POINT')} + ' VND'">
 
                             <span class="small text-secondary">/Khách</span>
                         </h2>
-                        <p class="small text-muted mb-3">Mã chương trình: NDSGN1965</p>
+<!--                        <p class="small text-muted mb-3">Mã chương trình: NDSGN1965</p>-->
+                        <p class="small text-muted mb-3">
+                            Khởi hành: <strong th:text="${origin}"></strong>
+                        </p>
+                        <p class="small text-muted mb-3">
+                            Ngày khởi hành: <strong th:text="${date}"></strong>
+                        </p>
+                        <p class="small text-muted mb-3">
+                            Mã chuyến bay:<strong th:text="${carrier}"></strong>
+                        </p>
+                        <p class="small text-muted mb-3"></p>
 
                         <button class="btn btn-primary w-100 mb-2 py-2 fw-bold">
                             <i class="bi bi-calendar-check me-2"></i> Chọn ngày khởi hành
@@ -151,33 +154,6 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Mặc định từ Sài Gòn đi Hà Nội (Bạn có thể sửa thành biến động)
-            const origin = "SGN";
-            const destination = "HAN";
-
-            // Tìm tất cả các ô ngày muốn hiển thị giá vé
-            const dateCells = document.querySelectorAll('.flight-date');
-
-            dateCells.forEach(cell => {
-                const travelDate = cell.getAttribute('data-date');
-                const priceSpan = cell.querySelector('.price-value');
-
-                // Gọi API nội bộ của chúng ta
-                fetch(`/api/flights/price?from=${origin}&to=${destination}&date=${travelDate}`)
-                    .then(res => res.text())
-                    .then(data => {
-                        if (data !== "N/A") {
-                            priceSpan.innerText = data;
-                        } else {
-                            priceSpan.innerText = "Hết vé";
-                        }
-                    })
-                    .catch(() => priceSpan.innerText = "Lỗi");
-            });
-        });
-    </script>
 </th:block>
 </body>
 

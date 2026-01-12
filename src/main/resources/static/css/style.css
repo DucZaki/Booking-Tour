@@ -189,3 +189,226 @@ footer {
     background-color: #FECF2F !important;
     color: white !important;
 }
+/* ===================== DROPDOWN & MEGA MENU TỐI ƯU ===================== */
+
+/* 1. Mặc định cho MOBILE (Dưới 992px) */
+@media (max-width: 991.98px) {
+    .navbar .dropdown-menu {
+        width: 100% !important;
+        position: static !important; /* Quan trọng: Để nó đẩy các menu khác xuống thay vì nằm đè lên */
+        transform: none !important;
+        float: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 1rem !important;
+        border-bottom: 1px solid #eee !important;
+    }
+
+    /* Chia lại cột trên mobile để không bị quá hẹp */
+    .mega-menu .col-6 {
+        width: 50%;
+    }
+
+    .mega-menu .col-md-6 {
+        margin-bottom: 20px;
+    }
+}
+
+/* 2. Cho DESKTOP (Từ 992px trở lên) */
+@media (min-width: 992px) {
+    /* Ép thẻ li cha phải có position static để menu con rộng theo container của Navbar */
+    .nav-item.dropdown.position-static-lg {
+        position: static !important;
+    }
+
+    .mega-menu {
+        width: 90vw !important; /* Tăng độ rộng để đẹp hơn */
+        max-width: 1100px;
+        left: 50% !important;
+        top: 100% !important;
+        transform: translateX(-50%) !important;
+        display: none; /* Mặc định ẩn, Bootstrap sẽ tự hiển thị khi click */
+    }
+
+    .navbar .nav-item.dropdown:hover .dropdown-menu {
+        display: block; /* (Tùy chọn) Hiện khi hover nếu muốn */
+    }
+}
+
+/* 3. Style nội dung bên trong (Dùng chung) */
+.navbar .dropdown-menu h6 {
+    color: #0077b6 !important;
+    font-weight: 700 !important;
+    font-size: 1rem;
+}
+
+.navbar .dropdown-item {
+    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    padding: 8px 12px !important;
+}
+/* Lưới lịch 7 cột */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+
+.day-label {
+    font-weight: bold;
+    padding-bottom: 10px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+/* Ô ngày chung */
+.calendar-day {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: default;
+    transition: all 0.2s ease;
+    background-color: #fff;
+}
+
+/* Ngày có tour và giá */
+.has-tour {
+    border-color: #dc3545; /* Màu đỏ bootstrap */
+    cursor: pointer;
+}
+
+.has-tour:hover {
+    background-color: #fff5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.1);
+}
+
+/* Ngày đang được chọn (Active) */
+.has-tour.active-day {
+    background-color: #fff;
+    border: 2px solid #dc3545;
+    position: relative;
+}
+
+/* Số ngày */
+.day-num {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Giá vé dưới số ngày */
+.price-sub {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #dc3545;
+    margin-top: 2px;
+}
+
+/* Ngày của tháng khác */
+.other-month {
+    color: #ccc;
+    background-color: #f9f9f9;
+    border: none;
+}
+.row-cols-7>* {
+    flex: 0 0 auto;
+    width: 14.2857%;
+    padding-right: var(--bs-gutter-x, 0.25rem);
+    padding-left: var(--bs-gutter-x, 0.25rem);
+}
+
+.row-cols-7 .col>div {
+    min-height: 40px;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    padding: 0.25rem 0;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    text-align: center;
+}
+.calendar-day {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    min-height: 60px; /* Phải có chiều cao để có diện tích click */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s;
+}
+/* Hiệu ứng khi di chuột */
+.calendar-day:hover {
+    border-color: #ffc107;
+    background-color: #fff9e6;
+}
+/* Màu sắc khi ngày được chọn */
+.calendar-day.active-day {
+    border: 2px solid #dc3545;
+    background-color: #fff5f5;
+}
+/* Màu sắc cho các ngày thuộc tháng khác (mờ đi) */
+.calendar-day.other-month {
+    color: #ccc;
+    background-color: #f9f9f9;
+    pointer-events: none; /* Không cho click vào ngày tháng khác */
+    border: none;
+}
+/* Màu sắc cho các nút chọn tháng khi được chọn */
+.month-btn.active {
+    background-color: #ffc107 !important; /* Màu vàng như trong ảnh */
+    color: #000 !important;
+    border: none;
+}
+     /* Ngày đã qua: mờ đi, gạch ngang số và không cho bấm */
+ .disabled-day {
+     background-color: #f1f3f5 !important;
+     color: #adb5bd !important;
+     cursor: not-allowed !important;
+     pointer-events: none; /* Chặn click chuột hoàn toàn */
+ }
+
+.disabled-day .day-num {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+
+/* Giữ nguyên màu cho ngày thuộc tháng khác nhưng chưa qua */
+.other-month:not(.disabled-day) {
+    color: #ccc;
+}
+.card-header {
+    margin-top:20px;
+    margin-bottom: 20px;
+}
+.sticky-price-box {
+    /*position: -webkit-sticky; */
+    position: sticky;
+    top: 80px; /* Khoảng cách từ mép trên trình duyệt khi trôi (tùy chỉnh theo chiều cao navbar của mày) */
+    z-index: 100;
+    transition: all 0.3s ease;
+}
+
+/* CSS cho ngày đã qua (như đã nói ở bước trước) */
+.disabled-day {
+    background-color: #f1f3f5 !important;
+    color: #adb5bd !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+.disabled-day .day-num {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
