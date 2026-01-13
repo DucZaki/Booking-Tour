@@ -24,31 +24,69 @@
 
         <div class="col-md-4">
           <label class="form-label fw-bold">Ngày khởi hành</label>
-          <input th:field="*{ngayKhoiHanh}" class="form-control" required>
+          <input type="date" th:field="*{ngayKhoiHanh}" class="form-control" required>
         </div>
 
         <div class="col-md-4">
           <label class="form-label fw-bold">Ngày kết thúc</label>
-          <input th:field="*{ngayKetThuc}" class="form-control" required>
+          <input type="date" th:field="*{ngayKetThuc}" class="form-control" required>
         </div>
 
         <div class="col-md-4">
-          <label class="form-label fw-bold">Phương tiện</label>
-          <select th:field="*{idPhuongTien.loai}" class="form-select" required>
-            <option value="">Chọn phương tiện</option>
-            <option value="PLANE">Plane</option>
-            <option value="BUS">Bus</option>
-            <option value="SHIP">Ship</option>
+          <label class="form-label">Phương tiện</label>
+          <select class="form-select"
+                  th:field="*{idPhuongTien.id}">
+            <option th:each="pt : ${phuongTienList}"
+                    th:value="${pt.id}"
+                    th:text="${pt.loai}">
+            </option>
           </select>
         </div>
 
-        <div class="col-md-12">
-          <label class="form-label fw-bold">Điểm đến</label>
-          <input>
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Châu lục</label>
+          <select id="chauLuc" class="form-select">
+            <option value="">-- Chọn châu lục --</option>
+            <option th:each="c : ${chauLucList}"
+                    th:value="${c}"
+                    th:text="${c}">
+            </option>
+          </select>
         </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Quốc gia</label>
+          <select id="quocGia" class="form-select">
+            <option value="">-- Chọn quốc gia --</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label fw-bold">Thành phố</label>
+          <select id="thanhPho"
+                  class="form-select"
+                  th:field="*{idDiemDen.id}">
+            <option value="">-- Chọn thành phố --</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label>Nổi bật:</label><br>
+          <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
+          <label for="yes">Yes</label>
+
+          <input type="radio" th:field="*{noiBat}" th:value="false" id="no">
+          <label for="no">No</label>
+        </div>
+
         <div class="col-md-12">
           <label class="form-label fw-bold">Mô tả</label>
-          <textarea th:field="*{moTa}" class="form-control" rows="4"></textarea>
+          <textarea th:field="*{moTa}" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <div class="col-md-12">
+          <label class="form-label fw-bold">Highlight</label>
+          <textarea th:field="*{highlight}" class="form-control" rows="4" required></textarea>
         </div>
 
         <div class="col-md-6">
@@ -68,5 +106,33 @@
     </form>
   </div>
 </div>
+<script>
+  document.getElementById("chauLuc").addEventListener("change", function () {
+    fetch(`/api/dia-diem/quoc-gia?chauLuc=${this.value}`)
+            .then(res => res.json())
+            .then(data => {
+              const qg = document.getElementById("quocGia");
+              qg.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
+              document.getElementById("thanhPho").innerHTML =
+                      '<option value="">-- Chọn thành phố --</option>';
+              data.forEach(item => {
+                qg.innerHTML += `<option value="${item}">${item}</option>`;
+              });
+            });
+  });
+
+  document.getElementById("quocGia").addEventListener("change", function () {
+    fetch(`/api/dia-diem/thanh-pho?quocGia=${this.value}`)
+            .then(res => res.json())
+            .then(data => {
+              const tp = document.getElementById("thanhPho");
+              tp.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+              data.forEach(item => {
+                tp.innerHTML += `<option value="${item.id}">${item.thanhPho}</option>`;
+              });
+            });
+  });
+</script>
+
 </body>
 </html>

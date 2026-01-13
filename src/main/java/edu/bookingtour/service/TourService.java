@@ -3,6 +3,9 @@ package edu.bookingtour.service;
 import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.ChuyenDiRepository;
+import edu.bookingtour.repo.DiemDenRepository;
+import edu.bookingtour.repo.NoiLuuTruRepository;
+import edu.bookingtour.repo.PhuongTienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,14 @@ import java.util.Optional;
 public class TourService {
     @Autowired
     private ChuyenDiRepository chuyenDiRepository;
+    @Autowired
+    private PhuongTienRepository phuongTienRepository;
+
+    @Autowired
+    private DiemDenRepository diemDenRepository;
+
+    @Autowired
+    private NoiLuuTruRepository noiLuuTruRepository;
     public long count() {
         return chuyenDiRepository.count();
     }
@@ -48,11 +59,16 @@ public class TourService {
         tour.setHinhAnh(chuyenDi.getHinhAnh());
         tour.setNgayKhoiHanh(chuyenDi.getNgayKhoiHanh());
         tour.setNgayKetThuc(chuyenDi.getNgayKetThuc());
-        tour.setIdDiemDen(chuyenDi.getIdDiemDen());
-        tour.setIdPhuongTien(chuyenDi.getIdPhuongTien());
-        tour.setIdNoiLuuTru(chuyenDi.getIdNoiLuuTru());
         tour.setNoiBat(chuyenDi.getNoiBat());
-
+        if(chuyenDi.getIdPhuongTien() != null) {
+            tour.setIdPhuongTien(phuongTienRepository.findById(chuyenDi.getIdPhuongTien().getId()).orElse(null));
+        }
+        if(chuyenDi.getIdDiemDen() != null) {
+            tour.setIdDiemDen(diemDenRepository.findById(chuyenDi.getIdDiemDen().getId()).orElse(null));
+        }
+        if(chuyenDi.getIdNoiLuuTru() != null) {
+            tour.setIdNoiLuuTru(noiLuuTruRepository.findById(chuyenDi.getIdNoiLuuTru().getId()).orElse(null));
+        }
     }
     public List<Calendar> getCalendar(int month, int year, String selectedDateStr) {
         List<Calendar> days = new ArrayList<>();

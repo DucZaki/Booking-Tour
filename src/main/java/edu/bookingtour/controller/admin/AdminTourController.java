@@ -1,6 +1,8 @@
 package edu.bookingtour.controller.admin;
 
 import edu.bookingtour.entity.ChuyenDi;
+import edu.bookingtour.repo.DiemDenRepository;
+import edu.bookingtour.service.PhuongTienService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +21,10 @@ import java.util.UUID;
 public class AdminTourController {
     @Autowired
     private TourService tourService;
-
+    @Autowired
+    private PhuongTienService phuongTienService;
+    @Autowired
+    private DiemDenRepository diemDenRepository;
     @Value("${image.path}")
     private String imagePath;
 
@@ -33,6 +38,8 @@ public class AdminTourController {
     public String tourAdd(Model model) {
         ChuyenDi tour = new ChuyenDi();
         model.addAttribute("tour", tour);
+        model.addAttribute("phuongTienList", phuongTienService.getDistinctLoai());
+        model.addAttribute("chauLucList", diemDenRepository.findDistinctChauLuc());
         return "admin/tour/tour-create";
     }
     @PostMapping("/save")
@@ -51,6 +58,11 @@ public class AdminTourController {
     public String tourEdit(Model model, @PathVariable Integer id) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
+        model.addAttribute("phuongTienList", phuongTienService.getDistinctLoai());
+        model.addAttribute("chauLucList", diemDenRepository.findDistinctChauLuc());
+        model.addAttribute("selectedChauLuc", tour.getIdDiemDen().getChauLuc());
+        model.addAttribute("selectedQuocGia", tour.getIdDiemDen().getQuocGia());
+        model.addAttribute("selectedThanhPho", tour.getIdDiemDen().getId());
         return "admin/tour/tour-edit";
     }
     @PostMapping("/update/{id}")
