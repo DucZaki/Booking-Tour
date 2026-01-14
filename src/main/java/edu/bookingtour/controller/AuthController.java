@@ -80,11 +80,11 @@ public class AuthController {
             nguoiDungService.registerNewUser(nguoiDung);
             redirectAttributes.addFlashAttribute("successMessage",
                     "Đăng ký thành công! Vui lòng đăng nhập.");
-            return "redirect:/login/login";
+            return "redirect:/login";
 
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "login/register";
+            return "/login/register";
         }
     }
 
@@ -111,18 +111,16 @@ public class AuthController {
         return "error/403";
     }
 
-    /**
-     * Trang profile người dùng
-     */
-    @GetMapping("/user/profile")
-    public String userProfile(Authentication authentication, Model model) {
-        String username = authentication.getName();
-        NguoiDung nguoiDung = nguoiDungService.findByTenDangNhap(username)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
 
-        model.addAttribute("nguoiDung", nguoiDung);
-        return "user/profile";
-    }
+//    @GetMapping("/user/profile")
+//    public String userProfile(Authentication authentication, Model model) {
+//        String username = authentication.getName();
+//        NguoiDung nguoiDung = nguoiDungService.findByTenDangNhap(username)
+//                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+//
+//        model.addAttribute("nguoiDung", nguoiDung);
+//        return "user/profile";
+//    }
 
     /**
      * Cập nhật thông tin profile

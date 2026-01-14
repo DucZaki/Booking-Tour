@@ -79,6 +79,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/redirect-after-login", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
+//                        .defaultSuccessUrl("/")
                 )
 //                .rememberMe(remember -> remember
 //                        .key("zaki-booking-remember-me")

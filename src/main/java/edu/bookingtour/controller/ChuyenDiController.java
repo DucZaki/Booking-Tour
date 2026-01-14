@@ -31,7 +31,6 @@ public class ChuyenDiController {
         model.addAttribute("dem", dem);
         return "chuyendi/tour";
     }
-
     // Phương thức viewChitietDenPage cũng nên sử dụng Service
     @GetMapping("/tour/{id}")
     public String viewChitietDenPage(Model model,
@@ -71,6 +70,7 @@ public class ChuyenDiController {
             model.addAttribute("currentMonth", viewMonth);
             model.addAttribute("currentYear", viewYear);
             model.addAttribute("dschuyendi", dschuyendi);
+
             model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
