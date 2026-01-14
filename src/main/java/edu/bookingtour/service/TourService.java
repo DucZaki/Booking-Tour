@@ -3,9 +3,14 @@ package edu.bookingtour.service;
 import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.ChuyenDiRepository;
+import edu.bookingtour.repo.DiemDenRepository;
+import edu.bookingtour.repo.NoiLuuTruRepository;
+import edu.bookingtour.repo.PhuongTienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -18,48 +23,55 @@ import java.util.Optional;
 public class TourService {
     @Autowired
     private ChuyenDiRepository chuyenDiRepository;
+    @Autowired
+    private PhuongTienRepository phuongTienRepository;
 
-//    public List<ChuyenDi> findAll() {
-//        return chuyenDiRepository.findAll();
-//    }
+    @Autowired
+    private DiemDenRepository diemDenRepository;
 
+    @Autowired
+    private NoiLuuTruRepository noiLuuTruRepository;
     public long count() {
         return chuyenDiRepository.count();
     }
-    public ChuyenDi findByIdd(Integer id) {
-        return chuyenDiRepository.findById(id).orElse(null);
+    public ChuyenDi findByIdd(Integer id) {return chuyenDiRepository.findById(id).orElse(null);}
+    public Optional<ChuyenDi> findById(Integer id) {
+        return chuyenDiRepository.findById(id);
     }
     public List<ChuyenDi> findAll() {
         return chuyenDiRepository.findAll();
     }
-    public Optional<ChuyenDi> findById(Integer id) {
-        return chuyenDiRepository.findById(id);
-    }
-    public ChuyenDi save(ChuyenDi chuyenDi, MultipartFile[] files) {
+    public ChuyenDi save(ChuyenDi chuyenDi) {
         ChuyenDi tour = new ChuyenDi();
-        mapToChuyenDi(tour, chuyenDi, files);
+        mapToChuyenDi(tour, chuyenDi);
         return chuyenDiRepository.save(tour);
     }
-    public ChuyenDi update(Integer id, ChuyenDi chuyenDi, MultipartFile[] files) {
+    public ChuyenDi update(Integer id, ChuyenDi chuyenDi) {
         ChuyenDi tour = chuyenDiRepository.findById(id).orElseThrow(()->new RuntimeException("ChuyenDi not found"));
-        mapToChuyenDi(tour, chuyenDi, files);
+        mapToChuyenDi(tour, chuyenDi);
         return chuyenDiRepository.save(tour);
     }
     public void delete(Integer id) {
         chuyenDiRepository.deleteById(id);
     }
 
-    public void mapToChuyenDi(ChuyenDi tour, ChuyenDi chuyenDi, MultipartFile[] files) {
+    public void mapToChuyenDi(ChuyenDi tour, ChuyenDi chuyenDi) {
         tour.setTieuDe(chuyenDi.getTieuDe());
         tour.setMoTa(chuyenDi.getMoTa());
         tour.setGia(chuyenDi.getGia());
+        tour.setHinhAnh(chuyenDi.getHinhAnh());
         tour.setNgayKhoiHanh(chuyenDi.getNgayKhoiHanh());
         tour.setNgayKetThuc(chuyenDi.getNgayKetThuc());
-        tour.setIdDiemDen(chuyenDi.getIdDiemDen());
-        tour.setIdPhuongTien(chuyenDi.getIdPhuongTien());
-        tour.setIdNoiLuuTru(chuyenDi.getIdNoiLuuTru());
         tour.setNoiBat(chuyenDi.getNoiBat());
-
+        if(chuyenDi.getIdPhuongTien() != null) {
+            tour.setIdPhuongTien(phuongTienRepository.findById(chuyenDi.getIdPhuongTien().getId()).orElse(null));
+        }
+        if(chuyenDi.getIdDiemDen() != null) {
+            tour.setIdDiemDen(diemDenRepository.findById(chuyenDi.getIdDiemDen().getId()).orElse(null));
+        }
+        if(chuyenDi.getIdNoiLuuTru() != null) {
+            tour.setIdNoiLuuTru(noiLuuTruRepository.findById(chuyenDi.getIdNoiLuuTru().getId()).orElse(null));
+        }
     }
     public List<Calendar> getCalendar(int month, int year, String selectedDateStr) {
         List<Calendar> days = new ArrayList<>();
@@ -93,5 +105,10 @@ public class TourService {
             days.add(day);
         }
         return days;
+    }
+
+    public Page<ChuyenDi> getAllChuyenDi(int page, int perPage) {
+        Pageable pageable = PageRequest.of(page, perPage);
+        return chuyenDiRepository.findAll(pageable);
     }
 }

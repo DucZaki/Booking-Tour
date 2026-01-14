@@ -412,3 +412,56 @@ footer {
     text-decoration: line-through;
     opacity: 0.5;
 }
+/* Sidebar Menu Styling */
+.profile-sidebar-menu .menu-item a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    display: block;
+    transition: 0.3s;
+}
+
+.profile-sidebar-menu .menu-item.active > a {
+    color: #000;
+    font-weight: 700;
+}
+
+.profile-sidebar-menu .sub-menu a {
+    font-size: 0.9rem;
+    color: #666;
+    padding: 5px 0;
+    display: block;
+    font-weight: normal;
+}
+
+.profile-sidebar-menu .sub-menu a:hover {
+    color: var(--bs-primary);
+}
+
+/* Custom Search Box */
+.search-box-container .form-control:focus {
+    box-shadow: none;
+    background-color: #fff;
+}
+
+/* Tabs Styling */
+.nav-tabs .nav-link {
+    border: none;
+    color: #555;
+    transition: all 0.3s;
+}
+
+.nav-tabs .nav-link.active {
+    color: #0056b3 !important;
+    background-color: transparent !important;
+}
+
+/* Card Shadow */
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+}
+
+/* Biểu tượng yêu thích */
+.text-danger {
+    color: #e31c25 !important;
+}

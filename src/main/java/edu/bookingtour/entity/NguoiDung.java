@@ -26,7 +26,6 @@ public class NguoiDung {
     @Column(name = "mat_khau")
     private String matKhau;
 
-    @Lob
     @Column(name = "vai_tro")
     private String vaiTro;
 
@@ -39,4 +38,8 @@ public class NguoiDung {
     @Column(name ="number")
     private String number;
 
+    @PrePersist
+    protected void onCreate() {
+        this.ngayTao = Instant.now();
+    }
 }

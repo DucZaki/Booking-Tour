@@ -8,4 +8,13 @@ import java.util.List;
 @Repository
 public interface DiemDenRepository extends JpaRepository<DiemDen, Integer> {
     List<DiemDen> findByNoiBat(Boolean noiBat);
+
+    @Query("SELECT DISTINCT d.chauLuc FROM DiemDen d")
+    List<String> findDistinctChauLuc();
+
+    @Query("SELECT DISTINCT d.quocGia FROM DiemDen d WHERE d.chauLuc = :chauLuc")
+    List<String> findDistinctQuocGiaByChauLuc(String chauLuc);
+
+    @Query("SELECT d FROM DiemDen d WHERE d.quocGia = :quocGia")
+    List<DiemDen> findByQuocGia(String quocGia);
 }

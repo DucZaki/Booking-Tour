@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <h3 class="fw-bold text-primary mb-3">Cập nhật chuyến đi</h3>
+        <form th:action="@{'/admin/tour/update/' + ${tour.id}}"
+              th:object="${tour}" method="post"
+              enctype="multipart/form-data"
+              class="shadow p-4 rounded bg-light">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Tiêu đề</label>
+                    <input type="text" th:field="*{tieuDe}" class="form-control" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Giá cả</label>
+                    <input type="text" th:field="*{gia}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Ngày khởi hành</label>
+                    <input th:field="*{ngayKhoiHanh}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Ngày kết thúc</label>
+                    <input th:field="*{ngayKetThuc}" class="form-control" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Phương tiện</label>
+                    <select class="form-select"
+                            th:field="*{idPhuongTien.id}">
+                        <option th:each="pt : ${phuongTienList}"
+                                th:value="${pt.id}"
+                                th:text="${pt.loai}">
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Châu lục</label>
+                    <select id="chauLuc"
+                            class="form-select"
+                            th:attr="data-selected=${selectedChauLuc}">
+                    <option value="">-- Chọn châu lục --</option>
+                        <option th:each="c : ${chauLucList}"
+                                th:value="${c}"
+                                th:text="${c}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Quốc gia</label>
+                    <select id="quocGia"
+                            class="form-select"
+                            th:attr="data-selected=${selectedQuocGia}">
+                    <option value="">-- Chọn quốc gia --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Thành phố</label>
+                    <select id="thanhPho"
+                            class="form-select"
+                            th:field="*{idDiemDen.id}"
+                            th:attr="data-selected=${selectedThanhPho}">
+                    <option value="">-- Chọn thành phố --</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label>Nổi bật:</label><br>
+                    <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
+                    <label for="yes">Yes</label>
+
+                    <input type="radio" th:field="*{noiBat}" th:value="false" id="no">
+                    <label for="no">No</label>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Mô tả</label>
+                    <textarea th:field="*{moTa}" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Highlight</label>
+                    <textarea th:field="*{highlight}" class="form-control" rows="4"></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Đổi ảnh mới (nếu có)</label>
+                    <input type="file" name="file" class="form-control" accept="image/*">
+                    <label class="form-label fw-bold">Ảnh hiện tại</label>
+                    <div>
+                        <img th:src="@{${tour.hinhAnh}}" alt="Tour Picture"
+                             class="rounded shadow-sm mt-2"
+                             style="height: 200px; object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-12 text-end mt-3">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-save"></i> Cập nhật
+                    </button>
+                    <a th:href="@{'/admin/tour/' + ${tour.id}}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Hủy
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const chauLucSelect = document.getElementById("chauLuc")
+        const quocGiaSelect = document.getElementById("quocGia")
+        const thanhPhoSelect = document.getElementById("thanhPho")
+
+        const selectedChauLuc = chauLucSelect.dataset.selected
+        const selectedQuocGia = quocGiaSelect.dataset.selected
+        const selectedThanhPhoId = thanhPhoSelect.dataset.selected
+
+        if (selectedChauLuc) {
+            chauLucSelect.value = selectedChauLuc
+            await loadQuocGia(selectedChauLuc, selectedQuocGia)
+        }
+
+        if (selectedQuocGia) {
+            quocGiaSelect.value = selectedQuocGia
+            await loadThanhPho(selectedQuocGia, selectedThanhPhoId)
+        }
+
+        chauLucSelect.addEventListener("change", () => {
+            loadQuocGia(chauLucSelect.value, null)
+        })
+
+        quocGiaSelect.addEventListener("change", () => {
+            loadThanhPho(quocGiaSelect.value, null)
+        })
+    })
+
+    async function loadQuocGia(chauLuc, selected) {
+        const res = await fetch(`/api/dia-diem/quoc-gia?chauLuc=${chauLuc}`)
+        const data = await res.json()
+
+        const quocGiaSelect = document.getElementById("quocGia")
+        quocGiaSelect.innerHTML = `<option value="">-- Chọn quốc gia --</option>`
+
+        data.forEach(qg => {
+            const opt = document.createElement("option")
+            opt.value = qg
+            opt.textContent = qg
+            if (qg === selected) opt.selected = true
+            quocGiaSelect.appendChild(opt)
+        })
+
+        document.getElementById("thanhPho").innerHTML =
+            `<option value="">-- Chọn thành phố --</option>`
+    }
+
+    async function loadThanhPho(quocGia, selectedId) {
+        const res = await fetch(`/api/dia-diem/thanh-pho?quocGia=${quocGia}`)
+        const data = await res.json()
+
+        const thanhPhoSelect = document.getElementById("thanhPho")
+        thanhPhoSelect.innerHTML = `<option value="">-- Chọn thành phố --</option>`
+
+        data.forEach(tp => {
+            const opt = document.createElement("option")
+            opt.value = tp.id
+            opt.textContent = tp.thanhPho
+            if (tp.id == selectedId) opt.selected = true
+            thanhPhoSelect.appendChild(opt)
+        })
+    }
+</script>
+</body>
+</html>

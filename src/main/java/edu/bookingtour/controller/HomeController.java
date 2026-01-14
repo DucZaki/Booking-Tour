@@ -3,7 +3,6 @@ package edu.bookingtour.controller;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DanhGia;
 import edu.bookingtour.entity.DiemDen;
-import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.repo.*;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.service.NguoiDungService;

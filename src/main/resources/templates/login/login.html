@@ -3,47 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Booking Tour</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Đăng nhập - ZakiBooking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h3 class="text-center mb-0">Login</h3>
-                </div>
-                <div class="card-body">
-                    <div th:if="${param.error}" class="alert alert-danger">
-                        <span>Tên đăng nhập hoặc mật khẩu không chính xác!</span>
-                    </div>
-
-                    <div th:if="${param.logout}" class="alert alert-success">
-                        <span>Đăng xuất thành công.</span>
-                    </div>
-
-                    <form th:action="@{/perform-login}" method="post">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Tên đăng nhập</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Mật khẩu</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                        </div>
-                    </form>
+<div class="min-h-screen w-full flex">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-black">
+        <div class="w-full max-w-md">
+            <div class="flex items-center gap-3 mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-[#FECF2F]">ZakiBooking</h1>
+                    <p class="text-sm text-gray-400">Khám phá thế giới cùng chúng tôi</p>
                 </div>
             </div>
+
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-white mb-2">Chào mừng trở lại!</h2>
+                <p class="text-gray-400">Đăng nhập để tiếp tục hành trình của bạn</p>
+            </div>
+
+            <div th:if="${param.error}" class="mb-4 p-3 bg-red-900/50 border border-red-500 text-red-200 text-sm rounded-lg">
+                Tên đăng nhập hoặc mật khẩu không chính xác.
+            </div>
+
+            <div th:if="${param.logout}" class="mb-4 p-3 bg-green-900/50 border border-green-500 text-green-200 text-sm rounded-lg">
+                Bạn đã đăng xuất thành công.
+            </div>
+
+            <form th:action="@{/perform-login}" method="post" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-300 mb-2">
+                        Tên đăng nhập (Email)
+                    </label>
+                    <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="example@email.com"
+                            class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FECF2F] focus:border-transparent transition-all"
+                            required
+                    />
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">
+                        Mật khẩu
+                    </label>
+                    <div class="relative">
+                        <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="••••••••"
+                                class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FECF2F] focus:border-transparent transition-all pr-12"
+                                required
+                        />
+                        <button
+                                type="button"
+                                onclick="togglePassword()"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FECF2F] transition-colors"
+                        >
+                            <span id="eye-icon">👁</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input
+                                type="checkbox"
+                                name="remember-me"
+                                class="w-4 h-4 rounded border-gray-800 bg-[#1a1a1a] text-[#FECF2F] focus:ring-[#FECF2F] focus:ring-2"
+                        />
+                        <span class="text-sm text-gray-400">Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a href="#" class="text-sm text-[#FECF2F] hover:underline">
+                        Quên mật khẩu?
+                    </a>
+                </div>
+
+                <button
+                        type="submit"
+                        class="w-full py-3 bg-[#FECF2F] text-black font-semibold rounded-lg hover:bg-[#fdd915] transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
+                >
+                    Đăng nhập
+                </button>
+            </form>
+
+            <div class="flex items-center gap-4 my-6">
+                <div class="flex-1 h-px bg-gray-800"></div>
+                <span class="text-sm text-gray-500">hoặc</span>
+                <div class="flex-1 h-px bg-gray-800"></div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <button class="py-3 px-4 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white hover:border-[#FECF2F] transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                    <span class="text-sm">Google</span>
+                </button>
+                <button class="py-3 px-4 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white hover:border-[#FECF2F] transition-all flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+                    <span class="text-sm">Facebook</span>
+                </button>
+            </div>
+
+            <p class="text-center text-gray-400 text-sm">
+                Chưa có tài khoản?
+                <a th:href="@{/register}" class="text-[#FECF2F] hover:underline font-medium">
+                    Đăng ký ngay
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <div class="hidden lg:block lg:w-1/2 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#FECF2F]/20 to-black/60 z-10"></div>
+        <img
+                src="https://images.unsplash.com/photo-1723065219121-3bfaf2170563?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                alt="Travel Destination"
+                class="w-full h-full object-cover"
+        />
+        <div class="absolute bottom-0 left-0 right-0 p-12 z-20">
+            <h3 class="text-4xl font-bold text-white mb-4">
+                Khám phá những điểm đến tuyệt vời
+            </h3>
+            <p class="text-xl text-gray-200">
+                Hàng nghìn tour du lịch đang chờ bạn khám phá
+            </p>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const eyeIcon = document.getElementById('eye-icon');
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.textContent = '🙈';
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.textContent = '👁️';
+        }
+    }
+</script>
 </body>
 </html>

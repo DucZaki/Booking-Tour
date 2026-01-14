@@ -1,103 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <style>
-        body,
-        html {
-            height: 100%;
-            margin: 0;
-            background-image: url('blob.png');
-        }
-
-        div {
-            background-color: antiquewhite;
-            box-shadow: 0px 0px 20px grey;
-            text-align: center;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 400px;
-            transform: translate(-50%, -50%);
-            border-radius: 15px;
-            box-sizing: border-box;
-            font-family: 'Courier New', Courier, monospace;
-            background-image: linear-gradient(0, rgba(169, 169, 169, 0.3), rgba(169, 169, 169, 0.3)), url('blob.png');
-            background-size: cover, cover;
-            font-weight: bold;
-        }
-
-        .input {
-            width: 300px;
-            height: 35px;
-            margin: 10px;
-            border-radius: 15px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 300px;
-            height: 37px;
-            border-radius: 15px;
-            border: 0.5px solid #ccc;
-            font-size: 20px;
-            color: grey;
-            margin-top: 20px;
-            background-color: black;
-        }
-
-        button:hover {
-            box-shadow: 0px 0px 10px grey;
-            background: rgba(255, 255, 255, 0.481);
-            color:black;
-        }
-
-        .input:hover {
-            box-shadow: 0px 0px 10px grey;
-        }
-
-        .color {
-            color: black;
-        }
-
-        .color:hover {
-            filter: drop-shadow(0px 0px 20px black);
-        }
-
-        p {
-            padding-bottom: 50px;
-        }
-
-        h1 {
-            font-size: 46px;
-            font-weight: bold;
-            margin: 20px
-        }
-
-        input {
-            padding-left: 20px;
-        }
-    </style>
+    <title>Đăng ký - Travel Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-black">
+<div class="min-h-screen w-full flex">
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-black">
+        <div class="w-full max-w-md">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="w-12 h-12 bg-[#FECF2F] rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-black"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-[#FECF2F]">Travel Booking</h1>
+                    <p class="text-sm text-gray-400">Khám phá thế giới cùng chúng tôi</p>
+                </div>
+            </div>
 
-<body>
-    <div>
-        <h1>Login</h1>
-        <input class="input" type="text" name="username" placeholder="Username">
-        <br>
-        <input class="input" type="password" name="password" placeholder="Password">
-        <br>
-        <input type="checkbox">
-        <label style="padding-right: 20px;"> Remember me</label>
-        <label><a href="https://www.facebook.com/anuc19" class="color">Forgot Password</a></label>
-        <br>
-        <button>Log in</button>
-        <p>Don't have an account. <a class="color" href="https://www.facebook.com/anuc19">Register</a></p>
+            <div class="mb-8">
+                <h2 class="text-3xl font-bold text-white mb-2">Tạo tài khoản mới</h2>
+                <p class="text-gray-400">Đăng ký để bắt đầu hành trình khám phá</p>
+            </div>
+
+            <form th:action="@{/register}" method="post" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Họ và tên</label>
+                    <input type="text" name="fullName" placeholder="Nguyễn Văn A" required
+                           class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Số điện thoại</label>
+                    <input type="tel" name="phone" placeholder="0901234567" required
+                           class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                    <input type="email" name="email" placeholder="example@email.com" required
+                           class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Mật khẩu</label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required
+                               class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all pr-12">
+                        <button type="button" onclick="togglePass('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FECF2F]">👁️</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Xác nhận mật khẩu</label>
+                    <div class="relative">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required
+                               class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all pr-12">
+                        <button type="button" onclick="togglePass('confirmPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FECF2F]">👁️</button>
+                    </div>
+                </div>
+
+                <div class="flex items-start gap-2">
+                    <input type="checkbox" id="terms" required class="mt-1 w-4 h-4 accent-[#FECF2F]">
+                    <label for="terms" class="text-sm text-gray-400">
+                        Tôi đồng ý với <a href="#" class="text-[#FECF2F] hover:underline">Điều khoản dịch vụ</a> và <a href="#" class="text-[#FECF2F] hover:underline">Chính sách bảo mật</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="w-full py-3 bg-[#FECF2F] text-black font-semibold rounded-lg hover:bg-[#fdd915] transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                    Đăng ký
+                </button>
+            </form>
+
+            <div class="flex items-center gap-4 my-6">
+                <div class="flex-1 h-px bg-gray-800"></div>
+                <span class="text-sm text-gray-500">hoặc</span>
+                <div class="flex-1 h-px bg-gray-800"></div>
+            </div>
+
+            <p class="text-center text-gray-400 text-sm">
+                Đã có tài khoản? <a th:href="@{/login}" class="text-[#FECF2F] hover:underline font-medium">Đăng nhập</a>
+            </p>
+        </div>
     </div>
-</body>
 
+    <div class="hidden lg:block lg:w-1/2 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#FECF2F]/20 to-black/60 z-10"></div>
+        <img src="https://images.unsplash.com/photo-1723065219121-3bfaf2170563?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+             alt="Travel" class="w-full h-full object-cover">
+        <div class="absolute bottom-0 left-0 right-0 p-12 z-20">
+            <h3 class="text-4xl font-bold text-white mb-4">Khám phá những điểm đến tuyệt vời</h3>
+            <p class="text-xl text-gray-200">Hàng nghìn tour du lịch đang chờ bạn khám phá</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePass(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
+</body>
 </html>
