@@ -3,6 +3,9 @@ package edu.bookingtour.service;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.repo.NguoiDungRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,5 +49,10 @@ public class NguoiDungService {
 
     public void deleteById(int id) {
         nguoiDungRepository.deleteById(id);
+    }
+
+    public Page<NguoiDung> findAllUser(int page, int perPage) {
+        Pageable pageable = PageRequest.of(page, perPage);
+        return nguoiDungRepository.findAll(pageable);
     }
 }

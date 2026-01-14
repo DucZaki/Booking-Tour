@@ -7,8 +7,10 @@ import edu.bookingtour.repo.DiemDenRepository;
 import edu.bookingtour.repo.NoiLuuTruRepository;
 import edu.bookingtour.repo.PhuongTienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -32,6 +34,7 @@ public class TourService {
     public long count() {
         return chuyenDiRepository.count();
     }
+    public ChuyenDi findByIdd(Integer id) {return chuyenDiRepository.findById(id).orElse(null);}
     public Optional<ChuyenDi> findById(Integer id) {
         return chuyenDiRepository.findById(id);
     }
@@ -102,5 +105,10 @@ public class TourService {
             days.add(day);
         }
         return days;
+    }
+
+    public Page<ChuyenDi> getAllChuyenDi(int page, int perPage) {
+        Pageable pageable = PageRequest.of(page, perPage);
+        return chuyenDiRepository.findAll(pageable);
     }
 }

@@ -3,12 +3,10 @@ package edu.bookingtour.controller.admin;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.service.NguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,9 +16,12 @@ public class AdminUserController {
     @Autowired
     private NguoiDungService nguoiDungService;
     @GetMapping
-    public String manageUsers(Model model) {
-        List<NguoiDung> nguoiDung = nguoiDungService.findAll();
+    public String listUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int perPage, Model model) {
+        Page<NguoiDung> nguoiDung = nguoiDungService.findAllUser(page, perPage);
         model.addAttribute("users", nguoiDung);
+        model.addAttribute("page", page);
+        model.addAttribute("perPage", perPage);
+        model.addAttribute("totalPage", nguoiDung.getTotalPages());
         return "admin/user/user-list";
     }
     @GetMapping("/create")

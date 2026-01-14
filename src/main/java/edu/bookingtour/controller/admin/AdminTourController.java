@@ -6,6 +6,7 @@ import edu.bookingtour.service.PhuongTienService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,9 +30,12 @@ public class AdminTourController {
     private String imagePath;
 
     @GetMapping
-    public String tourList(Model model) {
-        List<ChuyenDi> tour = tourService.findAll();
+    public String tourList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
+        Page<ChuyenDi> tour = tourService.getAllChuyenDi(page, perPage);
         model.addAttribute("tour", tour);
+        model.addAttribute("page", page);
+        model.addAttribute("perPage", perPage);
+        model.addAttribute("totalPage", tour.getTotalPages());
         return "admin/tour/tour-list";
     }
     @GetMapping("/create")
@@ -77,10 +81,10 @@ public class AdminTourController {
             chuyenDi.setHinhAnh(tour.getHinhAnh());
         }
         tourService.update(id, chuyenDi);
-        return "redirect:/admin/tour/{id}";
+        return "redirect:/admin/tour/detail/{id}";
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public String tourDetail(@PathVariable Integer id, Model model) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);

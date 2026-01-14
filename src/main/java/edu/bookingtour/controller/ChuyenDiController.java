@@ -71,7 +71,7 @@ public class ChuyenDiController {
             model.addAttribute("currentMonth", viewMonth);
             model.addAttribute("currentYear", viewYear);
             model.addAttribute("dschuyendi", dschuyendi);
-            model.addAttribute("id", tourService.findById(Math.toIntExact(id)));
+            model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
