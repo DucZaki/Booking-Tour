@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(~{::content})}">
+<head>
+    <title>Chuyến đi yêu thích của tôi</title>
+</head>
+<body>
+<th:block th:fragment="content">
+    <div class="container py-5" style="margin-top: 50px;">
+        <div class="d-flex align-items-center mb-4">
+            <i class="bi bi-heart-fill text-danger fs-2 me-3"></i>
+            <h2 class="fw-bold mb-0">Tour yêu thích của tôi</h2>
+        </div>
+
+        <div th:if="${#lists.isEmpty(listYeuThich)}" class="text-center py-5 shadow-sm rounded-4 bg-light border">
+            <i class="bi bi- bag-heart fs-1 text-muted"></i>
+            <p class="mt-3 text-muted">Bạn chưa có chuyến đi nào trong danh sách yêu thích.</p>
+            <a href="/tours" class="btn btn-primary rounded-pill px-4">Khám phá ngay</a>
+        </div>
+
+        <div class="row g-4" th:if="${not #lists.isEmpty(listYeuThich)}">
+            <div class="col-md-6 col-lg-4" th:each="item : ${listYeuThich}">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden favorite-card">
+                    <div class="position-relative">
+                        <img th:src="${item.idChuyenDi.hinhAnh}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Tour Image">
+                        <form th:action="@{/favorites/remove}" method="post" class="position-absolute top-0 end-0 m-2">
+                            <input type="hidden" name="favoriteId" th:value="${item.id}">
+                            <button type="submit" class="btn btn-white btn-sm rounded-circle shadow-sm text-danger" title="Xóa khỏi yêu thích">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold text-dark mb-2" th:text="${item.idChuyenDi.tieuDe}">Tên Tour</h5>
+
+                        <div class="d-flex align-items-center mb-3 text-muted small">
+                            <i class="bi bi-calendar3 me-2"></i>
+                            <span>Đã lưu vào: </span>
+                            <span class="ms-1" th:text="${#temporals.format(item.ngayThem, 'dd/MM/yyyy')}">15/01/2026</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                            <span class="text-danger fw-bold fs-5"
+                                  th:text="${#numbers.formatDecimal(item.idChuyenDi.gia, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                            <a th:href="@{/tour/{id}(id=${item.idChuyenDi.id})}" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                Chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .favorite-card { transition: transform 0.3s ease; }
+        .favorite-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important; }
+        .btn-white { background: white; border: none; width: 32px; height: 32px; display: flex; align-items:center; justify-content:center; }
+        .btn-white:hover { background: #f8f9fa; color: #dc3545 !important; }
+    </style>
+</th:block>
+</body>
+</html>

@@ -11,7 +11,6 @@
                 <i class="bi bi-arrow-left me-1"></i> Quay lại
             </a>
         </div>
-
         <div class="row">
             <div class="col-lg-3 mb-4">
                 <div class="card border-0 shadow-sm rounded-3">
@@ -35,8 +34,8 @@
                             <a th:href="@{/user/bookings}" class="list-group-item list-group-item-action border-0 mb-1">
                                 <i class="bi bi-luggage me-2"></i> Đơn đặt chỗ
                             </a>
-                            <a th:href="@{/user/reviews}" class="list-group-item list-group-item-action border-0 mb-1">
-                                <i class="bi bi-star me-2"></i> Đánh giá
+                            <a th:href="@{/favorites/my-favorites}" class="list-group-item list-group-item-action border-0 mb-1">
+                                <i class="bi bi-bookmark-heart me-2" ></i> Các tour yêu thích
                             </a>
                             <form th:action="@{/logout}" method="post" class="p-0">
                                 <button type="submit" class="list-group-item list-group-item-action text-danger fw-bold border-0">

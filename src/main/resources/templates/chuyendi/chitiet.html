@@ -118,7 +118,6 @@
                 </div>
 
             </div>
-
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm p-3 sticky-price-box">
                     <div class="card-body">
@@ -147,10 +146,17 @@
                            class="btn btn-outline-secondary w-100 py-2 fw-bold text-decoration-none">
                             <i class="bi bi-heart me-2"></i> Lưu lại chuyến đi
                         </a>
-                        <button sec:authorize="isAuthenticated()"
-                                class="btn btn-outline-secondary w-100 py-2 fw-bold"
-                                onclick="saveTour()"> <i class="bi bi-heart me-2"></i> Lưu lại chuyến đi
-                        </button>
+                        <form sec:authorize="isAuthenticated()"
+                              th:action="@{/favorites/add}"
+                              method="post">
+                            <input type="hidden" name="tourId" th:value="${id.id}">
+<!--                            <input type="hidden" name="username" th:value="${id.id}">-->
+
+                            <button type="submit" class="btn btn-outline-secondary w-100 py-2 fw-bold">
+                                <i class="bi bi-heart me-2"></i> Lưu lại chuyến đi
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             </div>

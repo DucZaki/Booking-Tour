@@ -28,5 +28,8 @@ public class YeuThich {
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "ngay_them")
     private Instant ngayThem;
-
+    @PrePersist
+    protected void onCreate() {
+        this.ngayThem = Instant.now();
+    }
 }

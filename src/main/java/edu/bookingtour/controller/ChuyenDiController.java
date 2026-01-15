@@ -4,6 +4,7 @@ import edu.bookingtour.client.TravelPayoutsClient;
 import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.ChuyenDiRepository;
+import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ public class ChuyenDiController {
     private TourService tourService; // Thêm Service
     @Autowired
     private TravelPayoutsClient travelPayoutsClient;
+    @Autowired
+    private NguoiDungService nguoiDungService;
     @GetMapping("/tour")
     public String viewDiemDenPage(Model model) {
 
@@ -61,7 +64,7 @@ public class ChuyenDiController {
             String carriers = travelPayoutsClient.getCarrierCode(from, to, Date);
             String Origin = travelPayoutsClient.takeorigin(from, to, Date);
             String departure = travelPayoutsClient.getdeparture(from, to, Date);
-
+//            String username = nguoiDungService.findByTenDangNhap()
             model.addAttribute("carrier", carriers);
             model.addAttribute("price", FlightPrice);
             model.addAttribute("date", departure);
@@ -70,8 +73,8 @@ public class ChuyenDiController {
             model.addAttribute("currentMonth", viewMonth);
             model.addAttribute("currentYear", viewYear);
             model.addAttribute("dschuyendi", dschuyendi);
-
             model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
+
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
