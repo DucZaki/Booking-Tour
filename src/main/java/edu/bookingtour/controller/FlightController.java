@@ -15,4 +15,5 @@ public class FlightController {
         double price = travelPayoutsClient.getCheapestPrice(from, to, date);
         return price;
     }
+
 }

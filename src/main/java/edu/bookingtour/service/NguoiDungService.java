@@ -123,16 +123,11 @@ public class NguoiDungService {
         nguoiDungRepository.save(user);
     }
 
-    /**
-     * Kiểm tra username đã tồn tại
-     */
     public boolean isUsernameExists(String username) {
         return nguoiDungRepository.findByTenDangNhap(username).isPresent();
     }
 
-    /**
-     * Kiểm tra email đã tồn tại
-     */
+
     public boolean isEmailExists(String email) {
         return nguoiDungRepository.findByEmail(email).isPresent();
     }

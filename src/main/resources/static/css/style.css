@@ -58,7 +58,7 @@ footer {
 
 /* Tiêu đề nhóm trong dropdown */
 .navbar .dropdown-menu h6 {
-    color: #0077b6 !important; /* xanh biển */
+    /*color: #0077b6 !important; !* xanh biển *!*/
     font-weight: 700 !important;
 }
 
@@ -117,7 +117,7 @@ footer {
     font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 800;
     letter-spacing: 1px;
-    color: #1E90FF;
+    /*color: #1E90FF;*/
     white-space: nowrap;
     overflow: hidden;
     width: 0;
@@ -237,7 +237,7 @@ footer {
 
 /* 3. Style nội dung bên trong (Dùng chung) */
 .navbar .dropdown-menu h6 {
-    color: #0077b6 !important;
+    /*color: #0077b6 !important;*/
     font-weight: 700 !important;
     font-size: 1rem;
 }
@@ -452,7 +452,7 @@ footer {
 }
 
 .nav-tabs .nav-link.active {
-    color: #0056b3 !important;
+    /*color: #0056b3 !important;*/
     background-color: transparent !important;
 }
 
