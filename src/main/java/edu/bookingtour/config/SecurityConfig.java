@@ -58,7 +58,10 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/",
                                 "/tour/**",
-                                "/api/public/**"
+                                "/api/public/**",
+                                "/tintuc",
+                                "/tin-tuc",
+                                "slogan.png"
                         ).permitAll()
 
                         // Admin only endpoints

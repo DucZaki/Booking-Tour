@@ -32,8 +32,9 @@ public class HomeController {
         List<DanhGia> dsDanhGia = danhgiarepo.findAll();
         model.addAttribute("dsDanhGia", dsDanhGia);
         List<String> dsnd= nguoidungservice.findhotenbinhluan();
-        return "index";
+        model.addAttribute("dsnd", dsnd);
 
+        return "index";
     }
 
 }

@@ -100,16 +100,15 @@
                     <div class="carousel-item" th:each="dsdg, iterStat : ${dsDanhGia}"
                          th:classappend="${iterStat.index == 0} ? 'active'"
                          style="background: none !important; color: #000;">
-                        <blockquote class="blockquote" style="background: none !important;">
-                            <p class="mb-4" style =" margin-bottom: 0px;"th:text="${dsdg.binhLuan}"></p>
+                        <a th:href="@{/tour/{id}(id=${dsdg.idChuyenDi.id})} " class="text-decoration-none">
+                            <blockquote class="blockquote" style="background: none !important;">
+                                <p class="mb-4 fw-bolder" style =" margin-bottom: 0px;"th:text="${dsdg.idChuyenDi.tieuDe} +':'"></p>
+                                <p class="mb-4" style =" margin-bottom: 0px;"th:text="${dsdg.binhLuan}"></p>
                             <footer class="blockquote-footer"
                                     th:text="${dsdg.idNguoiDung.hoTen}"></footer>
-                        </blockquote>
+                        </blockquote></a>
                     </div>
                 </div>
-
-                <!-- Nút điều hướng -->
-                <!-- Nút điều hướng -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#reviewCarousel" data-bs-slide="prev"
                         style="background: transparent; border: none;">
                     <span class="text-dark fs-1" aria-hidden="true">‹</span>

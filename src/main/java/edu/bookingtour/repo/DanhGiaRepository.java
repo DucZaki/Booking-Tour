@@ -9,4 +9,5 @@ import java.util.List;
 public interface DanhGiaRepository extends JpaRepository<DanhGia,Integer>
 {
     List<DanhGia> findAll();
+//    List<Integer> findByIdChuyenDi();
 }
