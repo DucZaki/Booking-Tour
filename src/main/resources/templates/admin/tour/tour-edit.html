@@ -16,22 +16,18 @@
                     <label class="form-label fw-bold">Tiêu đề</label>
                     <input type="text" th:field="*{tieuDe}" class="form-control" required>
                 </div>
-
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Giá cả</label>
                     <input type="text" th:field="*{gia}" class="form-control" required>
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Ngày khởi hành</label>
                     <input th:field="*{ngayKhoiHanh}" class="form-control" required>
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Ngày kết thúc</label>
                     <input th:field="*{ngayKetThuc}" class="form-control" required>
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label">Phương tiện</label>
                     <select class="form-select"
@@ -54,7 +50,6 @@
                         </option>
                     </select>
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Quốc gia</label>
                     <select id="quocGia"
@@ -63,7 +58,6 @@
                     <option value="">-- Chọn quốc gia --</option>
                     </select>
                 </div>
-
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Thành phố</label>
                     <select id="thanhPho"
@@ -73,7 +67,6 @@
                     <option value="">-- Chọn thành phố --</option>
                     </select>
                 </div>
-
                 <div class="col-md-6">
                     <label>Nổi bật:</label><br>
                     <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
@@ -82,17 +75,14 @@
                     <input type="radio" th:field="*{noiBat}" th:value="false" id="no">
                     <label for="no">No</label>
                 </div>
-
                 <div class="col-md-12">
                     <label class="form-label fw-bold">Mô tả</label>
                     <textarea th:field="*{moTa}" class="form-control" rows="4"></textarea>
                 </div>
-
                 <div class="col-md-12">
                     <label class="form-label fw-bold">Highlight</label>
                     <textarea th:field="*{highlight}" class="form-control" rows="4"></textarea>
                 </div>
-
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Đổi ảnh mới (nếu có)</label>
                     <input type="file" name="file" class="form-control" accept="image/*">
@@ -120,37 +110,29 @@
         const chauLucSelect = document.getElementById("chauLuc")
         const quocGiaSelect = document.getElementById("quocGia")
         const thanhPhoSelect = document.getElementById("thanhPho")
-
         const selectedChauLuc = chauLucSelect.dataset.selected
         const selectedQuocGia = quocGiaSelect.dataset.selected
         const selectedThanhPhoId = thanhPhoSelect.dataset.selected
-
         if (selectedChauLuc) {
             chauLucSelect.value = selectedChauLuc
             await loadQuocGia(selectedChauLuc, selectedQuocGia)
         }
-
         if (selectedQuocGia) {
             quocGiaSelect.value = selectedQuocGia
             await loadThanhPho(selectedQuocGia, selectedThanhPhoId)
         }
-
         chauLucSelect.addEventListener("change", () => {
             loadQuocGia(chauLucSelect.value, null)
         })
-
         quocGiaSelect.addEventListener("change", () => {
             loadThanhPho(quocGiaSelect.value, null)
         })
     })
-
     async function loadQuocGia(chauLuc, selected) {
         const res = await fetch(`/api/dia-diem/quoc-gia?chauLuc=${chauLuc}`)
         const data = await res.json()
-
         const quocGiaSelect = document.getElementById("quocGia")
         quocGiaSelect.innerHTML = `<option value="">-- Chọn quốc gia --</option>`
-
         data.forEach(qg => {
             const opt = document.createElement("option")
             opt.value = qg
@@ -158,18 +140,14 @@
             if (qg === selected) opt.selected = true
             quocGiaSelect.appendChild(opt)
         })
-
         document.getElementById("thanhPho").innerHTML =
             `<option value="">-- Chọn thành phố --</option>`
     }
-
     async function loadThanhPho(quocGia, selectedId) {
         const res = await fetch(`/api/dia-diem/thanh-pho?quocGia=${quocGia}`)
         const data = await res.json()
-
         const thanhPhoSelect = document.getElementById("thanhPho")
         thanhPhoSelect.innerHTML = `<option value="">-- Chọn thành phố --</option>`
-
         data.forEach(tp => {
             const opt = document.createElement("option")
             opt.value = tp.id

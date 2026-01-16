@@ -51,9 +51,7 @@ public class NguoiDungService {
      * Cập nhật thông tin người dùng
      */
     public NguoiDung update(Integer id, NguoiDung nguoiDung) {
-        NguoiDung user = nguoiDungRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
-
+        NguoiDung user = nguoiDungRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
         user.setTenDangNhap(nguoiDung.getTenDangNhap());
         user.setEmail(nguoiDung.getEmail());
         user.setHoTen(nguoiDung.getHoTen());
@@ -64,13 +62,9 @@ public class NguoiDungService {
         if (nguoiDung.getMatKhau() != null && !nguoiDung.getMatKhau().isEmpty()) {
             user.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
         }
-
         return nguoiDungRepository.save(user);
     }
-
-    /**
-     * Xóa người dùng
-     */
+    
     public void deleteById(Integer id) {
         if (!nguoiDungRepository.existsById(id)) {
             throw new RuntimeException("Không tìm thấy người dùng với ID: " + id);
