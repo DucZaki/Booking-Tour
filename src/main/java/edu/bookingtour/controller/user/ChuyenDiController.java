@@ -1,9 +1,8 @@
-package edu.bookingtour.controller;
+package edu.bookingtour.controller.user;
 
 import edu.bookingtour.client.TravelPayoutsClient;
 import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
-import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,14 +24,16 @@ public class ChuyenDiController {
     @Autowired
     private NguoiDungService nguoiDungService;
     @GetMapping("/tour")
-    public String viewDiemDenPage(Model model) {
-
-        List<ChuyenDi> dschuyendi = tourService.findAll();
-        long dem = tourService.count();
+    public String viewDiemDenPage(@RequestParam(required = false) String thanhPho, @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen, @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort, Model model) {
+        List<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, khoangGia, sort);
         model.addAttribute("dschuyendi", dschuyendi);
-        model.addAttribute("dem", dem);
+        model.addAttribute("dem", dschuyendi.size());
+        model.addAttribute("diemDenSelected", diemDen);
+        model.addAttribute("khoangGiaSelected", khoangGia);
+        model.addAttribute("sortSelected", sort);
         return "chuyendi/tour";
     }
+
     // Phương thức viewChitietDenPage cũng nên sử dụng Service
     @GetMapping("/tour/{id}")
     public String viewChitietDenPage(Model model,
@@ -51,7 +51,6 @@ public class ChuyenDiController {
         } else {
             localDate = LocalDate.now(); // nếu chưa chọn thì mặc định là ngày hiện tại
         }
-
         String Date = localDate.toString(); // yyyy-MM-dd
         List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear, selectedDate);
         List<ChuyenDi> dschuyendi = tourService.findAll();

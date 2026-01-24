@@ -24,7 +24,7 @@
                     <div class="col-md-3">
                         <label class="form-label fw-bold">Ngày đi</label>
                         <input type="date" class="form-control" />
-                    </div>
+                    </div>  
 
                     <!-- Ngân sách -->
                     <div class="col-md-3">
@@ -55,14 +55,16 @@
             <h2 class="fw-bold mb-4">Điểm đến nổi bật</h2>
             <div class="row g-4">
                 <div class="col-md-4" th:each="dd : ${dsNoiBat}">
-                    <div class="card border-0 shadow-sm h-100">
-                        <img th:src="@{${dd.hinhAnh}}" class="card-img-top rounded" alt=""
-                             style="width:100%; height:250px; object-fit: cover;">
-                        <div class="card-body">
-                            <h5 th:text="${dd.thanhPho}"></h5>
-                            <p th:text="${dd.chauLuc}"></p>
+                    <a th:href="@{/tour/{id}(id=${dd.id})}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100">
+                            <img th:src="@{${dd.hinhAnh}}" class="card-img-top rounded zoom-img" alt=""
+                                 style="width:100%; height:250px; object-fit: cover;">
+                            <div class="card-body">
+                                <h5 th:text="${dd.thanhPho}"></h5>
+                                <p th:text="${dd.chauLuc}"></p>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -75,8 +77,10 @@
             <div class="row g-4">
                 <div class="col-md-4" th:each="ds : ${dsnoibatcd}">
                     <div class="card border-0 shadow-sm h-100">
-                        <img th:src="@{${ds.hinhAnh}}" class="card-img-top rounded" alt=""
-                             style="width:100%; height:250px; object-fit: cover;" />
+                        <div class="img-zoom">
+                            <img th:src="@{${ds.hinhAnh}}" class="card-img-top rounded" alt=""
+                                 style="width:100%; height:250px; object-fit: cover;" />
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${ds.tieuDe}"></h5>
                             <p th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'" class="fw-bold text-danger fs-6 mb-2 fst-italic" ></p>

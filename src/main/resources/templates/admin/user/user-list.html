@@ -30,7 +30,7 @@
                         <td th:text="${user.tenDangNhap}"></td>
                         <td th:text="${user.hoTen}"></td>
                         <td th:text="${user.email}"></td>
-                        <td th:text="${user.ngayTao}"></td>
+                        <td th:text="${#temporals.format(user.ngayTao, 'dd-MM-yyyy')}"></td>
                         <td><span th:text="${user.vaiTro}"></span></td>
                         <td th:text="${user.number}"></td>
                         <td>

@@ -1,4 +1,4 @@
-package edu.bookingtour.controller;
+package edu.bookingtour.controller.user;
 
 //import ch.qos.logback.core.model.Model;
 import edu.bookingtour.entity.NguoiDung;

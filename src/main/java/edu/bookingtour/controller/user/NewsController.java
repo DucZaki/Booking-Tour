@@ -1,4 +1,4 @@
-package edu.bookingtour.controller;
+package edu.bookingtour.controller.user;
 
 import edu.bookingtour.client.newsapi;
 import edu.bookingtour.dto.ArticleDTO;

@@ -1,4 +1,4 @@
-package edu.bookingtour.controller;
+package edu.bookingtour.controller.user;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

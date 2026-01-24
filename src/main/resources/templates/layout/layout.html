@@ -36,18 +36,18 @@
                                 <div class="row mt-2">
                                     <div class="col-6">
                                         <p class="fw-bold mb-1 text-decoration-underline ">Miền Bắc</p>
-                                        <a href="#" class="dropdown-item px-2">Sapa</a>
-                                        <a href="#" class="dropdown-item px-2">Hạ Long</a>
+                                        <a th:href="@{/tour(thanhPho='Sapa')}" class="dropdown-item px-2">Sapa</a>
+                                        <a th:href="@{/tour(thanhPho='Hạ Long')}" class="dropdown-item px-2">Hạ Long</a>
                                     </div>
                                     <div class="col-6">
                                         <p class="fw-bold mb-1 text-decoration-underline">Miền Trung</p>
-                                        <a href="#" class="dropdown-item px-2">Đà Nẵng</a>
-                                        <a href="#" class="dropdown-item px-2">Huế</a>
+                                        <a th:href="@{/tour(thanhPho='Đà Nẵng')}" class="dropdown-item px-2">Đà Nẵng</a>
+                                        <a th:href="@{/tour(thanhPho='Huế')}" class="dropdown-item px-2">Huế</a>
                                     </div>
                                     <div class="col-12 mt-2">
                                         <p class="fw-bold mb-1 text-decoration-underline">Miền Nam</p>
-                                        <a href="#" class="dropdown-item px-2">Phú Quốc</a>
-                                        <a href="#" class="dropdown-item px-2">Cần Thơ</a>
+                                        <a th:href="@{/tour(thanhPho='Phú Quốc')}" class="dropdown-item px-2">Phú Quốc</a>
+                                        <a th:href="@{/tour(thanhPho='Cần Thơ')}" class="dropdown-item px-2">Cần Thơ</a>
                                     </div>
                                 </div>
                             </div>
@@ -56,19 +56,19 @@
                                 <div class="row mt-2">
                                     <div class="col-6">
                                         <p class="fw-bold mb-1 text-decoration-underline">Châu Á</p>
-                                        <a href="#" class="dropdown-item px-2">Thái Lan</a>
-                                        <a href="#" class="dropdown-item px-2">Singapore</a>
-                                        <a href="#" class="dropdown-item px-2">Hàn Quốc</a>
+                                        <a th:href="@{/tour(quocGia='Thái Lan')}" class="dropdown-item px-2">Thái Lan</a>
+                                        <a th:href="@{/tour(quocGia='Singapore')}" class="dropdown-item px-2">Singapore</a>
+                                        <a th:href="@{/tour(quocGia='Hàn Quốc')}" class="dropdown-item px-2">Hàn Quốc</a>
                                     </div>
                                     <div class="col-6">
                                         <p class="fw-bold mb-1 text-decoration-underline">Châu Âu</p>
-                                        <a href="#" class="dropdown-item px-2">Pháp</a>
-                                        <a href="#" class="dropdown-item px-2">Đức</a>
+                                        <a th:href="@{/tour(quocGia='Pháp')}" class="dropdown-item px-2">Pháp</a>
+                                        <a th:href="@{/tour(quocGia='Đức')}" class="dropdown-item px-2">Đức</a>
                                     </div>
                                     <div class="col-12 mt-2">
                                         <p class="fw-bold mb-1 text-decoration-underline">Châu Mỹ</p>
-                                        <a href="#" class="dropdown-item px-2">Mỹ</a>
-                                        <a href="#" class="dropdown-item px-2">Canada</a>
+                                        <a th:href="@{/tour(quocGia='Mỹ')}" class="dropdown-item px-2">Mỹ</a>
+                                        <a th:href="@{/tour(quocGia='Canada')}" class="dropdown-item px-2">Canada</a>
                                     </div>
                                 </div>
                             </div>
@@ -103,6 +103,9 @@
                             </form>
                         </li>
                     </ul>
+                </li>
+                <li sec:authorize="hasRole('ADMIN')" class="dropdown">
+                    <a th:href="@{/admin/user}" class="btn btn-outline-warning rounded-pill px-3">Manager</a>
                 </li>
             </ul>
         </div>

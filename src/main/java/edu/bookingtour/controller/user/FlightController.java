@@ -1,4 +1,4 @@
-package edu.bookingtour.controller;
+package edu.bookingtour.controller.user;
 
 import edu.bookingtour.client.TravelPayoutsClient;
 import org.springframework.beans.factory.annotation.Autowired;

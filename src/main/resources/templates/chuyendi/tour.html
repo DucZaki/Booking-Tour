@@ -9,80 +9,103 @@
 </head>
 <body>
 <content>
-
     <section class="container mt-5 pt-4 bg-white" >
         <h2 class="fw-bold mb-4 text-black">Danh sách Điểm Đến</h2>
     </section>
-
     <div class="container mb-5 bg-light">
         <div class="row align-items-start" >
-
-            <!-- Phần danh sách tour -->
             <section class="bg-light py-5">
                 <div class="container">
                     <div class="row align-items-start">
-                        <!-- Bộ Lọc (Bên Trái) -->
                         <div class="col-md-3 border-end bg-white p-4 rounded shadow-sm">
                             <h6 class="fw-bold mb-3">BỘ LỌC TÌM KIẾM</h6>
-                            <form  method ="GET" action ="filter">
-                            <div class="mb-3">
-                                <label class="form-label">Điểm đến</label>
-                                <select class="form-select" name ="DiemDen">
-                                    <option>Thái Lan</option>
-                                    <option>Nhật Bản</option>
-                                    <option>Hàn Quốc</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Khoảng giá</label>
-                                <select class="form-select" name ="KhoangGia">
-                                    <option value="DUOI5">Dưới 5 triệu</option>
-                                    <option value="5_10" >5 - 10 triệu</option>
-                                    <option value="TREN10">Trên 10 triệu</option>
-                                </select>
-                            </div>
+                            <form  method ="GET" th:action ="@{/tour}">
+                                <div class="mb-3">
+                                    <label class="form-label">Điểm đến</label>
+                                    <select class="form-select" name="diemDen">
+                                        <option value="">-- Tất cả điểm đến --</option>
+                                        <option value="Sapa" th:selected="${diemDenSelected == 'Sapa'}">Sapa</option>
+                                        <option value="Hạ Long" th:selected="${diemDenSelected == 'Hạ Long'}">Hạ Long</option>
+                                        <option value="Đà Nẵng" th:selected="${diemDenSelected == 'Đà Nẵng'}">Đà Nẵng</option>
+                                        <option value="Huế" th:selected="${diemDenSelected == 'Huế'}">Huế</option>
+                                        <option value="Phú Quốc" th:selected="${diemDenSelected == 'Phú Quốc'}">Phú Quốc</option>
+                                        <option value="Cần Thơ" th:selected="${diemDenSelected == 'Cần Thơ'}">Cần Thơ</option>
+                                        <option value="Thái Lan" th:selected="${diemDenSelected == 'Thái Lan'}">Thái Lan</option>
+                                        <option value="Singapore" th:selected="${diemDenSelected == 'Singapore'}">Singapore</option>
+                                        <option value="Hàn Quốc" th:selected="${diemDenSelected == 'Hàn Quốc'}">Hàn Quốc</option>
+                                        <option value="Pháp" th:selected="${diemDenSelected == 'Pháp'}">Pháp</option>
+                                        <option value="Đức" th:selected="${diemDenSelected == 'Đức'}">Đức</option>
+                                        <option value="Mỹ" th:selected="${diemDenSelected == 'Mỹ'}">Mỹ</option>
+                                        <option value="Canada" th:selected="${diemDenSelected == 'Canada'}">Canada</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Khoảng giá</label>
+                                    <select class="form-select" name="khoangGia">
+                                        <option value="">-- Tất cả --</option>
+                                        <option value="DUOI5" th:selected="${khoangGiaSelected == 'DUOI5'}">Dưới 5 triệu</option>
+                                        <option value="5_10" th:selected="${khoangGiaSelected == '5_10'}">5 - 10 triệu</option>
+                                        <option value="TREN10" th:selected="${khoangGiaSelected == 'TREN10'}">Trên 10 triệu</option>
+                                    </select>
+                                </div>
                                 <button type="submit" class="btn btn-warning fw-bold w-100">Áp dụng</button>
                             </form>
                         </div>
-
-                        <!-- Danh sách Tour -->
                         <div class="col-md-9">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <p class="mb-0">Tìm thấy <strong th:text="${dem}"></strong> tour phù hợp</p>
-                                <select class="form-select w-auto">
-                                    <option value="">Tất cả</option>
-                                    <option value="priceAsc">Giá tăng dần</option>
-                                    <option value="priceDesc">Giá giảm dần</option>
-                                    <option value="startDate">Ngày khởi hành gần nhất</option>
-                                </select>
+                                <form method="get" th:action="@{/tour}">
+                                    <!-- giữ bộ lọc bên trái -->
+                                    <input type="hidden" name="diemDen" th:value="${diemDenSelected}">
+                                    <input type="hidden" name="khoangGia" th:value="${khoangGiaSelected}">
+                                    <select class="form-select w-auto" name="sort" onchange="this.form.submit()">
+                                        <option value="">Tất cả</option>
+                                        <option value="priceAsc" th:selected="${sortSelected == 'priceAsc'}">Giá tăng dần</option>
+                                        <option value="priceDesc" th:selected="${sortSelected == 'priceDesc'}">Giá giảm dần</option>
+                                    </select>
+                                </form>
                             </div>
+                            <div th:if="${not #lists.isEmpty(dschuyendi)}">
+                                <div class="d-flex border rounded mb-3 shadow-sm bg-white"
+                                     th:each="ds : ${dschuyendi}">
+                                    <img th:src="${ds.hinhAnh}"
+                                         class="card-img-top rounded"
+                                         alt=""
+                                         style="width:260px; height:210px; object-fit: cover;" />
+                                    <div class="p-3 flex-grow-1">
+                                        <h5 class="fw-bold" th:text="${ds.tieuDe}"></h5>
+                                        <p class="mb-1">Mã tour: <strong>NNCTH1600</strong></p>
+                                        <p style="margin-bottom:5px;">
+                                            Phương tiện:
+                                            <span th:text="${ds.idPhuongTien.loai}"></span>
+                                        </p>
+                                        <p class="text-danger fw-bold"
+                                           th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                                        </p>
+                                    </div>
 
-                            <div class="d-flex border rounded mb-3 shadow-sm bg-white" th:each = "ds:${dschuyendi}">
-                                <img th:src="${ds.hinhAnh}"
-                                     class="card-img-top rounded"
-                                     alt=""
-                                     style="width:260px; height:210px; object-fit: cover; margin-top:0px" />
-                                <div class="p-3 flex-grow-1">
-                                    <h5 class="fw-bold" th:text="${ds.tieuDe}" ></h5>
-                                    <p class="mb-1">Mã tour: <strong>NNCTH1600</strong></p>
-                                    <p style="margin: 0;margin-bottom:5px;">
-                                        Phương Tiện: <span th:text="${ds.idPhuongTien.loai}"></span> | Khởi Hành: Hà Nội
-                                    </p>
-                                    <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
+                                    <div class="d-flex align-items-center px-3">
+                                        <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">
+                                            Xem chi tiết
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="d-flex align-items-center px-3">
-                                    <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">Xem chi tiết</a>
-                                </div>
+                            </div>
+                            <div th:if="${#lists.isEmpty(dschuyendi)}"
+                                 class="alert alert-info text-center p-5 rounded shadow-sm">
+                                <h5 class="fw-bold mb-2">
+                                    Tạm thời không có chuyến đi nào tồn tại
+                                </h5>
+                                <p class="mb-0 text-muted">
+                                    Vui lòng thử lại với điểm đến hoặc khoảng giá khác
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
-
-        </div>
         </div>
     </div>
-
 </content>
 </body>
 </html>
