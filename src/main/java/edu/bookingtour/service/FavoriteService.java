@@ -9,8 +9,10 @@ import edu.bookingtour.repo.NguoiDungRepository;
 import edu.bookingtour.service.NguoiDungService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class FavoriteService {
     @Autowired
     private NguoiDungRepository nguoiDungRepository;
@@ -31,5 +33,8 @@ public class FavoriteService {
         favorite.setIdChuyenDi(tour);
         favorite.setIdNguoiDung(user);
         yeuThichRepository.save(favorite);
+    }
+    public void deleteFavorite(Integer id){
+       yeuThichRepository.deleteById(id);
     }
 }

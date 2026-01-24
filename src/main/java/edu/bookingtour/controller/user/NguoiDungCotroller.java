@@ -23,7 +23,6 @@ public class NguoiDungCotroller {
         }
 
         String username = authentication.getName();
-
         NguoiDung user = nguoiDungRepository
                 .findByTenDangNhap(username)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
