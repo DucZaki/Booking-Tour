@@ -14,8 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 @Component
-public class NewsApiClient {
-
+public class newsapi {
     private static final String TOKEN = "f4576b6c4b744b5bbb4306309ade8ff1";
     private static final String API_URL = "https://newsapi.org/v2/everything";
 
@@ -64,5 +63,4 @@ public class NewsApiClient {
         System.out.println("API Error: " + response.body());
         return Collections.emptyList();
     }
-}
 }

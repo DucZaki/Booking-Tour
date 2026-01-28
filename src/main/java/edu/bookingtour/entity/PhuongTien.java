@@ -1,5 +1,6 @@
 package edu.bookingtour.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "phuong_tien")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class PhuongTien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +23,7 @@ public class PhuongTien {
     @Column(name = "hang")
     private String hang;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_diem_den")
     private DiemDen idDiemDen;
 
