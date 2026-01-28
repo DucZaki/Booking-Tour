@@ -13,22 +13,21 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
-
 @Component
-public class newsapi {
-    private final String TOKEN = "f4576b6c4b744b5bbb4306309ade8ff1";
-    private final String API_URL = "https://newsapi.org/v2/everything";
+public class NewsApiClient {
+
+    private static final String TOKEN = "f4576b6c4b744b5bbb4306309ade8ff1";
+    private static final String API_URL = "https://newsapi.org/v2/everything";
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final HttpClient client = HttpClient.newHttpClient();
 
     public List<ArticleDTO> getLatestNews() {
         try {
-            // Từ khóa: Địa điểm nổi tiếng thế giới và Thời tiết
-            // Dùng tiếng Anh để ĐẢM BẢO có dữ liệu đổ về
-            String query = "travel destinations OR world places OR weather forecast";
+            String query = "travel OR tourism OR destination";
             return getNews(query);
         } catch (Exception e) {
-            System.err.println("Lỗi thực thi lấy tin: " + e.getMessage());
+            System.err.println("Lỗi lấy tin: " + e.getMessage());
             return Collections.emptyList();
         }
     }
@@ -36,12 +35,11 @@ public class newsapi {
     public List<ArticleDTO> getNews(String query) throws Exception {
         String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
 
-        // Bỏ language=vi, đổi thành language=en để lấy tin quốc tế
-        // Sắp xếp theo relevancy (liên quan nhất)
-        String url = API_URL + "?q=" + encodedQuery
+        String url = API_URL
+                + "?q=" + encodedQuery
                 + "&language=en"
-                + "&sortBy=relevancy"
-                + "&pageSize=12" // Lấy 12 bài cho đẹp grid 4x3
+                + "&sortBy=publishedAt"
+                + "&pageSize=12"
                 + "&apiKey=" + TOKEN;
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -49,22 +47,22 @@ public class newsapi {
                 .GET()
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response =
+                client.send(request, HttpResponse.BodyHandlers.ofString());
 
-        // Dòng này cực kỳ quan trọng để debug:
         System.out.println("API Status: " + response.statusCode());
 
         if (response.statusCode() == 200) {
-            NewsResponseDTO newsResponse = mapper.readValue(response.body(), NewsResponseDTO.class);
+            NewsResponseDTO newsResponse =
+                    mapper.readValue(response.body(), NewsResponseDTO.class);
 
-            if (newsResponse.getArticles() == null || newsResponse.getArticles().isEmpty()) {
-                System.out.println("API trả về thành công nhưng không có bài báo nào khớp từ khóa.");
-                return Collections.emptyList();
-            }
-            return newsResponse.getArticles();
-        } else {
-            System.out.println("Lỗi từ NewsAPI: " + response.body());
-            return Collections.emptyList();
+            return newsResponse.getArticles() != null
+                    ? newsResponse.getArticles()
+                    : Collections.emptyList();
         }
+
+        System.out.println("API Error: " + response.body());
+        return Collections.emptyList();
     }
+}
 }
