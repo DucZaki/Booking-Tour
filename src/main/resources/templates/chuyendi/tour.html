@@ -55,7 +55,6 @@
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <p class="mb-0">Tìm thấy <strong th:text="${dem}"></strong> tour phù hợp</p>
                                 <form method="get" th:action="@{/tour}">
-                                    <!-- giữ bộ lọc bên trái -->
                                     <input type="hidden" name="diemDen" th:value="${diemDenSelected}">
                                     <input type="hidden" name="khoangGia" th:value="${khoangGiaSelected}">
                                     <select class="form-select w-auto" name="sort" onchange="this.form.submit()">
@@ -66,39 +65,22 @@
                                 </form>
                             </div>
                             <div th:if="${not #lists.isEmpty(dschuyendi)}">
-                                <div class="d-flex border rounded mb-3 shadow-sm bg-white"
-                                     th:each="ds : ${dschuyendi}">
-                                    <img th:src="${ds.hinhAnh}"
-                                         class="card-img-top rounded"
-                                         alt=""
-                                         style="width:260px; height:210px; object-fit: cover;" />
+                                <div class="d-flex border rounded mb-3 shadow-sm bg-white" th:each="ds : ${dschuyendi}">
+                                    <img th:src="${ds.hinhAnh}" class="card-img-top rounded" alt="" style="width:260px; height:210px; object-fit: cover;" />
                                     <div class="p-3 flex-grow-1">
                                         <h5 class="fw-bold" th:text="${ds.tieuDe}"></h5>
                                         <p class="mb-1">Mã tour: <strong>NNCTH1600</strong></p>
-                                        <p style="margin-bottom:5px;">
-                                            Phương tiện:
-                                            <span th:text="${ds.idPhuongTien.loai}"></span>
-                                        </p>
-                                        <p class="text-danger fw-bold"
-                                           th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">
-                                        </p>
+                                        <p style="margin-bottom:5px;">Phương tiện:<span th:text="${ds.idPhuongTien.loai}"></span></p>
+                                        <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
                                     </div>
-
                                     <div class="d-flex align-items-center px-3">
-                                        <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">
-                                            Xem chi tiết
-                                        </a>
+                                        <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">Xem chi tiết</a>
                                     </div>
                                 </div>
                             </div>
-                            <div th:if="${#lists.isEmpty(dschuyendi)}"
-                                 class="alert alert-info text-center p-5 rounded shadow-sm">
-                                <h5 class="fw-bold mb-2">
-                                    Tạm thời không có chuyến đi nào tồn tại
-                                </h5>
-                                <p class="mb-0 text-muted">
-                                    Vui lòng thử lại với điểm đến hoặc khoảng giá khác
-                                </p>
+                            <div th:if="${#lists.isEmpty(dschuyendi)}" class="alert alert-info text-center p-5 rounded shadow-sm">
+                                <h5 class="fw-bold mb-2">Tạm thời không có chuyến đi nào tồn tại</h5>
+                                <p class="mb-0 text-muted">Vui lòng thử lại với điểm đến hoặc khoảng giá khác</p>
                             </div>
                         </div>
                     </div>

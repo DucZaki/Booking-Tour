@@ -27,32 +27,33 @@
 
             <form th:action="@{/register}" method="post" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Họ và tên</label>
-                    <input type="text" name="fullName" placeholder="Nguyễn Văn A" required
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Tên đăng nhập</label>
+                    <input type="text" name="tenDangNhap" placeholder="username" required
                            class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
                 </div>
-
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Họ và tên</label>
+                    <input type="text" name="hoTen" placeholder="Nguyễn Văn A" required
+                           class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
+                </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Số điện thoại</label>
-                    <input type="tel" name="phone" placeholder="0901234567" required
+                    <input type="tel" name="number" placeholder="0901234567" required
                            class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
                     <input type="email" name="email" placeholder="example@email.com" required
                            class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all">
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Mật khẩu</label>
                     <div class="relative">
-                        <input type="password" id="password" name="password" placeholder="••••••••" required
+                        <input type="password" id="password" name="matKhau" placeholder="••••••••" required
                                class="w-full px-4 py-3 bg-[#1a1a1a] border border-gray-800 rounded-lg text-white focus:ring-2 focus:ring-[#FECF2F] outline-none transition-all pr-12">
                         <button type="button" onclick="togglePass('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FECF2F]">👁️</button>
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-sm font-medium text-gray-300 mb-2">Xác nhận mật khẩu</label>
                     <div class="relative">
@@ -61,31 +62,26 @@
                         <button type="button" onclick="togglePass('confirmPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#FECF2F]">👁️</button>
                     </div>
                 </div>
-
                 <div class="flex items-start gap-2">
                     <input type="checkbox" id="terms" required class="mt-1 w-4 h-4 accent-[#FECF2F]">
                     <label for="terms" class="text-sm text-gray-400">
                         Tôi đồng ý với <a href="#" class="text-[#FECF2F] hover:underline">Điều khoản dịch vụ</a> và <a href="#" class="text-[#FECF2F] hover:underline">Chính sách bảo mật</a>
                     </label>
                 </div>
-
                 <button type="submit" class="w-full py-3 bg-[#FECF2F] text-black font-semibold rounded-lg hover:bg-[#fdd915] transition-all transform hover:scale-[1.02] active:scale-[0.98]">
                     Đăng ký
                 </button>
             </form>
-
             <div class="flex items-center gap-4 my-6">
                 <div class="flex-1 h-px bg-gray-800"></div>
                 <span class="text-sm text-gray-500">hoặc</span>
                 <div class="flex-1 h-px bg-gray-800"></div>
             </div>
-
             <p class="text-center text-gray-400 text-sm">
                 Đã có tài khoản? <a th:href="@{/login}" class="text-[#FECF2F] hover:underline font-medium">Đăng nhập</a>
             </p>
         </div>
     </div>
-
     <div class="hidden lg:block lg:w-1/2 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-[#FECF2F]/20 to-black/60 z-10"></div>
         <img src="https://images.unsplash.com/photo-1723065219121-3bfaf2170563?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
@@ -96,7 +92,6 @@
         </div>
     </div>
 </div>
-
 <script>
     function togglePass(id) {
         const input = document.getElementById(id);

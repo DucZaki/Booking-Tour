@@ -24,15 +24,12 @@ public class AuthController {
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
             Model model) {
-
         if (error != null) {
             model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
         }
-
         if (logout != null) {
             model.addAttribute("successMessage", "Đăng xuất thành công!");
         }
-
         return "login/login";
     }
 
@@ -45,46 +42,31 @@ public class AuthController {
         return "login/register";
     }
 
-    /**
-     * Xử lý đăng ký người dùng mới
-     */
     @PostMapping("/register")
-    public String registerUser(
-            @ModelAttribute("nguoiDung") NguoiDung nguoiDung,
-            RedirectAttributes redirectAttributes,
-            Model model) {
-
-        // Kiểm tra các trường bắt buộc
+    public String registerUser(@ModelAttribute("nguoiDung") NguoiDung nguoiDung, RedirectAttributes redirectAttributes, Model model) {
         if (nguoiDung.getTenDangNhap() == null || nguoiDung.getTenDangNhap().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Tên đăng nhập không được để trống!");
             return "login/register";
         }
-
         if (nguoiDung.getMatKhau() == null || nguoiDung.getMatKhau().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Mật khẩu không được để trống!");
             return "login/register";
         }
-
         if (nguoiDung.getEmail() == null || nguoiDung.getEmail().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Email không được để trống!");
             return "login/register";
         }
-
         if (nguoiDung.getHoTen() == null || nguoiDung.getHoTen().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Họ tên không được để trống!");
             return "login/register";
         }
-
         try {
-            // Đăng ký người dùng mới
             nguoiDungService.registerNewUser(nguoiDung);
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Đăng ký thành công! Vui lòng đăng nhập.");
+            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
             return "redirect:/login";
-
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            return "/login/register";
+            return "login/register";
         }
     }
 
@@ -150,7 +132,6 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Có lỗi xảy ra: " + e.getMessage());
         }
-
         return "redirect:/user/profile";
     }
 

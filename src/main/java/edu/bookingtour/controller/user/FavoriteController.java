@@ -46,10 +46,8 @@ public class FavoriteController {
     @GetMapping("/my-favorites")
     public String showFavorites(Model model, Principal principal) {
         if (principal == null) return "redirect:/login";
-
-        // Tìm người dùng hiện tại
-        NguoiDung user = nguoiDungService.findByTenDangNhap(principal.getName()).get();
-
+        NguoiDung user = nguoiDungService.findByTenDangNhap(principal.getName()).orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        model.addAttribute("user", user);
         // Lấy danh sách yêu thích của người dùng đó
         // (Bạn cần viết hàm này trong YeuThichRepository)
         List<YeuThich> list = favoriteRepository.findByIdNguoiDung(user);

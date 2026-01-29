@@ -75,28 +75,18 @@ public class NguoiDungService {
         Pageable pageable = PageRequest.of(page, perPage);
         return nguoiDungRepository.findAll(pageable);
     }
-    /**
-     * Đăng ký người dùng mới
-     */
+
     public NguoiDung registerNewUser(NguoiDung nguoiDung) {
-        // Kiểm tra username đã tồn tại chưa
         if (nguoiDungRepository.findByTenDangNhap(nguoiDung.getTenDangNhap()).isPresent()) {
             throw new RuntimeException("Tên đăng nhập đã tồn tại!");
         }
-
-        // Kiểm tra email đã tồn tại chưa
         if (nguoiDungRepository.findByEmail(nguoiDung.getEmail()).isPresent()) {
             throw new RuntimeException("Email đã được sử dụng!");
         }
-
-        // Mã hóa mật khẩu
         nguoiDung.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
-
-        // Đặt vai trò mặc định là USER
         if (nguoiDung.getVaiTro() == null || nguoiDung.getVaiTro().isEmpty()) {
             nguoiDung.setVaiTro("USER");
         }
-
         return nguoiDungRepository.save(nguoiDung);
     }
 

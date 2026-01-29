@@ -24,8 +24,8 @@ public class ChuyenDiController {
     @Autowired
     private NguoiDungService nguoiDungService;
     @GetMapping("/tour")
-    public String viewDiemDenPage(@RequestParam(required = false) String thanhPho, @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen, @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort, Model model) {
-        List<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, khoangGia, sort);
+    public String viewDiemDenPage(@RequestParam(required = false) String thanhPho, @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen, @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort, @RequestParam(required = false) String ngayDi, Model model) {
+        List<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, khoangGia, ngayDi, sort);
         model.addAttribute("dschuyendi", dschuyendi);
         model.addAttribute("dem", dschuyendi.size());
         model.addAttribute("diemDenSelected", diemDen);

@@ -15,7 +15,4 @@ public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
     List<ChuyenDi> findByNoiBat (boolean noiBat);
     List<ChuyenDi> findAll();
     long count();
-
-    List<ChuyenDi> findByIdDiemDen_ThanhPho(String thanhPho);
-    List<ChuyenDi> findByIdDiemDen_QuocGia(String quocGia);
 }

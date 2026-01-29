@@ -111,7 +111,7 @@ public class TourService {
         return chuyenDiRepository.findAll(pageable);
     }
 
-    public List<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String khoangGia, String sort) {
+    public List<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String khoangGia, String ngayDi, String sort) {
         List<ChuyenDi> list = chuyenDiRepository.findAll();
         if (thanhPho != null && !thanhPho.isBlank()) {
             list = list.stream().filter(cd -> cd.getIdDiemDen().getThanhPho().equalsIgnoreCase(thanhPho)).toList();
@@ -121,6 +121,12 @@ public class TourService {
         }
         if (diemDen != null && !diemDen.isBlank()) {
             list = list.stream().filter(cd -> cd.getIdDiemDen().getThanhPho().equalsIgnoreCase(diemDen) || cd.getIdDiemDen().getQuocGia().equalsIgnoreCase(diemDen)).toList();
+        }
+        if (ngayDi != null && !ngayDi.isBlank()) {
+            LocalDate date = LocalDate.parse(ngayDi);
+            list = list.stream()
+                    .filter(cd -> !cd.getNgayKhoiHanh().isBefore(date))
+                    .toList();
         }
         if (khoangGia != null && !khoangGia.isBlank()) {
             BigDecimal five = BigDecimal.valueOf(5_000_000);
