@@ -1,5 +1,6 @@
 package edu.bookingtour.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "noi_luu_tru")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class NoiLuuTru {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +30,7 @@ public class NoiLuuTru {
     @Column(name = "gia", precision = 10, scale = 2)
     private BigDecimal gia;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_diem_den")
     private DiemDen idDiemDen;
 
