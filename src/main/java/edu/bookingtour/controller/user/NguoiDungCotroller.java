@@ -19,16 +19,18 @@ public class NguoiDungCotroller {
     public String profile(Model model, Authentication authentication) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            return "redirect:/login/login";
+            return "redirect:/login";
         }
 
-        String username = authentication.getName();
+        String name = authentication.getName();
+
         NguoiDung user = nguoiDungRepository
-                .findByTenDangNhap(username)
+                .findByTenDangNhap(name)
+                .or(() -> nguoiDungRepository.findByEmail(name))
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+
         model.addAttribute("user", user);
         return "user/profile";
     }
-
 
 }

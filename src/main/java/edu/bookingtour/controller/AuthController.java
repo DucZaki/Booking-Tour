@@ -93,7 +93,6 @@ public class AuthController {
         return "error/403";
     }
 
-
 //    @GetMapping("/user/profile")
 //    public String userProfile(Authentication authentication, Model model) {
 //        String username = authentication.getName();
@@ -128,7 +127,7 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("successMessage",
                     "Cập nhật thông tin thành công!");
 
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             redirectAttributes.addFlashAttribute("errorMessage",
                     "Có lỗi xảy ra: " + e.getMessage());
         }

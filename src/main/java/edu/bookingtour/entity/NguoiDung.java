@@ -38,6 +38,9 @@ public class NguoiDung {
     @Column(name ="number")
     private String number;
 
+    @Column(name = "provider")
+    private String provider;
+
     @PrePersist
     protected void onCreate() {
         this.ngayTao = Instant.now();

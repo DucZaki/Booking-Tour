@@ -1,5 +1,6 @@
 package edu.bookingtour.config;
 
+import edu.bookingtour.service.CustomOAuth2UserService;
 import edu.bookingtour.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,39 +19,101 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-        private final CustomUserDetailsService userDetailsService;
+    private final CustomUserDetailsService userDetailsService;
 
-        public SecurityConfig(CustomUserDetailsService userDetailsService) {
-                this.userDetailsService = userDetailsService;
-        }
+    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
 
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-        @Bean
-        public DaoAuthenticationProvider authenticationProvider() {
-                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-                authProvider.setUserDetailsService(userDetailsService);
-                authProvider.setPasswordEncoder(passwordEncoder());
-                return authProvider;
-        }
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
-        @Bean
-        public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-                return config.getAuthenticationManager();
-        }
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 
-        @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-                http
-                                .csrf(csrf -> csrf.disable())
-                                .authorizeHttpRequests(authorize -> authorize
-                                                .anyRequest().permitAll())
-                                .formLogin(form -> form.disable())
-                                .httpBasic(basic -> basic.disable());
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService) throws Exception {
+        http
+                .authenticationProvider(authenticationProvider())
 
-                return http.build();
-        }
+                .authorizeHttpRequests(authorize -> authorize
+                        // Public endpoints
+                        .requestMatchers(
+                                "/login",
+                                "/register",
+                                "/css/**",
+                                "/js/**",
+                                "/anh/**",
+                                "/images/**",
+                                "/",
+                                "/tour/**",
+                                "/api/public/**",
+                                "/tintuc",
+                                "/tin-tuc",
+                                "slogan.png"
+                        ).permitAll()
+
+                        // Admin only endpoints
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        // User and Admin endpoints
+                        .requestMatchers("/user/**", "/booking/**").authenticated()
+
+                        // All other requests must be authenticated
+                        .anyRequest().authenticated()
+                )
+
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/perform-login")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .defaultSuccessUrl("/redirect-after-login", true)
+                        .failureUrl("/login?error=true")
+                        .permitAll()
+//                        .defaultSuccessUrl("/")
+                )
+//                .rememberMe(remember -> remember
+//                        .key("zaki-booking-remember-me")
+//                        .rememberMeParameter("remember-me")
+//                        .tokenValiditySeconds(7 * 24 * 60 * 60) // 7 ngày
+//                        .userDetailsService(userDetailsService)
+//                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                        .permitAll()
+                )
+
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/access-denied")
+                )
+
+                .sessionManagement(session -> session
+                        .sessionFixation().changeSessionId()
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
+                )
+                .oauth2Login(oauth -> oauth
+                        .loginPage("/login")
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService))
+                        .defaultSuccessUrl("/", true)
+                );
+
+        return http.build();
+    }
 }
