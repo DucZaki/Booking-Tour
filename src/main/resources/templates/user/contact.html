@@ -1,0 +1,62 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout/layout :: layout(~{::section})">
+<section>
+    <div class="container py-5">
+        <div class="text-center m-4">
+            <h2 class="fw-bold text-primary">LIÊN HỆ</h2>
+            <p class="text-muted">Để có thể đáp ứng được các yêu cầu và đóng góp ý kiến của quý khách, xin vui lòng gửi thông tin hoặc gọi đến hotline các chi nhánh bên dưới để liên hệ một cách nhanh chóng</p>
+        </div>
+        <div th:if="${success}" class="alert alert-success rounded-3 shadow-sm border-0 d-flex">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.08.022l3.992-4.99a.75.75 0 1 0-1.164-.94L7.477 9.417 5.384 7.323a.75.75 0 1 0-1.06 1.06l2.646 2.647z"></path>
+            </svg>
+            <div>
+                Gửi thông tin thành công!
+            </div>
+        </div>
+        <form th:action="@{/contact}" th:object="${contact}" method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Họ tên *</label>
+                    <input type="text" class="form-control" th:field="*{name}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-control" th:field="*{email}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Điện thoại</label>
+                    <input type="text" class="form-control" th:field="*{phone_number}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Loại liên hệ</label>
+                    <select class="form-select" th:field="*{type}">
+                        <option value="TOUR">Du lịch</option>
+                        <option value="SUPPORT">Chăm sóc khách hàng</option>
+                        <option value="OTHER">Khác</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Địa chỉ</label>
+                    <input type="text" class="form-control" th:field="*{address}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Số khách</label>
+                    <input type="number" class="form-control" th:field="*{guest_number}">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Tiêu đề *</label>
+                    <input type="text" class="form-control" th:field="*{tittle}" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Nội dung *</label>
+                    <textarea class="form-control" rows="5" th:field="*{content}" required></textarea>
+                </div>
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi ngay</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+</html>

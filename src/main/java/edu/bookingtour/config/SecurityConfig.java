@@ -62,6 +62,7 @@ public class SecurityConfig {
                                 "/api/public/**",
                                 "/tintuc",
                                 "/tin-tuc",
+                                "/contact",
                                 "slogan.png"
                         ).permitAll()
 

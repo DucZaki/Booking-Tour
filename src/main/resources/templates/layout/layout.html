@@ -79,7 +79,7 @@
                 </li>
 
                 <li class="nav-item"><a class="nav-link" th:href="@{/tin-tuc}">Tin tức</a></li>
-                <li class="nav-item"><a class="nav-link me-3" href="#">Liên hệ</a></li>
+                <li class="nav-item"><a class="nav-link me-3" th:href="@{/contact}">Liên hệ</a></li>
 
                 <li class="nav-item" sec:authorize="isAnonymous()">
                     <a th:href="@{/login}" class="btn btn-primary">Đăng nhập</a>

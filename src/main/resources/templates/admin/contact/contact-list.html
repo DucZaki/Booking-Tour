@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+  <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+  <div class="container mt-4">
+    <h3 class="mb-2">Danh sách liên hệ</h3>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Họ tên</th>
+        <th>Loại</th>
+        <th>Email</th>
+        <th>Số khách</th>
+        <th>Ngày gửi</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="c : ${contacts}">
+        <td th:text="${c.name}"></td>
+        <td>
+          <span class="badge bg-info text-dark" th:text="${c.type}"></span>
+        </td>
+        <td th:text="${c.email}"></td>
+        <td th:text="${c.guest_number}"></td>
+        <td th:text="${#temporals.format(c.createdAt,'dd-MM-yyyy HH:mm')}"></td>
+        <td>
+          <span th:if="${c.status == 'NEW'}" class="badge bg-danger">Mới</span>
+          <span th:if="${c.status == 'READ'}" class="badge bg-success">Đã đọc</span>
+        </td>
+        <td>
+          <a th:href="@{'/admin/contact/' + ${c.id}}" class="btn btn-sm btn-outline-primary rounded-pill">Xem</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
