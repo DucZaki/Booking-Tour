@@ -22,11 +22,19 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Ngày khởi hành</label>
-                    <input th:field="*{ngayKhoiHanh}" class="form-control" required>
+                    <input type="date"
+                           th:field="*{ngayKhoiHanh}"
+                           class="form-control"
+                           th:attr="min=${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}"
+                           required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label fw-bold">Ngày kết thúc</label>
-                    <input th:field="*{ngayKetThuc}" class="form-control" required>
+                    <input type="date"
+                           th:field="*{ngayKetThuc}"
+                           class="form-control"
+                           th:attr="min=${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}"
+                           required>
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Phương tiện</label>
@@ -43,11 +51,11 @@
                     <select id="chauLuc"
                             class="form-select"
                             th:attr="data-selected=${selectedChauLuc}">
-                    <option value="">-- Chọn châu lục --</option>
-                        <option th:each="c : ${chauLucList}"
-                                th:value="${c}"
-                                th:text="${c}">
-                        </option>
+                        <option value="">-- Chọn châu lục --</option>
+                        <option value="Trong nước">Trong nước</option>
+                        <option value="Châu Á">Châu Á</option>
+                        <option value="Châu Âu">Châu Âu</option>
+                        <option value="Châu Mỹ">Châu Mỹ</option>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -97,7 +105,7 @@
                     <button type="submit" class="btn btn-primary me-2">
                         <i class="bi bi-save"></i> Cập nhật
                     </button>
-                    <a th:href="@{'/admin/tour/' + ${tour.id}}" class="btn btn-outline-secondary">
+                    <a th:href="@{'/admin/tour/detail/' + ${tour.id}}" class="btn btn-outline-secondary">
                         <i class="bi bi-x-circle"></i> Hủy
                     </a>
                 </div>
@@ -106,56 +114,67 @@
     </div>
 </div>
 <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const chauLucSelect = document.getElementById("chauLuc")
-        const quocGiaSelect = document.getElementById("quocGia")
-        const thanhPhoSelect = document.getElementById("thanhPho")
-        const selectedChauLuc = chauLucSelect.dataset.selected
-        const selectedQuocGia = quocGiaSelect.dataset.selected
-        const selectedThanhPhoId = thanhPhoSelect.dataset.selected
-        if (selectedChauLuc) {
-            chauLucSelect.value = selectedChauLuc
-            await loadQuocGia(selectedChauLuc, selectedQuocGia)
+    const dataDiaDiem = {
+        "Trong nước": {
+            "Việt Nam": [
+                {id: 1, ten: "Sapa"},
+                {id: 2, ten: "Hạ Long"},
+                {id: 3, ten: "Đà Nẵng"},
+                {id: 4, ten: "Huế"},
+                {id: 5, ten: "Phú Quốc"},
+                {id: 6, ten: "Cần Thơ"}
+            ]
+        },
+        "Châu Á": {
+            "Thái Lan": [{id: 7, ten: "Bangkok"}],
+            "Singapore": [{id: 8, ten: "Singapore"}],
+            "Hàn Quốc": [{id: 9, ten: "Seoul"}]
+        },
+        "Châu Âu": {
+            "Pháp": [{id: 10, ten: "Paris"}],
+            "Đức": [{id: 11, ten: "Berlin"}]
+        },
+        "Châu Mỹ": {
+            "Mỹ": [{id: 12, ten: "New York"}],
+            "Canada": [{id: 13, ten: "Toronto"}]
         }
-        if (selectedQuocGia) {
-            quocGiaSelect.value = selectedQuocGia
-            await loadThanhPho(selectedQuocGia, selectedThanhPhoId)
-        }
-        chauLucSelect.addEventListener("change", () => {
-            loadQuocGia(chauLucSelect.value, null)
-        })
-        quocGiaSelect.addEventListener("change", () => {
-            loadThanhPho(quocGiaSelect.value, null)
-        })
-    })
-    async function loadQuocGia(chauLuc, selected) {
-        const res = await fetch(`/api/dia-diem/quoc-gia?chauLuc=${chauLuc}`)
-        const data = await res.json()
-        const quocGiaSelect = document.getElementById("quocGia")
-        quocGiaSelect.innerHTML = `<option value="">-- Chọn quốc gia --</option>`
-        data.forEach(qg => {
-            const opt = document.createElement("option")
-            opt.value = qg
-            opt.textContent = qg
-            if (qg === selected) opt.selected = true
-            quocGiaSelect.appendChild(opt)
-        })
-        document.getElementById("thanhPho").innerHTML =
-            `<option value="">-- Chọn thành phố --</option>`
-    }
-    async function loadThanhPho(quocGia, selectedId) {
-        const res = await fetch(`/api/dia-diem/thanh-pho?quocGia=${quocGia}`)
-        const data = await res.json()
-        const thanhPhoSelect = document.getElementById("thanhPho")
-        thanhPhoSelect.innerHTML = `<option value="">-- Chọn thành phố --</option>`
-        data.forEach(tp => {
-            const opt = document.createElement("option")
-            opt.value = tp.id
-            opt.textContent = tp.thanhPho
-            if (tp.id == selectedId) opt.selected = true
-            thanhPhoSelect.appendChild(opt)
-        })
-    }
+    };
+
+    const chauLucSelect = document.getElementById("chauLuc");
+    const quocGiaSelect = document.getElementById("quocGia");
+    const thanhPhoSelect = document.getElementById("thanhPho");
+
+    chauLucSelect.addEventListener("change", function () {
+        const chauLuc = this.value;
+
+        quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
+        thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+
+        if (!dataDiaDiem[chauLuc]) return;
+
+        Object.keys(dataDiaDiem[chauLuc]).forEach(qg => {
+            const option = document.createElement("option");
+            option.value = qg;
+            option.textContent = qg;
+            quocGiaSelect.appendChild(option);
+        });
+    });
+    quocGiaSelect.addEventListener("change", function () {
+        const chauLuc = chauLucSelect.value;
+        const quocGia = this.value;
+
+        thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+
+        if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
+
+        dataDiaDiem[chauLuc][quocGia].forEach(tp => {
+            const option = document.createElement("option");
+            option.value = tp.id;
+            option.textContent = tp.ten;
+            thanhPhoSelect.appendChild(option);
+        });
+    });
 </script>
 </body>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
 </html>

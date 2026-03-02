@@ -47,9 +47,6 @@ public class NguoiDungService {
         return nguoiDungRepository.save(nguoiDung);
     }
 
-    /**
-     * Cập nhật thông tin người dùng
-     */
     public NguoiDung update(Integer id, NguoiDung nguoiDung) {
         NguoiDung user = nguoiDungRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
         user.setTenDangNhap(nguoiDung.getTenDangNhap());
@@ -57,8 +54,6 @@ public class NguoiDungService {
         user.setHoTen(nguoiDung.getHoTen());
         user.setNumber(nguoiDung.getNumber());
         user.setVaiTro(nguoiDung.getVaiTro());
-
-        // Chỉ cập nhật mật khẩu nếu có mật khẩu mới
         if (nguoiDung.getMatKhau() != null && !nguoiDung.getMatKhau().isEmpty()) {
             user.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
         }

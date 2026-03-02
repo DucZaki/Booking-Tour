@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <h3 class="mb-2">Danh sách đánh giá</h3>
+        <form th:action="@{/admin/danh-gia}" method="get" autocomplete="off">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <input type="text" name="hoTen" class="form-control" placeholder="Tìm theo tên người dùng..." autocomplete="off">
+                </div>
+                <div class="col-md-3">
+                    <select name="diem" class="form-select">
+                        <option value="">-- Lọc theo số sao --</option>
+                        <option value="5" th:selected="${diem == 5}">5 sao</option>
+                        <option value="4" th:selected="${diem == 4}">4 sao</option>
+                        <option value="3" th:selected="${diem == 3}">3 sao</option>
+                        <option value="2" th:selected="${diem == 2}">2 sao</option>
+                        <option value="1" th:selected="${diem == 1}">1 sao</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-dark w-100">Lọc</button>
+                </div>
+            </div>
+        </form>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Người dùng</th>
+                        <th>Chuyến đi</th>
+                        <th>Số sao</th>
+                        <th>Bình luận</th>
+                        <th>Ngày đánh giá</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="dg, index : ${danhGia}">
+                        <td th:text="${index.index + 1}"></td>
+                        <td th:text="${dg.idNguoiDung.hoTen}"></td>
+                        <td th:text="${dg.idChuyenDi.tieuDe}"></td>
+                        <td>
+                            <span class="badge bg-warning text-dark" th:text="${dg.diem + ' ⭐'}"></span>
+                        </td>
+                        <td th:text="${dg.binhLuan}"></td>
+                        <td th:text="${#temporals.format(dg.ngayDanhGia,'dd/MM/yyyy HH:mm')}"></td>
+                        <td class="text-center">
+                            <a th:href="@{/admin/danhgia/delete/{id}(id=${dg.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa đánh giá này?')">Xóa</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(danhGia)}">
+                        <td colspan="7" class="text-center text-muted py-4">Không có đánh giá nào.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div aria-label = "Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page - 1}, size=${size}, ten=${param.ten}, diem=${param.diem})}">&laquo;</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${i}, size=${size}, ten=${param.ten}, diem=${param.diem})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page + 1}, size=${size}, ten=${param.ten}, diem=${param.diem})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+</body>

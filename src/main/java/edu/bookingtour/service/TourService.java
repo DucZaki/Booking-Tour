@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -105,46 +106,46 @@ public class TourService {
         }
         return days;
     }
-
-    public Page<ChuyenDi> getAllChuyenDi(int page, int perPage) {
+    public Page<ChuyenDi> getActiveTours(int page, int perPage) {
         Pageable pageable = PageRequest.of(page, perPage);
-        return chuyenDiRepository.findAll(pageable);
+        return chuyenDiRepository.findByNgayKetThucAfter(LocalDate.now(), pageable);
     }
-
-    public List<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String khoangGia, String ngayDi, String sort) {
-        List<ChuyenDi> list = chuyenDiRepository.findAll();
-        if (thanhPho != null && !thanhPho.isBlank()) {
-            list = list.stream().filter(cd -> cd.getIdDiemDen().getThanhPho().equalsIgnoreCase(thanhPho)).toList();
-        }
-        if (quocGia != null && !quocGia.isBlank()) {
-            list = list.stream().filter(cd -> cd.getIdDiemDen().getQuocGia().equalsIgnoreCase(quocGia)).toList();
-        }
-        if (diemDen != null && !diemDen.isBlank()) {
-            list = list.stream().filter(cd -> cd.getIdDiemDen().getThanhPho().equalsIgnoreCase(diemDen) || cd.getIdDiemDen().getQuocGia().equalsIgnoreCase(diemDen)).toList();
-        }
-        if (ngayDi != null && !ngayDi.isBlank()) {
-            LocalDate date = LocalDate.parse(ngayDi);
-            list = list.stream()
-                    .filter(cd -> !cd.getNgayKhoiHanh().isBefore(date))
-                    .toList();
-        }
-        if (khoangGia != null && !khoangGia.isBlank()) {
+    public Page<ChuyenDi> getCompleteTours(int page, int perPage) {
+        Pageable pageable = PageRequest.of(page, perPage);
+        return chuyenDiRepository.findByNgayKetThucBefore(LocalDate.now(), pageable);
+    }
+    public Page<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String khoangGia, String ngayDi, String sort, int page, int size) {
+        LocalDate date = (ngayDi == null || ngayDi.isBlank()) ? null : LocalDate.parse(ngayDi);
+        BigDecimal minGia = null;
+        BigDecimal maxGia = null;
+        if (khoangGia != null) {
             BigDecimal five = BigDecimal.valueOf(5_000_000);
             BigDecimal ten = BigDecimal.valueOf(10_000_000);
-            list = switch (khoangGia) {
-                case "DUOI5" -> list.stream().filter(cd -> cd.getGia().compareTo(five) < 0).toList();
-                case "5_10" -> list.stream().filter(cd -> cd.getGia().compareTo(five) >= 0 && cd.getGia().compareTo(ten) <= 0).toList();
-                case "TREN10" -> list.stream().filter(cd -> cd.getGia().compareTo(ten) > 0).toList();
-                default -> list;
-            };
+            switch (khoangGia) {
+                case "DUOI5" -> {
+                    minGia = BigDecimal.ZERO;
+                    maxGia = five;
+                }
+                case "5_10" -> {
+                    minGia = five;
+                    maxGia = ten;
+                }
+                case "TREN10" -> {
+                    minGia = ten;
+                    maxGia = BigDecimal.valueOf(Long.MAX_VALUE);
+                }
+            }
         }
-        if (sort != null && !sort.isBlank()) {
-            list = switch (sort) {
-                case "priceAsc" -> list.stream().sorted(Comparator.comparing(ChuyenDi::getGia)).toList();
-                case "priceDesc" -> list.stream().sorted(Comparator.comparing(ChuyenDi::getGia).reversed()).toList();
-                default -> list;
-            };
+        Sort sortOption = Sort.unsorted();
+        if ("priceAsc".equals(sort)) {
+            sortOption = Sort.by("gia").ascending();
+        } else if ("priceDesc".equals(sort)) {
+            sortOption = Sort.by("gia").descending();
         }
-        return list;
+        Pageable pageable = PageRequest.of(page, size, sortOption);
+        return chuyenDiRepository.filterTour(emptyToNull(thanhPho), emptyToNull(quocGia), emptyToNull(diemDen), date, minGia, maxGia, pageable);
+    }
+    private String emptyToNull(String s) {
+        return (s == null || s.isBlank()) ? null : s;
     }
 }

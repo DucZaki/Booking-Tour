@@ -3,6 +3,9 @@ package edu.bookingtour.service;
 import edu.bookingtour.entity.Contact;
 import edu.bookingtour.repo.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +19,9 @@ public class ContactService {
         contactRepository.save(contact);
     }
 
-    public List<Contact> findAll() {
-        return contactRepository.findAll();
+    public Page<Contact> findAll(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return contactRepository.findAll(pageable);
     }
 
     public Contact findById(Long id) {

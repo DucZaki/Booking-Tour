@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+  <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <a th:href="@{/admin/tour/complete}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Quay lại
+      </a>
+      <h4 class="fw-bold text-primary mb-0">
+        Gia hạn chuyến đi
+      </h4>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3" th:text="${tour.tieuDe}"></h5>
+            <div class="row">
+              <div class="col-md-4 text-center">
+                <img th:src="@{${tour.hinhAnh}}" class="img-fluid rounded shadow" style="height:220px; object-fit:cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="mb-2">
+                  <span class="text-muted">Giá dịch vụ:</span>
+                  <span class="text-danger fw-bold" th:text="${#numbers.formatDecimal(tour.gia,0,'POINT',0,'COMMA')} + ' ₫'"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">Ngày khởi hành hiện tại:</span>
+                  <span class="fw-semibold text-danger" th:text="${#temporals.format(tour.ngayKhoiHanh,'dd-MM-yyyy')}"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">Ngày kết thúc hiện tại:</span>
+                  <span class="fw-semibold text-danger" th:text="${#temporals.format(tour.ngayKetThuc,'dd-MM-yyyy')}"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">Phương tiện:</span>
+                  <span th:text="${tour.idPhuongTien.loai}"></span>
+                </div>
+                <div class="mb-2">
+                  <span class="text-muted">Điểm đến:</span>
+                  <span th:text="${tour.idDiemDen.thanhPho}"></span>
+                </div>
+              </div>
+            </div>
+            <hr>
+            <div class="fw-semibold text-muted mb-2">Mô tả</div>
+            <div class="p-3 bg-light rounded" th:text="${tour.moTa}"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="card shadow border-0">
+          <div class="card-body">
+            <h5 class="fw-bold mb-3 text-success">
+              Gia hạn chuyến đi
+            </h5>
+            <form th:action="@{/admin/tour/extend}" method="post">
+              <input type="hidden" name="id" th:value="${tour.id}"/>
+              <div class="mb-3">
+                <label class="form-label">Ngày khởi hành mới</label>
+                <input type="date" name="ngayKhoiHanh" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Ngày kết thúc mới</label>
+                <input type="date" name="ngayKetThuc" class="form-control" required>
+              </div>
+              <button class="btn btn-success w-100"
+                      onclick="return confirm('Xác nhận gia hạn chuyến đi?')">
+                <i class="bi bi-calendar-check"></i>
+                Gia hạn ngay
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+</body>
+</html>

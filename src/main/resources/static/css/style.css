@@ -465,3 +465,28 @@ footer {
 .text-danger {
     color: #e31c25 !important;
 }
+
+.rating {
+    direction: rtl;
+    display: inline-flex;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    font-size: 28px;
+    color: #ccc;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.rating input:checked ~ label {
+    color: #ffc107;
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffc107;
+}

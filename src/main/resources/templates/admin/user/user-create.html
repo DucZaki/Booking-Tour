@@ -11,8 +11,7 @@
                 <h4>Add New User</h4>
             </div>
             <div class="card-body">
-                <form th:action="@{/admin/user/save}" method="post"
-                      enctype="multipart/form-data" th:object="${users}">
+                <form th:action="@{/admin/user/save}" method="post" enctype="multipart/form-data" th:object="${users}" autocomplete="off">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Tên đăng nhập</label>
@@ -32,7 +31,7 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Số điện thoại</label>
-                            <input type="number" th:field="*{number}" class="form-control" placeholder="Nhập số điện thoại..." required>
+                            <input type="text" th:field="*{number}" class="form-control" placeholder="Nhập số điện thoại..." required>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Quyền</label>
@@ -51,5 +50,6 @@
         </div>
     </div>
 </div>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
 </body>
 </html>

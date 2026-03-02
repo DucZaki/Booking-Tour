@@ -7,6 +7,7 @@ import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Controller
@@ -27,15 +29,37 @@ public class AdminTourController {
     private DiemDenRepository diemDenRepository;
     @Value("${image.path}")
     private String imagePath;
-
-    @GetMapping
-    public String tourList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
-        Page<ChuyenDi> tour = tourService.getAllChuyenDi(page, perPage);
-        model.addAttribute("tour", tour);
-        model.addAttribute("page", page);
+    @GetMapping("/active")
+    public String activeTours(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
+        Page<ChuyenDi> tours = tourService.getActiveTours(page, perPage);
+        model.addAttribute("tour", tours);
+        model.addAttribute("totalPage", tours.getTotalPages());
         model.addAttribute("perPage", perPage);
-        model.addAttribute("totalPage", tour.getTotalPages());
-        return "admin/tour/tour-list";
+        model.addAttribute("page", page);
+        return "admin/tour/tour-active";
+    }
+    @GetMapping("/completed")
+    public String completeTours(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
+        Page<ChuyenDi> tours = tourService.getCompleteTours(page, perPage);
+        model.addAttribute("tour", tours);
+        model.addAttribute("totalPage", tours.getTotalPages());
+        model.addAttribute("perPage", perPage);
+        model.addAttribute("page", page);
+        return "admin/tour/tour-complete";
+    }
+    @GetMapping("/extend/{id}")
+    public String extendForm(@PathVariable Integer id, Model model) {
+        ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
+        model.addAttribute("tour", tour);
+        return "admin/tour/tour-extend";
+    }
+    @PostMapping("/extend")
+    public String extendTour(@RequestParam Integer id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKhoiHanh, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKetThuc) {
+        ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
+        tour.setNgayKhoiHanh(ngayKhoiHanh);
+        tour.setNgayKetThuc(ngayKetThuc);
+        tourService.save(tour);
+        return "redirect:/admin/tour/active";
     }
     @GetMapping("/create")
     public String tourAdd(Model model) {
@@ -56,7 +80,6 @@ public class AdminTourController {
         tourService.save(chuyenDi);
         return "redirect:/admin/tour";
     }
-
     @GetMapping("/edit/{id}")
     public String tourEdit(Model model, @PathVariable Integer id) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
@@ -84,9 +107,10 @@ public class AdminTourController {
     }
 
     @GetMapping("/detail/{id}")
-    public String tourDetail(@PathVariable Integer id, Model model) {
+    public String tourDetail(@PathVariable Integer id, @RequestParam(required = false, defaultValue = "active") String source, Model model) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
+        model.addAttribute("source", source);
         return "admin/tour/tour-detail";
     }
     @GetMapping("delete/{id}")

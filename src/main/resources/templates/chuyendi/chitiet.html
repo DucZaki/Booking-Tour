@@ -7,7 +7,6 @@
     <title th:text="'Chi tiết Tour - ' + ${id.tieuDe}">Chi tiết Tour</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
 </head>
 <body>
 <th:block th:fragment="content">
@@ -97,6 +96,85 @@
                 </div>
 
                 <hr>
+
+                <!-- ===== ĐÁNH GIÁ ===== -->
+                <div class="mt-4">
+                    <h3 class="h5 fw-bold mb-3">ĐÁNH GIÁ CỦA KHÁCH HÀNG</h3>
+                    <div class="mb-3 d-flex align-items-center gap-3">
+                        <div class="fs-4 text-warning">
+                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                <i class="bi"
+                                   th:classappend="${i <= avgRating} ? 'bi-star-fill' : 'bi-star'"></i>
+                            </th:block>
+                        </div>
+                        <div>
+                            <strong th:text="${avgRating} + '/5'"></strong>
+                            <span class="text-muted small">(<span th:text="${totalReview}"></span> đánh giá)</span>
+                        </div>
+                    </div>
+                    <div class="card shadow-sm border-0 mb-3">
+                        <div class="card-body">
+                            <div th:if="${#lists.isEmpty(danhGiaList)}" class="text-muted text-center py-3">
+                                Chưa có đánh giá nào cho chuyến đi này.
+                            </div>
+                            <div th:each="dg : ${danhGiaList}" class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong th:text="${dg.idNguoiDung.hoTen}"></strong>
+                                        <span class="text-warning ms-2" th:text="${dg.diem + ' ⭐'}"></span>
+                                    </div>
+                                    <small class="text-muted"
+                                           th:text="${#temporals.format(dg.ngayDanhGia,'dd/MM/yyyy HH:mm')}">
+                                    </small>
+                                </div>
+                                <p class="mb-0 mt-2 text-muted"
+                                   th:text="${dg.binhLuan}">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div sec:authorize="isAnonymous()" class="alert alert-light border text-center">
+                        Vui lòng
+                        <a th:href="@{/login}" class="fw-bold text-decoration-none">
+                            đăng nhập
+                        </a>
+                        để gửi đánh giá.
+                    </div>
+                    <div sec:authorize="isAuthenticated()" class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <div th:if="${userReview != null}" class="alert alert-info">
+                                Bạn đã đánh giá chuyến đi này. Gửi lại sẽ cập nhật đánh giá.
+                            </div>
+                            <form id="reviewForm" th:action="@{/danh-gia/add}" method="post">
+                                <input type="hidden" name="tourId" th:value="${id.id}">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Mức độ hài lòng </label>
+                                    <div class="rating">
+                                        <input type="radio" name="diem" value="5" id="star5" required>
+                                        <label for="star5">★</label>
+                                        <input type="radio" name="diem" value="4" id="star4">
+                                        <label for="star4">★</label>
+                                        <input type="radio" name="diem" value="3" id="star3">
+                                        <label for="star3">★</label>
+                                        <input type="radio" name="diem" value="2" id="star2">
+                                        <label for="star2">★</label>
+                                        <input type="radio" name="diem" value="1" id="star1">
+                                        <label for="star1">★</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">
+                                        Bình luận
+                                    </label>
+                                    <textarea name="binhLuan" class="form-control" rows="3" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    Gửi đánh giá
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div> <!--Đánh giá-->
 
                 <h3 class="h5 fw-bold text-center mt-4 mb-3">THÔNG TIN THÊM VỀ CHUYẾN ĐI</h3>
                 <div class="row text-center border-bottom pb-3 mb-3">

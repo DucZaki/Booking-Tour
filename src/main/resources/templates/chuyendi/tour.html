@@ -82,6 +82,19 @@
                                 <h5 class="fw-bold mb-2">Tạm thời không có chuyến đi nào tồn tại</h5>
                                 <p class="mb-0 text-muted">Vui lòng thử lại với điểm đến hoặc khoảng giá khác</p>
                             </div>
+                            <div aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mt-4">
+                                    <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/tour(page=${page - 1}, perPage=${perPage})}">&laquo;</a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
+                                        <a class="page-link" th:href="@{/tour(page=${i}, perPage=${perPage})}" th:text="${i + 1}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/tour(page=${page + 1}, perPage=${perPage})}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

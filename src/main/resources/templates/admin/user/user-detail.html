@@ -19,7 +19,7 @@
                         <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
                         <p><strong>Số điện thoại:</strong> <span th:text="${user.number}"></span></p>
                         <p><strong>Role:</strong> <span th:text="${user.vaiTro}"></span></p>
-                        <p><strong>Ngày tạo:</strong> <span th:text="${user.ngayTao}"></span></p>
+                        <p><strong>Ngày tạo:</strong> <span th:text="${#temporals.format(user.ngayTao, 'dd-MM-yyyy')}"></span></p>
                     </div>
                 </div>
                 <div class="mt-4 d-flex justify-content-end">
@@ -32,5 +32,6 @@
         </div>
     </div>
 </div>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
 </body>
 </html>

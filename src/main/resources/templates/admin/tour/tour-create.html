@@ -7,10 +7,7 @@
   <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
   <div class="container mt-4">
     <h3 class="fw-bold text-primary mb-3">Thêm chuyến đi</h3>
-
-    <form th:action="@{/admin/tour/save}" th:object="${tour}" method="post" enctype="multipart/form-data"
-          class="shadow p-4 rounded bg-light">
-
+    <form th:action="@{/admin/tour/save}" th:object="${tour}" method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-light" autocomplete="off">
       <div class="row g-3">
         <div class="col-md-6">
           <label class="form-label fw-bold">Tiêu đề</label>
@@ -24,12 +21,12 @@
 
         <div class="col-md-4">
           <label class="form-label fw-bold">Ngày khởi hành</label>
-          <input type="date" th:field="*{ngayKhoiHanh}" class="form-control" required>
+          <input type="date" th:field="*{ngayKhoiHanh}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
         </div>
 
         <div class="col-md-4">
           <label class="form-label fw-bold">Ngày kết thúc</label>
-          <input type="date" th:field="*{ngayKetThuc}" class="form-control" required>
+          <input type="date" th:field="*{ngayKetThuc}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
         </div>
 
         <div class="col-md-4">
@@ -47,10 +44,10 @@
           <label class="form-label fw-bold">Châu lục</label>
           <select id="chauLuc" class="form-select">
             <option value="">-- Chọn châu lục --</option>
-            <option th:each="c : ${chauLucList}"
-                    th:value="${c}"
-                    th:text="${c}">
-            </option>
+            <option value="Trong nước">Trong nước</option>
+            <option value="Châu Á">Châu Á</option>
+            <option value="Châu Âu">Châu Âu</option>
+            <option value="Châu Mỹ">Châu Mỹ</option>
           </select>
         </div>
 
@@ -98,7 +95,7 @@
           <button type="submit" class="btn btn-success me-2">
             <i class="bi bi-save"></i> Lưu
           </button>
-          <a th:href="@{/admin/tour}" class="btn btn-outline-secondary">
+          <a th:href="@{/admin/tour/active}" class="btn btn-outline-secondary">
             <i class="bi bi-x-circle"></i> Hủy
           </a>
         </div>
@@ -107,32 +104,69 @@
   </div>
 </div>
 <script>
-  document.getElementById("chauLuc").addEventListener("change", function () {
-    fetch(`/api/dia-diem/quoc-gia?chauLuc=${this.value}`)
-            .then(res => res.json())
-            .then(data => {
-              const qg = document.getElementById("quocGia");
-              qg.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
-              document.getElementById("thanhPho").innerHTML =
-                      '<option value="">-- Chọn thành phố --</option>';
-              data.forEach(item => {
-                qg.innerHTML += `<option value="${item}">${item}</option>`;
-              });
-            });
+  const dataDiaDiem = {
+    "Trong nước": {
+      "Việt Nam": [
+        {id: 1, ten: "Sapa"},
+        {id: 2, ten: "Hạ Long"},
+        {id: 3, ten: "Đà Nẵng"},
+        {id: 4, ten: "Huế"},
+        {id: 5, ten: "Phú Quốc"},
+        {id: 6, ten: "Cần Thơ"}
+      ]
+    },
+    "Châu Á": {
+      "Thái Lan": [{id: 7, ten: "Bangkok"}],
+      "Singapore": [{id: 8, ten: "Singapore"}],
+      "Hàn Quốc": [{id: 9, ten: "Seoul"}]
+    },
+    "Châu Âu": {
+      "Pháp": [{id: 10, ten: "Paris"}],
+      "Đức": [{id: 11, ten: "Berlin"}]
+    },
+    "Châu Mỹ": {
+      "Mỹ": [{id: 12, ten: "New York"}],
+      "Canada": [{id: 13, ten: "Toronto"}]
+    }
+  };
+
+  const chauLucSelect = document.getElementById("chauLuc");
+  const quocGiaSelect = document.getElementById("quocGia");
+  const thanhPhoSelect = document.getElementById("thanhPho");
+
+  chauLucSelect.addEventListener("change", function () {
+    const chauLuc = this.value;
+
+    quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
+    thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+
+    if (!dataDiaDiem[chauLuc]) return;
+
+    Object.keys(dataDiaDiem[chauLuc]).forEach(qg => {
+      const option = document.createElement("option");
+      option.value = qg;
+      option.textContent = qg;
+      quocGiaSelect.appendChild(option);
+    });
   });
 
-  document.getElementById("quocGia").addEventListener("change", function () {
-    fetch(`/api/dia-diem/thanh-pho?quocGia=${this.value}`)
-            .then(res => res.json())
-            .then(data => {
-              const tp = document.getElementById("thanhPho");
-              tp.innerHTML = '<option value="">-- Chọn thành phố --</option>';
-              data.forEach(item => {
-                tp.innerHTML += `<option value="${item.id}">${item.thanhPho}</option>`;
-              });
-            });
+  quocGiaSelect.addEventListener("change", function () {
+    const chauLuc = chauLucSelect.value;
+    const quocGia = this.value;
+
+    thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+
+    if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
+
+    dataDiaDiem[chauLuc][quocGia].forEach(tp => {
+      const option = document.createElement("option");
+      option.value = tp.id;
+      option.textContent = tp.ten;
+      thanhPhoSelect.appendChild(option);
+    });
   });
 </script>
 
 </body>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
 </html>

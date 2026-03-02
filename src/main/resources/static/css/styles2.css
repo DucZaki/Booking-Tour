@@ -132,3 +132,39 @@ nav .nav-link i {
     max-width: 160px;
     word-break: break-word;
 }
+
+.admin-footer {
+    background: #fff;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.admin-sidebar {
+    width: 240px;
+    position: sticky;
+    top: 0;
+}
+.admin-sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    color: #555;
+    border-radius: 8px;
+    white-space: nowrap;
+    font-weight: 500;
+}
+
+.admin-sidebar .nav-link:hover {
+    background: #f3f6ff;
+    color: #0d6efd;
+}
+
+/* CỐ ĐỊNH vị trí icon */
+.admin-sidebar .nav-link i {
+    width: 22px;
+    text-align: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
