@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head th:replace="~{layout/admin_layout :: head('Ngày khởi hành')}"></head>
+
+<body>
+    <header th:replace="~{layout/admin_layout:: header()}"></header>
+    <div class="d-flex">
+        <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+        <div class="container mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a th:href="@{'/admin/tour/detail/' + ${tour.id}}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left"></i> Quay lại
+                </a>
+                <h4 class="fw-bold mb-0" th:text="'Ngày khởi hành - ' + ${tour.tieuDe}"></h4>
+            </div>
+
+            <!-- Form thêm ngày khởi hành mới -->
+            <div class="card mb-4 shadow-sm border-0">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-plus-circle me-2"></i>Thêm ngày khởi hành</h6>
+                    <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/add'}" method="post"
+                        id="addDatesForm">
+                        <div id="dateRowsContainer">
+                            <div class="row g-3 align-items-end mb-3 date-row">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold">Ngày đi <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" name="ngayDi" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold">Ngày về <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" name="ngayVe" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" class="btn btn-outline-danger btn-sm remove-row-btn"
+                                        style="display: none;">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-outline-primary btn-sm me-2" id="addRowBtn">
+                                <i class="bi bi-calendar-plus"></i> Thêm ngày khác
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <i class="bi bi-check-lg"></i> Xác nhận thêm tất cả
+                            </button>
+                        </div>
+                    </form>
+                    <script th:inline="javascript">
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const container = document.getElementById('dateRowsContainer');
+                            const addBtn = document.getElementById('addRowBtn');
+
+                            addBtn.addEventListener('click', function () {
+                                const firstRow = container.querySelector('.date-row');
+                                const newRow = firstRow.cloneNode(true);
+
+                                // Reset values
+                                newRow.querySelectorAll('input').forEach(input => input.value = '');
+
+                                // Show remove button
+                                const removeBtn = newRow.querySelector('.remove-row-btn');
+                                removeBtn.style.display = 'inline-block';
+                                removeBtn.addEventListener('click', function () {
+                                    newRow.remove();
+                                });
+
+                                container.appendChild(newRow);
+                            });
+                        });
+                    </script>
+                    <small class="text-muted mt-3 d-block">
+                        <i class="bi bi-info-circle me-1"></i> Đối với tour Máy bay: hệ thống tự fetch giá Amadeus. Đối
+                        với tour Bus: giá mặc định 300,000đ.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Bảng danh sách -->
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(danhSach)}" class="text-center text-muted py-4">
+                        <i class="bi bi-calendar-x fs-1"></i>
+                        <p class="mt-2">Chưa có ngày khởi hành nào. Hãy thêm ở trên.</p>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(danhSach)}" class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ngày đi</th>
+                                    <th>Ngày về</th>
+                                    <th>Mã CB đi</th>
+                                    <th>Giờ bay đi</th>
+                                    <th>Giá đi</th>
+                                    <th>Mã CB về</th>
+                                    <th>Giờ bay về</th>
+                                    <th>Giá về</th>
+                                    <th>Tổng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="nkh, stat : ${danhSach}">
+                                    <td th:text="${stat.count}"></td>
+                                    <td th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></td>
+                                    <td
+                                        th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}">
+                                    </td>
+                                    <td th:text="${nkh.maChuyenBayDi ?: 'N/A'}"></td>
+                                    <td th:text="${nkh.gioBayDi != null ? nkh.gioBayDi + ' → ' + nkh.gioDenDi : 'N/A'}">
+                                    </td>
+                                    <td class="text-danger fw-bold"
+                                        th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}">
+                                    </td>
+                                    <td th:text="${nkh.maChuyenBayVe ?: 'N/A'}"></td>
+                                    <td th:text="${nkh.gioBayVe != null ? nkh.gioBayVe + ' → ' + nkh.gioDenVe : 'N/A'}">
+                                    </td>
+                                    <td class="text-danger fw-bold"
+                                        th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}">
+                                    </td>
+                                    <td class="fw-bold text-primary"
+                                        th:text="${#numbers.formatDecimal(nkh.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                    </td>
+                                    <td>
+                                        <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/edit/' + ${nkh.id}}"
+                                            class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/delete/' + ${nkh.id}}"
+                                            class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Xoá ngày khởi hành này?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+</body>
+
+</html>

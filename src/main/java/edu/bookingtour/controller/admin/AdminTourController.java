@@ -27,10 +27,14 @@ public class AdminTourController {
     private PhuongTienService phuongTienService;
     @Autowired
     private DiemDenRepository diemDenRepository;
+    @Autowired
+    private edu.bookingtour.repo.DiemDonRepository diemDonRepository;
     @Value("${image.path}")
     private String imagePath;
+
     @GetMapping("/active")
-    public String activeTours(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
+    public String activeTours(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage,
+            Model model) {
         Page<ChuyenDi> tours = tourService.getActiveTours(page, perPage);
         model.addAttribute("tour", tours);
         model.addAttribute("totalPage", tours.getTotalPages());
@@ -38,8 +42,10 @@ public class AdminTourController {
         model.addAttribute("page", page);
         return "admin/tour/tour-active";
     }
+
     @GetMapping("/completed")
-    public String completeTours(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "8") int perPage, Model model) {
+    public String completeTours(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int perPage, Model model) {
         Page<ChuyenDi> tours = tourService.getCompleteTours(page, perPage);
         model.addAttribute("tour", tours);
         model.addAttribute("totalPage", tours.getTotalPages());
@@ -47,28 +53,35 @@ public class AdminTourController {
         model.addAttribute("page", page);
         return "admin/tour/tour-complete";
     }
+
     @GetMapping("/extend/{id}")
     public String extendForm(@PathVariable Integer id, Model model) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
         return "admin/tour/tour-extend";
     }
+
     @PostMapping("/extend")
-    public String extendTour(@RequestParam Integer id, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKhoiHanh, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKetThuc) {
+    public String extendTour(@RequestParam Integer id,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKhoiHanh,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayKetThuc) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         tour.setNgayKhoiHanh(ngayKhoiHanh);
         tour.setNgayKetThuc(ngayKetThuc);
         tourService.save(tour);
         return "redirect:/admin/tour/active";
     }
+
     @GetMapping("/create")
     public String tourAdd(Model model) {
         ChuyenDi tour = new ChuyenDi();
         model.addAttribute("tour", tour);
         model.addAttribute("phuongTienList", phuongTienService.getDistinctLoai());
         model.addAttribute("chauLucList", diemDenRepository.findDistinctChauLuc());
+        model.addAttribute("diemDonList", diemDonRepository.findAll());
         return "admin/tour/tour-create";
     }
+
     @PostMapping("/save")
     public String save(@ModelAttribute ChuyenDi chuyenDi, @RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
@@ -80,39 +93,47 @@ public class AdminTourController {
         tourService.save(chuyenDi);
         return "redirect:/admin/tour";
     }
+
     @GetMapping("/edit/{id}")
     public String tourEdit(Model model, @PathVariable Integer id) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
         model.addAttribute("phuongTienList", phuongTienService.getDistinctLoai());
         model.addAttribute("chauLucList", diemDenRepository.findDistinctChauLuc());
-        model.addAttribute("selectedChauLuc", tour.getIdDiemDen().getChauLuc());
-        model.addAttribute("selectedQuocGia", tour.getIdDiemDen().getQuocGia());
-        model.addAttribute("selectedThanhPho", tour.getIdDiemDen().getId());
+        model.addAttribute("diemDonList", diemDonRepository.findAll());
+        if (tour.getIdDiemDen() != null) {
+            model.addAttribute("selectedChauLuc", tour.getIdDiemDen().getChauLuc());
+            model.addAttribute("selectedQuocGia", tour.getIdDiemDen().getQuocGia());
+            model.addAttribute("selectedThanhPho", tour.getIdDiemDen().getId());
+        }
         return "admin/tour/tour-edit";
     }
+
     @PostMapping("/update/{id}")
-    public String update(@PathVariable Integer id, @ModelAttribute ChuyenDi chuyenDi, @RequestParam("file") MultipartFile file) throws IOException {
+    public String update(@PathVariable Integer id, @ModelAttribute ChuyenDi chuyenDi,
+            @RequestParam("file") MultipartFile file) throws IOException {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         if (!file.isEmpty()) {
             String fileName = UUID.randomUUID() + file.getOriginalFilename();
             File dest = new File(imagePath + fileName);
             file.transferTo(dest);
-            tour.setHinhAnh("/anh/chuyendi/" + fileName);
-        }else {
+            chuyenDi.setHinhAnh("/anh/chuyendi/" + fileName);
+        } else {
             chuyenDi.setHinhAnh(tour.getHinhAnh());
         }
         tourService.update(id, chuyenDi);
-        return "redirect:/admin/tour/detail/{id}";
+        return "redirect:/admin/tour/detail/" + id;
     }
 
     @GetMapping("/detail/{id}")
-    public String tourDetail(@PathVariable Integer id, @RequestParam(required = false, defaultValue = "active") String source, Model model) {
+    public String tourDetail(@PathVariable Integer id,
+            @RequestParam(required = false, defaultValue = "active") String source, Model model) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
         model.addAttribute("source", source);
         return "admin/tour/tour-detail";
     }
+
     @GetMapping("delete/{id}")
     public String delete(@PathVariable Integer id) {
         tourService.delete(id);

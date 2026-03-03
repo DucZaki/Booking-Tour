@@ -1,10 +1,11 @@
 package edu.bookingtour.controller.user;
 
-import edu.bookingtour.client.TravelPayoutsClient;
 import edu.bookingtour.entity.Calendar;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DanhGia;
+import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.service.DanhGiaService;
+import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +23,22 @@ import java.util.List;
 @Controller
 public class ChuyenDiController {
     @Autowired
-    private TourService tourService; // Thêm Service
+    private TourService tourService;
     @Autowired
     private DanhGiaService danhGiaService;
     @Autowired
-    private TravelPayoutsClient travelPayoutsClient;
+    private NgayKhoiHanhService ngayKhoiHanhService;
     @Autowired
     private NguoiDungService nguoiDungService;
+
     @GetMapping("/tour")
-    public String viewDiemDenPage(@RequestParam(required = false) String thanhPho, @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen, @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort, @RequestParam(required = false) String ngayDi, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, Model model) {
-        Page<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia,diemDen, khoangGia, ngayDi, sort, page, size);
+    public String viewDiemDenPage(@RequestParam(required = false) String thanhPho,
+            @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen,
+            @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String ngayDi, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, Model model) {
+        Page<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, khoangGia, ngayDi, sort, page,
+                size);
         model.addAttribute("dschuyendi", dschuyendi);
         model.addAttribute("dem", dschuyendi.getTotalElements());
         model.addAttribute("diemDenSelected", diemDen);
@@ -43,48 +50,74 @@ public class ChuyenDiController {
         return "chuyendi/tour";
     }
 
-    // Phương thức viewChitietDenPage cũng nên sử dụng Service
     @GetMapping("/tour/{id}")
     public String viewChitietDenPage(Model model,
-                                     @PathVariable Integer id,
-                                     @RequestParam(defaultValue = "1") Integer month,
-                                     @RequestParam(defaultValue = "2026") Integer year,
-                                     Principal principal,
-                                     @RequestParam(required = false) String selectedDate) throws Exception {
+            @PathVariable Integer id,
+            @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) Integer year,
+            Principal principal,
+            @RequestParam(required = false) String selectedDate) throws Exception {
 
-        int viewMonth = (month != null) ? month : LocalDate.now().getMonthValue();
-        int viewYear = (year != null) ? year : LocalDate.now().getYear();
-        // Nếu có ngày được chọn
-        LocalDate localDate;
-        if (selectedDate != null && !selectedDate.isEmpty()) {
-            localDate = LocalDate.parse(selectedDate); // ✅ Chuyển chuỗi "2026-01-10" thành LocalDate
-        } else {
-            localDate = LocalDate.now(); // nếu chưa chọn thì mặc định là ngày hiện tại
+        // Tính 3 tháng bắt đầu từ tháng hiện tại
+        LocalDate now = LocalDate.now();
+        int startMonth = now.getMonthValue();
+        int startYear = now.getYear();
+
+        // Default: tháng hiện tại
+        int viewMonth = (month != null) ? month : startMonth;
+        int viewYear = (year != null) ? year : startYear;
+
+        // Giới hạn chỉ cho phép 3 tháng từ tháng hiện tại
+        int[] months = new int[3];
+        int[] years = new int[3];
+        for (int i = 0; i < 3; i++) {
+            int m = startMonth + i;
+            int y = startYear;
+            if (m > 12) {
+                m -= 12;
+                y++;
+            }
+            months[i] = m;
+            years[i] = y;
         }
-        String Date = localDate.toString(); // yyyy-MM-dd
-        List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear, selectedDate);
-        List<ChuyenDi> dschuyendi = tourService.findAll();
 
-        String from = "HAN";
-        String to = "SGN";
+        ChuyenDi chuyenDi = tourService.findByIdd(Math.toIntExact(id));
+        if (chuyenDi == null) {
+            return "redirect:/tour";
+        }
+
+        // Lấy ngày khởi hành do admin đã set cho tháng hiện tại
+        List<NgayKhoiHanh> departureDates = ngayKhoiHanhService.getDepartureDates(id, viewMonth, viewYear);
+
+        // Tạo calendar với thông tin ngày khởi hành
+        List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear, selectedDate, departureDates);
+
+        // Tìm ngày khởi hành được chọn
+        NgayKhoiHanh selectedNkh = null;
+        double flightPrice = 0;
+        if (selectedDate != null && !selectedDate.isEmpty()) {
+            LocalDate localDate = LocalDate.parse(selectedDate);
+            selectedNkh = ngayKhoiHanhService.findByChuyenDiAndNgay(id, localDate);
+            if (selectedNkh != null) {
+                flightPrice = selectedNkh.getTongGiaVe();
+            }
+        }
 
         try {
-            double FlightPrice = travelPayoutsClient.getCheapestPrice(from, to, Date);
-            String carriers = travelPayoutsClient.getCarrierCode(from, to, Date);
-            String Origin = travelPayoutsClient.takeorigin(from, to, Date);
-            String departure = travelPayoutsClient.getdeparture(from, to, Date);
-//            String username = nguoiDungService.findByTenDangNhap()
-            model.addAttribute("carrier", carriers);
-            model.addAttribute("price", FlightPrice);
-            model.addAttribute("date", departure);
-            model.addAttribute("origin", Origin);
             model.addAttribute("calendar", calendar);
             model.addAttribute("currentMonth", viewMonth);
             model.addAttribute("currentYear", viewYear);
-            model.addAttribute("dschuyendi", dschuyendi);
             model.addAttribute("selectedDate", selectedDate);
-            model.addAttribute("id", tourService.findByIdd(Math.toIntExact(id)));
+            model.addAttribute("id", chuyenDi);
+            model.addAttribute("departureDates", departureDates);
+            model.addAttribute("selectedNkh", selectedNkh);
+            model.addAttribute("price", flightPrice);
 
+            // 3 tháng cho sidebar
+            model.addAttribute("months", months);
+            model.addAttribute("years", years);
+
+            // Đánh giá
             List<DanhGia> danhGiaList = danhGiaService.findByTourId(id);
             double avg = danhGiaList.stream().mapToInt(DanhGia::getDiem).average().orElse(0);
             DanhGia userReview = null;
@@ -103,5 +136,29 @@ public class ChuyenDiController {
         return "chuyendi/chitiet";
     }
 
+    /**
+     * Trang đặt tour (booking form)
+     */
+    @GetMapping("/tour/{tourId}/dat-tour")
+    public String bookingForm(@PathVariable Integer tourId,
+            @RequestParam Integer nkhId,
+            Principal principal,
+            Model model) {
+        ChuyenDi chuyenDi = tourService.findByIdd(tourId);
+        if (chuyenDi == null)
+            return "redirect:/tour";
 
+        NgayKhoiHanh nkh = ngayKhoiHanhService.findById(nkhId);
+        if (nkh == null)
+            return "redirect:/tour/" + tourId;
+
+        double tongGia = chuyenDi.getGia().doubleValue() + nkh.getTongGiaVe();
+
+        model.addAttribute("tour", chuyenDi);
+        model.addAttribute("nkh", nkh);
+        model.addAttribute("tongGia", tongGia);
+        model.addAttribute("principal", principal);
+
+        return "chuyendi/dat-tour";
+    }
 }

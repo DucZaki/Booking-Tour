@@ -1,56 +1,246 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8">-->
-<!--  <title>Admin Dashboard</title>-->
-<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--</head>-->
-<!--<body class="bg-light">-->
-<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
-<!--  <div class="container-fluid">-->
-<!--    <a class="navbar-brand" href="#">BookingTour Admin</a>-->
-<!--    <div class="collapse navbar-collapse">-->
-<!--      <ul class="navbar-nav ms-auto">-->
-<!--        <li class="nav-item"><a class="nav-link" th:href="@{/admin/users}">Users</a></li>-->
-<!--        <li class="nav-item"><a class="nav-link" th:href="@{/admin/travels}">Travels</a></li>-->
-<!--        <li class="nav-item"><a class="nav-link" th:href="@{/admin/destinations}">Destinations</a></li>-->
-<!--        <li class="nav-item"><a class="nav-link text-danger" th:href="@{/logout}">Logout</a></li>-->
-<!--      </ul>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</nav>-->
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
-<!--<div class="container py-5">-->
-<!--  <h1 class="mb-4">Welcome to Admin Dashboard</h1>-->
-<!--  <div class="row">-->
-<!--    <div class="col-md-4">-->
-<!--      <div class="card text-center shadow-sm">-->
-<!--        <div class="card-body">-->
-<!--          <h5 class="card-title">Users</h5>-->
-<!--          <p class="card-text">Manage registered users</p>-->
-<!--          <a th:href="@{/admin/users}" class="btn btn-primary">Go</a>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="col-md-4">-->
-<!--      <div class="card text-center shadow-sm">-->
-<!--        <div class="card-body">-->
-<!--          <h5 class="card-title">Travels</h5>-->
-<!--          <p class="card-text">View and edit tours</p>-->
-<!--          <a th:href="@{/admin/travels}" class="btn btn-success">Go</a>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="col-md-4">-->
-<!--      <div class="card text-center shadow-sm">-->
-<!--        <div class="card-body">-->
-<!--          <h5 class="card-title">Destinations</h5>-->
-<!--          <p class="card-text">Manage destinations</p>-->
-<!--          <a th:href="@{/admin/destinations}" class="btn btn-warning">Go</a>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
+<head th:replace="~{layout/admin_layout :: head('Admin Dashboard')}"></head>
+
+<body class="bg-light">
+    <div th:replace="~{layout/admin_layout :: header()}"></div>
+
+    <div class="d-flex">
+        <div th:replace="~{layout/admin_layout :: nav()}"></div>
+
+        <main class="flex-grow-1 p-4" style="min-height: 100vh;">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="fw-bold mb-0">Hệ thống Thống kê</h2>
+                    <div class="text-muted" th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}">
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100 bg-white border-start border-primary border-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
+                                        <i class="bi bi-currency-dollar fs-4"></i>
+                                    </div>
+                                    <span class="badge bg-light text-dark border small">+12%</span>
+                                </div>
+                                <h6 class="text-muted mb-1 small">Doanh thu tổng</h6>
+                                <h3 class="fw-bold mb-0 text-dark"
+                                    th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100 bg-white border-dark border-1"
+                            style="border-style: solid !important;">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
+                                        <i class="bi bi-cart-check fs-4"></i>
+                                    </div>
+                                    <span class="text-muted small fw-bold"
+                                        th:text="${successBookings} + ' thành công'"></span>
+                                </div>
+                                <h6 class="text-muted mb-1 small">Tổng số Booking</h6>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalBookings}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100 bg-white border-start border-primary border-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
+                                        <i class="bi bi-airplane-engines fs-4"></i>
+                                    </div>
+                                    <span class="text-muted small fw-bold" th:text="${totalTours} + ' tour'"></span>
+                                </div>
+                                <h6 class="text-muted mb-1 small">Hiệu suất Tour</h6>
+                                <h3 class="fw-bold mb-0 text-dark"
+                                    th:text="${totalTours > 0 ? (successBookings * 100 / totalBookings) : 0} + '%'">0%
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm h-100 bg-white border-dark border-1"
+                            style="border-style: solid !important;">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <div class="bg-dark text-primary p-3 rounded-3">
+                                        <i class="bi bi-people fs-4"></i>
+                                    </div>
+                                    <span class="text-muted small fw-bold">Khách hàng</span>
+                                </div>
+                                <h6 class="text-muted mb-1 small">Tổng người dùng</h6>
+                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalUsers}">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white py-3 border-bottom-0">
+                                <h5 class="fw-bold mb-0">Doanh thu theo tháng (2025)</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="revenueChart" style="max-height: 350px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white py-3 border-bottom-0">
+                                <h5 class="fw-bold mb-0">Trạng thái đặt chỗ</h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="statusChart" style="max-height: 350px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tables Row -->
+                <div class="row g-4">
+                    <div class="col-lg-12">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div
+                                class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="fw-bold mb-0">Top Tour bán chạy</h5>
+                                <a th:href="@{/admin/tour/active}" class="btn btn-sm btn-link text-decoration-none">Xem
+                                    tất cả</a>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="px-4 py-3 border-0">ID</th>
+                                                <th class="py-3 border-0">Tên Tour</th>
+                                                <th class="py-3 border-0">Số lượt đặt</th>
+                                                <th class="py-3 border-0">Doanh thu</th>
+                                                <th class="py-3 border-0 text-center">Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="row : ${topTours}">
+                                                <td class="px-4 py-3 border-0 fw-bold" th:text="${row[0]}"></td>
+                                                <td class="py-3 border-0" th:text="${row[1]}"></td>
+                                                <td class="py-3 border-0">
+                                                    <span
+                                                        class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold"
+                                                        th:text="${row[2]} + ' lượt'"></span>
+                                                </td>
+                                                <td class="py-3 border-0 fw-bold text-dark"
+                                                    th:text="${#numbers.formatDecimal(row[3], 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                                </td>
+                                                <td class="py-3 border-0 text-center">
+                                                    <a th:href="@{/admin/tour/detail/{id}(id=${row[0]})}"
+                                                        class="btn btn-sm btn-outline-primary rounded-circle">
+                                                        <i class="bi bi-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${#lists.isEmpty(topTours)}">
+                                                <td colspan="5" class="text-center py-5 text-muted">Chưa có dữ liệu đặt
+                                                    chỗ nào.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div th:replace="~{layout/admin_layout :: footer()}"></div>
+
+    <!-- Chart Configuration Script -->
+    <script th:inline="javascript">
+        /* Chart Data from Thymeleaf */
+        const months = /*[[${chartMonths}]]*/[];
+        const revenues = /*[[${chartRevenues}]]*/[];
+        const statusLabels = /*[[${statusLabels}]]*/[];
+        const statusCounts = /*[[${statusCounts}]]*/[];
+
+        // Revenue Line Chart
+        const revCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revCtx, {
+            type: 'line',
+            data: {
+                labels: months.map(m => `Tháng ${m}`),
+                datasets: [{
+                    label: 'Doanh thu (₫)',
+                    data: revenues,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#0d6efd'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5] },
+                        ticks: {
+                            callback: value => value.toLocaleString('vi-VN') + ' ₫'
+                        }
+                    },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+
+        // Booking Status Pie Chart
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusCounts,
+                    backgroundColor: [
+                        '#000000', // PAID (Black/Primary theme)
+                        '#FECF2F', // PENDING (Yellow)
+                        '#dc3545', // FAILED (Red)
+                        '#e9ecef'  // Canceled/Other (Light Grey)
+                    ],
+                    hoverOffset: 10,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, padding: 20 }
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+    </script>
+</body>
+
+</html>

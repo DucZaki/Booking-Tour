@@ -1,6 +1,6 @@
 package edu.bookingtour.controller.user;
 
-import edu.bookingtour.client.TravelPayoutsClient;
+import edu.bookingtour.client.AmadeusClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/flights")
 public class FlightController {
     @Autowired
-    private TravelPayoutsClient travelPayoutsClient;
+    private AmadeusClient amadeusClient;
 
     @GetMapping("/price")
     public double getPrice(@RequestParam String from, @RequestParam String to, @RequestParam String date) {
-        double price = travelPayoutsClient.getCheapestPrice(from, to, date);
+        double price = amadeusClient.getCheapestPrice(from, to, date);
         return price;
     }
 

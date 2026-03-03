@@ -26,15 +26,23 @@ public class FavoriteService {
     @Autowired
     private FavoriteRepository yeuThichRepository;
 
-    public void saveFavorite(Integer tourid, String username){
-        NguoiDung user = nguoiDungservice.findByTenDangNhap(username).orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: "));
+    public void saveFavorite(Integer tourid, String username) {
+        NguoiDung user = nguoiDungservice.findByTenDangNhap(username)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với username: " + username));
         ChuyenDi tour = TourService.findByIdd(tourid);
-        YeuThich favorite = new  YeuThich();
+
+        // Prevent duplicate favorites
+        if (yeuThichRepository.existsByIdNguoiDungAndIdChuyenDi(user, tour)) {
+            return;
+        }
+
+        YeuThich favorite = new YeuThich();
         favorite.setIdChuyenDi(tour);
         favorite.setIdNguoiDung(user);
         yeuThichRepository.save(favorite);
     }
-    public void deleteFavorite(Integer id){
-       yeuThichRepository.deleteById(id);
+
+    public void deleteFavorite(Integer id) {
+        yeuThichRepository.deleteById(id);
     }
 }

@@ -1,4 +1,5 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head th:fragment="head(title)">
   <title th:text="${title}"></title>
   <meta charset="UTF-8">
@@ -9,6 +10,8 @@
   <script src="/js/bootstrap.bundle.js"></script>
   <!-- Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <!-- Custom -->
   <link href="/css/styles2.css" rel="stylesheet" type="text/css">
 </head>
@@ -16,11 +19,11 @@
   <section class="admin-header container-fluid px-4 py-3 bg-white">
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center">
-        <i class="bi bi-kanban fs-4 text-primary me-2"></i>
-        <h5 class="fw-bold mb-0 text-primary">ZakiBooking Admin</h5>
+        <i class="bi bi-kanban fs-4 text-dark me-2"></i>
+        <h5 class="fw-bold mb-0 text-dark">ZakiBooking <span class="text-primary">Admin</span></h5>
       </div>
       <div class="d-flex align-items-center gap-2">
-        <a th:href="@{/}" class="btn btn-outline-primary btn-sm">
+        <a th:href="@{/}" class="btn btn-outline-dark btn-sm">
           <i class="bi bi-window me-1"></i>
           Client
         </a>
@@ -35,65 +38,63 @@
   </section>
 </header>
 <nav th:fragment="nav()" class="admin-sidebar border-end bg-white" style="width: 280px">
-    <ul class="nav flex-column px-3">
-      <li class="nav-item mb-1">
-        <a class="nav-link" th:href="@{/admin}">
-          <i class="bi bi-speedometer2 me-2"></i>
-          Dashboard
-        </a>
-      </li>
-      <li class="nav-item mb-1">
-        <a class="nav-link" th:href="@{/admin/user}">
-          <i class="bi bi-people me-2"></i>
-          Quản lý người dùng
-        </a>
-      </li>
-      <li class="nav-item mb-1">
-        <a class="nav-link d-flex justify-content-between align-items-center"
-           data-bs-toggle="collapse"
-           href="#tourMenu">
-          <span>
-            <i class="bi bi-airplane me-2"></i>
-            Quản lý chuyến đi
-          </span>
-          <i class="bi bi-chevron-down small"></i>
-        </a>
-        <div class="collapse ps-3" id="tourMenu">
-          <ul class="nav flex-column">
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/admin/tour/active}">
-                <i class="bi bi-play-circle me-2 text-success"></i>
-                Tour đang hoạt động
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" th:href="@{/admin/tour/completed}">
-                <i class="bi bi-check-circle me-2 text-secondary"></i>
-                Tour đã kết thúc
-              </a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      <li class="nav-item mb-1">
-        <a class="nav-link" th:href="@{/admin/contact}">
-          <i class="bi bi-envelope me-2"></i>
-          Quản lý liên hệ
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" th:href="@{/admin/danh-gia}">
-          <i class="bi bi-star me-2"></i>
-          Quản lý đánh giá
-        </a>
-      </li>
-    </ul>
+  <ul class="nav flex-column px-3">
+    <li class="nav-item mb-1">
+      <a class="nav-link" th:href="@{/admin}">
+        <i class="bi bi-speedometer2 me-2"></i>
+        Dashboard
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link" th:href="@{/admin/user}">
+        <i class="bi bi-people me-2"></i>
+        Quản lý người dùng
+      </a>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#tourMenu">
+        <span>
+          <i class="bi bi-airplane me-2"></i>
+          Quản lý chuyến đi
+        </span>
+        <i class="bi bi-chevron-down small"></i>
+      </a>
+      <div class="collapse ps-3" id="tourMenu">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/tour/active}">
+              <i class="bi bi-play-circle me-2 text-success"></i>
+              Tour đang hoạt động
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/tour/completed}">
+              <i class="bi bi-check-circle me-2 text-secondary"></i>
+              Tour đã kết thúc
+            </a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link" th:href="@{/admin/contact}">
+        <i class="bi bi-envelope me-2"></i>
+        Quản lý liên hệ
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" th:href="@{/admin/danh-gia}">
+        <i class="bi bi-star me-2"></i>
+        Quản lý đánh giá
+      </a>
+    </li>
+  </ul>
 </nav>
 
 <footer th:fragment="footer()" class="admin-footer mt-auto">
   <div class="container-fluid py-3 border-top">
     <div class="d-flex justify-content-center align-items-center small text-muted">
-        © 2026 ZakiBooking Admin Panel
+      © 2026 ZakiBooking Admin Panel
     </div>
   </div>
 </footer>

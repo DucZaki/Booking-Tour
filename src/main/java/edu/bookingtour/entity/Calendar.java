@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+
 @Getter
 @Setter
 public class Calendar {
@@ -12,5 +13,6 @@ public class Calendar {
     private double flightPrice;
     private boolean isSelected;
     private boolean isPast;
-
+    private boolean hasDeparture;
+    private Integer ngayKhoiHanhId;
 }

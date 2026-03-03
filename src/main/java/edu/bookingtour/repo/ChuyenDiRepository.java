@@ -16,13 +16,15 @@ import java.util.List;
 
 @Repository
 public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
-                                            JpaSpecificationExecutor<ChuyenDi> {
-    List<ChuyenDi> findByNoiBat (boolean noiBat);
+        JpaSpecificationExecutor<ChuyenDi> {
+    List<ChuyenDi> findByNoiBat(boolean noiBat);
+
     List<ChuyenDi> findAll();
+
     long count();
 
     @Query("""
-            SELECT cd FROM ChuyenDi cd
+            SELECT DISTINCT cd FROM ChuyenDi cd
             JOIN cd.idDiemDen dd
             WHERE (:thanhPho IS NULL OR LOWER(dd.thanhPho) = LOWER(:thanhPho))
             AND (:quocGia IS NULL OR LOWER(dd.quocGia) = LOWER(:quocGia))
@@ -30,8 +32,10 @@ public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
             AND (:ngayDi IS NULL OR cd.ngayKhoiHanh >= :ngayDi)
             AND (:minGia IS NULL OR :maxGia IS NULL OR cd.gia BETWEEN :minGia AND :maxGia)
             """)
-    Page<ChuyenDi> filterTour(String thanhPho, String quocGia, String diemDen, LocalDate ngayDi, BigDecimal minGia, BigDecimal maxGia, Pageable pageable);
+    Page<ChuyenDi> filterTour(String thanhPho, String quocGia, String diemDen, LocalDate ngayDi, BigDecimal minGia,
+            BigDecimal maxGia, Pageable pageable);
 
     Page<ChuyenDi> findByNgayKetThucAfter(LocalDate today, Pageable pageable);
+
     Page<ChuyenDi> findByNgayKetThucBefore(LocalDate today, Pageable pageable);
 }

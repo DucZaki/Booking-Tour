@@ -1,172 +1,179 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+
 <head th:replace="~{layout/admin_layout :: head('Admin')}"></head>
+
 <body>
-<header th:replace="~{layout/admin_layout:: header()}"></header>
-<div class="d-flex">
-  <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
-  <div class="container mt-4">
-    <h3 class="fw-bold text-primary mb-3">Thêm chuyến đi</h3>
-    <form th:action="@{/admin/tour/save}" th:object="${tour}" method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-light" autocomplete="off">
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Tiêu đề</label>
-          <input type="text" th:field="*{tieuDe}" class="form-control" required>
-        </div>
+  <header th:replace="~{layout/admin_layout:: header()}"></header>
+  <div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+      <h3 class="fw-bold text-primary mb-3">Thêm chuyến đi</h3>
+      <form th:action="@{/admin/tour/save}" th:object="${tour}" method="post" enctype="multipart/form-data"
+        class="shadow p-4 rounded bg-light" autocomplete="off">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Tiêu đề</label>
+            <input type="text" th:field="*{tieuDe}" class="form-control" required>
+          </div>
 
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Giá cả</label>
-          <input type="text" th:field="*{gia}" class="form-control" required>
-        </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Giá cả</label>
+            <input type="text" th:field="*{gia}" class="form-control" required>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Ngày khởi hành</label>
-          <input type="date" th:field="*{ngayKhoiHanh}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Ngày khởi hành</label>
+            <input type="date" th:field="*{ngayKhoiHanh}"
+              th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Ngày kết thúc</label>
-          <input type="date" th:field="*{ngayKetThuc}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Ngày kết thúc</label>
+            <input type="date" th:field="*{ngayKetThuc}"
+              th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label">Phương tiện</label>
-          <select class="form-select"
-                  th:field="*{idPhuongTien.id}">
-            <option th:each="pt : ${phuongTienList}"
-                    th:value="${pt.id}"
-                    th:text="${pt.loai}">
-            </option>
-          </select>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Phương tiện</label>
+            <select class="form-select" th:field="*{idPhuongTien.id}">
+              <option th:each="pt : ${phuongTienList}" th:value="${pt.id}" th:text="${pt.loai}"></option>
+            </select>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Châu lục</label>
-          <select id="chauLuc" class="form-select">
-            <option value="">-- Chọn châu lục --</option>
-            <option value="Trong nước">Trong nước</option>
-            <option value="Châu Á">Châu Á</option>
-            <option value="Châu Âu">Châu Âu</option>
-            <option value="Châu Mỹ">Châu Mỹ</option>
-          </select>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Điểm đón</label>
+            <select class="form-select" th:field="*{idDiemDon.id}">
+              <option th:each="dd : ${diemDonList}" th:value="${dd.id}" th:text="${dd.ten}"></option>
+            </select>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Quốc gia</label>
-          <select id="quocGia" class="form-select">
-            <option value="">-- Chọn quốc gia --</option>
-          </select>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Châu lục</label>
+            <select id="chauLuc" class="form-select">
+              <option value="">-- Chọn châu lục --</option>
+              <option value="Trong nước">Trong nước</option>
+              <option value="Châu Á">Châu Á</option>
+              <option value="Châu Âu">Châu Âu</option>
+              <option value="Châu Mỹ">Châu Mỹ</option>
+            </select>
+          </div>
 
-        <div class="col-md-4">
-          <label class="form-label fw-bold">Thành phố</label>
-          <select id="thanhPho"
-                  class="form-select"
-                  th:field="*{idDiemDen.id}">
-            <option value="">-- Chọn thành phố --</option>
-          </select>
-        </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Quốc gia</label>
+            <select id="quocGia" class="form-select">
+              <option value="">-- Chọn quốc gia --</option>
+            </select>
+          </div>
 
-        <div class="col-md-6">
-          <label>Nổi bật:</label><br>
-          <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
-          <label for="yes">Yes</label>
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Thành phố</label>
+            <select id="thanhPho" class="form-select" th:field="*{idDiemDen.id}">
+              <option value="">-- Chọn thành phố --</option>
+            </select>
+          </div>
 
-          <input type="radio" th:field="*{noiBat}" th:value="false" id="no">
-          <label for="no">No</label>
-        </div>
+          <div class="col-md-6">
+            <label>Nổi bật:</label><br>
+            <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
+            <label for="yes">Yes</label>
 
-        <div class="col-md-12">
-          <label class="form-label fw-bold">Mô tả</label>
-          <textarea th:field="*{moTa}" class="form-control" rows="4" required></textarea>
-        </div>
+            <input type="radio" th:field="*{noiBat}" th:value="false" id="no">
+            <label for="no">No</label>
+          </div>
 
-        <div class="col-md-12">
-          <label class="form-label fw-bold">Highlight</label>
-          <textarea th:field="*{highlight}" class="form-control" rows="4" required></textarea>
-        </div>
+          <div class="col-md-12">
+            <label class="form-label fw-bold">Mô tả</label>
+            <textarea th:field="*{moTa}" class="form-control" rows="4" required></textarea>
+          </div>
 
-        <div class="col-md-6">
-          <label class="form-label fw-bold">Ảnh đại diện</label>
-          <input type="file" name="file" class="form-control" accept="image/*">
-        </div>
+          <div class="col-md-12">
+            <label class="form-label fw-bold">Highlight</label>
+            <textarea th:field="*{highlight}" class="form-control" rows="4" required></textarea>
+          </div>
 
-        <div class="col-12 text-end mt-3">
-          <button type="submit" class="btn btn-success me-2">
-            <i class="bi bi-save"></i> Lưu
-          </button>
-          <a th:href="@{/admin/tour/active}" class="btn btn-outline-secondary">
-            <i class="bi bi-x-circle"></i> Hủy
-          </a>
+          <div class="col-md-6">
+            <label class="form-label fw-bold">Ảnh đại diện</label>
+            <input type="file" name="file" class="form-control" accept="image/*">
+          </div>
+
+          <div class="col-12 text-end mt-3">
+            <button type="submit" class="btn btn-success me-2">
+              <i class="bi bi-save"></i> Lưu
+            </button>
+            <a th:href="@{/admin/tour/active}" class="btn btn-outline-secondary">
+              <i class="bi bi-x-circle"></i> Hủy
+            </a>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </div>
   </div>
-</div>
-<script>
-  const dataDiaDiem = {
-    "Trong nước": {
-      "Việt Nam": [
-        {id: 1, ten: "Sapa"},
-        {id: 2, ten: "Hạ Long"},
-        {id: 3, ten: "Đà Nẵng"},
-        {id: 4, ten: "Huế"},
-        {id: 5, ten: "Phú Quốc"},
-        {id: 6, ten: "Cần Thơ"}
-      ]
-    },
-    "Châu Á": {
-      "Thái Lan": [{id: 7, ten: "Bangkok"}],
-      "Singapore": [{id: 8, ten: "Singapore"}],
-      "Hàn Quốc": [{id: 9, ten: "Seoul"}]
-    },
-    "Châu Âu": {
-      "Pháp": [{id: 10, ten: "Paris"}],
-      "Đức": [{id: 11, ten: "Berlin"}]
-    },
-    "Châu Mỹ": {
-      "Mỹ": [{id: 12, ten: "New York"}],
-      "Canada": [{id: 13, ten: "Toronto"}]
-    }
-  };
+  <script>
+    const dataDiaDiem = {
+      "Trong nước": {
+        "Việt Nam": [
+          { id: 1, ten: "Sapa" },
+          { id: 2, ten: "Hạ Long" },
+          { id: 3, ten: "Đà Nẵng" },
+          { id: 4, ten: "Huế" },
+          { id: 5, ten: "Phú Quốc" },
+          { id: 6, ten: "Cần Thơ" }
+        ]
+      },
+      "Châu Á": {
+        "Thái Lan": [{ id: 7, ten: "Bangkok" }],
+        "Singapore": [{ id: 8, ten: "Singapore" }],
+        "Hàn Quốc": [{ id: 9, ten: "Seoul" }]
+      },
+      "Châu Âu": {
+        "Pháp": [{ id: 10, ten: "Paris" }],
+        "Đức": [{ id: 11, ten: "Berlin" }]
+      },
+      "Châu Mỹ": {
+        "Mỹ": [{ id: 12, ten: "New York" }],
+        "Canada": [{ id: 13, ten: "Toronto" }]
+      }
+    };
 
-  const chauLucSelect = document.getElementById("chauLuc");
-  const quocGiaSelect = document.getElementById("quocGia");
-  const thanhPhoSelect = document.getElementById("thanhPho");
+    const chauLucSelect = document.getElementById("chauLuc");
+    const quocGiaSelect = document.getElementById("quocGia");
+    const thanhPhoSelect = document.getElementById("thanhPho");
 
-  chauLucSelect.addEventListener("change", function () {
-    const chauLuc = this.value;
+    chauLucSelect.addEventListener("change", function () {
+      const chauLuc = this.value;
 
-    quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
-    thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+      quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
+      thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
 
-    if (!dataDiaDiem[chauLuc]) return;
+      if (!dataDiaDiem[chauLuc]) return;
 
-    Object.keys(dataDiaDiem[chauLuc]).forEach(qg => {
-      const option = document.createElement("option");
-      option.value = qg;
-      option.textContent = qg;
-      quocGiaSelect.appendChild(option);
+      Object.keys(dataDiaDiem[chauLuc]).forEach(qg => {
+        const option = document.createElement("option");
+        option.value = qg;
+        option.textContent = qg;
+        quocGiaSelect.appendChild(option);
+      });
     });
-  });
 
-  quocGiaSelect.addEventListener("change", function () {
-    const chauLuc = chauLucSelect.value;
-    const quocGia = this.value;
+    quocGiaSelect.addEventListener("change", function () {
+      const chauLuc = chauLucSelect.value;
+      const quocGia = this.value;
 
-    thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+      thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
 
-    if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
+      if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
 
-    dataDiaDiem[chauLuc][quocGia].forEach(tp => {
-      const option = document.createElement("option");
-      option.value = tp.id;
-      option.textContent = tp.ten;
-      thanhPhoSelect.appendChild(option);
+      dataDiaDiem[chauLuc][quocGia].forEach(tp => {
+        const option = document.createElement("option");
+        option.value = tp.id;
+        option.textContent = tp.ten;
+        thanhPhoSelect.appendChild(option);
+      });
     });
-  });
-</script>
+  </script>
 
 </body>
 <footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+
 </html>

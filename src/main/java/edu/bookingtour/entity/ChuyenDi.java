@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -50,6 +51,10 @@ public class ChuyenDi {
     @JoinColumn(name = "id_noi_luu_tru")
     private NoiLuuTru idNoiLuuTru;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_diem_don")
+    private DiemDon idDiemDon;
+
     @ColumnDefault("0")
     @Column(name = "noi_bat")
     private Boolean noiBat;
@@ -59,4 +64,16 @@ public class ChuyenDi {
 
     @Column(name = "highlight")
     private String highlight;
+
+    @OneToMany(mappedBy = "chuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<NgayKhoiHanh> ngayKhoiHanhs;
+
+    @OneToMany(mappedBy = "idChuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DanhGia> danhGias;
+
+    @OneToMany(mappedBy = "idChuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DatCho> datChos;
+
+    @OneToMany(mappedBy = "idChuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<YeuThich> yeuThichs;
 }
