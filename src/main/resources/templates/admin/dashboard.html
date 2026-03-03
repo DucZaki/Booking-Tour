@@ -3,14 +3,14 @@
 
 <head th:replace="~{layout/admin_layout :: head('Admin Dashboard')}"></head>
 
-<body class="bg-light">
+<body>
     <div th:replace="~{layout/admin_layout :: header()}"></div>
 
     <div class="d-flex">
         <div th:replace="~{layout/admin_layout :: nav()}"></div>
 
-        <main class="flex-grow-1 p-4" style="min-height: 100vh;">
-            <div class="container-fluid">
+        <main class="flex-grow-1 p-4" style="min-height: calc(100vh - 80px); overflow-x: hidden;">
+            <div class="container-fluid px-0">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2 class="fw-bold mb-0">Hệ thống Thống kê</h2>
                     <div class="text-muted" th:text="${#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}">

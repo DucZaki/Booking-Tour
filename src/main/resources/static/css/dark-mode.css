@@ -387,30 +387,41 @@
     background-color: #2a2a2a !important;
 }
 
-/* === ADMIN - HEADER === */
-[data-theme="dark"] header {
+[data-theme="dark"] header,
+[data-theme="dark"] .admin-header {
     background-color: #1a1a1a !important;
     border-bottom-color: #2d2d2d !important;
     color: #e0e0e0 !important;
 }
 
-[data-theme="dark"] header h3 {
+[data-theme="dark"] header h3,
+[data-theme="dark"] .admin-header h3 {
     color: #FECF2F !important;
 }
 
 /* === ADMIN - SIDEBAR NAV === */
-[data-theme="dark"] nav {
+[data-theme="dark"] .admin-sidebar {
     background-color: #1a1a1a !important;
     border-right-color: #2d2d2d !important;
 }
 
-[data-theme="dark"] nav .nav-link {
+[data-theme="dark"] .admin-sidebar .nav-link {
     color: #c0c0c0 !important;
 }
 
-[data-theme="dark"] nav .nav-link:hover {
+[data-theme="dark"] .admin-sidebar .nav-link:hover {
     background-color: #2a2a2a !important;
     color: #FECF2F !important;
+}
+
+/* === ADMIN - FOOTER === */
+[data-theme="dark"] .admin-footer .container-fluid {
+    background-color: #1a1a1a !important;
+    border-top-color: #2d2d2d !important;
+}
+
+[data-theme="dark"] .admin-footer div {
+    color: #888 !important;
 }
 
 /* === DROPDOWN DIVIDER & USER DROPDOWN === */
@@ -434,24 +445,22 @@
 
 /* === DARK MODE TOGGLE BUTTON === */
 #darkModeToggle {
-    background: none;
-    border: none;
+    background: transparent !important;
+    border: none !important;
     cursor: pointer;
     font-size: 1.2rem;
-    padding: 6px 10px;
-    border-radius: 8px;
-    transition: background-color 0.2s, transform 0.3s;
+    padding: 0;
+    border-radius: 50%;
+    transition: transform 0.3s;
     color: inherit;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #darkModeToggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    transform: rotate(20deg);
-}
-
-[data-theme="dark"] #darkModeToggle:hover {
-    background-color: rgba(255, 255, 255, 0.08);
+    transform: scale(1.1) rotate(20deg);
 }
 
 /* === MODAL === */

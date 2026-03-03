@@ -22,7 +22,7 @@
                     <div class="card border-0 shadow-sm rounded-3">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-4">
-                                <div class="rounded-circle bg-warning text-white
+                                <div class="rounded-circle booking-avatar-bg
                                 d-flex align-items-center justify-content-center fw-bold"
                                     style="width:48px;height:48px;font-size:1.2rem;">
                                     <span th:text="${user.hoTen != null and #strings.length(user.hoTen) > 0}
@@ -41,7 +41,7 @@
                                     <i class="bi bi-person me-2"></i> Tài khoản
                                 </a>
                                 <a th:href="@{/user/bookings}"
-                                    class="list-group-item list-group-item-action fw-bold border-0 bg-light rounded mb-1">
+                                    class="list-group-item list-group-item-action fw-bold border-0 booking-sidebar-active rounded mb-1">
                                     <i class="bi bi-luggage me-2"></i> Đơn đặt chỗ
                                 </a>
                                 <a th:href="@{/favorites/my-favorites}"
@@ -62,7 +62,7 @@
                 <!-- MAIN CONTENT -->
                 <div class="col-lg-9">
                     <div class="d-flex align-items-center mb-4">
-                        <i class="bi bi-luggage-fill text-primary fs-3 me-2"></i>
+                        <i class="bi bi-luggage-fill text-booking-primary fs-3 me-2"></i>
                         <h3 class="fw-bold mb-0">Lịch sử đặt chỗ của tôi</h3>
                     </div>
 
@@ -214,7 +214,8 @@
                                                     <input type="hidden" name="tourId"
                                                         th:value="${booking.idChuyenDi.id}">
                                                     <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về tour
-                                                        <strong>[[${booking.idChuyenDi.tieuDe}]]</strong></p>
+                                                        <strong>[[${booking.idChuyenDi.tieuDe}]]</strong>
+                                                    </p>
 
                                                     <div class="mb-4 text-center">
                                                         <label class="d-block mb-2 small text-muted">Mức độ hài

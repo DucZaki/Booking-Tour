@@ -1,24 +1,53 @@
 :root {
-    --bs-primary: #FECF2F !important;   /* Vàng điểm nhấn */
-    --bs-secondary: #000000 !important; /* Đen */
+    --bs-primary: #FECF2F !important;
+    /* Vàng điểm nhấn */
+    --bs-secondary: #000000 !important;
+    /* Đen */
     --bs-dark: #000000 !important;
     --bs-light: #F5F5F5 !important;
     --bs-body-color: #212529 !important;
     --bs-body-bg: #FFFFFF !important;
 }
 
-/* Navbar đen trắng */
+/* Navbar vàng thương hiệu */
 .navbar {
-    background-color: var(--bs-dark) !important;
+    background-color: var(--bs-primary) !important;
+    padding: 0 !important;
 }
 
-.navbar a,
-.navbar-brand {
-    color: var(--bs-light) !important;
+.navbar .nav-link,
+.navbar-brand,
+.navbar-toggler-icon {
+    color: #000 !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
 }
 
 .navbar a:hover {
-    color: var(--bs-primary) !important;
+    color: #333 !important;
+}
+
+/* Dark Mode Toggle Styling */
+#darkModeToggle {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#darkModeToggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.1);
 }
 
 /* Button vàng */
@@ -35,7 +64,12 @@
 
 
 /* Các tiêu đề chính */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--bs-dark) !important;
 }
 
@@ -45,6 +79,7 @@ footer {
     color: var(--bs-light) !important;
     padding: 40px 0;
 }
+
 /* ===================== DROPDOWN MENU ===================== */
 
 /* Tổng thể dropdown */
@@ -70,6 +105,26 @@ footer {
 }
 
 /* Link địa điểm */
+/* Booking Page Theme Overrides */
+.booking-avatar-bg {
+    background-color: #FECF2F !important;
+    color: #000 !important;
+}
+
+.text-booking-primary {
+    color: #FECF2F !important;
+}
+
+#bookingTabs .nav-link.active {
+    background-color: #FECF2F !important;
+    color: #000 !important;
+}
+
+.booking-sidebar-active {
+    background-color: #FECF2F !important;
+    color: #000 !important;
+}
+
 .navbar .dropdown-item {
     color: #333 !important;
     font-weight: 500;
@@ -80,7 +135,8 @@ footer {
 
 /* Hiệu ứng hover */
 .navbar .dropdown-item:hover {
-    background-color: #FECF2F !important; /* xanh nhạt nhẹ */
+    background-color: #FECF2F !important;
+    /* xanh nhạt nhẹ */
     color: #000000 !important;
 }
 
@@ -95,20 +151,27 @@ footer {
 .navbar .dropdown-menu .border-bottom {
     border-color: #e9ecef !important;
 }
-/* Banner (hero-section) *//* ============================= */
+
+/* Banner (hero-section) */
+/* ============================= */
 /* Hero Section - Banner đầu trang */
 /* ============================= */
 .hero-section {
-    height: 35vh;                        /* Chiều cao banner */
-    background-color: #f5f5f5;           /* Nền sáng dịu */
+    height: 35vh;
+    /* Chiều cao banner */
+    background-color: #f5f5f5;
+    /* Nền sáng dịu */
     display: flex;
     flex-direction: column;
-    justify-content: center;             /* Căn giữa theo chiều dọc */
-    align-items: center;                 /* Căn giữa theo chiều ngang */
+    justify-content: center;
+    /* Căn giữa theo chiều dọc */
+    align-items: center;
+    /* Căn giữa theo chiều ngang */
     text-align: center;
     overflow: hidden;
     position: relative;
-    padding-top: 90px;                   /* Đẩy nội dung xuống để không bị navbar che */
+    padding-top: 90px;
+    /* Đẩy nội dung xuống để không bị navbar che */
     box-sizing: border-box;
 }
 
@@ -121,30 +184,44 @@ footer {
     white-space: nowrap;
     overflow: hidden;
     width: 0;
-    animation: typing 2s steps(34, end) 1 normal both; /* Hiệu ứng gõ chữ */
+    animation: typing 2s steps(34, end) 1 normal both;
+    /* Hiệu ứng gõ chữ */
     line-height: 1.3;
-    padding-bottom: 10px; /* Tạo khoảng trống để không bị cắt chữ */
+    padding-bottom: 10px;
+    /* Tạo khoảng trống để không bị cắt chữ */
 }
 
 /* Hiệu ứng gõ từng chữ */
 @keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 100%;
+    }
 }
 
 /* Responsive cho màn nhỏ */
 @media (max-width: 768px) {
     .hero-section {
-        padding-top: 100px; /* đẩy thêm chút cho mobile */
+        padding-top: 100px;
+        /* đẩy thêm chút cho mobile */
         height: auto;
     }
+
     #typing-text {
-        white-space: normal; /* Cho phép xuống dòng */
-        width: 100% !important; /* Hiển thị toàn bộ chữ */
-        overflow: visible; /* Không ẩn phần dư */
-        animation: none; /* Tắt hiệu ứng typing trên mobile */
+        white-space: normal;
+        /* Cho phép xuống dòng */
+        width: 100% !important;
+        /* Hiển thị toàn bộ chữ */
+        overflow: visible;
+        /* Không ẩn phần dư */
+        animation: none;
+        /* Tắt hiệu ứng typing trên mobile */
         text-align: center;
-        font-size: 1.6rem; /* Giảm kích thước cho vừa khung */
+        font-size: 1.6rem;
+        /* Giảm kích thước cho vừa khung */
     }
 }
 
@@ -175,27 +252,32 @@ footer {
     color: #555 !important;
     font-weight: 500;
     text-align: center;
-    margin-top: 0.3rem; /* giảm khoảng cách giữa nội dung và tên */
+    margin-top: 0.3rem;
+    /* giảm khoảng cách giữa nội dung và tên */
     font-style: italic;
     font-size: 0.95rem;
 }
+
 .btn-outline-primary {
-    background-color:  #FECF2F !important;
+    background-color: #FECF2F !important;
     color: #000000 !important;
-    border-color:  #FECF2F !important;
-    font-weight:40px;
+    border-color: #FECF2F !important;
+    font-weight: 40px;
 }
+
 .btn-outline-primary:hover {
     background-color: #FECF2F !important;
     color: white !important;
 }
+
 /* ===================== DROPDOWN & MEGA MENU TỐI ƯU ===================== */
 
 /* 1. Mặc định cho MOBILE (Dưới 992px) */
 @media (max-width: 991.98px) {
     .navbar .dropdown-menu {
         width: 100% !important;
-        position: static !important; /* Quan trọng: Để nó đẩy các menu khác xuống thay vì nằm đè lên */
+        position: static !important;
+        /* Quan trọng: Để nó đẩy các menu khác xuống thay vì nằm đè lên */
         transform: none !important;
         float: none !important;
         border-radius: 0 !important;
@@ -216,22 +298,26 @@ footer {
 
 /* 2. Cho DESKTOP (Từ 992px trở lên) */
 @media (min-width: 992px) {
+
     /* Ép thẻ li cha phải có position static để menu con rộng theo container của Navbar */
     .nav-item.dropdown.position-static-lg {
         position: static !important;
     }
 
     .mega-menu {
-        width: 90vw !important; /* Tăng độ rộng để đẹp hơn */
+        width: 90vw !important;
+        /* Tăng độ rộng để đẹp hơn */
         max-width: 1100px;
         left: 50% !important;
         top: 100% !important;
         transform: translateX(-50%) !important;
-        display: none; /* Mặc định ẩn, Bootstrap sẽ tự hiển thị khi click */
+        display: none;
+        /* Mặc định ẩn, Bootstrap sẽ tự hiển thị khi click */
     }
 
     .navbar .nav-item.dropdown:hover .dropdown-menu {
-        display: block; /* (Tùy chọn) Hiện khi hover nếu muốn */
+        display: block;
+        /* (Tùy chọn) Hiện khi hover nếu muốn */
     }
 }
 
@@ -243,9 +329,11 @@ footer {
 }
 
 .navbar .dropdown-item {
-    white-space: normal; /* Cho phép chữ xuống dòng nếu quá dài */
+    white-space: normal;
+    /* Cho phép chữ xuống dòng nếu quá dài */
     padding: 8px 12px !important;
 }
+
 /* Lưới lịch 7 cột */
 .calendar-grid {
     display: grid;
@@ -277,7 +365,8 @@ footer {
 
 /* Ngày có tour và giá */
 .has-tour {
-    border-color: #dc3545; /* Màu đỏ bootstrap */
+    border-color: #dc3545;
+    /* Màu đỏ bootstrap */
     cursor: pointer;
 }
 
@@ -314,6 +403,7 @@ footer {
     background-color: #f9f9f9;
     border: none;
 }
+
 .row-cols-7>* {
     flex: 0 0 auto;
     width: 14.2857%;
@@ -331,16 +421,19 @@ footer {
     font-size: 0.9rem;
     padding: 0.25rem 0;
 }
+
 .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 8px;
     text-align: center;
 }
+
 .calendar-day {
     border: 1px solid #eee;
     border-radius: 8px;
-    min-height: 60px; /* Phải có chiều cao để có diện tích click */
+    min-height: 60px;
+    /* Phải có chiều cao để có diện tích click */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -349,36 +442,44 @@ footer {
     background: #fff;
     transition: all 0.2s;
 }
+
 /* Hiệu ứng khi di chuột */
 .calendar-day:hover {
     border-color: #ffc107;
     background-color: #fff9e6;
 }
+
 /* Màu sắc khi ngày được chọn */
 .calendar-day.active-day {
     border: 2px solid #dc3545;
     background-color: #fff5f5;
 }
+
 /* Màu sắc cho các ngày thuộc tháng khác (mờ đi) */
 .calendar-day.other-month {
     color: #ccc;
     background-color: #f9f9f9;
-    pointer-events: none; /* Không cho click vào ngày tháng khác */
+    pointer-events: none;
+    /* Không cho click vào ngày tháng khác */
     border: none;
 }
+
 /* Màu sắc cho các nút chọn tháng khi được chọn */
 .month-btn.active {
-    background-color: #ffc107 !important; /* Màu vàng như trong ảnh */
+    background-color: #ffc107 !important;
+    /* Màu vàng như trong ảnh */
     color: #000 !important;
     border: none;
 }
-     /* Ngày đã qua: mờ đi, gạch ngang số và không cho bấm */
- .disabled-day {
-     background-color: #f1f3f5 !important;
-     color: #adb5bd !important;
-     cursor: not-allowed !important;
-     pointer-events: none; /* Chặn click chuột hoàn toàn */
- }
+
+/* Ngày đã qua: mờ đi, gạch ngang số và không cho bấm */
+.disabled-day {
+    background-color: #f1f3f5 !important;
+    color: #adb5bd !important;
+    cursor: not-allowed !important;
+    pointer-events: none;
+    /* Chặn click chuột hoàn toàn */
+}
 
 .disabled-day .day-num {
     text-decoration: line-through;
@@ -389,14 +490,17 @@ footer {
 .other-month:not(.disabled-day) {
     color: #ccc;
 }
+
 .card-header {
-    margin-top:20px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .sticky-price-box {
     /*position: -webkit-sticky; */
     position: sticky;
-    top: 80px; /* Khoảng cách từ mép trên trình duyệt khi trôi (tùy chỉnh theo chiều cao navbar của mày) */
+    top: 80px;
+    /* Khoảng cách từ mép trên trình duyệt khi trôi (tùy chỉnh theo chiều cao navbar của mày) */
     z-index: 100;
     transition: all 0.3s ease;
 }
@@ -408,10 +512,12 @@ footer {
     cursor: not-allowed !important;
     pointer-events: none;
 }
+
 .disabled-day .day-num {
     text-decoration: line-through;
     opacity: 0.5;
 }
+
 /* Sidebar Menu Styling */
 .profile-sidebar-menu .menu-item a {
     text-decoration: none;
@@ -421,7 +527,7 @@ footer {
     transition: 0.3s;
 }
 
-.profile-sidebar-menu .menu-item.active > a {
+.profile-sidebar-menu .menu-item.active>a {
     color: #000;
     font-weight: 700;
 }
@@ -458,7 +564,7 @@ footer {
 
 /* Card Shadow */
 .shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075)!important;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
 }
 
 /* Biểu tượng yêu thích */
@@ -482,11 +588,11 @@ footer {
     transition: 0.2s;
 }
 
-.rating input:checked ~ label {
+.rating input:checked~label {
     color: #ffc107;
 }
 
 .rating label:hover,
-.rating label:hover ~ label {
+.rating label:hover~label {
     color: #ffc107;
 }

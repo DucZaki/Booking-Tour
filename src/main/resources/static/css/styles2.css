@@ -4,6 +4,14 @@
     --bs-dark: #000000 !important;
 }
 
+.bg-primary {
+    background-color: var(--bs-primary) !important;
+}
+
+.admin-header {
+    background-color: var(--bs-primary) !important;
+}
+
 a {
     text-decoration: none;
 }
@@ -97,10 +105,8 @@ header form button {
 
 nav {
     background-color: #ffffff;
-    min-height: 100vh;
     border-right: 1px solid #dee2e6;
     padding: 1rem;
-    width: 240px;
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.03);
 }
 
@@ -161,9 +167,13 @@ nav .nav-link i {
 }
 
 .admin-sidebar {
-    width: 240px;
+    width: 260px;
+    flex-shrink: 0;
     position: sticky;
     top: 0;
+    height: calc(100vh - 80px);
+    /* Adjust based on header height */
+    overflow-y: auto;
 }
 
 .admin-sidebar .nav-link {
@@ -188,4 +198,9 @@ nav .nav-link i {
     text-align: center;
     font-size: 16px;
     flex-shrink: 0;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
