@@ -357,14 +357,14 @@
                     const totalRevenue = data.reduce((s, r) => s + (r[4] || 0), 0);
                     document.getElementById('tourStatsSummary').innerHTML = `
                         <div class="col-md-4"><div class="card border-0 bg-primary bg-opacity-10 rounded-3 p-3 text-center">
-                            <div class="fw-bold fs-4 text-primary">${data.length}</div>
-                            <div class="small text-muted">Đơn đặt</div></div></div>
+                            <div class="fw-bold fs-4 text-dark">${data.length}</div>
+                            <div class="small text-dark">Đơn đặt</div></div></div>
                         <div class="col-md-4"><div class="card border-0 bg-success bg-opacity-10 rounded-3 p-3 text-center">
-                            <div class="fw-bold fs-4 text-success">${totalGuests}</div>
-                            <div class="small text-muted">Tổng khách</div></div></div>
+                            <div class="fw-bold fs-4 text-dark">${totalGuests}</div>
+                            <div class="small text-dark">Tổng khách</div></div></div>
                         <div class="col-md-4"><div class="card border-0 bg-danger bg-opacity-10 rounded-3 p-3 text-center">
-                            <div class="fw-bold fs-5 text-danger">${totalRevenue.toLocaleString('vi-VN')} ₫</div>
-                            <div class="small text-muted">Tổng doanh thu</div></div></div>`;
+                            <div class="fw-bold fs-5 text-dark">${totalRevenue.toLocaleString('vi-VN')} ₫</div>
+                            <div class="small text-dark">Tổng doanh thu</div></div></div>`;
                     const tbody = document.getElementById('tourCustomersBody');
                     tbody.innerHTML = data.map((r, i) => `
                         <tr>
