@@ -110,43 +110,56 @@
 
                 <!-- Tables Row -->
                 <div class="row g-4">
+                    <!-- Top Tours Table -->
                     <div class="col-lg-12">
                         <div class="card border-0 shadow-sm rounded-4">
                             <div
                                 class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                                <h5 class="fw-bold mb-0">Top Tour bán chạy</h5>
-                                <a th:href="@{/admin/tour/active}" class="btn btn-sm btn-link text-decoration-none">Xem
-                                    tất cả</a>
+                                <h5 class="fw-bold mb-0"><i class="bi bi-trophy-fill text-warning me-2"></i>Top Tour bán
+                                    chạy</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="tourSortSelect" class="form-select form-select-sm" style="width:auto;"
+                                        onchange="sortTopTours(this.value)">
+                                        <option value="bookings">Sắp xếp: Lượt đặt</option>
+                                        <option value="revenue">Sắp xếp: Doanh thu</option>
+                                    </select>
+                                    <a th:href="@{/admin/tour/active}"
+                                        class="btn btn-sm btn-link text-decoration-none">Xem tất cả</a>
+                                </div>
                             </div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
+                                    <table class="table table-hover align-middle mb-0" id="topToursTable">
                                         <thead class="bg-light">
                                             <tr>
-                                                <th class="px-4 py-3 border-0">ID</th>
+                                                <th class="px-4 py-3 border-0">#</th>
                                                 <th class="py-3 border-0">Tên Tour</th>
                                                 <th class="py-3 border-0">Số lượt đặt</th>
                                                 <th class="py-3 border-0">Doanh thu</th>
-                                                <th class="py-3 border-0 text-center">Hành động</th>
+                                                <th class="py-3 border-0 text-center">Chi tiết khách hàng</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr th:each="row : ${topTours}">
-                                                <td class="px-4 py-3 border-0 fw-bold" th:text="${row[0]}"></td>
-                                                <td class="py-3 border-0" th:text="${row[1]}"></td>
+                                        <tbody id="topToursBody">
+                                            <tr th:each="row,iter : ${topTours}" th:data-bookings="${row[2]}"
+                                                th:data-revenue="${row[3]}" th:data-tour-id="${row[0]}"
+                                                th:data-tour-name="${row[1]}">
+                                                <td class="px-4 py-3 border-0 fw-bold text-muted"
+                                                    th:text="${iter.index + 1}"></td>
+                                                <td class="py-3 border-0 fw-bold" th:text="${row[1]}"></td>
                                                 <td class="py-3 border-0">
                                                     <span
                                                         class="badge bg-dark text-white px-3 py-2 rounded-pill fw-bold"
                                                         th:text="${row[2]} + ' lượt'"></span>
                                                 </td>
-                                                <td class="py-3 border-0 fw-bold text-dark"
+                                                <td class="py-3 border-0 fw-bold text-success"
                                                     th:text="${#numbers.formatDecimal(row[3], 0, 'COMMA', 0, 'POINT')} + ' ₫'">
                                                 </td>
                                                 <td class="py-3 border-0 text-center">
-                                                    <a th:href="@{/admin/tour/detail/{id}(id=${row[0]})}"
-                                                        class="btn btn-sm btn-outline-primary rounded-circle">
-                                                        <i class="bi bi-eye"></i>
-                                                    </a>
+                                                    <button class="btn btn-sm btn-primary rounded-pill px-3"
+                                                        th:data-tour-id="${row[0]}" th:data-tour-name="${row[1]}"
+                                                        onclick="showTourCustomers(this)">
+                                                        <i class="bi bi-people-fill me-1"></i>Xem khách
+                                                    </button>
                                                 </td>
                                             </tr>
                                             <tr th:if="${#lists.isEmpty(topTours)}">
@@ -155,6 +168,130 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Spending Stats Table -->
+                    <div class="col-lg-12">
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div
+                                class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="fw-bold mb-0"><i class="bi bi-person-check-fill text-primary me-2"></i>Chi
+                                    tiêu của khách hàng</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="userSortSelect" class="form-select form-select-sm" style="width:auto;"
+                                        onchange="sortUserSpending(this.value)">
+                                        <option value="spending_desc">Sắp xếp: Chi tiêu cao nhất</option>
+                                        <option value="spending_asc">Sắp xếp: Chi tiêu thấp nhất</option>
+                                        <option value="purchases_desc">Sắp xếp: Nhiều lượt mua</option>
+                                        <option value="name_asc">Sắp xếp: Tên A→Z</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0" id="userSpendingTable">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th class="px-4 py-3 border-0">#</th>
+                                                <th class="py-3 border-0">Tên khách hàng</th>
+                                                <th class="py-3 border-0">Email</th>
+                                                <th class="py-3 border-0">Số lượt mua</th>
+                                                <th class="py-3 border-0">Tổng chi tiêu</th>
+                                                <th class="py-3 border-0 text-center">Hạng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="userSpendingBody">
+                                            <tr th:each="row,iter : ${userSpendingStats}" th:data-name="${row[0]}"
+                                                th:data-email="${row[1]}" th:data-purchases="${row[2]}"
+                                                th:data-spending="${row[3]}">
+                                                <td class="px-4 py-3 border-0 fw-bold text-muted"
+                                                    th:text="${iter.index + 1}"></td>
+                                                <td class="py-3 border-0">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <div class="rounded-circle bg-primary bg-opacity-10 d-flex align-items-center justify-content-center fw-bold"
+                                                            style="width:36px;height:36px;font-size:0.85rem;"
+                                                            th:text="${#strings.substring(row[0] != null ? row[0] : 'K', 0, 1)}">
+                                                        </div>
+                                                        <span class="fw-bold"
+                                                            th:text="${row[0] ?: 'Khách vãng lai'}"></span>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 border-0 text-muted small" th:text="${row[1] ?: '-'}">
+                                                </td>
+                                                <td class="py-3 border-0">
+                                                    <span class="badge bg-secondary text-white px-3 py-2 rounded-pill"
+                                                        th:text="${row[2]} + ' lượt'"></span>
+                                                </td>
+                                                <td class="py-3 border-0 fw-bold text-danger"
+                                                    th:text="${#numbers.formatDecimal(row[3], 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                                </td>
+                                                <td class="py-3 border-0 text-center">
+                                                    <span th:if="${row[3] >= 100000000}"
+                                                        class="tier-badge tier-diamond">👑 Kim Cương</span>
+                                                    <span th:if="${row[3] >= 50000000 and row[3] < 100000000}"
+                                                        class="tier-badge tier-platinum">💎 Bạch Kim</span>
+                                                    <span th:if="${row[3] >= 20000000 and row[3] < 50000000}"
+                                                        class="tier-badge tier-gold">🥇 Vàng</span>
+                                                    <span th:if="${row[3] >= 10000000 and row[3] < 20000000}"
+                                                        class="tier-badge tier-silver">🥈 Bạc</span>
+                                                    <span th:if="${row[3] < 10000000}" class="tier-badge tier-bronze">🥉
+                                                        Đồng</span>
+                                                </td>
+
+                                            </tr>
+                                            <tr th:if="${#lists.isEmpty(userSpendingStats)}">
+                                                <td colspan="6" class="text-center py-5 text-muted">Chưa có dữ liệu
+                                                    thanh toán.</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal chi tiết khách hàng theo tour -->
+                <div class="modal fade" id="tourCustomersModal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content border-0 rounded-4 shadow">
+                            <div class="modal-header border-0 pb-0">
+                                <div>
+                                    <h5 class="fw-bold mb-1" id="modalTourName">Chi tiết tour</h5>
+                                    <p class="text-muted small mb-0">Danh sách khách hàng đã đặt tour này</p>
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <div id="tourCustomersLoading" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p class="mt-2 text-muted small">Đang tải dữ liệu...</p>
+                                </div>
+                                <div id="tourCustomersContent" style="display:none;">
+                                    <div class="row g-3 mb-3" id="tourStatsSummary"></div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th class="px-3 py-2">#</th>
+                                                    <th class="py-2">Tên khách</th>
+                                                    <th class="py-2">Email</th>
+                                                    <th class="py-2">SĐT</th>
+                                                    <th class="py-2">Số khách</th>
+                                                    <th class="py-2">Tổng tiền</th>
+                                                    <th class="py-2">Ngày đặt</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tourCustomersBody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div id="tourCustomersEmpty" style="display:none;" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1"></i>
+                                    <p class="mt-2">Chưa có khách hàng nào đặt tour này.</p>
                                 </div>
                             </div>
                         </div>
@@ -168,6 +305,85 @@
 
     <!-- Chart Configuration Script -->
     <script th:inline="javascript">
+        // === Sort Top Tours Table ===
+        function sortTopTours(criterion) {
+            const tbody = document.getElementById('topToursBody');
+            const rows = Array.from(tbody.querySelectorAll('tr[data-tour-id]'));
+            rows.sort((a, b) => {
+                if (criterion === 'revenue') return parseFloat(b.dataset.revenue) - parseFloat(a.dataset.revenue);
+                return parseFloat(b.dataset.bookings) - parseFloat(a.dataset.bookings);
+            });
+            rows.forEach((row, idx) => {
+                row.querySelector('td:first-child').textContent = idx + 1;
+                tbody.appendChild(row);
+            });
+        }
+
+        // === Sort User Spending Table ===
+        function sortUserSpending(criterion) {
+            const tbody = document.getElementById('userSpendingBody');
+            const rows = Array.from(tbody.querySelectorAll('tr[data-name]'));
+            rows.sort((a, b) => {
+                if (criterion === 'spending_asc') return parseFloat(a.dataset.spending) - parseFloat(b.dataset.spending);
+                if (criterion === 'purchases_desc') return parseFloat(b.dataset.purchases) - parseFloat(a.dataset.purchases);
+                if (criterion === 'name_asc') return (a.dataset.name || '').localeCompare(b.dataset.name || '', 'vi');
+                return parseFloat(b.dataset.spending) - parseFloat(a.dataset.spending); // spending_desc default
+            });
+            rows.forEach((row, idx) => {
+                row.querySelector('td:first-child').textContent = idx + 1;
+                tbody.appendChild(row);
+            });
+        }
+
+        // === Show Tour Customers Modal ===
+        function showTourCustomers(btn) {
+            const tourId = btn.dataset.tourId;
+            const tourName = btn.dataset.tourName;
+            document.getElementById('modalTourName').textContent = tourName;
+            document.getElementById('tourCustomersLoading').style.display = 'block';
+            document.getElementById('tourCustomersContent').style.display = 'none';
+            document.getElementById('tourCustomersEmpty').style.display = 'none';
+            const modal = new bootstrap.Modal(document.getElementById('tourCustomersModal'));
+            modal.show();
+            fetch('/admin/tour-bookings/' + tourId)
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('tourCustomersLoading').style.display = 'none';
+                    if (!data || data.length === 0) {
+                        document.getElementById('tourCustomersEmpty').style.display = 'block';
+                        return;
+                    }
+                    const totalGuests = data.reduce((s, r) => s + (r[3] || 0), 0);
+                    const totalRevenue = data.reduce((s, r) => s + (r[4] || 0), 0);
+                    document.getElementById('tourStatsSummary').innerHTML = `
+                        <div class="col-md-4"><div class="card border-0 bg-primary bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fw-bold fs-4 text-primary">${data.length}</div>
+                            <div class="small text-muted">Đơn đặt</div></div></div>
+                        <div class="col-md-4"><div class="card border-0 bg-success bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fw-bold fs-4 text-success">${totalGuests}</div>
+                            <div class="small text-muted">Tổng khách</div></div></div>
+                        <div class="col-md-4"><div class="card border-0 bg-danger bg-opacity-10 rounded-3 p-3 text-center">
+                            <div class="fw-bold fs-5 text-danger">${totalRevenue.toLocaleString('vi-VN')} ₫</div>
+                            <div class="small text-muted">Tổng doanh thu</div></div></div>`;
+                    const tbody = document.getElementById('tourCustomersBody');
+                    tbody.innerHTML = data.map((r, i) => `
+                        <tr>
+                            <td class="px-3">${i + 1}</td>
+                            <td class="fw-bold">${r[0] || '-'}</td>
+                            <td class="text-muted small">${r[1] || '-'}</td>
+                            <td class="small">${r[2] || '-'}</td>
+                            <td><span class="badge bg-dark rounded-pill">${r[3]} khách</span></td>
+                            <td class="fw-bold text-danger">${(r[4] || 0).toLocaleString('vi-VN')} ₫</td>
+                            <td class="text-muted small">${r[5] ? r[5].substring(0, 10) : '-'}</td>
+                        </tr>`).join('');
+                    document.getElementById('tourCustomersContent').style.display = 'block';
+                })
+                .catch(() => {
+                    document.getElementById('tourCustomersLoading').style.display = 'none';
+                    document.getElementById('tourCustomersEmpty').style.display = 'block';
+                });
+        }
+
         /* Chart Data from Thymeleaf */
         const months = /*[[${chartMonths}]]*/[];
         const revenues = /*[[${chartRevenues}]]*/[];

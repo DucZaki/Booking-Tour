@@ -159,6 +159,15 @@ public class ChuyenDiController {
         model.addAttribute("tongGia", tongGia);
         model.addAttribute("principal", principal);
 
+        // Tự điền thông tin user nếu đã đăng nhập
+        if (principal != null) {
+            nguoiDungService.findByTenDangNhap(principal.getName()).ifPresent(user -> {
+                model.addAttribute("userHoTen", user.getHoTen());
+                model.addAttribute("userEmail", user.getEmail());
+                model.addAttribute("userSoDienThoai", user.getNumber());
+            });
+        }
+
         return "chuyendi/dat-tour";
     }
 }

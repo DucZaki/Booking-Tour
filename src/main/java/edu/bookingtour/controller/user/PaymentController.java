@@ -80,10 +80,14 @@ public class PaymentController {
         datCho.setDiaChi(diaChi);
         datCho.setGhiChu(ghiChu);
 
+        // Calculate total amount including transport fees
+        double totalAmount = (tour.getGia().doubleValue() + nkh.getTongGiaVe()) * soLuong;
+        datCho.setTongGia(totalAmount);
+
         datCho = datChoService.save(datCho);
 
         // Prepare VNPay parameters
-        long amount = (long) ((tour.getGia().doubleValue() + nkh.getTongGiaVe()) * soLuong * 100);
+        long amount = (long) (totalAmount * 100);
         String vnp_TxnRef = String.valueOf(datCho.getId());
         String vnp_IpAddr = VNPayConfig.getIpAddress(request);
         String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
@@ -209,7 +213,7 @@ public class PaymentController {
         }
 
         ChuyenDi tour = datCho.getIdChuyenDi();
-        long amount = (long) (tour.getGia().doubleValue() * datCho.getSoLuong() * 100);
+        long amount = (long) (datCho.getTongGia() * 100);
 
         String vnp_TxnRef = String.valueOf(datCho.getId());
         String vnp_IpAddr = VNPayConfig.getIpAddress(request);

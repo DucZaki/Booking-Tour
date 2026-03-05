@@ -37,19 +37,19 @@
                                         <label class="form-label fw-bold">Họ và tên <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" name="hoTen" class="form-control"
-                                            placeholder="Nhập họ và tên" required>
+                                            placeholder="Nhập họ và tên" th:value="${userHoTen}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Email <span
                                                 class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control" placeholder="Nhập email"
-                                            required>
+                                            th:value="${userEmail}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Số điện thoại <span
                                                 class="text-danger">*</span></label>
                                         <input type="tel" name="soDienThoai" class="form-control"
-                                            placeholder="Nhập số điện thoại" required>
+                                            placeholder="Nhập số điện thoại" th:value="${userSoDienThoai}" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label fw-bold">Số lượng khách <span

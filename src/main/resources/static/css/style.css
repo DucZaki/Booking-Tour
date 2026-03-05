@@ -27,6 +27,60 @@
     color: #333 !important;
 }
 
+/* ===================== LOGO & BRANDING ===================== */
+.brand-logo-wrapper {
+    background: #000;
+    padding: 3px;
+    border-radius: 10px;
+    border: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.brand-logo-img {
+    height: 50px;
+    width: auto;
+    border-radius: 6px;
+}
+
+.brand-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-name {
+    font-size: 1.6rem !important;
+    color: #000 !important;
+    line-height: 1;
+    margin-bottom: 2px;
+    font-weight: 800 !important;
+}
+
+.brand-slogan {
+    font-size: 0.8rem !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+}
+
+/* Dark mode adjustments for branding in style.css */
+[data-theme="dark"] .brand-name {
+    color: var(--bs-primary) !important;
+}
+
+[data-theme="dark"] .brand-slogan {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .brand-logo-wrapper {
+    border-color: var(--bs-primary);
+}
+
+/* ============================================================ */
+
 /* Dark Mode Toggle Styling */
 #darkModeToggle {
     background: transparent !important;
@@ -595,4 +649,81 @@ footer {
 .rating label:hover,
 .rating label:hover~label {
     color: #ffc107;
+}
+
+/* ===================== MEMBERSHIP TIERS ===================== */
+.tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.tier-bronze {
+    background: linear-gradient(135deg, #f4e8d8, #dcb99c);
+    color: #8c5332;
+    border: 1px solid rgba(205, 127, 50, 0.4);
+}
+
+.tier-silver {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #555;
+    border: 1px solid rgba(192, 192, 192, 0.6);
+}
+
+.tier-gold {
+    background: linear-gradient(135deg, #fff9e6, #ffe58f);
+    color: #a37200;
+    border: 1px solid rgba(255, 215, 0, 0.6);
+}
+
+.tier-platinum {
+    background: linear-gradient(135deg, #ffffff, #e6e6e6);
+    color: #333;
+    border: 1px solid rgba(160, 160, 160, 0.6);
+}
+
+.tier-diamond {
+    background: linear-gradient(135deg, #e3f2fd, #90caf9, #5c6bc0);
+    color: #fff;
+    border: 1px solid rgba(92, 107, 192, 0.4);
+}
+
+/* Progress bar next tier */
+.tier-progress-wrap {
+    background: rgba(0, 0, 0, 0.07);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+}
+
+.tier-progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bronze {
+    background: linear-gradient(90deg, #cd7f32, #a0522d);
+}
+
+.silver {
+    background: linear-gradient(90deg, #a8a8a8, #707070);
+}
+
+.gold {
+    background: linear-gradient(90deg, #FFD700, #FFA500);
+}
+
+.platinum {
+    background: linear-gradient(90deg, #e5e4e2, #a0a0a0);
+}
+
+.diamond {
+    background: linear-gradient(90deg, #42a5f5, #5c6bc0);
 }

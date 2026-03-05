@@ -57,6 +57,9 @@ public class DatCho {
     @JoinColumn(name = "id_ma_giam_gia")
     private MaGiamGia idMaGiamGia;
 
+    @Column(name = "tong_gia")
+    private Double tongGia;
+
     @OneToMany(mappedBy = "idDatCho", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChoXacNhan> choXacNhans;
 }

@@ -497,18 +497,9 @@
 }
 
 /* === SMOOTH TRANSITION === */
-body,
 .navbar,
 .card,
-.form-control,
-.form-select,
 .dropdown-menu,
-.modal-content,
-.list-group-item,
-header,
-footer,
-nav,
-main,
-section {
+.modal-content {
     transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
 }

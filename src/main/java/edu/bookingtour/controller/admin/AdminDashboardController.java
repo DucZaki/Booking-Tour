@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +73,17 @@ public class AdminDashboardController {
         model.addAttribute("statusLabels", statusLabels);
         model.addAttribute("statusCounts", statusCounts);
 
+        // User Spending Stats
+        List<Object[]> userSpendingData = dashboardRepository.findUserSpendingStats();
+        model.addAttribute("userSpendingStats", userSpendingData);
+
         return "admin/dashboard";
+    }
+
+    // REST endpoint: lấy danh sách khách hàng đã mua theo tourId
+    @GetMapping("/tour-bookings/{tourId}")
+    @ResponseBody
+    public List<Object[]> getTourBookings(@PathVariable Integer tourId) {
+        return dashboardRepository.findBookingDetailsByTourId(tourId);
     }
 }

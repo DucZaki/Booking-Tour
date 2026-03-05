@@ -21,18 +21,27 @@
                 <div class="col-lg-3 mb-4">
                     <div class="card border-0 shadow-sm rounded-3">
                         <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-4">
+                            <div class="d-flex align-items-center mb-3">
                                 <div class="rounded-circle booking-avatar-bg
                                 d-flex align-items-center justify-content-center fw-bold"
                                     style="width:48px;height:48px;font-size:1.2rem;">
-                                    <span th:text="${user.hoTen != null and #strings.length(user.hoTen) > 0}
-                                    ? ${#strings.substring(user.hoTen,0,1)} : '?'"></span>
+                                    <span th:text="${(user.hoTen != null and #strings.length(user.hoTen) > 0)
+                                    ? #strings.substring(user.hoTen,0,1) : '?'}"></span>
                                 </div>
                                 <div class="ms-3">
                                     <h6 class="mb-0 fw-bold" th:text="${user.hoTen ?: 'Khách hàng'}"></h6>
                                     <p class="mb-0 text-muted small" th:text="${user.email ?: 'Chưa cập nhật email'}">
                                     </p>
                                 </div>
+                            </div>
+
+                            <!-- Hạng thành viên -->
+                            <div class="text-center mb-3">
+                                <span class="tier-badge" th:classappend="${memberTierColor}"
+                                    th:text="${memberTierIcon + ' ' + memberTier}"></span>
+                                <p class="small text-muted mt-1 mb-0"
+                                    th:text="${#numbers.formatDecimal(totalSpending,0,'COMMA',0,'POINT')} + ' ₫ tích lũy'">
+                                </p>
                             </div>
 
                             <div class="list-group list-group-flush small">
@@ -58,6 +67,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <!-- MAIN CONTENT -->
                 <div class="col-lg-9">
@@ -168,7 +178,7 @@
                                                     <div>
                                                         <span class="text-muted small">Tổng:</span>
                                                         <h5 class="text-danger fw-bold mb-0 d-inline ms-2"
-                                                            th:text="${#numbers.formatDecimal(booking.idChuyenDi.gia * booking.soLuong, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                                            th:text="${#numbers.formatDecimal(booking.tongGia, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
                                                         </h5>
                                                     </div>
                                                     <div class="d-flex gap-2">
