@@ -43,13 +43,20 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("nguoiDung") NguoiDung nguoiDung, RedirectAttributes redirectAttributes, Model model) {
+    public String registerUser(@ModelAttribute("nguoiDung") NguoiDung nguoiDung,
+            @RequestParam("confirmPassword") String confirmPassword,
+            RedirectAttributes redirectAttributes,
+            Model model) {
         if (nguoiDung.getTenDangNhap() == null || nguoiDung.getTenDangNhap().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Tên đăng nhập không được để trống!");
             return "login/register";
         }
         if (nguoiDung.getMatKhau() == null || nguoiDung.getMatKhau().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Mật khẩu không được để trống!");
+            return "login/register";
+        }
+        if (!nguoiDung.getMatKhau().equals(confirmPassword)) {
+            model.addAttribute("errorMessage", "Mật khẩu xác nhận không khớp!");
             return "login/register";
         }
         if (nguoiDung.getEmail() == null || nguoiDung.getEmail().trim().isEmpty()) {
@@ -62,7 +69,8 @@ public class AuthController {
         }
         try {
             nguoiDungService.registerNewUser(nguoiDung);
-            redirectAttributes.addFlashAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Đăng ký thành công! Chào mừng bạn tham gia ZakiBooking.");
             return "redirect:/login";
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -91,89 +99,5 @@ public class AuthController {
     public String accessDenied(Model model) {
         model.addAttribute("errorMessage", "Bạn không có quyền truy cập trang này!");
         return "error/403";
-    }
-
-//    @GetMapping("/user/profile")
-//    public String userProfile(Authentication authentication, Model model) {
-//        String username = authentication.getName();
-//        NguoiDung nguoiDung = nguoiDungService.findByTenDangNhap(username)
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-//
-//        model.addAttribute("nguoiDung", nguoiDung);
-//        return "user/profile";
-//    }
-
-    /**
-     * Cập nhật thông tin profile
-     */
-    @PostMapping("/user/profile/update")
-    public String updateProfile(
-            @ModelAttribute NguoiDung nguoiDung,
-            Authentication authentication,
-            RedirectAttributes redirectAttributes) {
-
-        try {
-            String username = authentication.getName();
-            NguoiDung currentUser = nguoiDungService.findByTenDangNhap(username)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-
-            // Cập nhật thông tin (không cho phép thay đổi username và vai trò)
-            currentUser.setHoTen(nguoiDung.getHoTen());
-            currentUser.setEmail(nguoiDung.getEmail());
-            currentUser.setNumber(nguoiDung.getNumber());
-
-            nguoiDungService.save(currentUser);
-
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Cập nhật thông tin thành công!");
-
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Có lỗi xảy ra: " + e.getMessage());
-        }
-        return "redirect:/user/profile";
-    }
-
-    /**
-     * Hiển thị form đổi mật khẩu
-     */
-    @GetMapping("/user/change-password")
-    public String showChangePasswordPage() {
-        return "user/change-password";
-    }
-
-    /**
-     * Xử lý đổi mật khẩu
-     */
-    @PostMapping("/user/change-password")
-    public String changePassword(
-            @RequestParam("oldPassword") String oldPassword,
-            @RequestParam("newPassword") String newPassword,
-            @RequestParam("confirmPassword") String confirmPassword,
-            Authentication authentication,
-            RedirectAttributes redirectAttributes) {
-
-        // Kiểm tra mật khẩu mới và xác nhận mật khẩu
-        if (!newPassword.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("errorMessage",
-                    "Mật khẩu mới và xác nhận mật khẩu không khớp!");
-            return "redirect:/user/change-password";
-        }
-
-        try {
-            String username = authentication.getName();
-            NguoiDung user = nguoiDungService.findByTenDangNhap(username)
-                    .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
-
-            nguoiDungService.changePassword(user.getId(), oldPassword, newPassword);
-
-            redirectAttributes.addFlashAttribute("successMessage",
-                    "Đổi mật khẩu thành công!");
-
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
-
-        return "redirect:/user/change-password";
     }
 }

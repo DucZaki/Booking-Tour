@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
+import edu.bookingtour.service.NguoiDungService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +25,9 @@ public class UserController {
 
     @Autowired
     private NguoiDungRepository nguoiDungRepository;
+
+    @Autowired
+    private NguoiDungService nguoiDungService;
 
     @Autowired
     private DatChoRepository datChoRepository;
@@ -160,5 +165,49 @@ public class UserController {
 
         redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin cá nhân thành công!");
         return "redirect:/user/profile";
+    }
+
+    @GetMapping("/change-password")
+    public String changePassword(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        NguoiDung user = resolveUser(authentication);
+        Double total = datChoRepository.sumTongGiaByUser(user);
+        double totalSpending = (total != null) ? total : 0.0;
+
+        model.addAttribute("user", user);
+        model.addAttribute("totalSpending", totalSpending);
+        model.addAttribute("memberTier", getMemberTier(totalSpending));
+        model.addAttribute("memberTierIcon", getMemberTierIcon(totalSpending));
+        model.addAttribute("memberTierColor", getMemberTierColor(totalSpending));
+        model.addAttribute("tierProgress", getTierProgress(totalSpending));
+        return "user/change-password";
+    }
+
+    @PostMapping("/change-password")
+    public String processChangePassword(@RequestParam String oldPassword,
+            @RequestParam String newPassword,
+            @RequestParam String confirmPassword,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
+            return "redirect:/user/change-password";
+        }
+
+        NguoiDung user = resolveUser(authentication);
+        try {
+            nguoiDungService.changePassword(user.getId(), oldPassword, newPassword);
+            redirectAttributes.addFlashAttribute("message", "Đổi mật khẩu thành công!");
+            return "redirect:/user/profile";
+        } catch (RuntimeException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/user/change-password";
+        }
     }
 }
