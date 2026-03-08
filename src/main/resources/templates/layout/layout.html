@@ -107,9 +107,12 @@
                     <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown"
                             role="button" data-bs-toggle="dropdown">
-                            <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold me-2"
+                            <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center fw-bold me-2 overflow-hidden"
                                 style="width: 35px; height: 35px; border: 2px solid #fff;">
-                                <span th:text="${#authentication.name.substring(0,1).toUpperCase()}">U</span>
+                                <img th:if="${currentUser != null and currentUser.anhDaiDien != null}"
+                                    th:src="${currentUser.anhDaiDien}" class="w-100 h-100 object-cover" alt="Avatar">
+                                <span th:if="${currentUser == null or currentUser.anhDaiDien == null}"
+                                    th:text="${#authentication.name.substring(0,1).toUpperCase()}">U</span>
                             </div>
                             <span class="fw-bold" th:text="${#authentication.name}">User</span>
                         </a>

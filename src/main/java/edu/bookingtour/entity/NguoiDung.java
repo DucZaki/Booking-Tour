@@ -35,11 +35,14 @@ public class NguoiDung {
 
     @Column(name = "ho_ten")
     private String hoTen;
-    @Column(name ="number")
+    @Column(name = "number")
     private String number;
 
     @Column(name = "provider")
     private String provider;
+
+    @Column(name = "anh_dai_dien")
+    private String anhDaiDien;
 
     @PrePersist
     protected void onCreate() {

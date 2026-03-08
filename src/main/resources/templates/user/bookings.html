@@ -22,11 +22,12 @@
                     <div class="card border-0 shadow-sm rounded-3">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center mb-3">
-                                <div class="rounded-circle booking-avatar-bg
-                                d-flex align-items-center justify-content-center fw-bold"
+                                <div class="rounded-circle booking-avatar-bg d-flex align-items-center justify-content-center fw-bold overflow-hidden"
                                     style="width:48px;height:48px;font-size:1.2rem;">
-                                    <span th:text="${(user.hoTen != null and #strings.length(user.hoTen) > 0)
-                                    ? #strings.substring(user.hoTen,0,1) : '?'}"></span>
+                                    <img th:if="${user.anhDaiDien != null}" th:src="${user.anhDaiDien}"
+                                        class="w-100 h-100 object-cover" alt="Avatar">
+                                    <span th:if="${user.anhDaiDien == null}"
+                                        th:text="${(user.hoTen != null and #strings.length(user.hoTen) > 0) ? #strings.substring(user.hoTen,0,1) : '?'}"></span>
                                 </div>
                                 <div class="ms-3">
                                     <h6 class="mb-0 fw-bold" th:text="${user.hoTen ?: 'Khách hàng'}"></h6>

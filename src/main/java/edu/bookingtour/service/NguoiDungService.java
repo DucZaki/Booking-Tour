@@ -21,21 +21,27 @@ public class NguoiDungService {
     private NguoiDungRepository nguoiDungRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     public List<String> findhotenbinhluan() {
         return nguoiDungRepository.findTatCaHoTen();
     }
+
     public Optional<NguoiDung> findById(Integer id) {
         return nguoiDungRepository.findById(id);
     }
+
     public Optional<NguoiDung> findByTenDangNhap(String tenDangNhap) {
         return nguoiDungRepository.findByTenDangNhap(tenDangNhap);
     }
+
     public Optional<NguoiDung> findByEmail(String email) {
         return nguoiDungRepository.findByEmail(email);
     }
+
     public List<NguoiDung> findAll() {
         return nguoiDungRepository.findAll();
     }
+
     public NguoiDung save(NguoiDung nguoiDung) {
         NguoiDung user = new NguoiDung();
         user.setTenDangNhap(nguoiDung.getTenDangNhap());
@@ -48,7 +54,8 @@ public class NguoiDungService {
     }
 
     public NguoiDung update(Integer id, NguoiDung nguoiDung) {
-        NguoiDung user = nguoiDungRepository.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
+        NguoiDung user = nguoiDungRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
         user.setTenDangNhap(nguoiDung.getTenDangNhap());
         user.setEmail(nguoiDung.getEmail());
         user.setHoTen(nguoiDung.getHoTen());
@@ -59,13 +66,14 @@ public class NguoiDungService {
         }
         return nguoiDungRepository.save(user);
     }
-    
+
     public void deleteById(Integer id) {
         if (!nguoiDungRepository.existsById(id)) {
             throw new RuntimeException("Không tìm thấy người dùng với ID: " + id);
         }
         nguoiDungRepository.deleteById(id);
     }
+
     public Page<NguoiDung> findAllUser(int page, int perPage) {
         Pageable pageable = PageRequest.of(page, perPage);
         return nguoiDungRepository.findAll(pageable);
@@ -106,8 +114,17 @@ public class NguoiDungService {
         return nguoiDungRepository.findByTenDangNhap(username).isPresent();
     }
 
-
     public boolean isEmailExists(String email) {
         return nguoiDungRepository.findByEmail(email).isPresent();
+    }
+
+    /**
+     * Cập nhật đường dẫn ảnh đại diện
+     */
+    public void updateAvatar(Integer userId, String avatarPath) {
+        NguoiDung user = nguoiDungRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
+        user.setAnhDaiDien(avatarPath);
+        nguoiDungRepository.save(user);
     }
 }

@@ -15,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.ui.Model;
 import edu.bookingtour.service.NguoiDungService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/user")
@@ -31,6 +36,9 @@ public class UserController {
 
     @Autowired
     private DatChoRepository datChoRepository;
+
+    @Value("${avatar.path}")
+    private String avatarPath;
 
     // -----------------------------------------------
     // Tính hạng thành viên theo tổng chi tiêu (PAID)
@@ -209,5 +217,43 @@ public class UserController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
             return "redirect:/user/change-password";
         }
+    }
+
+    @PostMapping("/update-avatar")
+    public String updateAvatar(@RequestParam("avatar") MultipartFile file,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes) {
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng chọn một tập tin ảnh!");
+            return "redirect:/user/profile";
+        }
+
+        try {
+            NguoiDung user = resolveUser(authentication);
+
+            // Tạo thư mục nếu chưa tồn tại
+            File directory = new File(avatarPath);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+
+            // Lưu file
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            File dest = new File(directory.getAbsolutePath() + File.separator + fileName);
+            file.transferTo(dest);
+
+            // Cập nhật đường dẫn trong DB
+            String dbPath = "/anh/user/" + fileName;
+            nguoiDungService.updateAvatar(user.getId(), dbPath);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật ảnh đại diện thành công!");
+
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Lỗi lưu file: " + e.getMessage());
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
+        }
+
+        return "redirect:/user/profile";
     }
 }
