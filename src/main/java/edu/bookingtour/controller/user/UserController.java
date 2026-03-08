@@ -127,10 +127,31 @@ public class UserController {
         List<DatCho> bookings = datChoRepository.findByIdNguoiDungOrderByIdDesc(user);
         Double total = datChoRepository.sumTongGiaByUser(user);
         double totalSpending = (total != null) ? total : 0.0;
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        // Pre-filter bookings for tabs
+        List<DatCho> pendingBookings = bookings.stream()
+                .filter(b -> "PENDING".equals(b.getTrangThai())
+                        && (b.getCreatedAt() == null || !b.getCreatedAt().plusMinutes(15).isBefore(currentTime)))
+                .collect(java.util.stream.Collectors.toList());
+
+        List<DatCho> paidBookings = bookings.stream()
+                .filter(b -> "PAID".equals(b.getTrangThai()))
+                .collect(java.util.stream.Collectors.toList());
+
+        List<DatCho> failedBookings = bookings.stream()
+                .filter(b -> "FAILED".equals(b.getTrangThai())
+                        || ("PENDING".equals(b.getTrangThai())
+                                && b.getCreatedAt() != null
+                                && b.getCreatedAt().plusMinutes(15).isBefore(currentTime)))
+                .collect(java.util.stream.Collectors.toList());
 
         model.addAttribute("user", user);
         model.addAttribute("bookings", bookings);
-        model.addAttribute("currentTime", LocalDateTime.now());
+        model.addAttribute("pendingBookings", pendingBookings);
+        model.addAttribute("paidBookings", paidBookings);
+        model.addAttribute("failedBookings", failedBookings);
+        model.addAttribute("currentTime", currentTime);
         model.addAttribute("totalSpending", totalSpending);
         model.addAttribute("memberTier", getMemberTier(totalSpending));
         model.addAttribute("memberTierIcon", getMemberTierIcon(totalSpending));

@@ -66,8 +66,15 @@ public class NgayKhoiHanhService {
             String to = "SGN";
             // Fetch thông tin vé máy bay chiều đi từ Amadeus
             fetchFlightInfo(nkh, from, to, ngayDi, true);
-            // Fetch thông tin vé máy bay chiều về từ Amadeus
-            fetchFlightInfo(nkh, to, from, ngayVe, false);
+            // Fetch thông tin vé máy bay chiều về từ Amadeus (chỉ khi có ngày về)
+            if (ngayVe != null) {
+                fetchFlightInfo(nkh, to, from, ngayVe, false);
+            } else {
+                nkh.setGiaVeVe(0.0);
+                nkh.setMaChuyenBayVe("N/A");
+                nkh.setGioBayVe("N/A");
+                nkh.setGioDenVe("N/A");
+            }
         }
 
         return ngayKhoiHanhRepository.save(nkh);
@@ -145,8 +152,15 @@ public class NgayKhoiHanhService {
             String to = "SGN";
             // Re-fetch flight info chiều đi
             fetchFlightInfo(nkh, from, to, ngayDi, true);
-            // Re-fetch flight info chiều về
-            fetchFlightInfo(nkh, to, from, ngayVe, false);
+            // Re-fetch flight info chiều về (chỉ khi có ngày về)
+            if (ngayVe != null) {
+                fetchFlightInfo(nkh, to, from, ngayVe, false);
+            } else {
+                nkh.setGiaVeVe(0.0);
+                nkh.setMaChuyenBayVe("N/A");
+                nkh.setGioBayVe("N/A");
+                nkh.setGioDenVe("N/A");
+            }
         }
 
         return ngayKhoiHanhRepository.save(nkh);

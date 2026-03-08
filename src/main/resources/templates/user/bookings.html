@@ -105,19 +105,15 @@
                         </div>
                         <!-- Tab: Pending -->
                         <div class="tab-pane fade" id="pending" role="tabpanel">
-                            <div
-                                th:replace="~{::bookingList(${bookings.?[trangThai == 'PENDING' && (createdAt == null || !createdAt.plusMinutes(15).isBefore(currentTime)) ]})}">
-                            </div>
+                            <div th:replace="~{::bookingList(${pendingBookings})}"></div>
                         </div>
                         <!-- Tab: Paid (Confirmed) -->
                         <div class="tab-pane fade" id="paid" role="tabpanel">
-                            <div th:replace="~{::bookingList(${bookings.?[trangThai == 'PAID']})}"></div>
+                            <div th:replace="~{::bookingList(${paidBookings})}"></div>
                         </div>
                         <!-- Tab: Failed/Expired -->
                         <div class="tab-pane fade" id="failed" role="tabpanel">
-                            <div
-                                th:replace="~{::bookingList(${bookings.?[trangThai == 'FAILED' || (trangThai == 'PENDING' && createdAt != null && createdAt.plusMinutes(15).isBefore(currentTime)) ]})}">
-                            </div>
+                            <div th:replace="~{::bookingList(${failedBookings})}"></div>
                         </div>
                     </div>
 
@@ -192,7 +188,7 @@
 
                                                         <!-- Review Button -->
                                                         <button
-                                                            th:if="${booking.trangThai == 'PAID' && booking.idChuyenDi.ngayKetThuc.isBefore(#temporals.createToday())}"
+                                                            th:if="${booking.trangThai == 'PAID' && booking.idChuyenDi.ngayKetThuc != null && booking.idChuyenDi.ngayKetThuc.isBefore(#temporals.createToday())}"
                                                             class="btn btn-warning rounded-pill btn-sm px-4"
                                                             data-bs-toggle="modal"
                                                             th:data-bs-target="'#reviewModal' + ${booking.id}">
