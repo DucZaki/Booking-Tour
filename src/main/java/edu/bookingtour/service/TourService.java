@@ -55,15 +55,6 @@ public class TourService {
 
     public ChuyenDi update(Integer id, ChuyenDi chuyenDi) {
         ChuyenDi tour = chuyenDiRepository.findById(id).orElseThrow(() -> new RuntimeException("ChuyenDi not found"));
-        mapToChuyenDi(tour, chuyenDi);
-        return chuyenDiRepository.save(tour);
-    }
-
-    public void delete(Integer id) {
-        chuyenDiRepository.deleteById(id);
-    }
-
-    public void mapToChuyenDi(ChuyenDi tour, ChuyenDi chuyenDi) {
         tour.setTieuDe(chuyenDi.getTieuDe());
         tour.setMoTa(chuyenDi.getMoTa());
         tour.setGia(chuyenDi.getGia());
@@ -85,6 +76,11 @@ public class TourService {
         if (chuyenDi.getIdDiemDon() != null && chuyenDi.getIdDiemDon().getId() != null) {
             tour.setIdDiemDon(diemDonRepository.findById(chuyenDi.getIdDiemDon().getId()).orElse(null));
         }
+        return chuyenDiRepository.save(tour);
+    }
+
+    public void delete(Integer id) {
+        chuyenDiRepository.deleteById(id);
     }
 
     public List<Calendar> getCalendar(int month, int year, String selectedDateStr) {

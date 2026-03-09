@@ -68,11 +68,11 @@
                 <input type="hidden" name="id" th:value="${tour.id}" />
                 <div class="mb-3">
                   <label class="form-label">Ngày khởi hành mới</label>
-                  <input type="date" name="ngayKhoiHanh" class="form-control" required>
+                  <input type="date" name="ngayKhoiHanh" class="form-control" th:min="${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}" required>
                 </div>
                 <div class="mb-3">
                   <label class="form-label">Ngày kết thúc mới</label>
-                  <input type="date" name="ngayKetThuc" class="form-control" required>
+                  <input type="date" name="ngayKetThuc" class="form-control" th:min="${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}" required>
                 </div>
                 <button class="btn btn-success w-100" onclick="return confirm('Xác nhận gia hạn chuyến đi?')">
                   <i class="bi bi-calendar-check"></i>

@@ -503,3 +503,9 @@
 .modal-content {
     transition: background-color 0.3s ease, color 0.2s ease, border-color 0.3s ease;
 }
+
+/* FIX hover text disappear */
+[data-theme="dark"] .table-hover > tbody > tr:hover > * {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}

@@ -53,7 +53,7 @@ public class DanhGiaService {
             dg.setBinhLuan(binhLuan);
             dg.setNgayDanhGia(Instant.now());
             dg.setIdChuyenDi(chuyenDiRepository.findById(tourId).orElseThrow(() -> new RuntimeException("Tour không tồn tại")));
-            dg.setIdNguoiDung(nguoiDungRepository.findByTenDangNhap(username).orElseThrow(() -> new RuntimeException("Tour không tồn tại")));
+            dg.setIdNguoiDung(nguoiDungRepository.findByTenDangNhap(username).orElseThrow(() -> new RuntimeException("Người dùng không tồn tại")));
             danhGiaRepository.save(dg);
         }
     }

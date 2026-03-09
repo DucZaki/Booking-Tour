@@ -88,10 +88,10 @@ public class AdminTourController {
             String fileName = UUID.randomUUID() + file.getOriginalFilename();
             File dest = new File(imagePath + fileName);
             file.transferTo(dest);
-            chuyenDi.setHinhAnh("/anh/chuyendi/" + fileName);
+            chuyenDi.setHinhAnh("/uploads/" + fileName);
         }
         tourService.save(chuyenDi);
-        return "redirect:/admin/tour";
+        return "redirect:/admin/tour/active";
     }
 
     @GetMapping("/edit/{id}")
@@ -117,7 +117,7 @@ public class AdminTourController {
             String fileName = UUID.randomUUID() + file.getOriginalFilename();
             File dest = new File(imagePath + fileName);
             file.transferTo(dest);
-            chuyenDi.setHinhAnh("/anh/chuyendi/" + fileName);
+            chuyenDi.setHinhAnh("/uploads/" + fileName);
         } else {
             chuyenDi.setHinhAnh(tour.getHinhAnh());
         }
@@ -134,9 +134,9 @@ public class AdminTourController {
         return "admin/tour/tour-detail";
     }
 
-    @GetMapping("delete/{id}")
-    public String delete(@PathVariable Integer id) {
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id, @RequestParam(defaultValue = "active") String source) {
         tourService.delete(id);
-        return "redirect:/admin/tour";
+        return "redirect:/admin/tour/" + source;
     }
 }

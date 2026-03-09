@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Ngày khởi hành</label>
                         <input type="date" th:field="*{ngayKhoiHanh}" class="form-control"
-                            th:attr="min=${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}" required>
+                               th:min="${tour.id == null ? #temporals.format(#temporals.createNow(),'yyyy-MM-dd') : null}">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Ngày kết thúc</label>

@@ -17,8 +17,7 @@
                         class="btn btn-warning">
                         <i class="bi bi-pencil"></i> Sửa
                     </a>
-                    <a th:href="@{'/admin/tour/delete/' + ${tour.id}}"
-                        onclick="return confirm('Bạn có chắc muốn xóa chuyến đi này?');" class="btn btn-danger">
+                    <a th:href="@{/admin/tour/delete/{id}(id=${tour.id},source=${source})}" onclick="return confirm('Bạn có chắc muốn xóa chuyến đi này?');" class="btn btn-danger">
                         <i class="bi bi-trash"></i> Xóa
                     </a>
                 </div>

@@ -43,13 +43,6 @@ public class NguoiDungService {
     }
 
     public NguoiDung save(NguoiDung nguoiDung) {
-        NguoiDung user = new NguoiDung();
-        user.setTenDangNhap(nguoiDung.getTenDangNhap());
-        user.setEmail(nguoiDung.getEmail());
-        user.setMatKhau(nguoiDung.getMatKhau());
-        user.setVaiTro(nguoiDung.getVaiTro());
-        user.setHoTen(nguoiDung.getHoTen());
-        user.setNumber(nguoiDung.getNumber());
         return nguoiDungRepository.save(nguoiDung);
     }
 

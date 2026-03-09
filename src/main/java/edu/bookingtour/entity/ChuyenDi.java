@@ -31,11 +31,11 @@ public class ChuyenDi {
     @Column(name = "gia", precision = 10, scale = 2)
     private BigDecimal gia;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "ngay_khoi_hanh")
     private LocalDate ngayKhoiHanh;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "ngay_ket_thuc")
     private LocalDate ngayKetThuc;
 

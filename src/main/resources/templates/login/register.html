@@ -33,64 +33,52 @@
                     <p class="text-sm font-medium" th:text="${successMessage}"></p>
                 </div>
 
-                <form th:action="@{/register}" method="post" class="space-y-5">
+                <form th:action="@{/register}" method="post" class="space-y-5" autocomplete="off">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tên đăng
-                                nhập</label>
-                            <input type="text" name="tenDangNhap" th:value="${nguoiDung.tenDangNhap}"
-                                placeholder="username" required
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Tên đăng nhập</label>
+                            <input type="text" name="tenDangNhap" th:value="${nguoiDung.tenDangNhap}" placeholder="username" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Họ và
-                                tên</label>
-                            <input type="text" name="hoTen" th:value="${nguoiDung.hoTen}" placeholder="Nguyễn Văn A"
-                                required
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Họ và tên</label>
+                            <input type="text" name="hoTen" th:value="${nguoiDung.hoTen}" placeholder="Nguyễn Văn A" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all">
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Số điện
-                                thoại</label>
-                            <input type="tel" name="number" th:value="${nguoiDung.number}" placeholder="0901234567"
-                                required
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Số điện thoại</label>
+                            <input type="tel" name="number" th:value="${nguoiDung.number}" placeholder="0901234567" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all">
                         </div>
                         <div>
                             <label
                                 class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Email</label>
-                            <input type="email" name="email" th:value="${nguoiDung.email}"
-                                placeholder="example@email.com" required
+                            <input type="email" name="email" th:value="${nguoiDung.email}" placeholder="example@email.com" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Mật
-                            khẩu</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Mật khẩu</label>
                         <div class="relative">
                             <input type="password" id="password" name="matKhau" placeholder="••••••••" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all pr-12">
                             <button type="button" onclick="togglePass('password')"
-                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FECF2F] transition-colors">
-                                👁️
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FECF2F] transition-colors">👁️
                             </button>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Xác nhận mật
-                            khẩu</label>
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Xác nhận mật khẩu</label>
                         <div class="relative">
-                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••"
-                                required
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••" required
                                 class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-[#FECF2F] focus:bg-white/10 outline-none transition-all pr-12">
                             <button type="button" onclick="togglePass('confirmPassword')"
-                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FECF2F] transition-colors">
-                                👁️
+                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#FECF2F] transition-colors">👁️
                             </button>
                         </div>
                     </div>
@@ -101,10 +89,8 @@
                                 class="w-4 h-4 rounded border-white/10 bg-white/5 text-[#FECF2F] focus:ring-[#FECF2F] cursor-pointer">
                         </div>
                         <label for="terms" class="text-sm text-gray-400">
-                            Tôi đồng ý với <a href="#"
-                                class="text-[#FECF2F] hover:text-[#fdd915] transition-colors">Điều khoản dịch vụ</a> và
-                            <a href="#" class="text-[#FECF2F] hover:text-[#fdd915] transition-colors">Chính sách bảo
-                                mật</a>
+                            Tôi đồng ý với <a href="#" class="text-[#FECF2F] hover:text-[#fdd915] transition-colors">Điều khoản dịch vụ</a> và
+                            <a href="#" class="text-[#FECF2F] hover:text-[#fdd915] transition-colors">Chính sách bảo mật</a>
                         </label>
                     </div>
 
