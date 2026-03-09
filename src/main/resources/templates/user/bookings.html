@@ -227,21 +227,31 @@
                                                     <div class="mb-4 text-center">
                                                         <label class="d-block mb-2 small text-muted">Mức độ hài
                                                             lòng</label>
-                                                        <div class="star-rating fs-3 text-warning">
-                                                            <input type="radio" th:name="'diem'" value="5" id="s5"
-                                                                checked class="d-none"><label for="s5"
+                                                        <div class="star-rating fs-3">
+                                                            <input type="radio" name="diem" value="5"
+                                                                th:id="'s5_' + ${booking.id}"
+                                                                checked class="d-none"><label
+                                                                th:for="'s5_' + ${booking.id}"
                                                                 class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" th:name="'diem'" value="4" id="s4"
-                                                                class="d-none"><label for="s4"
+                                                            <input type="radio" name="diem" value="4"
+                                                                th:id="'s4_' + ${booking.id}"
+                                                                class="d-none"><label
+                                                                th:for="'s4_' + ${booking.id}"
                                                                 class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" th:name="'diem'" value="3" id="s3"
-                                                                class="d-none"><label for="s3"
+                                                            <input type="radio" name="diem" value="3"
+                                                                th:id="'s3_' + ${booking.id}"
+                                                                class="d-none"><label
+                                                                th:for="'s3_' + ${booking.id}"
                                                                 class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" th:name="'diem'" value="2" id="s2"
-                                                                class="d-none"><label for="s2"
+                                                            <input type="radio" name="diem" value="2"
+                                                                th:id="'s2_' + ${booking.id}"
+                                                                class="d-none"><label
+                                                                th:for="'s2_' + ${booking.id}"
                                                                 class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" th:name="'diem'" value="1" id="s1"
-                                                                class="d-none"><label for="s1"
+                                                            <input type="radio" name="diem" value="1"
+                                                                th:id="'s1_' + ${booking.id}"
+                                                                class="d-none"><label
+                                                                th:for="'s1_' + ${booking.id}"
                                                                 class="bi bi-star-fill cursor-pointer"></label>
                                                         </div>
                                                     </div>
