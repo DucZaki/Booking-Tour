@@ -53,6 +53,19 @@ public class TourService {
         return chuyenDiRepository.save(chuyenDi);
     }
 
+    public ChuyenDi createTour(ChuyenDi chuyenDi) {
+        if (chuyenDi.getIdPhuongTien() != null && chuyenDi.getIdPhuongTien().getId() != null) {
+            chuyenDi.setIdPhuongTien(phuongTienRepository.findById(chuyenDi.getIdPhuongTien().getId()).orElse(null));
+        }
+        if (chuyenDi.getIdDiemDen() != null && chuyenDi.getIdDiemDen().getId() != null) {
+            chuyenDi.setIdDiemDen(diemDenRepository.findById(chuyenDi.getIdDiemDen().getId()).orElse(null));
+        }
+        if (chuyenDi.getIdDiemDon() != null && chuyenDi.getIdDiemDon().getId() != null) {
+            chuyenDi.setIdDiemDon(diemDonRepository.findById(chuyenDi.getIdDiemDon().getId()).orElse(null));
+        }
+        return chuyenDiRepository.save(chuyenDi);
+    }
+
     public ChuyenDi update(Integer id, ChuyenDi chuyenDi) {
         ChuyenDi tour = chuyenDiRepository.findById(id).orElseThrow(() -> new RuntimeException("ChuyenDi not found"));
         tour.setTieuDe(chuyenDi.getTieuDe());

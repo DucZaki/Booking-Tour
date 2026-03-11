@@ -85,12 +85,13 @@ public class AdminTourController {
     @PostMapping("/save")
     public String save(@ModelAttribute ChuyenDi chuyenDi, @RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
-            String fileName = UUID.randomUUID() + file.getOriginalFilename();
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             File dest = new File(imagePath + fileName);
+            dest.getParentFile().mkdirs();
             file.transferTo(dest);
             chuyenDi.setHinhAnh("/uploads/" + fileName);
         }
-        tourService.save(chuyenDi);
+        tourService.createTour(chuyenDi);
         return "redirect:/admin/tour/active";
     }
 

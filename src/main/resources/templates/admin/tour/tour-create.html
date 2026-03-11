@@ -25,13 +25,13 @@
           <div class="col-md-4">
             <label class="form-label fw-bold">Ngày khởi hành</label>
             <input type="date" th:field="*{ngayKhoiHanh}"
-              th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+              th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
           </div>
 
           <div class="col-md-4">
             <label class="form-label fw-bold">Ngày kết thúc</label>
             <input type="date" th:field="*{ngayKetThuc}"
-              th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+              th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
           </div>
 
           <div class="col-md-4">

@@ -11,6 +11,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
@@ -24,44 +26,36 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oauthUser = super.loadUser(request);
 
         String registrationId = request.getClientRegistration().getRegistrationId();
+        Map<String, Object> attributes = new HashMap<>(oauthUser.getAttributes());
 
-        String email = null;
-        String name = null;
-        String provider = null;
+        String email = (String) attributes.get("email");
+        String name = (String) attributes.get("name");
+        String provider = registrationId.toUpperCase();
+        
+        // Identifiers: Google uses "sub", Facebook uses "id"
+        String providerId = (String) attributes.get("google".equals(registrationId) ? "sub" : "id");
 
-        if ("google".equals(registrationId)) {
-            email = oauthUser.getAttribute("email");
-            name = oauthUser.getAttribute("name");
-            provider = "GOOGLE";
-        }
+        // Determine unique username for lookup
+        String tenDangNhap = (email != null) ? email : registrationId + "_" + providerId;
 
-        if ("facebook".equals(registrationId)) {
-            email = oauthUser.getAttribute("email");
-            name = oauthUser.getAttribute("name");
-            provider = "FACEBOOK";
-        }
+        // Save or update user in database
+        nguoiDungService.findByTenDangNhap(tenDangNhap).orElseGet(() -> {
+            NguoiDung nd = new NguoiDung();
+            nd.setTenDangNhap(tenDangNhap);
+            nd.setEmail(email);
+            nd.setHoTen(name);
+            nd.setVaiTro("USER");
+            nd.setProvider(provider);
+            return nguoiDungService.save(nd);
+        });
 
-        if (email != null) {
-            String finalProvider = provider;
-            String finalName = name;
-            String finalEmail = email;
-            nguoiDungService.findByEmail(email).orElseGet(() -> {
-                NguoiDung nd = new NguoiDung();
-                nd.setEmail(finalEmail);
-                nd.setTenDangNhap(finalEmail);
-                nd.setHoTen(finalName);
-                nd.setVaiTro("USER");
-                nd.setProvider(finalProvider);
-                return nguoiDungService.save(nd);
-            });
-        }
+        // Add the unique username to attributes so we can use it as the name attribute key
+        attributes.put("userNameKey", tenDangNhap);
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
-                oauthUser.getAttributes(),
-                "email"
+                attributes,
+                "userNameKey"
         );
     }
-
-
 }
