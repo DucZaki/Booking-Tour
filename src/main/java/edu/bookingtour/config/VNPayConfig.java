@@ -3,6 +3,9 @@ package edu.bookingtour.config;
 import jakarta.servlet.http.HttpServletRequest;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -10,14 +13,24 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+@Component
 public class VNPayConfig {
-    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_Returnurl = "http://localhost:8080/payment/vnpay-callback";
-    public static String vnp_TmnCode = "1HDJ5TF3";
-    public static String vnp_HashSecret = "DBRU24476VMM3E3B85YAZOHY4MFMZDBB";
-    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
+    @Value("${vnp.pay-url}")
+    public String vnp_PayUrl;
 
-    public static String md5(String message) {
+    @Value("${vnp.return-url}")
+    public String vnp_Returnurl;
+
+    @Value("${vnp.tmn-code}")
+    public String vnp_TmnCode;
+
+    @Value("${vnp.hash-secret}")
+    public String vnp_HashSecret;
+
+    @Value("${vnp.api-url}")
+    public String vnp_ApiUrl;
+
+    public String md5(String message) {
         String digest = null;
         try {
             MessageDigest md = MessageDigest.getInstance("MD5");
@@ -35,7 +48,7 @@ public class VNPayConfig {
         return digest;
     }
 
-    public static String Sha256(String message) {
+    public String Sha256(String message) {
         String digest = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -54,7 +67,7 @@ public class VNPayConfig {
     }
 
     // Standard hash function for VNPAY 2.1.0
-    public static String hashAllFields(Map<String, String> fields) throws UnsupportedEncodingException {
+    public String hashAllFields(Map<String, String> fields) throws UnsupportedEncodingException {
         List<String> fieldNames = new ArrayList<>(fields.keySet());
         Collections.sort(fieldNames);
 
@@ -78,7 +91,7 @@ public class VNPayConfig {
         return hmacSHA512(vnp_HashSecret, hashData.toString());
     }
 
-    public static String hmacSHA512(final String key, final String data) {
+    public String hmacSHA512(final String key, final String data) {
         try {
 
             if (key == null || data == null) {
@@ -101,7 +114,7 @@ public class VNPayConfig {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
+    public String getIpAddress(HttpServletRequest request) {
         String ipAdress;
         try {
             ipAdress = request.getHeader("X-FORWARDED-FOR");
@@ -114,7 +127,7 @@ public class VNPayConfig {
         return ipAdress;
     }
 
-    public static String getRandomNumber(int len) {
+    public String getRandomNumber(int len) {
         Random rnd = new Random();
         String chars = "0123456789";
         StringBuilder sb = new StringBuilder(len);

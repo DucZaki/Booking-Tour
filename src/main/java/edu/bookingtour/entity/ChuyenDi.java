@@ -62,7 +62,7 @@ public class ChuyenDi {
     @Column(name = "hinh_anh")
     private String hinhAnh;
 
-    @Column(name = "highlight")
+    @Column(name = "highlight", columnDefinition = "TEXT")
     private String highlight;
 
     @OneToMany(mappedBy = "chuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)

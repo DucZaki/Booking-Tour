@@ -43,6 +43,9 @@ public class PaymentController {
     @Autowired
     private NguoiDungService nguoiDungService;
 
+    @Autowired
+    private VNPayConfig vnPayConfig;
+
     @PostMapping("/booking/submit")
     public String submitBooking(
             @RequestParam Integer tourId,
@@ -89,8 +92,8 @@ public class PaymentController {
         // Prepare VNPay parameters
         long amount = (long) (totalAmount * 100);
         String vnp_TxnRef = String.valueOf(datCho.getId());
-        String vnp_IpAddr = VNPayConfig.getIpAddress(request);
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_IpAddr = vnPayConfig.getIpAddress(request);
+        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", "2.1.0");
@@ -102,7 +105,7 @@ public class PaymentController {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan tour: " + tour.getTieuDe());
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_Returnurl);
+        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -133,8 +136,8 @@ public class PaymentController {
             }
         }
 
-        String vnp_SecureHash = VNPayConfig.hashAllFields(vnp_Params);
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
+        String vnp_SecureHash = vnPayConfig.hashAllFields(vnp_Params);
+        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
 
         return "redirect:" + paymentUrl;
     }
@@ -160,7 +163,7 @@ public class PaymentController {
 
         // Check hash
         try {
-            String signValue = VNPayConfig.hashAllFields(fields);
+            String signValue = vnPayConfig.hashAllFields(fields);
             if (signValue.equals(vnp_SecureHash)) {
                 String orderId = request.getParameter("vnp_TxnRef");
                 String responseCode = request.getParameter("vnp_ResponseCode");
@@ -216,8 +219,8 @@ public class PaymentController {
         long amount = (long) (datCho.getTongGia() * 100);
 
         String vnp_TxnRef = String.valueOf(datCho.getId());
-        String vnp_IpAddr = VNPayConfig.getIpAddress(request);
-        String vnp_TmnCode = VNPayConfig.vnp_TmnCode;
+        String vnp_IpAddr = vnPayConfig.getIpAddress(request);
+        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
 
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", "2.1.0");
@@ -229,7 +232,7 @@ public class PaymentController {
         vnp_Params.put("vnp_OrderInfo", "Thanh toan lai tour: " + tour.getTieuDe());
         vnp_Params.put("vnp_OrderType", "other");
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", VNPayConfig.vnp_Returnurl);
+        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
@@ -256,8 +259,8 @@ public class PaymentController {
             }
         }
 
-        String vnp_SecureHash = VNPayConfig.hashAllFields(vnp_Params);
-        String paymentUrl = VNPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
+        String vnp_SecureHash = vnPayConfig.hashAllFields(vnp_Params);
+        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
 
         return "redirect:" + paymentUrl;
     }

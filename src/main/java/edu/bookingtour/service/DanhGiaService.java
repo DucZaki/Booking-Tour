@@ -21,6 +21,7 @@ public class DanhGiaService {
     NguoiDungRepository nguoiDungRepository;
     @Autowired
     DanhGiaRepository danhGiaRepository;
+
     public Page<DanhGia> filter(Integer diem, String ten, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         if (diem != null && ten != null && !ten.isEmpty()) {
@@ -34,14 +35,18 @@ public class DanhGiaService {
         }
         return danhGiaRepository.findAll(pageable);
     }
+
     public List<DanhGia> findByTourId(Integer tourId) {
         return danhGiaRepository.findByIdChuyenDi_Id(tourId);
     }
+
     public DanhGia findUserReview(Integer tourId, String username) {
         return danhGiaRepository.findByIdChuyenDi_IdAndIdNguoiDung_TenDangNhap(tourId, username).orElse(null);
     }
+
     public void save(Integer tourId, Integer diem, String binhLuan, String username) {
-        DanhGia existing = danhGiaRepository.findByIdChuyenDi_IdAndIdNguoiDung_TenDangNhap(tourId, username).orElse(null);
+        DanhGia existing = danhGiaRepository.findByIdChuyenDi_IdAndIdNguoiDung_TenDangNhap(tourId, username)
+                .orElse(null);
         if (existing != null) {
             existing.setDiem(diem);
             existing.setBinhLuan(binhLuan);
@@ -52,11 +57,14 @@ public class DanhGiaService {
             dg.setDiem(diem);
             dg.setBinhLuan(binhLuan);
             dg.setNgayDanhGia(Instant.now());
-            dg.setIdChuyenDi(chuyenDiRepository.findById(tourId).orElseThrow(() -> new RuntimeException("Tour không tồn tại")));
-            dg.setIdNguoiDung(nguoiDungRepository.findByTenDangNhap(username).orElseThrow(() -> new RuntimeException("Người dùng không tồn tại")));
+            dg.setIdChuyenDi(
+                    chuyenDiRepository.findById(tourId).orElseThrow(() -> new RuntimeException("Tour không tồn tại")));
+            dg.setIdNguoiDung(nguoiDungRepository.findByTenDangNhap(username)
+                    .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại")));
             danhGiaRepository.save(dg);
         }
     }
+
     public void delete(Integer id) {
         danhGiaRepository.deleteById(id);
     }

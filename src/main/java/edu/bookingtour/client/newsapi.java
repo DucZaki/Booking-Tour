@@ -3,6 +3,7 @@ package edu.bookingtour.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.bookingtour.dto.ArticleDTO;
 import edu.bookingtour.dto.NewsResponseDTO;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
@@ -15,7 +16,9 @@ import java.util.Collections;
 import java.util.List;
 @Component
 public class newsapi {
-    private static final String TOKEN = "f4576b6c4b744b5bbb4306309ade8ff1";
+    @Value("${news.api.token}")
+    private String token;
+
     private static final String API_URL = "https://newsapi.org/v2/everything";
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -39,7 +42,7 @@ public class newsapi {
                 + "&language=en"
                 + "&sortBy=publishedAt"
                 + "&pageSize=12"
-                + "&apiKey=" + TOKEN;
+                + "&apiKey=" + token;
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))

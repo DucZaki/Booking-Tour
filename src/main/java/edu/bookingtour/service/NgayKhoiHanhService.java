@@ -41,6 +41,13 @@ public class NgayKhoiHanhService {
         ChuyenDi chuyenDi = chuyenDiRepository.findById(chuyenDiId)
                 .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
 
+        // Kiểm tra xem ngày khởi hành đã tồn tại chưa
+        Optional<NgayKhoiHanh> existing = ngayKhoiHanhRepository.findByChuyenDiIdAndNgay(chuyenDiId, ngayDi);
+        if (existing.isPresent()) {
+            return existing.get(); // Trả về bản ghi cũ nếu đã tồn tại để tránh lỗi duplicate
+        }
+
+
         NgayKhoiHanh nkh = new NgayKhoiHanh();
         nkh.setChuyenDi(chuyenDi);
         nkh.setNgay(ngayDi);
@@ -136,7 +143,15 @@ public class NgayKhoiHanhService {
                 .orElseThrow(() -> new RuntimeException("Ngày khởi hành không tồn tại"));
 
         ChuyenDi chuyenDi = nkh.getChuyenDi();
+
+        // Kiểm tra xem ngày mới có bị trùng với ngày khác của cùng 1 tour không
+        Optional<NgayKhoiHanh> existing = ngayKhoiHanhRepository.findByChuyenDiIdAndNgay(chuyenDi.getId(), ngayDi);
+        if (existing.isPresent() && !existing.get().getId().equals(id)) {
+            throw new RuntimeException("Ngày khởi hành " + ngayDi + " đã tồn tại cho tour này");
+        }
+
         boolean isBus = chuyenDi.getIdPhuongTien() != null
+
                 && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
 
         nkh.setNgay(ngayDi);
