@@ -651,6 +651,32 @@ footer {
     color: #ffc107;
 }
 
+/* ===================== STAR RATING (Booking Review) ===================== */
+.star-rating {
+    direction: rtl;
+    display: inline-flex;
+    gap: 4px;
+}
+
+.star-rating label {
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star-rating input:checked ~ label {
+    color: #ffc107;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffc107;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
 /* ===================== MEMBERSHIP TIERS ===================== */
 .tier-badge {
     display: inline-flex;
