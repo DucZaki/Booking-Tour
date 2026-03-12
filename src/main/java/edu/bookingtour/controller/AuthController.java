@@ -23,9 +23,16 @@ public class AuthController {
     public String showLoginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
+            jakarta.servlet.http.HttpSession session,
             Model model) {
         if (error != null) {
-            model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
+            String sessionError = (String) session.getAttribute("error.message");
+            if (sessionError != null) {
+                model.addAttribute("errorMessage", sessionError);
+                session.removeAttribute("error.message");
+            } else {
+                model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
+            }
         }
         if (logout != null) {
             model.addAttribute("successMessage", "Đăng xuất thành công!");

@@ -114,6 +114,11 @@ public class SecurityConfig {
                                                 .loginPage("/login")
                                                 .userInfoEndpoint(userInfo -> userInfo
                                                                 .userService(customOAuth2UserService))
+                                                .failureHandler((request, response, exception) -> {
+                                                        request.getSession().setAttribute("error.message",
+                                                                        exception.getMessage());
+                                                        response.sendRedirect("/login?error=true");
+                                                })
                                                 .defaultSuccessUrl("/", true));
 
                 return http.build();

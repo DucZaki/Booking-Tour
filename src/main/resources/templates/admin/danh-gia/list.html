@@ -63,16 +63,16 @@
                 </table>
             </div>
         </div>
-        <div aria-label = "Page navigation">
+        <div aria-label = "Page navigation" th:if="${totalPage > 0}">
             <ul class="pagination justify-content-center mt-4">
                 <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page - 1}, size=${size}, ten=${param.ten}, diem=${param.diem})}">&laquo;</a>
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page - 1}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}">&laquo;</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${i}, size=${size}, ten=${param.ten}, diem=${param.diem})}" th:text="${i + 1}"></a>
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${i}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}" th:text="${i + 1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page + 1}, size=${size}, ten=${param.ten}, diem=${param.diem})}">&raquo;</a>
+                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page + 1}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}">&raquo;</a>
                 </li>
             </ul>
         </div>

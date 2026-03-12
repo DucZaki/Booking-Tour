@@ -104,19 +104,24 @@ public class NgayKhoiHanhService {
                 String gioDen = formatTime(arrivalTime);
 
                 if (isDeparture) {
+                    System.out.println("Fetched Departure Flight: " + flightNumber + " Price: " + price);
                     nkh.setGiaVeDi(price);
                     nkh.setMaChuyenBayDi(flightNumber);
                     nkh.setGioBayDi(gioBay);
                     nkh.setGioDenDi(gioDen);
                 } else {
+                    System.out.println("Fetched Return Flight: " + flightNumber + " Price: " + price);
                     nkh.setGiaVeVe(price);
                     nkh.setMaChuyenBayVe(flightNumber);
                     nkh.setGioBayVe(gioBay);
                     nkh.setGioDenVe(gioDen);
                 }
+            } else {
+                System.out.println("No flight data found for " + from + " to " + to + " on " + date);
             }
         } catch (Exception e) {
-            System.err.println("Lỗi fetch flight info: " + e.getMessage());
+            System.err.println("Lỗi fetch flight info (" + from + "-" + to + "): " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -20,10 +20,15 @@ public class CustomUserDetailsService implements UserDetailsService {
         NguoiDung nguoiDung = nguoiDungRepository.findByTenDangNhap(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy user: " + username));
 
+        String role = nguoiDung.getVaiTro();
+        if (role != null && role.startsWith("ROLE_")) {
+            role = role.substring(5);
+        }
+
         return User.builder()
                 .username(nguoiDung.getTenDangNhap())
-                .password(nguoiDung.getMatKhau())
-                .roles(nguoiDung.getVaiTro())
+                .password(nguoiDung.getMatKhau() != null ? nguoiDung.getMatKhau() : "")
+                .roles(role != null ? role : "USER")
                 .build();
     }
 }

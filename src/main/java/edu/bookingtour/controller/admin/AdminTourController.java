@@ -75,6 +75,9 @@ public class AdminTourController {
     @GetMapping("/create")
     public String tourAdd(Model model) {
         ChuyenDi tour = new ChuyenDi();
+        tour.setIdPhuongTien(new edu.bookingtour.entity.PhuongTien());
+        tour.setIdDiemDon(new edu.bookingtour.entity.DiemDon());
+        tour.setIdDiemDen(new edu.bookingtour.entity.DiemDen());
         model.addAttribute("tour", tour);
         model.addAttribute("phuongTienList", phuongTienService.getDistinctLoai());
         model.addAttribute("chauLucList", diemDenRepository.findDistinctChauLuc());

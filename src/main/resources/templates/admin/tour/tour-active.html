@@ -31,12 +31,12 @@
         Không có chuyến đi nào.
       </div>
     </div>
-    <div aria-label="Page navigation">
+    <div aria-label="Page navigation" th:if="${totalPage > 0}">
       <ul class="pagination justify-content-center mt-4">
         <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
           <a class="page-link" th:href="@{/admin/tour/active(page=${page - 1}, perPage=${perPage})}">&laquo;</a>
         </li>
-        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage > 0 ? totalPage - 1 : 0)}" th:classappend="${i == page} ? 'active'">
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
           <a class="page-link" th:href="@{/admin/tour/active(page=${i}, perPage=${perPage})}" th:text="${i + 1}"></a>
         </li>
         <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">

@@ -1,30 +1,77 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head th:fragment="head(title)">
-  <title th:text="${title}"></title>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link href="/img/favicon.ico" rel="shortcut icon" type="image/x-icon">
-  <!-- Bootstrap -->
-  <link href="/css/bootstrap.css" rel="stylesheet" type="text/css">
-  <script src="/js/bootstrap.bundle.js"></script>
-  <!-- Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title} + ' | ZakiBooking Admin'"></title>
+
+  <!-- Bootstrap 5 & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Custom -->
-  <link href="/css/style.css" rel="stylesheet" type="text/css">
-  <link href="/css/styles2.css" rel="stylesheet" type="text/css">
-  <link href="/css/dark-mode.css" rel="stylesheet" type="text/css">
-  <script src="/js/dark-mode.js" defer></script>
-  <!-- Anti-FOUC -->
-  <script>
-    (function () {
-      var saved = localStorage.getItem('zakibooking-theme');
-      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
-    })();
-  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --sidebar-width: 260px;
+      --card-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      --card-border-radius: 1rem;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      min-height: calc(100vh - 80px);
+      background: #fff;
+    }
+
+    .nav-link {
+      color: #495057;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      margin: 0.2rem 0;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: rgba(13, 110, 253, 0.1);
+      color: var(--primary-color);
+    }
+
+    .nav-link i {
+      font-size: 1.1rem;
+    }
+
+    .stat-card {
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border-radius: var(--card-border-radius);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card {
+      border: none;
+      border-radius: var(--card-border-radius);
+    }
+  </style>
 </head>
 <header th:fragment="header()">
   <section class="admin-header w-100 px-0 py-0 border-bottom">
@@ -109,4 +156,6 @@
       © 2026 ZakiBooking Admin
     </div>
   </div>
+  <!-- Bootstrap 5 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </footer>

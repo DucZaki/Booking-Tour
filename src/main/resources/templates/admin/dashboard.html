@@ -20,67 +20,75 @@
                 <!-- KPI Cards -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm h-100 bg-white border-start border-primary border-4">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
-                                        <i class="bi bi-currency-dollar fs-4"></i>
+                        <a th:href="@{/admin/revenue}" class="text-decoration-none">
+                            <div class="card stat-card shadow-sm h-100 bg-white border-start border-primary border-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
+                                            <i class="bi bi-currency-dollar fs-4"></i>
+                                        </div>
+                                        <span class="badge bg-light text-dark border small">+12%</span>
                                     </div>
-                                    <span class="badge bg-light text-dark border small">+12%</span>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold ls-1">Doanh thu tổng</h6>
+                                    <h3 class="fw-bold mb-0 text-dark"
+                                        th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                                        0 ₫
+                                    </h3>
                                 </div>
-                                <h6 class="text-muted mb-1 small">Doanh thu tổng</h6>
-                                <h3 class="fw-bold mb-0 text-dark"
-                                    th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫
-                                </h3>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm h-100 bg-white border-dark border-1"
-                            style="border-style: solid !important;">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
-                                        <i class="bi bi-cart-check fs-4"></i>
+                        <a th:href="@{/admin/bookings}" class="text-decoration-none">
+                            <div class="card stat-card shadow-sm h-100 bg-white border-start border-success border-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="bg-success bg-opacity-10 text-dark p-3 rounded-3">
+                                            <i class="bi bi-cart-check fs-4"></i>
+                                        </div>
+                                        <span class="text-muted small fw-bold"
+                                            th:text="${successBookings} + ' thành công'"></span>
                                     </div>
-                                    <span class="text-muted small fw-bold"
-                                        th:text="${successBookings} + ' thành công'"></span>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold ls-1">Tổng số Booking</h6>
+                                    <h3 class="fw-bold mb-0 text-dark" th:text="${totalBookings}">0</h3>
                                 </div>
-                                <h6 class="text-muted mb-1 small">Tổng số Booking</h6>
-                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalBookings}">0</h3>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm h-100 bg-white border-start border-primary border-4">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="bg-primary bg-opacity-10 text-dark p-3 rounded-3">
-                                        <i class="bi bi-airplane-engines fs-4"></i>
+                        <a th:href="@{/admin/tour-performance}" class="text-decoration-none">
+                            <div class="card stat-card shadow-sm h-100 bg-white border-start border-warning border-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="bg-warning bg-opacity-10 text-dark p-3 rounded-3">
+                                            <i class="bi bi-airplane-engines fs-4"></i>
+                                        </div>
+                                        <span class="text-muted small fw-bold" th:text="${totalTours} + ' tour'"></span>
                                     </div>
-                                    <span class="text-muted small fw-bold" th:text="${totalTours} + ' tour'"></span>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold ls-1">Hiệu suất Tour</h6>
+                                    <h3 class="fw-bold mb-0 text-dark"
+                                        th:text="${totalBookings > 0 ? (successBookings * 100 / totalBookings) : 0} + '%'">
+                                        0%
+                                    </h3>
                                 </div>
-                                <h6 class="text-muted mb-1 small">Hiệu suất Tour</h6>
-                                <h3 class="fw-bold mb-0 text-dark"
-                                    th:text="${totalTours > 0 ? (successBookings * 100 / totalBookings) : 0} + '%'">0%
-                                </h3>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     <div class="col-md-3">
-                        <div class="card border-0 shadow-sm h-100 bg-white border-dark border-1"
-                            style="border-style: solid !important;">
-                            <div class="card-body p-4">
-                                <div class="d-flex justify-content-between mb-3">
-                                    <div class="bg-dark text-primary p-3 rounded-3">
-                                        <i class="bi bi-people fs-4"></i>
+                        <a th:href="@{/admin/users-detail}" class="text-decoration-none">
+                            <div class="card stat-card shadow-sm h-100 bg-white border-start border-info border-4">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div class="bg-info bg-opacity-10 text-dark p-3 rounded-3">
+                                            <i class="bi bi-people fs-4"></i>
+                                        </div>
+                                        <span class="text-muted small fw-bold">Khách hàng</span>
                                     </div>
-                                    <span class="text-muted small fw-bold">Khách hàng</span>
+                                    <h6 class="text-muted mb-1 small uppercase fw-bold ls-1">Tổng người dùng</h6>
+                                    <h3 class="fw-bold mb-0 text-dark" th:text="${totalUsers}">0</h3>
                                 </div>
-                                <h6 class="text-muted mb-1 small">Tổng người dùng</h6>
-                                <h3 class="fw-bold mb-0 text-dark" th:text="${totalUsers}">0</h3>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
 
@@ -88,21 +96,31 @@
                 <div class="row g-4 mb-4">
                     <div class="col-lg-8">
                         <div class="card border-0 shadow-sm rounded-4">
-                            <div class="card-header bg-white py-3 border-bottom-0">
-                                <h5 class="fw-bold mb-0">Doanh thu theo tháng (2025)</h5>
+                            <div
+                                class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+                                <h5 class="fw-bold mb-0" id="revenueChartTitle">Doanh thu theo tháng (2026)</h5>
+                                <div class="d-flex align-items-center gap-2">
+                                    <select id="revenueYearSelect" class="form-select form-select-sm"
+                                        style="width: 120px;" onchange="updateRevenueChart(this.value)">
+                                        <option value="2026" selected>Năm 2026</option>
+                                        <option value="2025">Năm 2025</option>
+                                        <option value="2024">Năm 2024</option>
+                                        <option value="2023">Năm 2023</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="card-body p-4">
-                                <canvas id="revenueChart" style="max-height: 350px;"></canvas>
+                                <canvas id="revenueChart" style="height: 450px;"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-header bg-white py-3 border-bottom-0">
                                 <h5 class="fw-bold mb-0">Trạng thái đặt chỗ</h5>
                             </div>
-                            <div class="card-body p-4">
-                                <canvas id="statusChart" style="max-height: 350px;"></canvas>
+                            <div class="card-body p-4 d-flex align-items-center">
+                                <canvas id="statusChart" style="height: 450px;"></canvas>
                             </div>
                         </div>
                     </div>
@@ -385,46 +403,69 @@
         }
 
         /* Chart Data from Thymeleaf */
-        const months = /*[[${chartMonths}]]*/[];
-        const revenues = /*[[${chartRevenues}]]*/[];
+        let months = /*[[${chartMonths}]]*/[];
+        let revenues = /*[[${chartRevenues}]]*/[];
         const statusLabels = /*[[${statusLabels}]]*/[];
         const statusCounts = /*[[${statusCounts}]]*/[];
 
-        // Revenue Line Chart
-        const revCtx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(revCtx, {
-            type: 'line',
-            data: {
-                labels: months.map(m => `Tháng ${m}`),
-                datasets: [{
-                    label: 'Doanh thu (₫)',
-                    data: revenues,
-                    borderColor: '#0d6efd',
-                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    pointRadius: 4,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: '#0d6efd'
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
+        let revenueChart;
+
+        // === Revenue Line Chart ===
+        function initRevenueChart(labels, data) {
+            const revCtx = document.getElementById('revenueChart').getContext('2d');
+            revenueChart = new Chart(revCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (₫)',
+                        data: data,
+                        borderColor: '#0d6efd',
+                        backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#0d6efd'
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { borderDash: [5, 5] },
-                        ticks: {
-                            callback: value => value.toLocaleString('vi-VN') + ' ₫'
-                        }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
                     },
-                    x: { grid: { display: false } }
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { borderDash: [5, 5] },
+                            ticks: {
+                                callback: value => value.toLocaleString('vi-VN') + ' ₫'
+                            }
+                        },
+                        x: { grid: { display: false } }
+                    }
                 }
-            }
+            });
+        }
+
+        // === Update Revenue Chart via AJAX ===
+        function updateRevenueChart(year) {
+            const title = document.getElementById('revenueChartTitle');
+            fetch(`/admin/api/revenue/monthly?year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    title.textContent = `Doanh thu theo tháng (${data.year})`;
+                    revenueChart.data.labels = data.labels;
+                    revenueChart.data.datasets[0].data = data.data;
+                    revenueChart.update();
+                })
+                .catch(err => console.error('Error:', err));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initRevenueChart(months.map(m => `Tháng ${m}`), revenues);
         });
 
         // Booking Status Pie Chart
@@ -436,10 +477,10 @@
                 datasets: [{
                     data: statusCounts,
                     backgroundColor: [
-                        '#000000', // PAID (Black/Primary theme)
-                        '#FECF2F', // PENDING (Yellow)
-                        '#dc3545', // FAILED (Red)
-                        '#e9ecef'  // Canceled/Other (Light Grey)
+                        '#000000', // PAID
+                        '#FECF2F', // PENDING
+                        '#dc3545', // FAILED
+                        '#e9ecef'  // OTHERS
                     ],
                     hoverOffset: 10,
                     borderWidth: 0
@@ -447,6 +488,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
                         position: 'bottom',

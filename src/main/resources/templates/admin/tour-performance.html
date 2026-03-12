@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/admin_layout :: head('Hiệu suất Tour')}"></head>
+<body>
+    <div th:replace="~{layout/admin_layout :: header()}"></div>
+    <div class="d-flex">
+        <div th:replace="~{layout/admin_layout :: nav()}"></div>
+        <main class="flex-grow-1 p-4" style="min-height: calc(100vh - 80px);">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <a th:href="@{/admin}" class="btn btn-sm btn-outline-dark mb-2">
+                            <i class="bi bi-arrow-left"></i> Quay lại Dashboard
+                        </a>
+                        <h2 class="fw-bold mb-0">Hiệu suất Tour & Bán hàng</h2>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-lg-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="fw-bold mb-0">Lượt khách theo Tour</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="bookingsChart" style="max-height: 350px;"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-header bg-white py-3">
+                                <h5 class="fw-bold mb-0">Tỷ lệ Trạng thái Booking</h5>
+                            </div>
+                            <div class="card-body d-flex flex-column justify-content-center">
+                                <div class="text-center mb-4">
+                                    <h2 class="fw-bold text-success" th:text="${totalBookings > 0 ? (successBookings * 100 / totalBookings) : 0} + '%'"></h2>
+                                    <p class="text-muted">Tỷ lệ thành công trung bình</p>
+                                </div>
+                                <div class="px-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small">Thành công (PAID)</span>
+                                        <span class="small fw-bold" th:text="${successBookings}"></span>
+                                    </div>
+                                    <div class="progress mb-3" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" th:style="'width: ' + (${totalBookings > 0 ? (successBookings * 100 / totalBookings) : 0}) + '%'"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small">Tổng đơn đặt</span>
+                                        <span class="small fw-bold" th:text="${totalBookings}"></span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0">Bảng xếp hạng hiệu suất Tour</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="px-4 py-3">Xếp hạng</th>
+                                        <th class="py-3">Tên Tour</th>
+                                        <th class="py-3 text-center">Số lượt đặt</th>
+                                        <th class="py-3 text-end">Doanh thu</th>
+                                        <th class="py-3 text-center">Hiệu suất bán</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="row, iter : ${tours}">
+                                        <td class="px-4 py-3 fw-bold text-muted">
+                                            <span th:if="${iter.index == 0}" class="badge bg-warning text-dark"><i class="bi bi-trophy-fill"></i> TOP 1</span>
+                                            <span th:if="${iter.index != 0}" th:text="'#' + (${iter.index + 1})"></span>
+                                        </td>
+                                        <td class="py-3 fw-bold" th:text="${row[1]}"></td>
+                                        <td class="py-3 text-center">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill" th:text="${row[2]} + ' lượt'"></span>
+                                        </td>
+                                        <td class="py-3 text-end fw-bold text-success" th:text="${#numbers.formatDecimal(row[3], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                        <td class="py-3 text-center" style="width: 200px;">
+                                            <div class="progress" style="height: 8px;" th:if="${totalBookings > 0}">
+                                                <div class="progress-bar bg-primary" role="progressbar" th:style="'width: ' + (${row[2] * 100 / totalBookings}) + '%'"></div>
+                                            </div>
+                                            <div class="progress" style="height: 8px;" th:unless="${totalBookings > 0}">
+                                                <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div th:replace="~{layout/admin_layout :: footer()}"></div>
+
+    <script th:inline="javascript">
+        const tourLabels = /*[[${tourLabels}]]*/ [];
+        const tourData = /*[[${tourData}]]*/ [];
+
+        if (tourLabels.length > 0) {
+            const ctx = document.getElementById('bookingsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: tourLabels,
+                    datasets: [{
+                        label: 'Số lượng booking',
+                        data: tourData,
+                        backgroundColor: 'rgba(13, 110, 253, 0.8)',
+                        borderRadius: 10
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
