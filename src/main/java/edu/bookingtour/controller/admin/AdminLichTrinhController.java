@@ -25,9 +25,8 @@ public class AdminLichTrinhController {
 
         model.addAttribute("lichTrinh", lt);
         model.addAttribute("tour",
-                tourService.findById(tourId)
-                        .orElseThrow(() -> new IllegalArgumentException("Tour not found")));
-        return "admin/lich-trinh/lichtrinh-create";
+                tourService.findById(tourId).orElseThrow(() -> new IllegalArgumentException("Tour not found")));
+        return "admin/tour/tour-detail";
     }
 
     @PostMapping("/save")
