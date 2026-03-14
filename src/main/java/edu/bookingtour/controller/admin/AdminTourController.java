@@ -2,6 +2,7 @@ package edu.bookingtour.controller.admin;
 
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.DiemDenRepository;
+import edu.bookingtour.service.LichTrinhService;
 import edu.bookingtour.service.PhuongTienService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class AdminTourController {
     private TourService tourService;
     @Autowired
     private PhuongTienService phuongTienService;
+    @Autowired
+    private LichTrinhService lichTrinhService;
     @Autowired
     private DiemDenRepository diemDenRepository;
     @Autowired
@@ -130,11 +133,11 @@ public class AdminTourController {
     }
 
     @GetMapping("/detail/{id}")
-    public String tourDetail(@PathVariable Integer id,
-            @RequestParam(required = false, defaultValue = "active") String source, Model model) {
+    public String tourDetail(@PathVariable Integer id, @RequestParam(required = false, defaultValue = "active") String source, Model model) {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         model.addAttribute("tour", tour);
         model.addAttribute("source", source);
+        model.addAttribute("lichTrinhs", lichTrinhService.getByTour(id));
         return "admin/tour/tour-detail";
     }
 

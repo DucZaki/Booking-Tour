@@ -1,13 +1,7 @@
 package edu.bookingtour.controller.user;
 
-import edu.bookingtour.entity.Calendar;
-import edu.bookingtour.entity.ChuyenDi;
-import edu.bookingtour.entity.DanhGia;
-import edu.bookingtour.entity.NgayKhoiHanh;
-import edu.bookingtour.service.DanhGiaService;
-import edu.bookingtour.service.NgayKhoiHanhService;
-import edu.bookingtour.service.NguoiDungService;
-import edu.bookingtour.service.TourService;
+import edu.bookingtour.entity.*;
+import edu.bookingtour.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -30,7 +24,8 @@ public class ChuyenDiController {
     private NgayKhoiHanhService ngayKhoiHanhService;
     @Autowired
     private NguoiDungService nguoiDungService;
-
+    @Autowired
+    private LichTrinhService lichTrinhService;
     @GetMapping("/tour")
     public String viewDiemDenPage(@RequestParam(required = false) String thanhPho,
             @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen,
@@ -128,6 +123,9 @@ public class ChuyenDiController {
             model.addAttribute("avgRating", Math.round(avg));
             model.addAttribute("totalReview", danhGiaList.size());
             model.addAttribute("danhGiaList", danhGiaList);
+
+            List<LichTrinh> lichTrinhs = lichTrinhService.getByTour(id);
+            model.addAttribute("lichTrinhs", lichTrinhs);
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
