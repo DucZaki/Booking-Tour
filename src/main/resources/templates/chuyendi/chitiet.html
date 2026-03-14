@@ -251,6 +251,44 @@
                         </div>
                     </div>
 
+                    <h3 class="h5 fw-bold text-center mb-4">LỊCH TRÌNH</h3>
+                    <div th:if="${#lists.isEmpty(lichTrinhs)}"
+                         class="text-center py-5 schedule-empty">
+                        <i class="bi bi-calendar-x fs-1 mb-3"></i>
+                        <p class="mb-0">Tạm thời chưa có lịch trình cho chuyến đi này</p>
+                    </div>
+
+                    <div class="accordion" id="tourSchedule" th:if="${!#lists.isEmpty(lichTrinhs)}">
+                        <div class="accordion-item schedule-item" th:each="lich,iter : ${lichTrinhs}">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:attr="data-bs-target='#day' + ${lich.ngayThu}">
+                                    <div class="w-100">
+                                        <div class="fw-bold">
+                                            Ngày [[${lich.ngayThu}]]: [[${lich.tieuDe}]]
+                                        </div>
+                                        <div class="small schedule-meal mt-1">
+                                            <i class="bi bi-cup-hot me-1"></i>
+                                            [[${lich.soBuaAn}]]
+                                        </div>
+                                    </div>
+                                </button>
+                            </h2>
+
+                            <div class="accordion-collapse collapse"
+                                 th:id="'day' + ${lich.ngayThu}">
+                                <div class="accordion-body">
+                                    <div class="schedule-line">
+                                        <div class="schedule-content">
+                                            <p th:text="${lich.noiDung}"></p>
+                                            <p class="fw-bold mt-3">
+                                                Nghỉ đêm tại [[${lich.nghiDem}]]
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- ===== SIDEBAR BÊN PHẢI ===== -->
@@ -364,6 +402,61 @@
                 display: block;
                 line-height: 1;
                 margin-top: 2px;
+            }
+            /* ===== SCHEDULE THEME ===== */
+
+            .schedule-item {
+                border: none;
+                margin-bottom: 10px;
+                overflow: hidden;
+            }
+
+            .accordion-button {
+                background: var(--bs-body-bg);
+                color: var(--bs-body-color);
+                transition: 0.25s;
+            }
+
+            .accordion-button:not(.collapsed){
+                background: var(--bs-primary);
+                color: #111 !important;
+            }
+
+            .accordion-body {
+                background: var(--bs-body-bg);
+            }
+
+            /* timeline */
+            .schedule-line {
+                border-left: 2px dashed var(--bs-primary);
+                padding-left: 20px;
+                position: relative;
+            }
+
+            .schedule-line::before {
+                content: "";
+                width: 10px;
+                height: 10px;
+                background: var(--bs-primary);
+                border-radius: 50%;
+                position: absolute;
+                left: -6px;
+                top: 6px;
+            }
+
+            /* text */
+            .schedule-content {
+                font-size: 0.95rem;
+                line-height: 1.7;
+                color: var(--bs-body-color);
+            }
+
+            .schedule-meal {
+                color: #6c757d;
+            }
+
+            .schedule-empty {
+                color: #6c757d;
             }
         </style>
     </th:block>
