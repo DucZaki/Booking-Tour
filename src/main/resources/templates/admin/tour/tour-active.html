@@ -15,7 +15,8 @@
     </div>
     <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4">
       <div class="col" th:each="t : ${tour}">
-        <a th:href="@{/admin/tour/detail/{id}(id=${t.id}, source='active')}" class="text-decoration-none text-dark">
+        <a class="tour-card" th:href="@{/admin/tour/detail/{id}(id=${t.id},source='active')}"
+           onclick="sessionStorage.removeItem('tourTab')">
           <div class="card h-100 border-0 shadow-sm tour-card">
             <img th:src="@{${t.hinhAnh}}" class="card-img-top" style="height: 230px; object-fit: cover;" alt="Tour picture">
             <div class="card-body text-center">

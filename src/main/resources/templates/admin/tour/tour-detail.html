@@ -155,7 +155,7 @@
                                         Ngày [[${lich.ngayThu}]] - [[${lich.tieuDe}]]
                                     </h5>
                                     <div class="d-flex gap-2">
-                                        <a th:href="@{/admin/lich-trinh/edit/{id}(id=${lich.id})}" class="btn btn-sm btn-warning" onclick="localStorage.setItem('tourTab','#schedule-tab')">
+                                        <a th:href="@{/admin/lich-trinh/edit/{id}(id=${lich.id})}" class="btn btn-sm btn-warning" onclick="sessionStorage.setItem('tourTab','#schedule-tab')">
                                             Sửa
                                         </a>
                                         <a th:href="@{/admin/lich-trinh/delete/{id}(id=${lich.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn chắc chắn muốn xoá?')">
@@ -208,9 +208,10 @@
                                 </form>
                             </div>
                         </div>
-                        <div id="addBlockList"
-                             class="card border-2 border-dashed text-center add-block"
-                             onclick="openCreateForm()">
+                    <div th:if="${!#lists.isEmpty(lichTrinhs)}"
+                         id="addBlockList"
+                         class="card border-2 border-dashed text-center add-block"
+                         onclick="openCreateForm()">
                             <div class="card-body py-4">
                                 <i class="bi bi-plus-circle fs-2 text-primary"></i>
                                 <div class="fw-semibold">
@@ -228,12 +229,15 @@
             const empty = document.getElementById("emptyBlock");
             const addEmpty = document.getElementById("addBlockEmty");
             const addList = document.getElementById("addBlockList");
+
             form.style.display = "block";
             if (empty) empty.style.display = "none";
             if (addEmpty) addEmpty.style.display = "none";
             if (addList) addList.style.display = "none";
+
             const day = document.getElementById("ngayThuInput").value;
             document.getElementById("dayPreview").innerText = "Day " + day;
+
             form.scrollIntoView({ behavior: "smooth" });
         }
 
@@ -242,20 +246,27 @@
             const empty = document.getElementById("emptyBlock");
             const addEmpty = document.getElementById("addBlockEmty");
             const addList = document.getElementById("addBlockList");
+
             form.style.display = "none";
             if (empty) empty.style.display = "block";
             if (addEmpty) addEmpty.style.display = "block";
             if (addList) addList.style.display = "block";
         }
+
         document.addEventListener("DOMContentLoaded", function () {
-            const activeTab = localStorage.getItem("tourTab");
-            if (activeTab) {
-                const tab = new bootstrap.Tab(document.querySelector(activeTab));
-                tab.show();
+
+            const savedTab = sessionStorage.getItem("tourTab");
+
+            if (savedTab) {
+                const tab = document.querySelector(savedTab);
+                if (tab) new bootstrap.Tab(tab).show();
+            } else {
+                new bootstrap.Tab(document.querySelector("#info-tab")).show();
             }
+
             document.querySelectorAll('#tourTab button').forEach(tab => {
                 tab.addEventListener("shown.bs.tab", function () {
-                    localStorage.setItem("tourTab", "#" + this.id);
+                    sessionStorage.setItem("tourTab", "#" + this.id);
                 });
             });
         });
