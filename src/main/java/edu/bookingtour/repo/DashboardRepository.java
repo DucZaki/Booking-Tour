@@ -71,13 +71,6 @@ public interface DashboardRepository extends JpaRepository<DatCho, Integer> {
                         "ORDER BY d.ngayDat DESC")
         List<Object[]> findAllBookingDetails();
 
-        @Query("SELECT u.id, u.hoTen, u.email, u.number, u.vaiTro, u.ngayTao, " +
-                        "(SELECT COUNT(d) FROM DatCho d WHERE d.idNguoiDung = u), " +
-                        "(SELECT SUM(d.tongGia) FROM DatCho d WHERE d.idNguoiDung = u AND d.trangThai = 'PAID') " +
-                        "FROM NguoiDung u " +
-                        "ORDER BY u.ngayTao DESC")
-        List<Object[]> findAllUserDetails();
-
         // Thống kê chi tiêu của từng người dùng (đã thanh toán)
         @Query("SELECT COALESCE(d.idNguoiDung.hoTen, d.hoTen) as tenKhach, " +
                         "COALESCE(d.idNguoiDung.email, d.email) as email, " +

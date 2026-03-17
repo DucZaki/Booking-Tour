@@ -11,8 +11,7 @@
                 <h4>Edit User</h4>
             </div>
             <div class="card-body">
-                <form th:action="@{'/admin/user/update/' + ${user.id}}" method="post"
-                      enctype="multipart/form-data" th:object="${user}">
+                <form th:action="@{'/admin/user/update/' + ${user.id}}" method="post" enctype="multipart/form-data" th:object="${user}" autocomplete="off">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Tên dăng nhập</label>
@@ -44,7 +43,7 @@
                         </div>
                     </div>
                     <div class="mt-4 d-flex justify-content-end">
-                        <a href="/admin/user" class="btn btn-secondary me-2">Cancel</a>
+                        <a th:href="@{'/admin/user/' + ${user.id}}" class="btn btn-secondary me-2">Huỷ</a>
                         <button type="submit" class="btn btn-warning text-white">Update</button>
                     </div>
                 </form>
