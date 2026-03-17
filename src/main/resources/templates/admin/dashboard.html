@@ -387,7 +387,7 @@
                     tbody.innerHTML = data.map((r, i) => `
                         <tr>
                             <td class="px-3">${i + 1}</td>
-                            <td class="fw-bold">${r[0] || '-'}</td>
+                            <td class="fw-bold">${r[6] ? `<a href="/admin/user/${r[6]}" class="text-decoration-none text-primary">${r[0]}</a>` : (r[0] || '-')}</td>
                             <td class="text-muted small">${r[1] || '-'}</td>
                             <td class="small">${r[2] || '-'}</td>
                             <td><span class="badge bg-dark rounded-pill">${r[3]} khách</span></td>
