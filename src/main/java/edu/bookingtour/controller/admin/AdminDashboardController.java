@@ -193,10 +193,4 @@ public class AdminDashboardController {
         model.addAttribute("successBookings", dashboardRepository.countSuccessfulBookings());
         return "admin/tour-performance";
     }
-
-    @GetMapping("/users-detail")
-    public String usersDetail(Model model) {
-        model.addAttribute("users", dashboardRepository.findAllUserDetails());
-        return "admin/users-detail";
-    }
 }

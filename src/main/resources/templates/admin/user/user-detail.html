@@ -9,7 +9,6 @@
         <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
         <div class="container mt-4">
             <div class="container-fluid py-4 px-4">
-                <!-- Breadcrumb & Actions -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <nav aria-label="breadcrumb">
@@ -34,7 +33,6 @@
                 </div>
 
                 <div class="row g-4">
-                    <!-- Left Column: User Info & Chart -->
                     <div class="col-lg-4">
                         <div class="card border-0 shadow-sm rounded-4 mb-4">
                             <div class="card-body p-4 text-center">
@@ -253,7 +251,6 @@
                 </div>
             </div>
 
-            <!-- Invoice Detail Modal -->
             <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content border-0 rounded-4 shadow">
@@ -319,7 +316,6 @@
             </div>
 
             <script th:inline="javascript">
-                // === Invoice Modal Logic ===
                 function showInvoice(btn) {
                     const data = btn.dataset;
                     document.getElementById('invId').textContent = '#' + data.id;
@@ -352,7 +348,6 @@
                     modal.show();
                 }
 
-                // === Spending Chart Logic ===
                 document.addEventListener('DOMContentLoaded', function () {
                     const userId = /*[[${user.id}]]*/ 0;
                     fetch(`/admin/user/api/${userId}/spending`)
@@ -394,7 +389,6 @@
                         });
                 });
 
-                // Simple search filter for bookings
                 document.getElementById('bookingSearch').addEventListener('keyup', function () {
                     let filter = this.value.toUpperCase();
                     let rows = document.querySelector('table tbody').rows;

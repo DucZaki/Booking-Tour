@@ -34,10 +34,6 @@ public class NguoiDungService {
         return nguoiDungRepository.findByTenDangNhap(tenDangNhap);
     }
 
-    public Optional<NguoiDung> findByEmail(String email) {
-        return nguoiDungRepository.findByEmail(email);
-    }
-
     public List<NguoiDung> findAll() {
         return nguoiDungRepository.findAll();
     }
@@ -67,9 +63,9 @@ public class NguoiDungService {
         nguoiDungRepository.deleteById(id);
     }
 
-    public Page<NguoiDung> findAllUser(int page, int perPage) {
-        Pageable pageable = PageRequest.of(page, perPage);
-        return nguoiDungRepository.findAll(pageable);
+    public Page<Object[]> findAllUserDetail(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return nguoiDungRepository.findAllUserDetails(pageable);
     }
 
     public NguoiDung registerNewUser(NguoiDung nguoiDung) {
