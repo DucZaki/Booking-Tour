@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{layout/admin_layout :: head('Admin - Tour Reviews')}"></head>
+
+<body>
+<header th:replace="~{layout/admin_layout:: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-0">Quản lý đánh giá theo Tour</h3>
+                <div class="text-muted small">Xem hiệu suất phản hồi của từng chuyến đi</div>
+            </div>
+            <div class="d-flex align-items-center">
+                <form th:action="@{/admin/danh-gia}" method="get" class="d-flex align-items-center">
+                    <label class="me-2 fw-bold small text-nowrap">Sắp xếp theo:</label>
+                    <select name="sort" class="form-select form-select-sm rounded-pill px-3" onchange="this.form.submit()" style="width: 180px;">
+                        <option value="">Mặc định</option>
+                        <option value="ratingDesc" th:selected="${sort == 'ratingDesc'}">Đánh giá cao nhất</option>
+                        <option value="ratingAsc" th:selected="${sort == 'ratingAsc'}">Đánh giá thấp nhất</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" th:each="tour : ${tours}">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden tour-review-card">
+                    <img th:src="${tour.hinhAnh}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="">
+                    <div class="card-body">
+                        <h5 class="fw-bold text-truncate" th:text="${tour.tieuDe}"></h5>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="me-auto">
+                                <span class="fs-4 fw-bold text-warning" 
+                                      th:text="${#numbers.formatDecimal(tour.avgRating, 1, 1)}">0.0</span>
+                                <span class="text-muted">/ 5.0</span>
+                            </div>
+                            <div class="badge bg-light text-dark rounded-pill px-3 py-2">
+                                <i class="bi bi-chat-right-text me-1 text-primary"></i>
+                                <span th:text="${tour.totalReviews}">0</span> đánh giá
+                            </div>
+                        </div>
+                        
+                        <!-- Progress bars for sentiment summary -->
+                        <div class="small mb-2">
+                             <div class="d-flex justify-content-between mb-1">
+                                 <span>Tích cực (4-5 sao)</span>
+                                 <span th:text="${tour.positivePercentage} + '%'">0%</span>
+                             </div>
+                             <div class="progress" style="height: 6px;">
+                                 <div class="progress-bar bg-success" role="progressbar" 
+                                      th:style="'width: ' + ${tour.positivePercentage} + '%'"></div>
+                             </div>
+                        </div>
+
+                        <a th:href="@{/admin/danh-gia/detail(tourId=${tour.id})}" class="btn btn-dark w-100 rounded-pill mt-3">
+                            Xem chi tiết bình luận <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(tours)}" class="alert alert-info text-center p-5 rounded-4 shadow-sm mt-4">
+            <i class="bi bi-info-circle fs-1 mb-3"></i>
+            <h5 class="fw-bold">Chưa có đánh giá nào được gửi</h5>
+            <p class="mb-0 text-muted">Hệ thống sẽ hiển thị các tour có bình luận tại đây.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .tour-review-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .tour-review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .progress-bar {
+        border-radius: 10px;
+    }
+</style>
+
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+</body>
+</html>

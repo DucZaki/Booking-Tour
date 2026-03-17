@@ -163,14 +163,14 @@
         <div th:replace="${content}"></div>
     </main>
 
-    <section class="newsletter bg-custom text-white py-5 text-center">
+    <section class="newsletter bg-custom py-5 text-center shadow-sm">
         <div class="container">
-            <h3 class="fw-bold">Đăng ký nhận tin khuyến mãi</h3>
-            <p>Nhận ngay ưu đãi du lịch mới nhất mỗi tuần</p>
-            <form th:action="@{/register}" method="get" class="d-flex justify-content-center mt-3">
-                <input type="email" name="email" class="form-control w-50 me-2" placeholder="Nhập email của bạn"
+            <h3 class="fw-bold mb-2">Đăng ký nhận tin khuyến mãi</h3>
+            <p class="mb-4">Nhận ngay ưu đãi du lịch mới nhất mỗi tuần từ ZakiBooking</p>
+            <form th:action="@{/register}" method="get" class="d-flex justify-content-center mt-3 mx-auto" style="max-width: 600px;">
+                <input type="email" name="email" class="form-control border-0 rounded-pill px-4 me-2 shadow-sm" placeholder="Nhập email của bạn..."
                     required />
-                <button type="submit" class="btn btn-light">Đăng ký</button>
+                <button type="submit" class="btn btn-dark rounded-pill px-4 fw-bold shadow-sm">Đăng ký</button>
             </form>
         </div>
     </section>

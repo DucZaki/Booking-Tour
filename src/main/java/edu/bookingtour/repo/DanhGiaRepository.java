@@ -17,6 +17,10 @@ public interface DanhGiaRepository extends JpaRepository<DanhGia, Integer> {
 
     Page<DanhGia> findByIdNguoiDung_HoTenContainingIgnoreCase(String hoTen, Pageable pageable);
 
+    Page<DanhGia> findByIdChuyenDi_Id(Integer tourId, Pageable pageable);
+
+    Page<DanhGia> findByIdChuyenDi_IdAndDiem(Integer tourId, Integer diem, Pageable pageable);
+
     List<DanhGia> findByIdChuyenDi_Id(Integer id);
 
     Optional<DanhGia> findByIdChuyenDi_IdAndIdNguoiDung_TenDangNhap(Integer tourId, String username);
