@@ -36,7 +36,10 @@
                                     <tr th:each="row : ${bookings}">
                                         <td class="px-4 py-3 fw-bold text-muted" th:text="'#' + ${row[0]}"></td>
                                         <td class="py-3">
-                                            <div class="fw-bold" th:text="${row[1] ?: 'Khách vãng lai'}"></div>
+                                            <div class="fw-bold">
+                                                <a th:if="${row[8] != null}" th:href="@{/admin/user/{id}(id=${row[8]})}" th:text="${row[1]}" class="text-decoration-none text-primary"></a>
+                                                <span th:if="${row[8] == null}" th:text="${row[1] ?: 'Khách vãng lai'}"></span>
+                                            </div>
                                             <div class="text-muted small" th:text="${row[2] ?: '-'}"></div>
                                         </td>
                                         <td class="py-3 fw-bold text-primary" th:text="${row[3]}"></td>
@@ -51,7 +54,7 @@
                                             <span th:if="${row[7] == 'FAILED'}" class="badge bg-danger rounded-pill px-3 py-2">Thất bại</span>
                                         </td>
                                         <td class="py-3 text-center">
-                                            <button class="btn btn-sm btn-light border rounded-pill px-3" 
+                                            <button th:if="${row[7] == 'PAID'}" class="btn btn-sm btn-light border rounded-pill px-3" 
                                                     th:data-id="${row[0]}"
                                                     th:data-user="${row[1] ?: 'Khách vãng lai'}"
                                                     th:data-tour="${row[3]}"
@@ -59,6 +62,7 @@
                                                     th:data-total="${row[5]}"
                                                     th:data-date="${row[6]}"
                                                     th:data-status="${row[7]}"
+                                                    th:data-userid="${row[8]}"
                                                     onclick="showInvoice(this)">
                                                 <i class="bi bi-file-earmark-text me-1"></i>Hoá đơn
                                             </button>
@@ -117,7 +121,12 @@
                         </div>
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted">Người đặt:</span>
-                            <span class="fw-bold" id="modalUser">-</span>
+                            <span class="fw-bold" id="modalUserContainer">
+                                <span id="modalUser">-</span>
+                                <a id="modalUserLink" href="#" class="btn btn-sm btn-link p-0 ms-1" style="display:none;" title="Xem hồ sơ">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </span>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -161,6 +170,14 @@
             statusBadge.textContent = data.status === 'PAID' ? 'Thành công' : (data.status === 'PENDING' ? 'Chờ thanh toán' : 'Thất bại');
             statusBadge.className = 'badge rounded-pill px-3 py-1 mt-2 ' + 
                 (data.status === 'PAID' ? 'bg-success' : (data.status === 'PENDING' ? 'bg-warning text-dark' : 'bg-danger'));
+
+            const userLink = document.getElementById('modalUserLink');
+            if (data.userid && data.userid !== 'null') {
+                userLink.href = '/admin/user/' + data.userid;
+                userLink.style.display = 'inline';
+            } else {
+                userLink.style.display = 'none';
+            }
 
             new bootstrap.Modal(document.getElementById('invoiceModal')).show();
         }

@@ -188,84 +188,32 @@
 
                                                         <!-- Review Button -->
                                                         <button
-                                                            th:if="${booking.trangThai == 'PAID' && booking.idChuyenDi.ngayKetThuc != null && booking.idChuyenDi.ngayKetThuc.isBefore(#temporals.createToday())}"
+                                                            th:if="${booking.trangThai == 'PAID' && booking.idChuyenDi.ngayKetThuc != null && !booking.idChuyenDi.ngayKetThuc.isAfter(#temporals.createToday())}"
                                                             class="btn btn-warning rounded-pill btn-sm px-4"
-                                                            data-bs-toggle="modal"
-                                                            th:data-bs-target="'#reviewModal' + ${booking.id}">
+                                                            th:data-id="${booking.id}"
+                                                            th:data-tour-id="${booking.idChuyenDi.id}"
+                                                            th:data-tour-title="${booking.idChuyenDi.tieuDe}"
+                                                            onclick="openReviewModal(this)">
                                                             Đánh giá
+                                                        </button>
+
+                                                        <!-- Invoice Button -->
+                                                        <button th:if="${booking.trangThai == 'PAID'}"
+                                                            class="btn btn-light border rounded-pill btn-sm px-3"
+                                                            th:data-id="${booking.id}" th:data-user="${user.hoTen}"
+                                                            th:data-tour="${booking.idChuyenDi.tieuDe}"
+                                                            th:data-people="${booking.soLuong}"
+                                                            th:data-total="${booking.tongGia}"
+                                                            th:data-date="${#temporals.format(booking.ngayDat, 'dd/MM/yyyy')}"
+                                                            onclick="showInvoice(this)">
+                                                            <i class="bi bi-file-earmark-text me-1"></i>Hoá đơn
                                                         </button>
 
                                                         <a th:href="@{/tour/{id}(id=${booking.idChuyenDi.id})}"
                                                             class="btn btn-outline-primary rounded-pill btn-sm px-3">
                                                             Chi tiết tour
                                                         </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Review Modal -->
-                                <div class="modal fade" th:id="'reviewModal' + ${booking.id}" tabindex="-1"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content border-0 rounded-4 shadow">
-                                            <div class="modal-header border-0 pb-0">
-                                                <h5 class="fw-bold">Đánh giá chuyến đi</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <form th:action="@{/danh-gia/add}" method="post">
-                                                <div class="modal-body p-4">
-                                                    <input type="hidden" name="tourId"
-                                                        th:value="${booking.idChuyenDi.id}">
-                                                    <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về tour
-                                                        <strong>[[${booking.idChuyenDi.tieuDe}]]</strong>
-                                                    </p>
-
-                                                    <div class="mb-4 text-center">
-                                                        <label class="d-block mb-2 small text-muted">Mức độ hài
-                                                            lòng</label>
-                                                        <div class="star-rating fs-3">
-                                                            <input type="radio" name="diem" value="5"
-                                                                th:id="'s5_' + ${booking.id}" checked
-                                                                class="d-none"><label th:for="'s5_' + ${booking.id}"
-                                                                class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" name="diem" value="4"
-                                                                th:id="'s4_' + ${booking.id}" class="d-none"><label
-                                                                th:for="'s4_' + ${booking.id}"
-                                                                class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" name="diem" value="3"
-                                                                th:id="'s3_' + ${booking.id}" class="d-none"><label
-                                                                th:for="'s3_' + ${booking.id}"
-                                                                class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" name="diem" value="2"
-                                                                th:id="'s2_' + ${booking.id}" class="d-none"><label
-                                                                th:for="'s2_' + ${booking.id}"
-                                                                class="bi bi-star-fill cursor-pointer"></label>
-                                                            <input type="radio" name="diem" value="1"
-                                                                th:id="'s1_' + ${booking.id}" class="d-none"><label
-                                                                th:for="'s1_' + ${booking.id}"
-                                                                class="bi bi-star-fill cursor-pointer"></label>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label class="form-label small fw-bold">Bình luận của
-                                                            bạn</label>
-                                                        <textarea name="binhLuan" class="form-control rounded-3"
-                                                            rows="4" placeholder="Cảm nhận của bạn về chuyến đi..."
-                                                            required></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer border-0 pt-0">
-                                                    <button type="button" class="btn btn-light rounded-pill px-4"
-                                                        data-bs-dismiss="modal">Hủy</button>
-                                                    <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi
-                                                        đánh giá</button>
-                                                </div>
-                                            </form>
+                                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -273,9 +221,138 @@
                         </div>
                     </div>
 
+                    <!-- Review Modal (Single, Shared) -->
+                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 rounded-4 shadow">
+                                <div class="modal-header border-0 pb-0">
+                                    <h5 class="fw-bold">Đánh giá chuyến đi</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form th:action="@{/danh-gia/add}" method="post">
+                                    <div class="modal-body p-4">
+                                        <input type="hidden" name="tourId" id="reviewTourId">
+                                        <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về tour
+                                            <strong id="reviewTourTitle">...</strong>
+                                        </p>
+
+                                        <div class="mb-4 text-center">
+                                            <label class="d-block mb-2 small text-muted">Mức độ hài lòng</label>
+                                            <div class="star-rating fs-3">
+                                                <input type="radio" name="diem" value="5" id="s5" checked class="d-none">
+                                                <label for="s5" class="bi bi-star-fill cursor-pointer"></label>
+                                                <input type="radio" name="diem" value="4" id="s4" class="d-none">
+                                                <label for="s4" class="bi bi-star-fill cursor-pointer"></label>
+                                                <input type="radio" name="diem" value="3" id="s3" class="d-none">
+                                                <label for="s3" class="bi bi-star-fill cursor-pointer"></label>
+                                                <input type="radio" name="diem" value="2" id="s2" class="d-none">
+                                                <label for="s2" class="bi bi-star-fill cursor-pointer"></label>
+                                                <input type="radio" name="diem" value="1" id="s1" class="d-none">
+                                                <label for="s1" class="bi bi-star-fill cursor-pointer"></label>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label small fw-bold">Bình luận của bạn</label>
+                                            <textarea name="binhLuan" class="form-control rounded-3" rows="4"
+                                                placeholder="Cảm nhận của bạn về chuyến đi..." required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer border-0 pt-0">
+                                        <button type="button" class="btn btn-light rounded-pill px-4"
+                                            data-bs-dismiss="modal">Hủy</button>
+                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi đánh giá</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
+
+        <!-- Modal Chi tiết Hoá đơn -->
+        <div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="fw-bold mb-0">Chi tiết Hoá đơn</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="text-center mb-4">
+                            <div class="display-6 fw-bold text-dark" id="modalTotal">0 ₫</div>
+                            <div class="badge bg-success rounded-pill px-3 py-1 mt-2">Thành công</div>
+                        </div>
+
+                        <div class="border-top pt-3">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Mã đơn hàng:</span>
+                                <span class="fw-bold" id="modalId">#0</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Người đặt:</span>
+                                <span class="fw-bold" id="modalUser">-</span>
+                            </div>
+                            <hr>
+                            <div class="mb-3 text-center">
+                                <span class="text-muted d-block mb-1 small">Tour đã đặt:</span>
+                                <div class="fw-bold text-primary" id="modalTour">-</div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Số lượng:</span>
+                                <span class="fw-bold" id="modalPeople">1 người</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Ngày đặt:</span>
+                                <span class="fw-bold" id="modalDate">-</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted small">Phương thức:</span>
+                                <span class="fw-bold">Chuyển khoản / VNPay</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-3 bg-light rounded-3 text-center small text-muted">
+                            <i class="bi bi-info-circle me-1"></i> Cảm ơn bạn đã tin tưởng ZakiBooking.
+                            Chúc bạn có một chuyến đi tuyệt vời!
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-dark rounded-pill w-100 py-2"
+                            data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function showInvoice(btn) {
+                const data = btn.dataset;
+                document.getElementById('modalId').textContent = '#' + data.id;
+                document.getElementById('modalUser').textContent = data.user;
+                document.getElementById('modalTour').textContent = data.tour;
+                document.getElementById('modalPeople').textContent = data.people + ' người';
+                document.getElementById('modalTotal').textContent = parseInt(data.total).toLocaleString('vi-VN') + ' ₫';
+                document.getElementById('modalDate').textContent = data.date;
+
+                new bootstrap.Modal(document.getElementById('invoiceModal')).show();
+            }
+
+            function openReviewModal(btn) {
+                const data = btn.dataset;
+                document.getElementById('reviewTourId').value = data.tourId;
+                document.getElementById('reviewTourTitle').textContent = data.tourTitle;
+
+                // Reset modal fields if needed
+                const modal = document.getElementById('reviewModal');
+                modal.querySelector('textarea').value = '';
+                modal.querySelector('#s5').checked = true;
+
+                new bootstrap.Modal(modal).show();
+            }
+        </script>
     </th:block>
 </body>
 

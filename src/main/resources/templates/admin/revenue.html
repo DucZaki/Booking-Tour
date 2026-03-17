@@ -48,8 +48,7 @@
                             <div class="tab-pane fade show active" id="month" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <canvas id="monthlyChartLine" style="max-height: 400px;" class="mb-4"></canvas>
-                                        <canvas id="monthlyChartBar" style="max-height: 300px;"></canvas>
+                                        <canvas id="monthlyChartLine" style="max-height: 400px;"></canvas>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
@@ -66,7 +65,7 @@
                                                             <div class="fw-bold" th:text="'Tháng ' + ${row[0]}"></div>
                                                             <div class="small text-muted" th:text="'Năm 2026'"></div>
                                                         </td>
-                                                        <td class="text-end fw-bold text-primary" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                                        <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -92,7 +91,7 @@
                                                 <tbody>
                                                     <tr th:each="row : ${weeklyRevenue}">
                                                         <td th:text="'Tuần ' + ${row[0]}"></td>
-                                                        <td class="text-end fw-bold text-primary" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                                        <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -118,7 +117,7 @@
                                                 <tbody>
                                                     <tr th:each="row : ${yearlyRevenue}">
                                                         <td th:text="'Năm ' + ${row[0]}"></td>
-                                                        <td class="text-end fw-bold text-primary" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                                        <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -152,8 +151,11 @@
                                          To be thorough, I'll update the controller to pass 'bookings' to revenue.html too. -->
                                     <tr th:each="row : ${bookings}">
                                         <td class="px-4 py-3 text-muted fw-bold" th:text="'#' + ${row[0]}"></td>
-                                        <td class="py-3" th:text="${row[1] ?: 'Khách vãng lai'}"></td>
-                                        <td class="py-3 fw-bold" th:text="${row[3]}"></td>
+                                        <td class="py-3">
+                                            <a th:if="${row[8] != null}" th:href="@{/admin/user/{id}(id=${row[8]})}" th:text="${row[1]}" class="text-decoration-none text-dark fw-bold border-bottom border-warning"></a>
+                                            <span th:if="${row[8] == null}" th:text="${row[1] ?: 'Khách vãng lai'}"></span>
+                                        </td>
+                                        <td class="py-3 fw-bold text-dark" th:text="${row[3]}"></td>
                                         <td class="py-3 text-end fw-bold text-success" th:text="${#numbers.formatDecimal(row[5], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                         <td class="py-3 small text-muted" th:text="${row[6]}"></td>
                                         <td class="py-3 text-center">
@@ -186,15 +188,18 @@
                 type: type,
                 data: {
                     labels: labels,
-                    datasets: [{
+                        datasets: [{
                         label: 'Doanh thu (₫)',
                         data: data,
-                        backgroundColor: isLine ? 'transparent' : '#0d6efd',
-                        borderColor: '#0d6efd',
+                        backgroundColor: isLine ? 'rgba(254, 207, 47, 0.1)' : '#FECF2F',
+                        borderColor: '#FECF2F',
                         borderWidth: isLine ? 3 : 1,
                         borderRadius: isLine ? 0 : 8,
                         fill: isLine,
-                        tension: 0.4
+                        tension: 0.4,
+                        pointRadius: isLine ? 4 : 0,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#FECF2F'
                     }]
                 },
                 options: {
@@ -212,7 +217,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             renderChart('weeklyChart', weeklyLabels, weeklyData);
-            renderChart('monthlyChartBar', monthlyLabels, monthlyData, 'bar');
             renderChart('monthlyChartLine', monthlyLabels, monthlyData, 'line');
             renderChart('yearlyChart', yearlyLabels, yearlyData);
         });

@@ -56,7 +56,7 @@ public interface DashboardRepository extends JpaRepository<DatCho, Integer> {
         List<Object[]> findYearlyRevenue();
 
         @Query(value = "SELECT d.id, COALESCE(d.ho_ten, u.ho_ten), COALESCE(d.email, u.email), c.tieu_de, " +
-                        "d.so_luong, d.tong_gia, d.ngay_dat, d.trang_thai " +
+                        "d.so_luong, d.tong_gia, d.ngay_dat, d.trang_thai, u.id as user_id " +
                         "FROM dat_cho d " +
                         "LEFT JOIN nguoi_dung u ON d.id_nguoi_dung = u.id " +
                         "JOIN chuyen_di c ON d.id_chuyen_di = c.id " +
@@ -66,7 +66,7 @@ public interface DashboardRepository extends JpaRepository<DatCho, Integer> {
         org.springframework.data.domain.Page<Object[]> findAllBookingDetails(org.springframework.data.domain.Pageable pageable);
 
         @Query("SELECT d.id, COALESCE(d.hoTen, u.hoTen), COALESCE(d.email, u.email), d.idChuyenDi.tieuDe, " +
-                        "d.soLuong, d.tongGia, d.ngayDat, d.trangThai " +
+                        "d.soLuong, d.tongGia, d.ngayDat, d.trangThai, u.id " +
                         "FROM DatCho d LEFT JOIN d.idNguoiDung u " +
                         "ORDER BY d.ngayDat DESC")
         List<Object[]> findAllBookingDetails();
@@ -84,8 +84,8 @@ public interface DashboardRepository extends JpaRepository<DatCho, Integer> {
 
         // Lấy danh sách booking chi tiết (khách hàng + số lượng) cho một tour cụ thể
         @Query("SELECT d.hoTen as tenKhach, d.email as email, d.soDienThoai as sdt, " +
-                        "d.soLuong as soLuong, d.tongGia as tongGia, d.ngayDat as ngayDat " +
-                        "FROM DatCho d " +
+                        "d.soLuong as soLuong, d.tongGia as tongGia, d.ngayDat as ngayDat, u.id " +
+                        "FROM DatCho d LEFT JOIN d.idNguoiDung u " +
                         "WHERE d.idChuyenDi.id = :tourId AND d.trangThai = 'PAID' " +
                         "ORDER BY d.ngayDat DESC")
         List<Object[]> findBookingDetailsByTourId(
