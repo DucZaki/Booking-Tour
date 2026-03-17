@@ -189,12 +189,13 @@
                                                         <!-- Review Button -->
                                                         <button
                                                             th:if="${booking.trangThai == 'PAID' && booking.idChuyenDi.ngayKetThuc != null && !booking.idChuyenDi.ngayKetThuc.isAfter(#temporals.createToday())}"
+                                                            type="button"
                                                             class="btn btn-warning rounded-pill btn-sm px-4"
                                                             th:data-id="${booking.id}"
                                                             th:data-tour-id="${booking.idChuyenDi.id}"
                                                             th:data-tour-title="${booking.idChuyenDi.tieuDe}"
                                                             onclick="openReviewModal(this)">
-                                                            Đánh giá
+                                                            <i class="bi bi-star me-1"></i>Đánh giá
                                                         </button>
 
                                                         <!-- Invoice Button -->
@@ -209,6 +210,14 @@
                                                             <i class="bi bi-file-earmark-text me-1"></i>Hoá đơn
                                                         </button>
 
+                                                        <!-- Itinerary Button -->
+                                                        <button th:if="${booking.trangThai == 'PAID'}"
+                                                            class="btn btn-info text-white rounded-pill btn-sm px-3"
+                                                            th:data-tour-id="${booking.idChuyenDi.id}"
+                                                            onclick="showItinerary(this)">
+                                                            <i class="bi bi-map me-1"></i>Lịch trình
+                                                        </button>
+
                                                         <a th:href="@{/tour/{id}(id=${booking.idChuyenDi.id})}"
                                                             class="btn btn-outline-primary rounded-pill btn-sm px-3">
                                                             Chi tiết tour
@@ -221,53 +230,54 @@
                         </div>
                     </div>
 
-                    <!-- Review Modal (Single, Shared) -->
-                    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content border-0 rounded-4 shadow">
-                                <div class="modal-header border-0 pb-0">
-                                    <h5 class="fw-bold">Đánh giá chuyến đi</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <!-- Modals -->
+
+        <!-- Review Modal -->
+        <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="fw-bold">Đánh giá chuyến đi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/danh-gia/add}" method="post">
+                        <div class="modal-body p-4">
+                            <input type="hidden" name="tourId" id="reviewTourId">
+                            <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về tour
+                                <strong id="reviewTourTitle">...</strong>
+                            </p>
+
+                            <div class="mb-4 text-center">
+                                <label class="d-block mb-2 small text-muted">Mức độ hài lòng</label>
+                                <div class="star-rating fs-3">
+                                    <input type="radio" name="diem" value="5" id="s5" checked class="d-none">
+                                    <label for="s5" class="bi bi-star-fill cursor-pointer"></label>
+                                    <input type="radio" name="diem" value="4" id="s4" class="d-none">
+                                    <label for="s4" class="bi bi-star-fill cursor-pointer"></label>
+                                    <input type="radio" name="diem" value="3" id="s3" class="d-none">
+                                    <label for="s3" class="bi bi-star-fill cursor-pointer"></label>
+                                    <input type="radio" name="diem" value="2" id="s2" class="d-none">
+                                    <label for="s2" class="bi bi-star-fill cursor-pointer"></label>
+                                    <input type="radio" name="diem" value="1" id="s1" class="d-none">
+                                    <label for="s1" class="bi bi-star-fill cursor-pointer"></label>
                                 </div>
-                                <form th:action="@{/danh-gia/add}" method="post">
-                                    <div class="modal-body p-4">
-                                        <input type="hidden" name="tourId" id="reviewTourId">
-                                        <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về tour
-                                            <strong id="reviewTourTitle">...</strong>
-                                        </p>
+                            </div>
 
-                                        <div class="mb-4 text-center">
-                                            <label class="d-block mb-2 small text-muted">Mức độ hài lòng</label>
-                                            <div class="star-rating fs-3">
-                                                <input type="radio" name="diem" value="5" id="s5" checked class="d-none">
-                                                <label for="s5" class="bi bi-star-fill cursor-pointer"></label>
-                                                <input type="radio" name="diem" value="4" id="s4" class="d-none">
-                                                <label for="s4" class="bi bi-star-fill cursor-pointer"></label>
-                                                <input type="radio" name="diem" value="3" id="s3" class="d-none">
-                                                <label for="s3" class="bi bi-star-fill cursor-pointer"></label>
-                                                <input type="radio" name="diem" value="2" id="s2" class="d-none">
-                                                <label for="s2" class="bi bi-star-fill cursor-pointer"></label>
-                                                <input type="radio" name="diem" value="1" id="s1" class="d-none">
-                                                <label for="s1" class="bi bi-star-fill cursor-pointer"></label>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3">
-                                            <label class="form-label small fw-bold">Bình luận của bạn</label>
-                                            <textarea name="binhLuan" class="form-control rounded-3" rows="4"
-                                                placeholder="Cảm nhận của bạn về chuyến đi..." required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer border-0 pt-0">
-                                        <button type="button" class="btn btn-light rounded-pill px-4"
-                                            data-bs-dismiss="modal">Hủy</button>
-                                        <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi đánh giá</button>
-                                    </div>
-                                </form>
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold">Bình luận của bạn</label>
+                                <textarea name="binhLuan" class="form-control rounded-3" rows="4"
+                                    placeholder="Cảm nhận của bạn về chuyến đi..." required></textarea>
                             </div>
                         </div>
-                    </div>
-
+                        <div class="modal-footer border-0 pt-0">
+                            <button type="button" class="btn btn-light rounded-pill px-4"
+                                data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi đánh giá</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -327,6 +337,98 @@
             </div>
         </div>
 
+        <!-- Modal Lịch trình chi tiết -->
+        <div class="modal fade" id="itineraryModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content border-0 rounded-4 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="fw-bold mb-0">Lịch trình & Chi tiết tour</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div id="itineraryLoading" class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Đang lấy thông tin lịch trình...</p>
+                        </div>
+
+                        <div id="itineraryContent" style="display: none;">
+                            <div class="row g-4 mb-4">
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h6 class="fw-bold mb-2"><i class="bi bi-calendar-event text-success me-2"></i>Khởi hành</h6>
+                                        <p id="modalNgayKhoiHanh" class="mb-0 text-muted">Chưa cập nhật</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h6 class="fw-bold mb-2"><i class="bi bi-geo-alt-fill text-danger me-2"></i>Điểm đón</h6>
+                                        <p id="modalDiemDon" class="mb-0 text-muted">Chưa cập nhật</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded-3 h-100">
+                                        <h6 class="fw-bold mb-2"><i class="bi bi-info-circle-fill text-primary me-2"></i>Lưu ý</h6>
+                                        <p id="modalNotes" class="mb-0 text-muted small">Không có lưu ý đặc biệt.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="fw-bold mb-3">Hành trình chi tiết</h6>
+                            <div id="itineraryTimeline" class="itinerary-timeline ms-2">
+                                <!-- Timeline items will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .itinerary-timeline {
+                border-left: 2px solid #e9ecef;
+                padding-left: 1.5rem;
+                position: relative;
+            }
+            .timeline-item {
+                position: relative;
+                margin-bottom: 1.5rem;
+            }
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                left: -1.5rem;
+                top: 0;
+                width: 0.8rem;
+                height: 0.8rem;
+                background-color: var(--bs-primary);
+                border-radius: 50%;
+                transform: translateX(-50%);
+                border: 2px solid #fff;
+            }
+            .timeline-day {
+                font-size: 0.8rem;
+                font-weight: bold;
+                color: var(--bs-primary);
+                text-transform: uppercase;
+                margin-bottom: 0.2rem;
+            }
+            .timeline-title {
+                font-weight: bold;
+                margin-bottom: 0.3rem;
+            }
+            .timeline-body {
+                font-size: 0.9rem;
+                color: #6c757d;
+            }
+            .timeline-footer {
+                font-size: 0.8rem;
+                color: #adb5bd;
+                margin-top: 0.3rem;
+            }
+        </style>
+
         <script>
             function showInvoice(btn) {
                 const data = btn.dataset;
@@ -342,15 +444,82 @@
 
             function openReviewModal(btn) {
                 const data = btn.dataset;
-                document.getElementById('reviewTourId').value = data.tourId;
-                document.getElementById('reviewTourTitle').textContent = data.tourTitle;
+                const modalEl = document.getElementById('reviewModal');
+                if (!modalEl) return;
 
-                // Reset modal fields if needed
-                const modal = document.getElementById('reviewModal');
-                modal.querySelector('textarea').value = '';
-                modal.querySelector('#s5').checked = true;
+                const tourIdInput = document.getElementById('reviewTourId');
+                const tourTitleEl = document.getElementById('reviewTourTitle');
+                
+                if (tourIdInput) tourIdInput.value = data.tourId || '';
+                if (tourTitleEl) tourTitleEl.textContent = data.tourTitle || '...';
 
-                new bootstrap.Modal(modal).show();
+                // Reset fields
+                const textarea = modalEl.querySelector('textarea');
+                if (textarea) textarea.value = '';
+                
+                const s5 = document.getElementById('s5');
+                if (s5) s5.checked = true;
+
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            }
+
+            async function showItinerary(btn) {
+                const tourId = btn.dataset.tourId;
+                const modal = new bootstrap.Modal(document.getElementById('itineraryModal'));
+                const loading = document.getElementById('itineraryLoading');
+                const content = document.getElementById('itineraryContent');
+                const timeline = document.getElementById('itineraryTimeline');
+
+                // Show modal and loading state
+                content.style.display = 'none';
+                loading.style.display = 'block';
+                modal.show();
+
+                try {
+                    const response = await fetch(`/api/tour/${tourId}/details`);
+                    if (!response.ok) throw new Error('Không thể lấy thông tin tour');
+                    
+                    const data = await response.json();
+                    
+                    // Update header info
+                    if (data.ngayKhoiHanh) {
+                        const date = new Date(data.ngayKhoiHanh);
+                        document.getElementById('modalNgayKhoiHanh').textContent = date.toLocaleDateString('vi-VN');
+                    } else {
+                        document.getElementById('modalNgayKhoiHanh').textContent = 'Chưa cập nhật';
+                    }
+                    
+                    document.getElementById('modalDiemDon').textContent = data.diemDon || 'Chưa cập nhật';
+                    document.getElementById('modalNotes').innerHTML = data.notes || 'Không có lưu ý đặc biệt cho tour này.';
+                    
+                    // Build timeline
+                    timeline.innerHTML = '';
+                    if (data.itinerary && data.itinerary.length > 0) {
+                        data.itinerary.sort((a,b) => a.ngayThu - b.ngayThu).forEach(item => {
+                            const div = document.createElement('div');
+                            div.className = 'timeline-item';
+                            div.innerHTML = `
+                                <div class="timeline-day">Ngày ${item.ngayThu}</div>
+                                <div class="timeline-title">${item.tieuDe}</div>
+                                <div class="timeline-body">${item.noiDung}</div>
+                                <div class="timeline-footer">
+                                    ${item.soBuaAn ? `<i class="bi bi-cup-hot me-1"></i> Bữa ăn: ${item.soBuaAn}` : ''}
+                                    ${item.nghiDem ? `<span class="mx-2">|</span><i class="bi bi-moon-stars me-1"></i> Nghỉ đêm: ${item.nghiDem}` : ''}
+                                </div>
+                            `;
+                            timeline.appendChild(div);
+                        });
+                    } else {
+                        timeline.innerHTML = '<p class="text-muted italic">Thông tin lịch trình đang được cập nhật...</p>';
+                    }
+                    
+                    loading.style.display = 'none';
+                    content.style.display = 'block';
+                } catch (error) {
+                    console.error('Error fetching itinerary:', error);
+                    loading.innerHTML = `<div class="text-danger"><i class="bi bi-exclamation-triangle fs-1"></i><p class="mt-2">Lỗi: ${error.message}</p></div>`;
+                }
             }
         </script>
     </th:block>

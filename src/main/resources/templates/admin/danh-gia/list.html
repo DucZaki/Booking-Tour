@@ -7,72 +7,102 @@
 <div class="d-flex">
     <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
     <div class="container mt-4">
-        <h3 class="mb-2">Danh sách đánh giá</h3>
-        <form th:action="@{/admin/danh-gia}" method="get" autocomplete="off">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <input type="text" name="hoTen" class="form-control" placeholder="Tìm theo tên người dùng..." autocomplete="off">
-                </div>
-                <div class="col-md-3">
-                    <select name="diem" class="form-select">
-                        <option value="">-- Lọc theo số sao --</option>
-                        <option value="5" th:selected="${diem == 5}">5 sao</option>
-                        <option value="4" th:selected="${diem == 4}">4 sao</option>
-                        <option value="3" th:selected="${diem == 3}">3 sao</option>
-                        <option value="2" th:selected="${diem == 2}">2 sao</option>
-                        <option value="1" th:selected="${diem == 1}">1 sao</option>
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-dark w-100">Lọc</button>
-                </div>
+        <div class="d-flex align-items-center mb-4">
+            <a th:href="@{/admin/danh-gia}" class="btn btn-outline-dark rounded-pill me-3">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+            <h3 class="fw-bold mb-0">Chi tiết đánh giá</h3>
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 mb-4">
+            <div class="card-body">
+                <form th:action="@{/admin/danh-gia/detail}" method="get" class="row g-3 align-items-end">
+                    <input type="hidden" name="tourId" th:value="${tourId}">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Tìm theo tên người dùng</label>
+                        <input type="text" name="hoTen" th:value="${hoTen}" class="form-control" placeholder="Nhập tên...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">Lọc theo số sao</label>
+                        <select name="diem" class="form-select">
+                            <option value="">-- Tất cả --</option>
+                            <option value="5" th:selected="${diem == 5}">5 sao (Cực tốt)</option>
+                            <option value="4" th:selected="${diem == 4}">4 sao (Tốt)</option>
+                            <option value="3" th:selected="${diem == 3}">3 sao (Trung bình)</option>
+                            <option value="2" th:selected="${diem == 2}">2 sao (Kém)</option>
+                            <option value="1" th:selected="${diem == 1}">1 sao (Rất tệ)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold">Sắp xếp</label>
+                        <select name="sort" class="form-select">
+                            <option value="">Mới nhất</option>
+                            <option value="scoreDesc" th:selected="${sort == 'scoreDesc'}">Số sao giảm dần</option>
+                            <option value="scoreAsc" th:selected="${sort == 'scoreAsc'}">Số sao tăng dần</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-dark w-100 rounded-pill">Áp dụng</button>
+                    </div>
+                </form>
             </div>
-        </form>
-        <div class="card shadow-sm">
+        </div>
+
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
             <div class="card-body p-0">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-dark">
+                    <thead class="bg-light">
                     <tr>
-                        <th>#</th>
-                        <th>Người dùng</th>
+                        <th class="ps-4">Người dùng</th>
                         <th>Chuyến đi</th>
-                        <th>Số sao</th>
+                        <th>Đánh giá</th>
                         <th>Bình luận</th>
-                        <th>Ngày đánh giá</th>
-                        <th class="text-center">Hành động</th>
+                        <th>Ngày</th>
+                        <th class="text-center pe-4">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="dg, index : ${danhGia}">
-                        <td th:text="${index.index + 1}"></td>
-                        <td th:text="${dg.idNguoiDung.hoTen}"></td>
+                    <tr th:each="dg : ${danhGia}">
+                        <td class="ps-4">
+                            <div class="fw-bold" th:text="${dg.idNguoiDung.hoTen}"></div>
+                            <small class="text-muted" th:text="${dg.idNguoiDung.tenDangNhap}"></small>
+                        </td>
                         <td th:text="${dg.idChuyenDi.tieuDe}"></td>
                         <td>
-                            <span class="badge bg-warning text-dark" th:text="${dg.diem + ' ⭐'}"></span>
+                            <div class="text-warning">
+                                <span th:each="i : ${#numbers.sequence(1, 5)}" 
+                                      th:class="${i <= dg.diem ? 'bi bi-star-fill' : 'bi bi-star'}"></span>
+                            </div>
                         </td>
-                        <td th:text="${dg.binhLuan}"></td>
-                        <td th:text="${#temporals.format(dg.ngayDanhGia,'dd/MM/yyyy HH:mm')}"></td>
-                        <td class="text-center">
-                            <a th:href="@{/admin/danhgia/delete/{id}(id=${dg.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa đánh giá này?')">Xóa</a>
+                        <td class="text-wrap" style="max-width: 300px;" th:text="${dg.binhLuan}"></td>
+                        <td th:text="${#temporals.format(dg.ngayDanhGia,'dd/MM/yyyy')}"></td>
+                        <td class="text-center pe-4">
+                            <a th:href="@{/admin/danhgia/delete/{id}(id=${dg.id})}" 
+                               class="btn btn-sm btn-outline-danger rounded-pill px-3" 
+                               onclick="return confirm('Bạn có chắc muốn xóa đánh giá này?')">Xóa</a>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(danhGia)}">
-                        <td colspan="7" class="text-center text-muted py-4">Không có đánh giá nào.</td>
+                        <td colspan="6" class="text-center text-muted py-5">
+                            <i class="bi bi-chat-dots fs-1 mb-2 d-block"></i>
+                            Không có đánh giá nào phù hợp với bộ lọc.
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div aria-label = "Page navigation" th:if="${totalPage > 0}">
-            <ul class="pagination justify-content-center mt-4">
+
+        <div aria-label="Page navigation" th:if="${totalPage > 1}" class="mt-4">
+            <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page - 1}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}">&laquo;</a>
+                    <a class="page-link rounded-circle mx-1" th:href="@{/admin/danh-gia/detail(page=${page - 1}, size=${size}, hoTen=${hoTen}, diem=${diem}, tourId=${tourId}, sort=${sort})}">&laquo;</a>
                 </li>
                 <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${i}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}" th:text="${i + 1}"></a>
+                    <a class="page-link rounded-circle mx-1" th:href="@{/admin/danh-gia/detail(page=${i}, size=${size}, hoTen=${hoTen}, diem=${diem}, tourId=${tourId}, sort=${sort})}" th:text="${i + 1}"></a>
                 </li>
                 <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">
-                    <a class="page-link" th:href="@{/admin/danh-gia(page=${page + 1}, size=${size}, hoTen=${param.hoTen}, diem=${param.diem})}">&raquo;</a>
+                    <a class="page-link rounded-circle mx-1" th:href="@{/admin/danh-gia/detail(page=${page + 1}, size=${size}, hoTen=${hoTen}, diem=${diem}, tourId=${tourId}, sort=${sort})}">&raquo;</a>
                 </li>
             </ul>
         </div>

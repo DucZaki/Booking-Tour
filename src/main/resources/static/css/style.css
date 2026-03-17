@@ -1,12 +1,12 @@
 :root {
-    --bs-primary: #FECF2F !important;
-    /* Vàng điểm nhấn */
-    --bs-secondary: #000000 !important;
-    /* Đen */
+    --bs-primary: #FECF2F !important; /* Vàng thương hiệu */
+    --primary-hover: #e0b800;
+    --bs-secondary: #000000 !important; /* Đen */
     --bs-dark: #000000 !important;
     --bs-light: #F5F5F5 !important;
     --bs-body-color: #212529 !important;
     --bs-body-bg: #FFFFFF !important;
+    --accent-color: #FECF2F;
 }
 
 /* Navbar vàng thương hiệu */
@@ -113,7 +113,28 @@
 }
 
 .btn-primary:hover {
-    background-color: #e0b800 !important;
+    background-color: var(--primary-hover) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(254, 207, 47, 0.3);
+}
+
+.btn-primary {
+    transition: all 0.3s ease;
+}
+
+/* Background brand light */
+.bg-brand-light {
+    background-color: #fff9e6 !important;
+}
+
+.text-brand {
+    color: var(--bs-primary) !important;
+}
+
+/* Search section focus */
+.search-section .form-control:focus, .search-section .form-select:focus {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(254, 207, 47, 0.25) !important;
 }
 
 
@@ -131,7 +152,17 @@ h6 {
 footer {
     background-color: var(--bs-dark) !important;
     color: var(--bs-light) !important;
-    padding: 40px 0;
+    padding: 50px 0 20px 0;
+    border-top: 4px solid var(--bs-primary);
+}
+
+.bg-custom {
+    background-color: var(--bs-primary) !important;
+    color: #000 !important;
+}
+
+.bg-custom p, .bg-custom h3 {
+    color: #000 !important;
 }
 
 /* ===================== DROPDOWN MENU ===================== */
@@ -320,8 +351,18 @@ footer {
 }
 
 .btn-outline-primary:hover {
-    background-color: #FECF2F !important;
+    background-color: var(--primary-hover) !important;
     color: white !important;
+}
+
+/* Link and interactive colors */
+a {
+    color: #000;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--primary-hover);
 }
 
 /* ===================== DROPDOWN & MEGA MENU TỐI ƯU ===================== */
