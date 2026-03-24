@@ -185,6 +185,19 @@
                         </div>
                     </div>
 
+                    <!-- ===== THÔNG TIN THỜI TIẾT ===== -->
+                    <div id="weatherForecastContainer" class="mt-4 rounded border shadow-sm overflow-hidden">
+                        <div class="d-flex justify-content-between align-items-center px-3 py-2" style="background:#ffc107;">
+                            <h3 class="h6 fw-bold mb-0" style="color:#212529;"><i class="bi bi-cloud-sun me-2"></i>Dự báo thời tiết 5 ngày tới</h3>
+                            <button type="button" class="btn-close btn-sm" onclick="closeWeather()" aria-label="Đóng"></button>
+                        </div>
+                        <div class="p-3 bg-white">
+                            <div id="weatherContent" class="row text-center g-2">
+                                <!-- Weather items will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="mt-4 p-3 bg-light rounded border-start border-3 border-primary">
                         <h3 class="h6 text-primary fw-bold">Điểm nhấn của chương trình</h3>
                         <p class="small mb-0 text-muted h7" th:text="${id.highlight}">
@@ -233,21 +246,116 @@
                     <!--Đánh giá-->
 
                     <h3 class="h5 fw-bold text-center mt-4 mb-3">THÔNG TIN THÊM VỀ CHUYẾN ĐI</h3>
-                    <div class="row text-center border-bottom pb-3 mb-3">
+                    <div class="row text-center border-bottom pb-3 mb-3 g-2">
+                        <!-- Điểm tham quan -->
                         <div class="col-4">
-                            <i class="bi bi-geo-alt fs-4 text-primary"></i>
-                            <p class="mb-1 fw-bold small">Điểm tham quan</p>
-                            <p class="small text-muted" th:text="${id.moTa}"></p>
+                            <div class="info-card" onclick="showWeather(this)" th:data-location="${id.idDiemDen != null ? id.idDiemDen.thanhPho : id.moTa}">
+                                <i class="bi bi-geo-alt fs-3" style="color:#ffc107;"></i>
+                                <p class="mb-1 fw-bold small mt-1">Điểm tham quan</p>
+                                <p class="small text-muted mb-0" th:text="${id.moTa}"></p>
+                                <span class="info-card-hint"><i class="bi bi-cloud-sun me-1"></i>Xem thời tiết</span>
+                            </div>
                         </div>
+                        <!-- Phương Tiện -->
                         <div class="col-4">
-                            <i class="bi bi-bus-front fs-4 text-primary"></i>
-                            <p class="mb-1 fw-bold small">Phương Tiện</p>
-                            <p class="small text-muted" th:text="${id.idPhuongTien.loai}"></p>
+                            <div class="info-card" onclick="showTransportModal()" th:data-transport="${id.idPhuongTien.loai}">
+                                <i class="bi bi-airplane fs-3" style="color:#ffc107;"></i>
+                                <p class="mb-1 fw-bold small mt-1">Phương Tiện</p>
+                                <p class="small text-muted mb-0" th:text="${id.idPhuongTien.loai}"></p>
+                                <span class="info-card-hint"><i class="bi bi-info-circle me-1"></i>Xem lưu ý</span>
+                            </div>
                         </div>
+                        <!-- Đối tượng -->
                         <div class="col-4">
-                            <i class="bi bi-people fs-4 text-primary"></i>
-                            <p class="mb-1 fw-bold small">Đối tượng thích hợp</p>
-                            <p class="small text-muted">Cặp đôi, Gia đình, Thanh niên</p>
+                            <div class="info-card" onclick="showAudienceModal()">
+                                <i class="bi bi-people fs-3" style="color:#ffc107;"></i>
+                                <p class="mb-1 fw-bold small mt-1">Đối tượng thích hợp</p>
+                                <p class="small text-muted mb-0">Cặp đôi, Gia đình, Thanh niên</p>
+                                <span class="info-card-hint"><i class="bi bi-lightbulb me-1"></i>Gợi ý hoạt động</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal: Phương Tiện -->
+                    <div class="modal fade" id="transportModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header" style="background:#ffc107;">
+                                    <h5 class="modal-title fw-bold" style="color:#212529;"><i class="bi bi-airplane me-2"></i>Lưu ý khi đi máy bay</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <ul class="list-unstyled mb-0">
+                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">🧳</span><div><strong>Hành lý xách tay:</strong> Tối đa 7kg, kích thước không quá 56x36x23cm.</div></li>
+                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">📦</span><div><strong>Hành lý ký gửi:</strong> Theo vé (thường 20–23kg). Vượt phụ thu theo hãng.</div></li>
+                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">⏱️</span><div><strong>Có mặt tại sân bay:</strong> Nội địa trước <strong>60 phút</strong>, quốc tế trước <strong>2–3 tiếng</strong>.</div></li>
+                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">🚫</span><div><strong>Không mang:</strong> Chất lỏng &gt;100ml vào cabin, vật sắc nhọn, bật lửa gas.</div></li>
+                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">📱</span><div><strong>Check-in online:</strong> Mở trước 24h, giúp chọn ghế và tiết kiệm thời gian.</div></li>
+                                        <li class="d-flex gap-2"><span class="fs-5">🎒</span><div><strong>Mang theo:</strong> CMND/Hộ chiếu còn hạn, vé điện tử, thuốc cá nhân.</div></li>
+                                    </ul>
+                                </div>
+                                <div class="modal-footer border-0 pt-0">
+                                    <button class="btn btn-sm fw-bold" style="background:#ffc107;color:#212529;" data-bs-dismiss="modal">Đã hiểu</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal: Đối tượng -->
+                    <div class="modal fade" id="audienceModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                            <div class="modal-content border-0 shadow">
+                                <div class="modal-header" style="background:#ffc107;">
+                                    <h5 class="modal-title fw-bold" style="color:#212529;"><i class="bi bi-people me-2"></i>Gợi ý hoạt động theo nhóm</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row g-3">
+                                        <div class="col-md-4">
+                                            <div class="p-3 rounded h-100" style="background:#fff8e1;border:1px solid #ffc107;">
+                                                <div class="fs-2 text-center mb-2">💑</div>
+                                                <h6 class="fw-bold text-center mb-3">Cặp đôi</h6>
+                                                <ul class="small text-muted ps-3 mb-0">
+                                                    <li>Bữa tối lãng mạn tại nhà hàng địa phương</li>
+                                                    <li>Chụp ảnh hoàng hôn tại điểm đến</li>
+                                                    <li>Trải nghiệm spa & massage cặp đôi</li>
+                                                    <li>City tour theo lộ trình riêng tư</li>
+                                                    <li>Mua quà lưu niệm đặc trưng vùng</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-3 rounded h-100" style="background:#fff8e1;border:1px solid #ffc107;">
+                                                <div class="fs-2 text-center mb-2">👨‍👩‍👧</div>
+                                                <h6 class="fw-bold text-center mb-3">Gia đình</h6>
+                                                <ul class="small text-muted ps-3 mb-0">
+                                                    <li>Khu vui chơi & công viên nước</li>
+                                                    <li>Tham quan bảo tàng, di tích lịch sử</li>
+                                                    <li>Nghỉ khách sạn có hồ bơi gia đình</li>
+                                                    <li>Ăn uống nhà hàng thân thiện trẻ em</li>
+                                                    <li>Hoạt động trải nghiệm ngoài trời</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="p-3 rounded h-100" style="background:#fff8e1;border:1px solid #ffc107;">
+                                                <div class="fs-2 text-center mb-2">🧑‍🤝‍🧑</div>
+                                                <h6 class="fw-bold text-center mb-3">Thanh niên</h6>
+                                                <ul class="small text-muted ps-3 mb-0">
+                                                    <li>Trekking, leo núi, khám phá thiên nhiên</li>
+                                                    <li>Street food tour & ẩm thực địa phương</li>
+                                                    <li>Check-in điểm sống ảo nổi tiếng</li>
+                                                    <li>Nightlife & bar rooftop view đẹp</li>
+                                                    <li>Thuê xe máy tự khám phá tự do</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer border-0 pt-0">
+                                    <button class="btn btn-sm fw-bold" style="background:#ffc107;color:#212529;" data-bs-dismiss="modal">Tuyệt vời!</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -373,7 +481,134 @@
             </div>
         </div>
 
+        <script>
+            function showWeather(element) {
+                const location = element.getAttribute('data-location');
+                const container = document.getElementById('weatherForecastContainer');
+                const content = document.getElementById('weatherContent');
+                container.classList.remove('d-none');
+                container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                content.innerHTML = '<div class="col-12 text-center py-2"><div class="spinner-border text-primary spinner-border-sm" role="status"></div><span class="ms-2 small">Đang tải dữ liệu thời tiết cho ' + location + '...</span></div>';
+                
+                fetch('https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(location) + '&count=1&language=vi&format=json')
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.results || data.results.length === 0) {
+                            content.innerHTML = '<div class="col-12 text-center text-danger small">Không tìm thấy dữ liệu thời tiết cho địa điểm này.</div>';
+                            return;
+                        }
+                        const lat = data.results[0].latitude;
+                        const lon = data.results[0].longitude;
+                        const locName = data.results[0].name;
+                        
+                        fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5')
+                            .then(res => res.json())
+                            .then(weatherData => {
+                                let html = '<div class="col-12 mb-2"><strong class="small text-muted">Thời tiết tại ' + locName + '</strong> &nbsp;<a href="https://www.windy.com/?'+lat+','+lon+',10" target="_blank" class="small" style="color:#856404;"><i class="bi bi-box-arrow-up-right"></i> Xem chi tiết</a></div>';
+                                const windyBase = 'https://www.windy.com/?' + lat + ',' + lon + ',10';
+                                const daily = weatherData.daily;
+                                for(let i=0; i<daily.time.length; i++) {
+                                    const dateStr = new Date(daily.time[i]).toLocaleDateString('vi-VN', {weekday: 'short', day: 'numeric', month: 'numeric'});
+                                    const maxT = Math.round(daily.temperature_2m_max[i]);
+                                    const minT = Math.round(daily.temperature_2m_min[i]);
+                                    const wCode = daily.weathercode[i];
+                                    let icon = getWeatherIcon(wCode);
+                                    
+                                    html += `
+                                    <div class="col">
+                                        <a href="${windyBase}" target="_blank" class="text-decoration-none">
+                                        <div class="p-2 border rounded h-100 weather-day-card">
+                                            <div class="small fw-bold" style="color:#856404;">${dateStr}</div>
+                                            <div class="fs-4 my-1">${icon}</div>
+                                            <div class="small"><span class="text-danger fw-bold">${maxT}°</span> / <span class="text-secondary">${minT}°</span></div>
+                                            <div class="mt-1" style="font-size:0.6rem;color:#aaa;">Xem chi tiết</div>
+                                        </div>
+                                        </a>
+                                    </div>
+                                    `;
+                                }
+                                content.innerHTML = html;
+                            })
+                            .catch(err => {
+                                content.innerHTML = '<div class="col-12 text-center text-danger small">Lỗi khi tải dữ liệu thời tiết.</div>';
+                            });
+                    })
+                    .catch(err => {
+                        content.innerHTML = '<div class="col-12 text-center text-danger small">Lỗi khi tìm kiếm địa điểm.</div>';
+                    });
+            }
+
+            function closeWeather() {
+                document.getElementById('weatherForecastContainer').classList.add('d-none');
+            }
+
+            function showTransportModal() {
+                new bootstrap.Modal(document.getElementById('transportModal')).show();
+            }
+            function showAudienceModal() {
+                new bootstrap.Modal(document.getElementById('audienceModal')).show();
+            }
+
+            // Auto-load weather on page open
+            document.addEventListener('DOMContentLoaded', function() {
+                const locationEl = document.querySelector('[data-location]');
+                if (locationEl) showWeather(locationEl);
+            });
+
+            function getWeatherIcon(code) {
+                if (code === 0) return '<i class="bi bi-sun text-warning"></i>';
+                if (code === 1 || code === 2 || code === 3) return '<i class="bi bi-cloud-sun text-secondary"></i>';
+                if (code >= 45 && code <= 48) return '<i class="bi bi-cloud-fog text-secondary"></i>';
+                if (code >= 51 && code <= 67) return '<i class="bi bi-cloud-drizzle text-primary"></i>';
+                if (code >= 71 && code <= 77) return '<i class="bi bi-snow text-info"></i>';
+                if (code >= 80 && code <= 82) return '<i class="bi bi-cloud-rain text-primary"></i>';
+                if (code >= 85 && code <= 86) return '<i class="bi bi-cloud-snow text-info"></i>';
+                if (code >= 95) return '<i class="bi bi-cloud-lightning-rain text-danger"></i>';
+                return '<i class="bi bi-cloud text-secondary"></i>';
+            }
+        </script>
         <style>
+            .info-card {
+                cursor: pointer;
+                border-radius: 10px;
+                padding: 12px 8px;
+                transition: all 0.2s ease;
+                border: 2px solid transparent;
+                user-select: none;
+            }
+            .info-card:hover {
+                background: #fff8e1;
+                border-color: #ffc107;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 16px rgba(255,193,7,0.25);
+            }
+            .info-card-hint {
+                display: inline-block;
+                margin-top: 6px;
+                font-size: 0.68rem;
+                color: #856404;
+                background: #fff3cd;
+                border-radius: 20px;
+                padding: 2px 8px;
+                font-weight: 600;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            .info-card:hover .info-card-hint {
+                opacity: 1;
+            }
+            .weather-day-card {
+                background: #fffbec;
+                border-color: #ffc107 !important;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .weather-day-card:hover {
+                background: #fff3cd;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(255,193,7,0.3);
+            }
             .departure-day {
                 background-color: #fff3cd !important;
                 border: 2px solid #ffc107 !important;
