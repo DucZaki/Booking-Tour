@@ -78,17 +78,6 @@ src/main/java/edu/bookingtour/
    ```
 4. Truy cập vào trình duyệt: `http://localhost:8080`
 
----
-
-## 👥 Thành Viên Nhóm
-
-*   **Nguyễn Minh Đức** - MSV: 23010634
-*   **Ngô Văn Hưng** - MSV: 23010622
-
-**Giảng viên hướng dẫn:** Vũ Văn Quang
-
----
-
 ## 📞 Liên Hệ
 
 Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với các thành viên nhóm hoặc qua github dự án.
