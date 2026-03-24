@@ -258,8 +258,8 @@
                         </div>
                         <!-- Phương Tiện -->
                         <div class="col-4">
-                            <div class="info-card" onclick="showTransportModal()" th:data-transport="${id.idPhuongTien.loai}">
-                                <i class="bi bi-airplane fs-3" style="color:#ffc107;"></i>
+                            <div class="info-card" onclick="showTransportModal(this)" th:data-transport="${id.idPhuongTien.loai}">
+                                <i id="transportIcon" class="bi bi-airplane fs-3" style="color:#ffc107;"></i>
                                 <p class="mb-1 fw-bold small mt-1">Phương Tiện</p>
                                 <p class="small text-muted mb-0" th:text="${id.idPhuongTien.loai}"></p>
                                 <span class="info-card-hint"><i class="bi bi-info-circle me-1"></i>Xem lưu ý</span>
@@ -276,24 +276,15 @@
                         </div>
                     </div>
 
-                    <!-- Modal: Phương Tiện -->
+                    <!-- Modal: Phương Tiện (dynamic) -->
                     <div class="modal fade" id="transportModal" tabindex="-1">
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content border-0 shadow">
                                 <div class="modal-header" style="background:#ffc107;">
-                                    <h5 class="modal-title fw-bold" style="color:#212529;"><i class="bi bi-airplane me-2"></i>Lưu ý khi đi máy bay</h5>
+                                    <h5 class="modal-title fw-bold" id="transportModalTitle" style="color:#212529;">Lưu ý phương tiện</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
-                                <div class="modal-body">
-                                    <ul class="list-unstyled mb-0">
-                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">🧳</span><div><strong>Hành lý xách tay:</strong> Tối đa 7kg, kích thước không quá 56x36x23cm.</div></li>
-                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">📦</span><div><strong>Hành lý ký gửi:</strong> Theo vé (thường 20–23kg). Vượt phụ thu theo hãng.</div></li>
-                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">⏱️</span><div><strong>Có mặt tại sân bay:</strong> Nội địa trước <strong>60 phút</strong>, quốc tế trước <strong>2–3 tiếng</strong>.</div></li>
-                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">🚫</span><div><strong>Không mang:</strong> Chất lỏng &gt;100ml vào cabin, vật sắc nhọn, bật lửa gas.</div></li>
-                                        <li class="mb-3 d-flex gap-2"><span class="fs-5">📱</span><div><strong>Check-in online:</strong> Mở trước 24h, giúp chọn ghế và tiết kiệm thời gian.</div></li>
-                                        <li class="d-flex gap-2"><span class="fs-5">🎒</span><div><strong>Mang theo:</strong> CMND/Hộ chiếu còn hạn, vé điện tử, thuốc cá nhân.</div></li>
-                                    </ul>
-                                </div>
+                                <div class="modal-body" id="transportModalBody"></div>
                                 <div class="modal-footer border-0 pt-0">
                                     <button class="btn btn-sm fw-bold" style="background:#ffc107;color:#212529;" data-bs-dismiss="modal">Đã hiểu</button>
                                 </div>
@@ -543,7 +534,72 @@
                 document.getElementById('weatherForecastContainer').classList.add('d-none');
             }
 
-            function showTransportModal() {
+            function showTransportModal(el) {
+                const type = (el ? el.getAttribute('data-transport') : '') || '';
+                const t = type.toLowerCase();
+
+                const data = {
+                    plane: {
+                        icon: 'bi-airplane', title: 'Lưu ý khi đi máy bay',
+                        items: [
+                            ['🧳', 'Hành lý xách tay', 'Tối đa 7kg, kích thước không quá 56×36×23cm.'],
+                            ['📦', 'Hành lý ký gửi', 'Theo vé (thường 20–23kg). Vượt phụ thu theo hãng.'],
+                            ['⏱️', 'Có mặt tại sân bay', 'Nội địa trước <strong>60 phút</strong>, quốc tế trước <strong>2–3 tiếng</strong>.'],
+                            ['🚫', 'Không mang', 'Chất lỏng &gt;100ml vào cabin, vật sắc nhọn, bật lửa gas.'],
+                            ['📱', 'Check-in online', 'Mở trước 24h, giúp chọn ghế và tiết kiệm thời gian.'],
+                            ['🎒', 'Mang theo', 'CMND/Hộ chiếu còn hạn, vé điện tử, thuốc cá nhân.'],
+                        ]
+                    },
+                    bus: {
+                        icon: 'bi-bus-front', title: 'Lưu ý khi đi xe khách',
+                        items: [
+                            ['🧳', 'Hành lý', 'Chỉ mang đồ gọn nhẹ, hạn chế vali cồng kềnh trên xe.'],
+                            ['⏱️', 'Đúng giờ', 'Có mặt trước <strong>15–30 phút</strong> tránh bị bỏ chuyến.'],
+                            ['🍬', 'Chống say xe', 'Uống thuốc trước 30 phút, tránh ăn no trước khi lên xe.'],
+                            ['💧', 'Giữ nước', 'Mang theo nước uống và đồ ăn nhẹ cho hành trình dài.'],
+                            ['🪟', 'Chọn chỗ ngồi', 'Ngồi giữa xe hoặc phía trước ít xóc hơn.'],
+                            ['📵', 'Tuân thủ', 'Không ăn mùi nặng, giữ yên lặng và tôn trọng hành khách khác.'],
+                        ]
+                    },
+                    train: {
+                        icon: 'bi-train-front', title: 'Lưu ý khi đi tàu hỏa',
+                        items: [
+                            ['🎫', 'Vé tàu', 'In sẵn vé hoặc lưu vé điện tử, kiểm tra số toa & số ghế.'],
+                            ['⏱️', 'Đúng giờ', 'Có mặt tại ga trước <strong>30 phút</strong>, tàu không chờ.'],
+                            ['🧳', 'Hành lý', 'Để hành lý đúng kệ hành lý, tránh cản lối đi.'],
+                            ['🍱', 'Ăn uống', 'Có thể mang đồ ăn, tránh thức ăn mùi nặng trong toa.'],
+                            ['🪪', 'Giấy tờ', 'Mang CMND/căn cước để đối chiếu vé khi cần.'],
+                            ['🌙', 'Giường nằm', 'Nếu đi giường nằm, mang theo đồ thoải mái và thuốc ngủ nếu cần.'],
+                        ]
+                    },
+                    ship: {
+                        icon: 'bi-tsunami', title: 'Lưu ý khi đi tàu thủy / phà',
+                        items: [
+                            ['🧴', 'Thuốc say sóng', 'Uống trước khi lên tàu 30 phút, đặc biệt khi sóng lớn.'],
+                            ['🦺', 'Áo phao', 'Quan sát vị trí áo phao và lối thoát hiểm ngay khi lên tàu.'],
+                            ['🧳', 'Hành lý', 'Giữ hành lý gọn, cố định để tránh trượt ngã khi sóng.'],
+                            ['⏱️', 'Đúng giờ', 'Có mặt tại bến trước <strong>30 phút</strong> để làm thủ tục.'],
+                            ['🌊', 'Thời tiết', 'Theo dõi dự báo thời tiết biển trước chuyến đi.'],
+                            ['📵', 'An toàn', 'Không đứng ở đầu tàu khi chạy, không ngồi trên lan can.'],
+                        ]
+                    }
+                };
+
+                let key = 'plane';
+                if (t.includes('bus') || t.includes('xe')) key = 'bus';
+                else if (t.includes('train') || t.includes('tàu hỏa') || t.includes('tau')) key = 'train';
+                else if (t.includes('ship') || t.includes('boat') || t.includes('phà') || t.includes('thủy')) key = 'ship';
+                else if (t.includes('plane') || t.includes('flight') || t.includes('máy bay')) key = 'plane';
+
+                const info = data[key];
+                document.getElementById('transportModalTitle').innerHTML =
+                    '<i class="bi ' + info.icon + ' me-2"></i>' + info.title;
+                document.getElementById('transportModalBody').innerHTML =
+                    '<ul class="list-unstyled mb-0">' +
+                    info.items.map((item, i) =>
+                        '<li class="' + (i < info.items.length - 1 ? 'mb-3 ' : '') + 'd-flex gap-2"><span class="fs-5">' + item[0] + '</span><div><strong>' + item[1] + ':</strong> ' + item[2] + '</div></li>'
+                    ).join('') + '</ul>';
+
                 new bootstrap.Modal(document.getElementById('transportModal')).show();
             }
             function showAudienceModal() {
