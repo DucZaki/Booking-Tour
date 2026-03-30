@@ -35,3 +35,5 @@ build/
 ### Local config ###
 application-local.properties
 src/main/resources/application.propertiessrc/main/resources/application.properties
+
+.env
