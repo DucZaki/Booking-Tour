@@ -1,54 +1,74 @@
 
 <html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: layout(~{::section})">
 <section>
-    <header class="hero-section py-5 bg-brand-light">
-        <div class="container text-center">
-            <h1 id="typing-text" class="fw-bold">Bạn muốn đi đâu cùng ZakiBooking?</h1>
-            <p class="lead text-muted mt-3">Khám phá hàng ngàn tour du lịch hấp dẫn với giá tốt nhất</p>
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 id="typing-text">
+                Bạn muốn đi đâu cùng <span class="brand-gradient">ZakiBooking?</span>
+            </h1>
+            <p class="lead hero-lead mx-auto">Khám phá hàng ngàn tour du lịch hấp dẫn với giá tốt nhất, kiến tạo những kỷ niệm vô giá cùng chúng tôi.</p>
         </div>
     </header>
-    <section class="search-section bg-white py-4">
+    <section class="search-section py-4" style="margin-top: -60px; position: relative; z-index: 10;">
         <div class="container">
-            <form class="bg-white p-4 rounded shadow" method ="GET" th:action ="@{/tour}" autocomplete="off">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Bạn muốn đi đâu? <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="diemDen" placeholder="ví dụ: Đà Nẵng, Phú Quốc, Nhật Bản, ..." />
+            <form class="p-4 rounded-5 shadow-lg border-0" method ="GET" th:action ="@{/tour}" autocomplete="off" 
+                  style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(254, 207, 47, 0.2) !important;">
+                <div class="row g-3 align-items-center">
+                    <div class="col-lg-4">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-geo-alt-fill text-primary"></i>
+                            <label class="form-label fw-bold mb-0">Bạn muốn đi đâu?</label>
+                        </div>
+                        <input type="text" class="form-control bg-light border-0 py-3" name="diemDen" placeholder="ví dụ: Đà Nẵng, Phú Quốc..." />
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">Ngày đi</label>
-                        <input type="date" class="form-control" name="ngayDi" id="ngayDi" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-calendar-event-fill text-primary"></i>
+                            <label class="form-label fw-bold mb-0">Ngày đi</label>
+                        </div>
+                        <input type="date" class="form-control bg-light border-0 py-3" name="ngayDi" id="ngayDi" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
                     </div>  
-                    <div class="col-md-3">
-                        <label class="form-label fw-bold">Khoảng giá</label>
-                        <select class="form-select" name="khoangGia">
-                            <option value="">-- Tất cả --</option>
+                    <div class="col-lg-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <i class="bi bi-tag-fill text-primary"></i>
+                            <label class="form-label fw-bold mb-0">Khoảng giá</label>
+                        </div>
+                        <select class="form-select bg-light border-0 py-3" name="khoangGia">
+                            <option value="">Tất cả mức giá</option>
                             <option value="DUOI5">Dưới 5 triệu</option>
                             <option value="5_10">5 - 10 triệu</option>
                             <option value="TREN10">Trên 10 triệu</option>
                         </select>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="bi bi-search"></i> Tìm tour
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-primary w-100 py-3 mt-4 mt-lg-0 shadow-sm fw-bold">
+                            TÌM KIẾM
                         </button>
                     </div>
                 </div>
             </form>
         </div>
     </section>
-    <section class="py-5 text-center">
+    <section class="py-5">
         <div class="container">
-            <h2 class="fw-bold mb-4">Điểm đến nổi bật</h2>
+            <div class="d-flex align-items-end justify-content-between mb-5">
+                <div>
+                    <h6 class="text-primary fw-bold text-uppercase ls-wide">Explore</h6>
+                    <h2 class="fw-800 mb-0" style="font-size: 2.5rem; letter-spacing: -0.02em;">Điểm đến nổi bật</h2>
+                </div>
+                <a th:href="@{/tour}" class="text-dark fw-bold text-decoration-none border-bottom border-2 border-primary pb-1">Xem tất cả</a>
+            </div>
             <div class="row g-4">
                 <div class="col-md-4" th:each="dd : ${dsNoiBat}">
                     <a th:href="@{/tour/{id}(id=${dd.id})}" class="text-decoration-none">
-                        <div class="card border-0 shadow-sm h-100">
-                            <img th:src="@{${dd.hinhAnh}}" class="card-img-top rounded zoom-img" alt=""
-                                 style="width:100%; height:250px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 th:text="${dd.thanhPho}"></h5>
-                                <p th:text="${dd.chauLuc}"></p>
+                        <div class="card h-100 group">
+                            <div class="img-zoom" style="height: 300px;">
+                                <img th:src="@{${dd.hinhAnh}}" class="w-100 h-100 object-cover" alt="">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end p-4" 
+                                     style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);">
+                                    <h4 class="text-white fw-bold mb-1" th:text="${dd.thanhPho}"></h4>
+                                    <p class="text-white-50 mb-0 fs-7" th:text="${dd.chauLuc}"></p>
+                                </div>
                             </div>
                         </div>
                     </a>
