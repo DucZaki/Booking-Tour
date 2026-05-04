@@ -53,10 +53,19 @@
 }
 
 /* === DROPDOWN MENU === */
-[data-theme="dark"] .navbar .dropdown-menu {
-    background-color: #1e1e1e !important;
-    border: 1px solid #3a3a3a !important;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+[data-theme="dark"] .mega-menu {
+    background-color: #1A1C1E !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
+}
+
+[data-theme="dark"] .mega-menu .dropdown-item {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+[data-theme="dark"] .mega-menu .dropdown-item:hover {
+    background-color: rgba(254, 207, 47, 0.1) !important;
+    color: #FECF2F !important;
 }
 
 [data-theme="dark"] .navbar .dropdown-menu h6 {
@@ -122,29 +131,35 @@
     color: #FECF2F !important;
 }
 
-/* === HERO SECTION === */
+/* === HERO SECTION DARK === */
 [data-theme="dark"] .hero-section {
-    background-color: #111 !important;
+    background: linear-gradient(180deg, #0A0A0B 0%, #121213 100%) !important;
 }
 
 [data-theme="dark"] #typing-text {
-    color: #FECF2F;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .hero-lead {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="dark"] .brand-gradient {
+    background: linear-gradient(90deg, #FFFFFF 0%, #FECF2F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* === FORMS === */
 [data-theme="dark"] .form-control,
 [data-theme="dark"] .form-select {
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
-    border-color: #444 !important;
+    background-color: #1A1C1E !important;
+    color: #FFFFFF !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-[data-theme="dark"] .form-control:focus,
-[data-theme="dark"] .form-select:focus {
-    background-color: #2a2a2a !important;
-    color: #e0e0e0 !important;
-    border-color: #FECF2F !important;
-    box-shadow: 0 0 0 0.2rem rgba(254, 207, 47, 0.25) !important;
+[data-theme="dark"] .form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
 }
 
 [data-theme="dark"] .form-control::placeholder {

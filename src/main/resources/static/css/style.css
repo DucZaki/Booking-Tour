@@ -1,30 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
 :root {
-    --bs-primary: #FECF2F !important; /* Vàng thương hiệu */
-    --primary-hover: #e0b800;
-    --bs-secondary: #000000 !important; /* Đen */
-    --bs-dark: #000000 !important;
-    --bs-light: #F5F5F5 !important;
-    --bs-body-color: #212529 !important;
-    --bs-body-bg: #FFFFFF !important;
+    --bs-primary: #FECF2F !important;
+    --primary-hover: #fcd752;
+    --primary-glow: rgba(254, 207, 47, 0.4);
+    --bs-secondary: #1A1C1E !important;
+    --bs-dark: #121416 !important;
+    --bs-light: #F9F9FC !important;
+    --bs-body-color: #1A1C1E !important;
+    --bs-body-bg: #F9F9FC !important;
     --accent-color: #FECF2F;
+
+    /* Golden Horizon Tokens */
+    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --nav-glass-bg: rgba(255, 255, 255, 0.75);
+    --nav-shadow: 0 16px 48px -8px rgba(26, 28, 30, 0.12);
+    --card-radius: 20px;
+    --pill-radius: 100px;
+    --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Navbar vàng thương hiệu */
+body {
+    font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading);
+}
+
+/* ===================== PREMIUM NAVIGATION DOCK ===================== */
+.premium-nav-dock {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    background: var(--nav-glass-bg) !important;
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-radius: var(--pill-radius);
+    padding: 10px 32px !important;
+    box-shadow: var(--nav-shadow);
+    z-index: 1050;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: var(--transition-smooth);
+}
+
+.premium-nav-dock.scrolled {
+    top: 12px;
+    width: 95%;
+    padding: 6px 32px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+}
+
+.premium-nav-dock .navbar-brand {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: var(--bs-dark) !important;
+    padding: 0;
+}
+
+.premium-nav-dock .nav-link {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(26, 28, 30, 0.7) !important;
+    padding: 8px 16px !important;
+    transition: color 0.3s ease;
+}
+
+.premium-nav-dock .nav-link:hover,
+.premium-nav-dock .nav-link.active {
+    color: var(--bs-dark) !important;
+}
+
+.premium-nav-dock .user-profile-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--bs-dark);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.premium-nav-dock .user-profile-icon:hover {
+    transform: scale(1.05);
+    background: var(--bs-primary);
+}
+
+/* Removal of old navbar styles that conflict */
 .navbar {
-    background-color: var(--bs-primary) !important;
-    padding: 0 !important;
-}
-
-.navbar .nav-link,
-.navbar-brand,
-.navbar-toggler-icon {
-    color: #000 !important;
-    font-size: 1.1rem !important;
-    font-weight: 600 !important;
-}
-
-.navbar a:hover {
-    color: #333 !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
 }
 
 /* ===================== LOGO & BRANDING ===================== */
@@ -104,65 +187,187 @@
     transform: scale(1.1);
 }
 
-/* Button vàng */
+/* ===================== GLOBAL COMPONENT OVERHAUL ===================== */
+.card {
+    border: none !important;
+    border-radius: var(--card-radius) !important;
+    background: #FFFFFF !important;
+    box-shadow: 0 10px 30px rgba(26, 28, 30, 0.04) !important;
+    transition: var(--transition-smooth) !important;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 24px 60px rgba(26, 28, 30, 0.12) !important;
+}
+
+.img-zoom {
+    overflow: hidden;
+    position: relative;
+}
+
+.img-zoom img {
+    transition: var(--transition-smooth);
+}
+
+.card:hover .img-zoom img {
+    transform: scale(1.1);
+}
+
+.card-img-top {
+    border-radius: var(--card-radius) var(--card-radius) 0 0 !important;
+}
+
+.btn {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    border-radius: var(--pill-radius) !important;
+    transition: all 0.3s ease;
+    padding: 10px 24px;
+}
+
 .btn-primary {
     background-color: var(--bs-primary) !important;
     border: none !important;
-    color: #000 !important;
-    font-weight: 600;
+    color: var(--bs-dark) !important;
 }
 
 .btn-primary:hover {
     background-color: var(--primary-hover) !important;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(254, 207, 47, 0.3);
+    box-shadow: 0 8px 20px rgba(254, 207, 47, 0.3);
 }
 
-.btn-primary {
-    transition: all 0.3s ease;
-}
-
-/* Background brand light */
-.bg-brand-light {
-    background-color: #fff9e6 !important;
-}
-
-.text-brand {
-    color: var(--bs-primary) !important;
-}
-
-/* Search section focus */
-.search-section .form-control:focus, .search-section .form-select:focus {
-    border-color: var(--bs-primary) !important;
-    box-shadow: 0 0 0 0.25rem rgba(254, 207, 47, 0.25) !important;
-}
-
-
-/* Các tiêu đề chính */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+.form-control,
+.form-select {
+    border: none !important;
+    background-color: #F1F1F4 !important;
+    border-radius: 12px !important;
+    padding: 12px 20px !important;
+    font-size: 0.9rem !important;
     color: var(--bs-dark) !important;
 }
 
-/* Footer đen + chữ trắng */
+.form-control:focus {
+    box-shadow: 0 0 0 3px rgba(254, 207, 47, 0.2) !important;
+}
+
+/* ===================== HERO SECTION ===================== */
+.hero-section {
+    background: linear-gradient(180deg, #FFF9E6 0%, #F9F9FC 100%);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 0;
+}
+
+#typing-text {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    color: var(--bs-dark);
+}
+
+.brand-gradient {
+    background: linear-gradient(90deg, #705900 0%, #FECF2F 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-lead {
+    max-width: 600px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 500;
+    color: rgba(26, 28, 30, 0.6);
+}
+
+/* ===================== FORMS & SELECT FIXES ===================== */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 16px 12px !important;
+    padding-right: 2.5rem !important;
+}
+
+.search-section .form-control,
+.search-section .form-select {
+    height: 54px !important;
+}
+
+/* ===================== DROPDOWN & MEGA MENU ===================== */
+.mega-menu {
+    background: #FFFFFF !important;
+    border-radius: 24px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08) !important;
+}
+
+.mega-menu .dropdown-item {
+    font-family: var(--font-body) !important;
+    font-weight: 500 !important;
+    color: var(--bs-dark) !important;
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--bs-dark);
+    font-size: 1.5rem;
+    letter-spacing: -0.04em;
+}
+
+.premium-nav-dock .nav-link {
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 10px 20px !important;
+    color: rgba(26, 28, 30, 0.6) !important;
+}
+
+.premium-nav-dock .nav-link:hover {
+    color: var(--bs-dark) !important;
+}
+
+/* ===================== EDITORIAL NEWSLETTER & FOOTER ===================== */
+.newsletter {
+    background: #000000 !important;
+    color: #FFFFFF !important;
+    padding: 100px 0 !important;
+    text-align: center;
+}
+
+.newsletter h3 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 24px;
+    color: #FFF !important;
+}
+
+.newsletter p {
+    color: rgba(255, 255, 255, 0.7) !important;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+.newsletter input {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    max-width: 400px;
+}
+
 footer {
-    background-color: var(--bs-dark) !important;
-    color: var(--bs-light) !important;
-    padding: 50px 0 20px 0;
-    border-top: 4px solid var(--bs-primary);
-}
-
-.bg-custom {
-    background-color: var(--bs-primary) !important;
-    color: #000 !important;
-}
-
-.bg-custom p, .bg-custom h3 {
-    color: #000 !important;
+    background-color: #000000 !important;
+    color: rgba(255, 255, 255, 0.5) !important;
+    padding: 80px 0 40px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ===================== DROPDOWN MENU ===================== */
@@ -705,12 +910,12 @@ a:hover {
     transition: color 0.2s ease;
 }
 
-.star-rating input:checked ~ label {
+.star-rating input:checked~label {
     color: #ffc107;
 }
 
 .star-rating label:hover,
-.star-rating label:hover ~ label {
+.star-rating label:hover~label {
     color: #ffc107;
 }
 

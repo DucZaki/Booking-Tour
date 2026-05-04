@@ -30,4 +30,6 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
 
     @Query("SELECT COALESCE(SUM(d.tongGia), 0.0) FROM DatCho d WHERE d.idNguoiDung = :user AND d.trangThai = 'PAID'")
     Double sumTongGiaByUser(@Param("user") NguoiDung user);
+
+    List<DatCho> findByEmailOrderByNgayDatDesc(String email);
 }

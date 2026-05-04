@@ -48,7 +48,8 @@ public class SecurityConfig {
                         throws Exception {
                 http
                                 .authenticationProvider(authenticationProvider())
-
+                                .csrf(csrf -> csrf
+                                                .ignoringRequestMatchers("/api/chat"))
                                 .authorizeHttpRequests(authorize -> authorize
                                                 // Public endpoints
                                                 .requestMatchers(
@@ -62,6 +63,7 @@ public class SecurityConfig {
                                                                 "/",
                                                                 "/tour/**",
                                                                 "/api/public/**",
+                                                                "/api/chat",
                                                                 "/tintuc",
                                                                 "/tin-tuc",
                                                                 "/contact",
