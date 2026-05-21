@@ -31,6 +31,10 @@ public class DatCho {
     @JoinColumn(name = "id_diem_don")
     private DiemDon idDiemDon;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ngay_khoi_hanh")
+    private NgayKhoiHanh idNgayKhoiHanh;
+
     @Column(name = "so_luong")
     private Integer soLuong;
 
@@ -64,6 +68,13 @@ public class DatCho {
 
     @Column(name = "tong_gia")
     private Double tongGia;
+
+    /** Token duy nhất cho QR check-in (quét mã → /check-in/{token}). */
+    @Column(name = "ma_check_in", length = 64, unique = true)
+    private String maCheckIn;
+
+    @Column(name = "checked_in_at")
+    private LocalDateTime checkedInAt;
 
     @OneToMany(mappedBy = "idDatCho", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChoXacNhan> choXacNhans;

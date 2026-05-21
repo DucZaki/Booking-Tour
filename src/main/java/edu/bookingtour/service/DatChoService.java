@@ -13,11 +13,18 @@ public class DatChoService {
     private DatChoRepository datChoRepository;
 
     public DatCho save(DatCho datCho) {
+        if (datCho.getMaCheckIn() == null || datCho.getMaCheckIn().isBlank()) {
+            datCho.setMaCheckIn(java.util.UUID.randomUUID().toString().replace("-", ""));
+        }
         return datChoRepository.save(datCho);
     }
 
     public Optional<DatCho> findById(Integer id) {
         return datChoRepository.findById(id);
+    }
+
+    public Optional<DatCho> findByIdWithDetails(Integer id) {
+        return datChoRepository.findByIdWithDetails(id);
     }
 
     public void updateStatus(Integer id, String status) {

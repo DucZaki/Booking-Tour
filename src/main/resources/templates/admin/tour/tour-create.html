@@ -24,14 +24,14 @@
 
           <div class="col-md-4">
             <label class="form-label fw-bold">Ngày khởi hành</label>
-            <input type="date" th:field="*{ngayKhoiHanh}"
-              th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+            <input type="text" th:field="*{ngayKhoiHanh}" class="form-control zaki-date" required
+              th:attr="data-min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" placeholder="dd/mm/yyyy" inputmode="numeric">
           </div>
 
           <div class="col-md-4">
             <label class="form-label fw-bold">Ngày kết thúc</label>
-            <input type="date" th:field="*{ngayKetThuc}"
-              th:attr="min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" class="form-control" required>
+            <input type="text" th:field="*{ngayKetThuc}" class="form-control zaki-date" required
+              th:attr="data-min=${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}" placeholder="dd/mm/yyyy" inputmode="numeric">
           </div>
 
           <div class="col-md-4">
@@ -144,11 +144,17 @@
     const quocGiaSelect = document.getElementById("quocGia");
     const thanhPhoSelect = document.getElementById("thanhPho");
 
+    function refreshSelect(sel) {
+      if (window.ZakiSelect) ZakiSelect.refresh(sel);
+    }
+
     chauLucSelect.addEventListener("change", function () {
       const chauLuc = this.value;
 
       quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
       thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+      refreshSelect(quocGiaSelect);
+      refreshSelect(thanhPhoSelect);
 
       if (!dataDiaDiem[chauLuc]) return;
 
@@ -158,6 +164,7 @@
         option.textContent = qg;
         quocGiaSelect.appendChild(option);
       });
+      refreshSelect(quocGiaSelect);
     });
 
     quocGiaSelect.addEventListener("change", function () {
@@ -165,6 +172,7 @@
       const quocGia = this.value;
 
       thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+      refreshSelect(thanhPhoSelect);
 
       if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
 
@@ -174,6 +182,7 @@
         option.textContent = tp.ten;
         thanhPhoSelect.appendChild(option);
       });
+      refreshSelect(thanhPhoSelect);
     });
   </script>
 

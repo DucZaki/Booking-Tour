@@ -63,9 +63,34 @@ public class NguoiDungService {
         nguoiDungRepository.deleteById(id);
     }
 
-    public Page<Object[]> findAllUserDetail(int page, int size) {
+    public Page<Object[]> findAllUserDetail(int page, int size, String keyword, String sort) {
         Pageable pageable = PageRequest.of(page, size);
-        return nguoiDungRepository.findAllUserDetails(pageable);
+        String kw = normalizeKeyword(keyword);
+        String sortKey = normalizeSort(sort);
+
+        return switch (sortKey) {
+            case "spending_asc" -> nguoiDungRepository.searchUsersBySpendingAsc(kw, pageable);
+            case "bookings_desc" -> nguoiDungRepository.searchUsersByBookingsDesc(kw, pageable);
+            case "name_asc" -> nguoiDungRepository.searchUsersByNameAsc(kw, pageable);
+            default -> nguoiDungRepository.searchUsersBySpendingDesc(kw, pageable);
+        };
+    }
+
+    private static String normalizeKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return null;
+        }
+        return keyword.trim();
+    }
+
+    private static String normalizeSort(String sort) {
+        if (sort == null) {
+            return "spending_desc";
+        }
+        return switch (sort) {
+            case "spending_asc", "bookings_desc", "name_asc", "spending_desc" -> sort;
+            default -> "spending_desc";
+        };
     }
 
     public NguoiDung registerNewUser(NguoiDung nguoiDung) {

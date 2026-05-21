@@ -18,39 +18,59 @@
 
                 <div class="row g-4 mb-4">
                     <div class="col-lg-8">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white py-3">
-                                <h5 class="fw-bold mb-0">Lượt khách theo Tour</h5>
+                        <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card-header bg-white py-3 border-0">
+                                <h5 class="fw-bold mb-0">Lượt đặt & Doanh thu theo Tour</h5>
+                                <p class="text-muted small mb-0">Top tour đã thanh toán (PAID)</p>
                             </div>
                             <div class="card-body">
-                                <canvas id="bookingsChart" style="max-height: 350px;"></canvas>
+                                <div th:if="${#lists.isEmpty(tourLabels)}" class="text-center py-5 text-muted">
+                                    <i class="bi bi-bar-chart fs-1 d-block mb-2"></i>
+                                    Chưa có dữ liệu bán hàng.
+                                </div>
+                                <canvas th:unless="${#lists.isEmpty(tourLabels)}" id="bookingsChart" style="height: 380px;"></canvas>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-header bg-white py-3">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-white py-3 border-0">
                                 <h5 class="fw-bold mb-0">Tỷ lệ Trạng thái Booking</h5>
                             </div>
                             <div class="card-body d-flex flex-column justify-content-center">
                                 <div class="text-center mb-4">
-                                    <h2 class="fw-bold text-success" th:text="${totalBookings > 0 ? (successBookings * 100 / totalBookings) : 0} + '%'"></h2>
-                                    <p class="text-muted">Tỷ lệ thành công trung bình</p>
+                                    <h2 class="fw-bold text-success"
+                                        th:text="${totalBookings > 0 ? #numbers.formatDecimal(successBookings * 100.0 / totalBookings, 1, 'POINT', 1, 'COMMA') + '%' : '0%'}"></h2>
+                                    <p class="text-muted mb-0">Tỷ lệ thanh toán thành công</p>
                                 </div>
-                                <div class="px-3">
+                                <div class="px-2">
                                     <div class="d-flex justify-content-between mb-1">
                                         <span class="small">Thành công (PAID)</span>
-                                        <span class="small fw-bold" th:text="${successBookings}"></span>
+                                        <span class="small fw-bold text-success" th:text="${successBookings}"></span>
                                     </div>
-                                    <div class="progress mb-3" style="height: 6px;">
-                                        <div class="progress-bar bg-success" role="progressbar" th:style="'width: ' + (${totalBookings > 0 ? (successBookings * 100 / totalBookings) : 0}) + '%'"></div>
+                                    <div class="progress mb-3" style="height: 8px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                             th:style="'width: ' + (${totalBookings > 0 ? successBookings * 100 / totalBookings : 0}) + '%'"></div>
                                     </div>
                                     <div class="d-flex justify-content-between mb-1">
-                                        <span class="small">Tổng đơn đặt</span>
-                                        <span class="small fw-bold" th:text="${totalBookings}"></span>
+                                        <span class="small">Chờ / khác</span>
+                                        <span class="small fw-bold" th:text="${pendingBookings}"></span>
                                     </div>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"></div>
+                                    <div class="progress mb-3" style="height: 8px;">
+                                        <div class="progress-bar bg-warning" role="progressbar"
+                                             th:style="'width: ' + (${totalBookings > 0 ? pendingBookings * 100 / totalBookings : 0}) + '%'"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span class="small">Thất bại</span>
+                                        <span class="small fw-bold text-danger" th:text="${failedBookings}"></span>
+                                    </div>
+                                    <div class="progress mb-2" style="height: 8px;">
+                                        <div class="progress-bar bg-danger" role="progressbar"
+                                             th:style="'width: ' + (${totalBookings > 0 ? failedBookings * 100 / totalBookings : 0}) + '%'"></div>
+                                    </div>
+                                    <div class="text-center mt-3 pt-2 border-top">
+                                        <span class="small text-muted">Tổng đơn: </span>
+                                        <span class="fw-bold" th:text="${totalBookings}"></span>
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +79,7 @@
                 </div>
 
                 <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-white py-3 border-bottom">
                         <h5 class="fw-bold mb-0">Bảng xếp hạng hiệu suất Tour</h5>
                     </div>
                     <div class="card-body p-0">
@@ -86,13 +106,17 @@
                                         </td>
                                         <td class="py-3 text-end fw-bold text-success" th:text="${#numbers.formatDecimal(row[3], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                         <td class="py-3 text-center" style="width: 200px;">
-                                            <div class="progress" style="height: 8px;" th:if="${totalBookings > 0}">
-                                                <div class="progress-bar bg-primary" role="progressbar" th:style="'width: ' + (${row[2] * 100 / totalBookings}) + '%'"></div>
+                                            <div class="progress" style="height: 8px;" th:if="${maxTourBookings > 0}">
+                                                <div class="progress-bar" role="progressbar"
+                                                     th:style="'width:' + (${row[2]} * 100 / ${maxTourBookings}) + '%; background-color:#FECF2F;'"></div>
                                             </div>
-                                            <div class="progress" style="height: 8px;" th:unless="${totalBookings > 0}">
+                                            <div class="progress" style="height: 8px;" th:unless="${maxTourBookings > 0}">
                                                 <div class="progress-bar bg-secondary" role="progressbar" style="width: 0%"></div>
                                             </div>
                                         </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(tours)}">
+                                        <td colspan="5" class="text-center py-5 text-muted">Chưa có tour nào được đặt thành công.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -106,28 +130,95 @@
 
     <script th:inline="javascript">
         const tourLabels = /*[[${tourLabels}]]*/ [];
-        const tourData = /*[[${tourData}]]*/ [];
+        const tourBookings = /*[[${tourBookings}]]*/ [];
+        const tourRevenues = /*[[${tourRevenues}]]*/ [];
 
-        if (tourLabels.length > 0) {
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!tourLabels.length) return;
+
             const ctx = document.getElementById('bookingsChart').getContext('2d');
             new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: tourLabels,
-                    datasets: [{
-                        label: 'Số lượng booking',
-                        data: tourData,
-                        backgroundColor: 'rgba(13, 110, 253, 0.8)',
-                        borderRadius: 10
-                    }]
+                    datasets: [
+                        {
+                            label: 'Lượt đặt (PAID)',
+                            data: tourBookings,
+                            backgroundColor: 'rgba(254, 207, 47, 0.85)',
+                            borderColor: '#FECF2F',
+                            borderWidth: 1,
+                            borderRadius: 8,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Doanh thu (₫)',
+                            data: tourRevenues,
+                            type: 'line',
+                            borderColor: '#212529',
+                            backgroundColor: 'rgba(33, 37, 41, 0.08)',
+                            borderWidth: 2,
+                            tension: 0.35,
+                            fill: false,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#fff',
+                            pointBorderColor: '#212529',
+                            yAxisID: 'y1'
+                        }
+                    ]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
-                    plugins: { legend: { display: false } }
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: { boxWidth: 12, font: { size: 12 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => {
+                                    if (ctx.dataset.yAxisID === 'y1') {
+                                        return ' Doanh thu: ' + Number(ctx.raw).toLocaleString('vi-VN') + ' ₫';
+                                    }
+                                    return ' Lượt đặt: ' + ctx.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 } }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Lượt đặt' },
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0,
+                                callback: v => Number.isInteger(v) ? v : ''
+                            },
+                            grid: { borderDash: [4, 4], color: 'rgba(0,0,0,0.06)' }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            beginAtZero: true,
+                            title: { display: true, text: 'Doanh thu (₫)' },
+                            grid: { drawOnChartArea: false },
+                            ticks: {
+                                callback: v => Number(v).toLocaleString('vi-VN')
+                            }
+                        }
+                    }
                 }
             });
-        }
+        });
     </script>
 </body>
 </html>

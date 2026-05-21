@@ -63,6 +63,7 @@
                                                     th:data-date="${row[6]}"
                                                     th:data-status="${row[7]}"
                                                     th:data-userid="${row[8]}"
+                                                    th:data-checkin-token="${row[9]}"
                                                     onclick="showInvoice(this)">
                                                 <i class="bi bi-file-earmark-text me-1"></i>Hoá đơn
                                             </button>
@@ -112,6 +113,17 @@
                     <div class="text-center mb-4">
                         <div class="display-6 fw-bold text-dark" id="modalTotal">0 ₫</div>
                         <div class="badge bg-success rounded-pill px-3 py-1 mt-2" id="modalStatus">Thành công</div>
+                    </div>
+
+                    <div id="invoiceQrBlock" class="text-center mb-4" style="display:none;">
+                        <p class="small text-muted mb-2"><i class="bi bi-qr-code me-1"></i> QR check-in</p>
+                        <img id="invoiceQrImg" src="" alt="QR check-in" class="border rounded-3 p-2 bg-white"
+                             style="width:160px;height:160px;object-fit:contain;">
+                        <div class="mt-2">
+                            <a id="invoiceCheckInLink" href="#" target="_blank" class="btn btn-sm btn-outline-warning">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Mở trang check-in
+                            </a>
+                        </div>
                     </div>
                     
                     <div class="border-top pt-3">
@@ -177,6 +189,17 @@
                 userLink.style.display = 'inline';
             } else {
                 userLink.style.display = 'none';
+            }
+
+            const qrBlock = document.getElementById('invoiceQrBlock');
+            const qrImg = document.getElementById('invoiceQrImg');
+            const checkInLink = document.getElementById('invoiceCheckInLink');
+            if (data.checkinToken) {
+                qrImg.src = '/check-in/' + data.checkinToken + '/qr.png';
+                checkInLink.href = '/check-in/' + data.checkinToken;
+                qrBlock.style.display = 'block';
+            } else {
+                qrBlock.style.display = 'none';
             }
 
             new bootstrap.Modal(document.getElementById('invoiceModal')).show();

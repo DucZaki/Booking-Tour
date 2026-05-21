@@ -32,4 +32,29 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
     Double sumTongGiaByUser(@Param("user") NguoiDung user);
 
     List<DatCho> findByEmailOrderByNgayDatDesc(String email);
+
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idChuyenDi t
+            LEFT JOIN FETCH t.idDiemDen
+            LEFT JOIN FETCH t.idPhuongTien
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh
+            WHERE d.id = :id
+            """)
+    java.util.Optional<DatCho> findByIdWithDetails(@Param("id") Integer id);
+
+    @Query("SELECT d FROM DatCho d WHERE d.maCheckIn = :maCheckIn")
+    java.util.Optional<DatCho> findByMaCheckIn(@Param("maCheckIn") String maCheckIn);
+
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idChuyenDi t
+            LEFT JOIN FETCH t.idDiemDen
+            LEFT JOIN FETCH t.idPhuongTien
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh
+            WHERE d.maCheckIn = :token
+            """)
+    java.util.Optional<DatCho> findByMaCheckInWithDetails(@Param("token") String token);
 }

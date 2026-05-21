@@ -1,5 +1,6 @@
 package edu.bookingtour.controller.admin;
 
+import edu.bookingtour.dto.AdminUserListItem;
 import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.repo.DatChoRepository;
@@ -26,12 +27,18 @@ public class AdminUserController {
     private DatChoRepository datChoRepository;
 
     @GetMapping
-    public String listUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int perPage, Model model) {
-        Page<Object[]> nguoiDung = nguoiDungService.findAllUserDetail(page, perPage);
-        model.addAttribute("users", nguoiDung);
+    public String listUsers(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int perPage,
+                            @RequestParam(required = false) String q,
+                            @RequestParam(defaultValue = "spending_desc") String sort,
+                            Model model) {
+        Page<Object[]> nguoiDung = nguoiDungService.findAllUserDetail(page, perPage, q, sort);
+        model.addAttribute("users", nguoiDung.getContent().stream().map(AdminUserListItem::fromRow).toList());
         model.addAttribute("page", page);
         model.addAttribute("perPage", perPage);
         model.addAttribute("totalPage", nguoiDung.getTotalPages());
+        model.addAttribute("keyword", q != null ? q : "");
+        model.addAttribute("sort", sort);
         return "admin/user/user-list";
     }
     @GetMapping("/create")
