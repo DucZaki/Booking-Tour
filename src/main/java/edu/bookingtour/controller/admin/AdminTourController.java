@@ -4,6 +4,7 @@ import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.repo.DiemDenRepository;
 import edu.bookingtour.service.LichTrinhService;
 import edu.bookingtour.service.PhuongTienService;
+import edu.bookingtour.service.TourBootstrapService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,8 @@ public class AdminTourController {
     private DiemDenRepository diemDenRepository;
     @Autowired
     private edu.bookingtour.repo.DiemDonRepository diemDonRepository;
+    @Autowired
+    private TourBootstrapService tourBootstrapService;
     @Value("${image.path}")
     private String imagePath;
 
@@ -89,13 +92,22 @@ public class AdminTourController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute ChuyenDi chuyenDi, @RequestParam("file") MultipartFile file) throws IOException {
+    public String save(@ModelAttribute ChuyenDi chuyenDi,
+            @RequestParam(value = "departureIds", required = false) java.util.List<Integer> departureIds,
+            @RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             File dest = new File(imagePath + fileName);
             dest.getParentFile().mkdirs();
             file.transferTo(dest);
             chuyenDi.setHinhAnh("/uploads/" + fileName);
+        }
+        if (departureIds != null && !departureIds.isEmpty()) {
+            java.util.Set<edu.bookingtour.entity.DiemDon> deps = new java.util.HashSet<>();
+            for (Integer depId : departureIds) {
+                diemDonRepository.findById(depId).ifPresent(deps::add);
+            }
+            chuyenDi.setDiemDons(deps);
         }
         tourService.createTour(chuyenDi);
         return "redirect:/admin/tour/active";
@@ -118,6 +130,7 @@ public class AdminTourController {
 
     @PostMapping("/update/{id}")
     public String update(@PathVariable Integer id, @ModelAttribute ChuyenDi chuyenDi,
+            @RequestParam(value = "departureIds", required = false) java.util.List<Integer> departureIds,
             @RequestParam("file") MultipartFile file) throws IOException {
         ChuyenDi tour = tourService.findById(id).orElseThrow(() -> new RuntimeException("Tour Not Found"));
         if (!file.isEmpty()) {
@@ -127,6 +140,13 @@ public class AdminTourController {
             chuyenDi.setHinhAnh("/uploads/" + fileName);
         } else {
             chuyenDi.setHinhAnh(tour.getHinhAnh());
+        }
+        if (departureIds != null) {
+            java.util.Set<edu.bookingtour.entity.DiemDon> deps = new java.util.HashSet<>();
+            for (Integer depId : departureIds) {
+                diemDonRepository.findById(depId).ifPresent(deps::add);
+            }
+            chuyenDi.setDiemDons(deps);
         }
         tourService.update(id, chuyenDi);
         return "redirect:/admin/tour/detail/" + id;
@@ -145,5 +165,14 @@ public class AdminTourController {
     public String delete(@PathVariable Integer id, @RequestParam(defaultValue = "active") String source) {
         tourService.delete(id);
         return "redirect:/admin/tour/" + source;
+    }
+
+    @PostMapping("/bootstrap/activate-all")
+    public String bootstrapActivateAll(org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        TourBootstrapService.BootstrapResult result = tourBootstrapService.activateAllToursForCurrentMonth();
+        redirectAttributes.addFlashAttribute("successMessage",
+                "Đã kích hoạt " + result.totalTours() + " tour, thêm " + result.departuresAdded()
+                        + " ngày khởi hành (T" + result.month() + "/" + result.year() + ").");
+        return "redirect:/admin/tour/active";
     }
 }

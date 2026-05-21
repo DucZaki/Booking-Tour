@@ -74,7 +74,7 @@
                                     <img th:src="${ds.hinhAnh}" class="card-img-top rounded" alt="" style="width:260px; height:210px; object-fit: cover;" />
                                     <div class="p-3 flex-grow-1">
                                         <h5 class="fw-bold" th:text="${ds.tieuDe}"></h5>
-                                        <p class="mb-1">Mã tour: <strong>NNCTH1600</strong></p>
+                                        <p class="mb-1">Mã tour: <strong th:text="${T(edu.bookingtour.util.TourCodeUtil).format(ds.id)}">ZAKI1</strong></p>
                                         <p style="margin-bottom:5px;">Phương tiện:<span th:text="${ds.idPhuongTien.loai}"></span></p>
                                         <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
                                     </div>
@@ -88,7 +88,7 @@
                                 <p class="mb-0 text-muted">Vui lòng thử lại với điểm đến hoặc khoảng giá khác</p>
                             </div>
                             <div th:if="${totalPage > 0}" aria-label="Page navigation">
-                                <ul class="pagination justify-content-center mt-4">
+                                <ul class="pagination zaki-pagination justify-content-center mt-4">
                                     <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
                                         <a class="page-link" th:href="@{/tour(page=${page - 1}, size=${size}, diemDen=${diemDenSelected}, khoangGia=${khoangGiaSelected}, sort=${sortSelected}, ngayDi=${ngayDiSelected}, thanhPho=${thanhPhoSelected}, quocGia=${quocGiaSelected})}">&laquo;</a>
                                     </li>

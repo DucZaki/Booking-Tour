@@ -49,7 +49,7 @@ public class SecurityConfig {
                 http
                                 .authenticationProvider(authenticationProvider())
                                 .csrf(csrf -> csrf
-                                                .ignoringRequestMatchers("/api/chat", "/api/promo/**", "/payment/**"))
+                                                .ignoringRequestMatchers("/api/chat", "/api/promo/**", "/api/tour/**", "/payment/**"))
                                 .authorizeHttpRequests(authorize -> authorize
                                                 // Public endpoints
                                                 .requestMatchers(
@@ -65,6 +65,7 @@ public class SecurityConfig {
                                                                 "/api/public/**",
                                                                 "/api/chat",
                                                                 "/api/promo/**",
+                                                                "/api/tour/**",
                                                                 "/tintuc",
                                                                 "/tin-tuc",
                                                                 "/contact",

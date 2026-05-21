@@ -70,6 +70,11 @@ public class AuthController {
             model.addAttribute("errorMessage", "Email không được để trống!");
             return "login/register";
         }
+        String email = nguoiDung.getEmail().trim();
+        if (!email.toLowerCase().endsWith("@gmail.com")) {
+            model.addAttribute("errorMessage", "Email phải là Gmail (@gmail.com)!");
+            return "login/register";
+        }
         if (nguoiDung.getHoTen() == null || nguoiDung.getHoTen().trim().isEmpty()) {
             model.addAttribute("errorMessage", "Họ tên không được để trống!");
             return "login/register";

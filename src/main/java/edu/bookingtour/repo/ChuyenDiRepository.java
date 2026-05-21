@@ -39,4 +39,28 @@ public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
     Page<ChuyenDi> findByNgayKetThucAfter(LocalDate today, Pageable pageable);
 
     Page<ChuyenDi> findByNgayKetThucBefore(LocalDate today, Pageable pageable);
+
+    @Query("""
+            SELECT DISTINCT cd FROM ChuyenDi cd
+            JOIN cd.diemDons dd
+            WHERE dd.id IN :diemDonIds
+            AND (
+                cd.ngayKetThuc IS NULL
+                OR cd.ngayKetThuc >= :today
+                OR EXISTS (
+                    SELECT 1 FROM NgayKhoiHanh nkh
+                    WHERE nkh.chuyenDi = cd AND nkh.ngay >= :today
+                )
+            )
+            ORDER BY cd.noiBat DESC, cd.gia ASC
+            """)
+    List<ChuyenDi> findByDiemDonIdsAndBookable(List<Integer> diemDonIds, LocalDate today);
+
+    @Query("""
+            SELECT cd FROM ChuyenDi cd
+            JOIN cd.diemDons dd
+            WHERE dd.id IN :diemDonIds
+            ORDER BY cd.noiBat DESC, cd.gia ASC
+            """)
+    List<ChuyenDi> findByDiemDonIds(List<Integer> diemDonIds);
 }

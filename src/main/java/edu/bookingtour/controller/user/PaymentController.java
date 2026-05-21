@@ -7,10 +7,12 @@ import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.service.DatChoService;
+import edu.bookingtour.service.EmailService;
 import edu.bookingtour.service.MaGiamGiaService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
+import edu.bookingtour.repo.DiemDonRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,10 +52,17 @@ public class PaymentController {
     @Autowired
     private MaGiamGiaService maGiamGiaService;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private DiemDonRepository diemDonRepository;
+
     @PostMapping("/booking/submit")
     public String submitBooking(
             @RequestParam Integer tourId,
             @RequestParam Integer nkhId,
+            @RequestParam Integer departureId,
             @RequestParam String hoTen,
             @RequestParam String email,
             @RequestParam String soDienThoai,
@@ -70,6 +79,12 @@ public class PaymentController {
 
         if (tour == null || nkh == null) {
             return "redirect:/tour";
+        }
+
+        // Require Gmail for booking notifications
+        if (email == null || email.isBlank() || !email.trim().toLowerCase().endsWith("@gmail.com")) {
+            redirectAttributes.addFlashAttribute("promoError", "Vui lòng nhập Gmail hợp lệ (@gmail.com) để nhận thông báo.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
 
         // Create booking entry
@@ -89,6 +104,17 @@ public class PaymentController {
         datCho.setDiaChi(diaChi);
         datCho.setGhiChu(ghiChu);
 
+        // Validate selected departure point belongs to tour options
+        tourService.normalizeTourDepartureOptions(tour);
+        boolean okDeparture = tour.getDiemDons() != null && tour.getDiemDons().stream()
+                .anyMatch(d -> d.getId() != null && d.getId().equals(departureId));
+        if (!okDeparture) {
+            redirectAttributes.addFlashAttribute("promoError", "Điểm xuất phát không hợp lệ.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        // Persist chosen departure on booking
+        datCho.setIdDiemDon(diemDonRepository.getReferenceById(departureId));
+
         double unitPrice = tour.getGia().doubleValue() + nkh.getTongGiaVe();
         PromoApplyResult promoResult = maGiamGiaService.validateAndApply(maGiamGia, tourId, unitPrice, soLuong);
         if (maGiamGia != null && !maGiamGia.isBlank() && !promoResult.isValid()) {
@@ -104,6 +130,7 @@ public class PaymentController {
         datCho.setTongGia(totalAmount);
 
         datCho = datChoService.save(datCho);
+        emailService.sendBookingCreated(datCho);
 
         long amountVnd = (long) Math.round(totalAmount);
         if (amountVnd < 5000L) {
@@ -183,6 +210,13 @@ public class PaymentController {
 
             if ("00".equals(responseCode)) {
                 datChoService.updateStatus(Integer.parseInt(orderId), "PAID");
+                try {
+                    DatCho updated = datChoService.findById(Integer.parseInt(orderId)).orElse(null);
+                    if (updated != null) {
+                        emailService.sendPaymentSuccess(updated);
+                    }
+                } catch (Exception ignored) {
+                }
             } else {
                 datChoService.updateStatus(Integer.parseInt(orderId), "FAILED");
             }

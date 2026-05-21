@@ -60,20 +60,11 @@ public class NgayKhoiHanhService {
                 && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
 
         if (isBus) {
-            nkh.setGiaVeDi(300000.0);
-            nkh.setGiaVeVe(0.0);
-            nkh.setMaChuyenBayDi("BUS");
-            nkh.setGioBayDi("08:00");
-            nkh.setGioDenDi("12:00");
-            nkh.setMaChuyenBayVe("BUS");
-            nkh.setGioBayVe("14:00");
-            nkh.setGioDenVe("18:00");
+            applyDefaultTransportInfo(nkh, chuyenDi);
         } else {
             String from = "HAN";
             String to = "SGN";
-            // Fetch thông tin vé máy bay chiều đi từ Amadeus
             fetchFlightInfo(nkh, from, to, ngayDi, true);
-            // Fetch thông tin vé máy bay chiều về từ Amadeus (chỉ khi có ngày về)
             if (ngayVe != null) {
                 fetchFlightInfo(nkh, to, from, ngayVe, false);
             } else {
@@ -85,6 +76,54 @@ public class NgayKhoiHanhService {
         }
 
         return ngayKhoiHanhRepository.save(nkh);
+    }
+
+    /**
+     * Thêm ngày KH với giá/giờ mặc định — dùng bootstrap hàng loạt, không gọi Amadeus.
+     */
+    @Transactional
+    public NgayKhoiHanh addDepartureDateWithDefaults(Integer chuyenDiId, LocalDate ngayDi, LocalDate ngayVe) {
+        ChuyenDi chuyenDi = chuyenDiRepository.findById(chuyenDiId)
+                .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
+
+        Optional<NgayKhoiHanh> existing = ngayKhoiHanhRepository.findByChuyenDiIdAndNgay(chuyenDiId, ngayDi);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        NgayKhoiHanh nkh = new NgayKhoiHanh();
+        nkh.setChuyenDi(chuyenDi);
+        nkh.setNgay(ngayDi);
+        nkh.setThang(ngayDi.getMonthValue());
+        nkh.setNam(ngayDi.getYear());
+        nkh.setNgayVe(ngayVe);
+        applyDefaultTransportInfo(nkh, chuyenDi);
+        return ngayKhoiHanhRepository.save(nkh);
+    }
+
+    private void applyDefaultTransportInfo(NgayKhoiHanh nkh, ChuyenDi chuyenDi) {
+        boolean isBus = chuyenDi.getIdPhuongTien() != null
+                && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
+
+        if (isBus) {
+            nkh.setGiaVeDi(300000.0);
+            nkh.setGiaVeVe(0.0);
+            nkh.setMaChuyenBayDi("BUS");
+            nkh.setGioBayDi("08:00");
+            nkh.setGioDenDi("12:00");
+            nkh.setMaChuyenBayVe("BUS");
+            nkh.setGioBayVe("14:00");
+            nkh.setGioDenVe("18:00");
+        } else {
+            nkh.setGiaVeDi(1_454_000.0);
+            nkh.setGiaVeVe(1_454_000.0);
+            nkh.setMaChuyenBayDi("VJ197");
+            nkh.setGioBayDi("05:30");
+            nkh.setGioDenDi("07:40");
+            nkh.setMaChuyenBayVe("VJ194");
+            nkh.setGioBayVe("17:10");
+            nkh.setGioDenVe("05:00");
+        }
     }
 
     /**

@@ -9,7 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -54,6 +56,11 @@ public class ChuyenDi {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_diem_don")
     private DiemDon idDiemDon;
+
+    // Allowed departure points for this tour (admin-configurable)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "chuyen_di_diem_don", joinColumns = @JoinColumn(name = "chuyen_di_id"), inverseJoinColumns = @JoinColumn(name = "diem_don_id"))
+    private Set<DiemDon> diemDons = new HashSet<>();
 
     @ColumnDefault("0")
     @Column(name = "noi_bat")

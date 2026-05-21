@@ -37,10 +37,16 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-bold">Điểm đón</label>
-                        <select class="form-select" th:field="*{idDiemDon.id}">
-                            <option th:each="dd : ${diemDonList}" th:value="${dd.id}" th:text="${dd.ten}"></option>
-                        </select>
+                        <label class="form-label fw-bold">Điểm xuất phát (admin chọn)</label>
+                        <div class="border rounded-3 p-3 bg-white" style="max-height: 180px; overflow: auto;">
+                            <div class="form-check" th:each="dd : ${diemDonList}">
+                                <input class="form-check-input" type="checkbox" name="departureIds" th:value="${dd.id}"
+                                    th:id="${'dep_' + dd.id}"
+                                    th:checked="${tour.diemDons != null and tour.diemDons.contains(dd)}" />
+                                <label class="form-check-label fw-semibold" th:for="${'dep_' + dd.id}" th:text="${dd.ten}"></label>
+                            </div>
+                            <div class="small text-muted mt-2">Bỏ chọn hết để hệ thống tự gán theo điểm đến.</div>
+                        </div>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Châu lục</label>
