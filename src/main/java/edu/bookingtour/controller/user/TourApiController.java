@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -38,10 +39,32 @@ public class TourApiController {
         response.put("id", tour.getId());
         response.put("tieuDe", tour.getTieuDe());
         response.put("ngayKhoiHanh", tour.getNgayKhoiHanh());
-        response.put("diemDon", (tour.getIdDiemDon() != null) ? tour.getIdDiemDon().getTen() : "N/A");
+        tourService.normalizeTourDepartureOptions(tour);
+        String dep = (tour.getIdDiemDon() != null) ? tour.getIdDiemDon().getTen() : "N/A";
+        response.put("diemDon", dep);
         response.put("notes", tour.getHighlight());
         response.put("itinerary", itinerary);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<Map<String, Object>> nearbyTours(
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng,
+            @RequestParam(required = false) String city,
+            @RequestParam(defaultValue = "100") double radiusKm,
+            @RequestParam(defaultValue = "6") int limit,
+            @RequestParam(defaultValue = "0") int page) {
+        if (radiusKm < 1) {
+            radiusKm = 100;
+        }
+        if (limit < 1 || limit > 20) {
+            limit = 6;
+        }
+        if (page < 0) {
+            page = 0;
+        }
+        return ResponseEntity.ok(tourService.findNearbyTours(lat, lng, city, radiusKm, limit, page));
     }
 }

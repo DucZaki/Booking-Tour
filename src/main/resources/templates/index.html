@@ -39,6 +39,33 @@
             </form>
         </div>
     </section>
+    <section class="py-5 bg-white" id="nearbyToursSection">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
+                <div>
+                    <h6 class="text-primary fw-bold text-uppercase ls-wide">Gần bạn</h6>
+                    <h2 class="fw-800 mb-0" style="font-size: 2.5rem; letter-spacing: -0.02em;">Chuyến đi gần bạn</h2>
+                    <p class="text-muted mb-0 mt-2">Tour khởi hành từ điểm đón gần vị trí hiện tại của bạn</p>
+                </div>
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <select class="form-select" id="nearbyCitySelect" style="min-width: 180px;" aria-label="Chọn thành phố xuất phát">
+                        <option value="">Hoặc chọn thành phố</option>
+                        <option value="Hà Nội">Hà Nội</option>
+                        <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                        <option value="Đà Nẵng">Đà Nẵng</option>
+                    </select>
+                    <button type="button" class="btn btn-outline-primary" id="nearbyRetryBtn">
+                        <i class="bi bi-crosshair"></i> Dùng vị trí của tôi
+                    </button>
+                </div>
+            </div>
+            <div id="nearbyToursStatus" class="nearby-status mb-4 text-muted">
+                <span class="spinner-border spinner-border-sm me-2"></span>Đang lấy vị trí...
+            </div>
+            <div class="row g-4" id="nearbyToursGrid"></div>
+            <div class="d-flex justify-content-center mt-4" id="nearbyToursPagination" style="display:none;"></div>
+        </div>
+    </section>
     <section class="py-5">
         <div class="container">
             <div class="d-flex align-items-end justify-content-between mb-5">
@@ -117,5 +144,6 @@
             </div>
         </div>
     </section>
+    <script th:src="@{/js/nearby-tours.js}"></script>
 </section>
 </html>

@@ -12,7 +12,14 @@
 <body>
     <th:block th:fragment="content">
         <div class="container pt-5 tour-detail-container">
-            <div class="row" style="margin-top:30px;">
+            <div class="row" style="margin-top:30px;" th:with="
+                diemDonTen=${id.idDiemDon != null and id.idDiemDon.ten != null ? id.idDiemDon.ten : 'Hà Nội'},
+                diemDenTp=${id.idDiemDen != null ? id.idDiemDen.thanhPho : null},
+                diemDenQg=${id.idDiemDen != null ? id.idDiemDen.quocGia : null},
+                diemDenLabel=${diemDenTp != null ? (diemDenQg != null and !#strings.isEmpty(diemDenQg) ? diemDenTp + ', ' + diemDenQg : diemDenTp) : 'Đang cập nhật'},
+                transportKind=${T(edu.bookingtour.util.TransportUi).kind(id.idPhuongTien)},
+                transportIcon=${T(edu.bookingtour.util.TransportUi).icon(transportKind)},
+                transportIconTimeline=${T(edu.bookingtour.util.TransportUi).iconTimeline(transportKind)}">
 
                 <div class="col-lg-8">
 
@@ -99,11 +106,14 @@
                         </div>
                     </div>
 
-                    <!-- ===== THÔNG TIN CHUYẾN BAY KHI CHỌN NGÀY ===== -->
+                    <!-- ===== THÔNG TIN PHƯƠNG TIỆN KHI CHỌN NGÀY ===== -->
                     <div th:if="${selectedNkh != null}" class="mt-4">
                         <div class="card border-0 shadow-sm">
                             <div class="card-header bg-primary text-white py-3">
-                                <h5 class="mb-0 fw-bold"><i class="bi bi-airplane me-2"></i>THÔNG TIN CHUYẾN BAY</h5>
+                                <h5 class="mb-0 fw-bold">
+                                    <i th:class="'bi ' + ${transportIcon} + ' me-2'"></i>
+                                    <span th:text="${T(edu.bookingtour.util.TransportUi).infoSectionTitle(transportKind)}">THÔNG TIN CHUYẾN BAY</span>
+                                </h5>
                             </div>
                             <div class="card-body p-0">
                                 <!-- Chiều đi -->
@@ -117,24 +127,39 @@
                                         <div class="col-md-3 text-center">
                                             <div class="fs-3 fw-bold text-dark"
                                                 th:text="${selectedNkh.gioBayDi ?: 'N/A'}"></div>
-                                            <div class="small text-muted">HAN</div>
-                                            <div class="small text-muted">Hà Nội</div>
+                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
+                                                th:switch="${diemDonTen}">
+                                                <span th:case="'Hà Nội'">HAN</span>
+                                                <span th:case="'Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'Đà Nẵng'">DAD</span>
+                                                <span th:case="*">—</span>
+                                            </div>
+                                            <div class="small text-muted" th:text="${diemDonTen}">Hà Nội</div>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="d-flex align-items-center justify-content-center">
                                                 <hr class="flex-grow-1">
-                                                <i class="bi bi-airplane-fill text-primary mx-3 fs-5"></i>
+                                                <i th:class="'bi ' + ${transportIconTimeline} + ' text-primary mx-3 fs-5'"></i>
                                                 <hr class="flex-grow-1">
                                             </div>
                                             <div class="small text-muted"
-                                                th:text="'Mã chuyến bay: ' + ${selectedNkh.maChuyenBayDi ?: 'N/A'}">
+                                                th:text="${T(edu.bookingtour.util.TransportUi).tripCodeLabel(transportKind) + ': ' + (selectedNkh.maChuyenBayDi ?: 'N/A')}">
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center">
                                             <div class="fs-3 fw-bold text-dark"
                                                 th:text="${selectedNkh.gioDenDi ?: 'N/A'}"></div>
-                                            <div class="small text-muted">SGN</div>
-                                            <div class="small text-muted">TP. Hồ Chí Minh</div>
+                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
+                                                th:switch="${diemDenTp}">
+                                                <span th:case="'Hà Nội'">HAN</span>
+                                                <span th:case="'Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'TP. Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'Đà Nẵng'">DAD</span>
+                                                <span th:case="'Phú Quốc'">PQC</span>
+                                                <span th:case="'Nha Trang'">CXR</span>
+                                                <span th:case="*">—</span>
+                                            </div>
+                                            <div class="small text-muted" th:text="${diemDenTp ?: diemDenLabel}">TP. HCM</div>
                                         </div>
                                     </div>
                                     <div class="text-end mt-2">
@@ -154,25 +179,40 @@
                                         <div class="col-md-3 text-center">
                                             <div class="fs-3 fw-bold text-dark"
                                                 th:text="${selectedNkh.gioBayVe ?: 'N/A'}"></div>
-                                            <div class="small text-muted">SGN</div>
-                                            <div class="small text-muted">TP. Hồ Chí Minh</div>
+                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
+                                                th:switch="${diemDenTp}">
+                                                <span th:case="'Hà Nội'">HAN</span>
+                                                <span th:case="'Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'TP. Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'Đà Nẵng'">DAD</span>
+                                                <span th:case="'Phú Quốc'">PQC</span>
+                                                <span th:case="'Nha Trang'">CXR</span>
+                                                <span th:case="*">—</span>
+                                            </div>
+                                            <div class="small text-muted" th:text="${diemDenTp ?: diemDenLabel}">TP. HCM</div>
                                         </div>
                                         <div class="col-md-6 text-center">
                                             <div class="d-flex align-items-center justify-content-center">
                                                 <hr class="flex-grow-1">
-                                                <i class="bi bi-airplane-fill text-primary mx-3 fs-5"
-                                                    style="transform: scaleX(-1);"></i>
+                                                <i th:class="'bi ' + ${transportIconTimeline} + ' text-primary mx-3 fs-5'"
+                                                    th:style="${transportKind == 'plane'} ? 'transform: scaleX(-1);' : null"></i>
                                                 <hr class="flex-grow-1">
                                             </div>
                                             <div class="small text-muted"
-                                                th:text="'Mã chuyến bay: ' + ${selectedNkh.maChuyenBayVe ?: 'N/A'}">
+                                                th:text="${T(edu.bookingtour.util.TransportUi).tripCodeLabel(transportKind) + ': ' + (selectedNkh.maChuyenBayVe ?: 'N/A')}">
                                             </div>
                                         </div>
                                         <div class="col-md-3 text-center">
                                             <div class="fs-3 fw-bold text-dark"
                                                 th:text="${selectedNkh.gioDenVe ?: 'N/A'}"></div>
-                                            <div class="small text-muted">HAN</div>
-                                            <div class="small text-muted">Hà Nội</div>
+                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
+                                                th:switch="${diemDonTen}">
+                                                <span th:case="'Hà Nội'">HAN</span>
+                                                <span th:case="'Hồ Chí Minh'">SGN</span>
+                                                <span th:case="'Đà Nẵng'">DAD</span>
+                                                <span th:case="*">—</span>
+                                            </div>
+                                            <div class="small text-muted" th:text="${diemDonTen}">Hà Nội</div>
                                         </div>
                                     </div>
                                     <div class="text-end mt-2">
@@ -184,7 +224,7 @@
                                 <!-- Tổng giá vé -->
                                 <div class="p-4 bg-light">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold fs-6">TỔNG GIÁ VÉ MÁY BAY</span>
+                                        <span class="fw-bold fs-6" th:text="${T(edu.bookingtour.util.TransportUi).totalTicketPriceLabel(transportKind)}">TỔNG GIÁ VÉ</span>
                                         <span class="text-danger fw-bold fs-4"
                                             th:text="${#numbers.formatDecimal(selectedNkh.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' VND'"></span>
                                     </div>
@@ -255,26 +295,37 @@
 
                     <h3 class="h5 fw-bold text-center mt-4 mb-3">THÔNG TIN THÊM VỀ CHUYẾN ĐI</h3>
                     <div class="row text-center border-bottom pb-3 mb-3 g-2">
+                        <!-- Điểm khởi hành -->
+                        <div class="col-6 col-lg-3">
+                            <div class="info-card h-100">
+                                <i class="bi bi-pin-map fs-3" style="color:#ffc107;"></i>
+                                <p class="mb-1 fw-bold small mt-1">Điểm khởi hành</p>
+                                <p class="small text-muted mb-0" th:text="${diemDonTen}">Hà Nội</p>
+                            </div>
+                        </div>
                         <!-- Điểm tham quan -->
-                        <div class="col-4">
+                        <div class="col-6 col-lg-3">
                             <div class="info-card" onclick="showWeather(this)" th:data-location="${id.idDiemDen != null ? id.idDiemDen.thanhPho : id.moTa}">
                                 <i class="bi bi-geo-alt fs-3" style="color:#ffc107;"></i>
                                 <p class="mb-1 fw-bold small mt-1">Điểm tham quan</p>
-                                <p class="small text-muted mb-0" th:text="${id.moTa}"></p>
+                                <p class="small fw-semibold text-dark mb-0" th:text="${diemDenLabel}"></p>
+                                <p class="small text-muted mb-0" th:if="${id.moTa != null and !#strings.isEmpty(id.moTa)}" th:text="${id.moTa}"></p>
                                 <span class="info-card-hint"><i class="bi bi-cloud-sun me-1"></i>Xem thời tiết</span>
                             </div>
                         </div>
                         <!-- Phương Tiện -->
-                        <div class="col-4">
-                            <div class="info-card" onclick="showTransportModal(this)" th:data-transport="${id.idPhuongTien.loai}">
-                                <i id="transportIcon" class="bi bi-airplane fs-3" style="color:#ffc107;"></i>
+                        <div class="col-6 col-lg-3">
+                            <div class="info-card" onclick="showTransportModal(this)"
+                                 th:data-transport="${id.idPhuongTien.loai}"
+                                 th:data-transport-kind="${transportKind}">
+                                <i id="transportIcon" th:class="'bi ' + ${transportIcon} + ' fs-3'" style="color:#ffc107;"></i>
                                 <p class="mb-1 fw-bold small mt-1">Phương Tiện</p>
                                 <p class="small text-muted mb-0" th:text="${id.idPhuongTien.loai}"></p>
                                 <span class="info-card-hint"><i class="bi bi-info-circle me-1"></i>Xem lưu ý</span>
                             </div>
                         </div>
                         <!-- Đối tượng -->
-                        <div class="col-4">
+                        <div class="col-6 col-lg-3">
                             <div class="info-card" onclick="showAudienceModal()">
                                 <i class="bi bi-people fs-3" style="color:#ffc107;"></i>
                                 <p class="mb-1 fw-bold small mt-1">Đối tượng thích hợp</p>
@@ -447,6 +498,10 @@
                 <div class="col-lg-4">
                     <div class="card border-0 shadow-sm p-3 sticky-price-box">
                         <div class="card-body">
+                            <p class="small text-muted mb-3 pb-3 border-bottom">
+                                <i class="bi bi-pin-map me-1"></i> Điểm khởi hành:
+                                <strong th:text="${diemDonTen}">Hà Nội</strong>
+                            </p>
                             <p class="mb-0 text-secondary small">Giá từ:</p>
 
                             <!-- Khi chưa chọn ngày: chỉ hiện giá tour -->
@@ -475,7 +530,7 @@
                                         th:text="${#numbers.formatDecimal(id.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></strong>
                                 </div>
                                 <div class="small text-muted mb-3">
-                                    <span>Vé máy bay: </span>
+                                    <span th:text="${T(edu.bookingtour.util.TransportUi).ticketLabel(transportKind) + ': '}">Vé: </span>
                                     <strong
                                         th:text="${#numbers.formatDecimal(price, 0, 'COMMA', 0, 'POINT')} + ' VND'"></strong>
                                 </div>
@@ -489,14 +544,16 @@
                                         th:text="${selectedNkh.ngayVe != null ? #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></strong>
                                 </p>
                                 <p class="small text-muted mb-2">
-                                    <i class="bi bi-airplane me-1"></i> CB đi:
+                                    <i th:class="'bi ' + ${transportIcon} + ' me-1'"></i>
+                                    <span th:text="${T(edu.bookingtour.util.TransportUi).outboundTripLabel(transportKind) + ':'}">Chuyến đi:</span>
                                     <strong th:text="${selectedNkh.maChuyenBayDi ?: 'N/A'}"></strong>
                                     (<span th:text="${selectedNkh.gioBayDi ?: ''}"></span> → <span
                                         th:text="${selectedNkh.gioDenDi ?: ''}"></span>)
                                 </p>
                                 <p class="small text-muted mb-3">
-                                    <i class="bi bi-airplane me-1"
-                                        style="transform: scaleX(-1); display:inline-block;"></i> CB về:
+                                    <i th:class="'bi ' + ${transportIcon} + ' me-1'"
+                                        th:style="${transportKind == 'plane'} ? 'transform: scaleX(-1); display:inline-block;' : null"></i>
+                                    <span th:text="${T(edu.bookingtour.util.TransportUi).returnTripLabel(transportKind) + ':'}">Chuyến về:</span>
                                     <strong th:text="${selectedNkh.maChuyenBayVe ?: 'N/A'}"></strong>
                                     (<span th:text="${selectedNkh.gioBayVe ?: ''}"></span> → <span
                                         th:text="${selectedNkh.gioDenVe ?: ''}"></span>)
@@ -590,6 +647,7 @@
             function showTransportModal(el) {
                 const type = (el ? el.getAttribute('data-transport') : '') || '';
                 const t = type.toLowerCase();
+                let key = el ? el.getAttribute('data-transport-kind') : null;
 
                 const data = {
                     plane: {
@@ -638,11 +696,13 @@
                     }
                 };
 
-                let key = 'plane';
-                if (t.includes('bus') || t.includes('xe')) key = 'bus';
-                else if (t.includes('train') || t.includes('tàu hỏa') || t.includes('tau')) key = 'train';
-                else if (t.includes('ship') || t.includes('boat') || t.includes('phà') || t.includes('thủy')) key = 'ship';
-                else if (t.includes('plane') || t.includes('flight') || t.includes('máy bay')) key = 'plane';
+                if (!key) {
+                    key = 'plane';
+                    if (t.includes('bus') || t.includes('xe')) key = 'bus';
+                    else if (t.includes('train') || t.includes('tàu hỏa') || t.includes('tau')) key = 'train';
+                    else if (t.includes('ship') || t.includes('ferry') || t.includes('boat') || t.includes('phà') || t.includes('thủy')) key = 'ship';
+                    else if (t.includes('plane') || t.includes('flight') || t.includes('máy bay')) key = 'plane';
+                }
 
                 const info = data[key];
                 document.getElementById('transportModalTitle').innerHTML =

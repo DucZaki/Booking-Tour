@@ -85,6 +85,9 @@ public class ChuyenDiController {
             return "redirect:/tour";
         }
 
+        // Ensure departure options are consistent for templates that rely on idDiemDon.
+        tourService.normalizeTourDepartureOptions(chuyenDi);
+
         // Lấy ngày khởi hành do admin đã set cho tháng hiện tại
         List<NgayKhoiHanh> departureDates = ngayKhoiHanhService.getDepartureDates(id, viewMonth, viewYear);
 
@@ -160,6 +163,14 @@ public class ChuyenDiController {
         model.addAttribute("nkh", nkh);
         model.addAttribute("tongGia", tongGia);
         model.addAttribute("principal", principal);
+
+        // Departure options (admin-configurable). Default to the first option.
+        tourService.normalizeTourDepartureOptions(chuyenDi);
+        java.util.List<DiemDon> departureOptions = new java.util.ArrayList<>(chuyenDi.getDiemDons());
+        departureOptions.sort(java.util.Comparator.comparing(DiemDon::getId));
+        model.addAttribute("departureOptions", departureOptions);
+        model.addAttribute("selectedDepartureId",
+                departureOptions.isEmpty() ? null : departureOptions.get(0).getId());
 
         // Tự điền thông tin user nếu đã đăng nhập
         if (principal != null) {

@@ -26,6 +26,11 @@ public class DatCho {
     @JoinColumn(name = "id_chuyen_di")
     private ChuyenDi idChuyenDi;
 
+    // Selected departure point for this booking (may differ per tour options)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_diem_don")
+    private DiemDon idDiemDon;
+
     @Column(name = "so_luong")
     private Integer soLuong;
 

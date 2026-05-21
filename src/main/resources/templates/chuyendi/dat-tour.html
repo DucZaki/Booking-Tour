@@ -9,7 +9,10 @@
 
 <body>
     <th:block th:fragment="content">
-        <div class="container pt-5" style="margin-top: 30px;">
+        <div class="container pt-5" style="margin-top: 30px;"
+             th:with="transportKind=${T(edu.bookingtour.util.TransportUi).kind(tour.idPhuongTien)},
+                      transportIcon=${T(edu.bookingtour.util.TransportUi).icon(transportKind)},
+                      transportIconTimeline=${T(edu.bookingtour.util.TransportUi).iconTimeline(transportKind)}">
             <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb small">
                     <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
@@ -23,48 +26,63 @@
             <div class="row">
                 <!-- Form bên trái -->
                 <div class="col-lg-8">
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-primary text-white py-3">
-                            <h5 class="mb-0 fw-bold"><i class="bi bi-person-lines-fill me-2"></i>THÔNG TIN LIÊN LẠC</h5>
+                    <div class="card shadow-sm border-0 mb-4 card--static booking-card">
+                        <div class="card-header booking-card-header">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="booking-card-icon"><i class="bi bi-person-lines-fill"></i></span>
+                                    <div>
+                                        <div class="booking-card-title">Thông tin liên lạc</div>
+                                        <div class="booking-card-subtitle">Dùng để xác nhận đơn và gửi thông báo</div>
+                                    </div>
+                                </div>
+                                <span class="booking-card-badge">Bắt buộc: <span class="text-danger">*</span></span>
+                            </div>
                         </div>
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 booking-form">
                             <form th:action="@{/booking/submit}" method="post" id="bookingForm">
                                 <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <input type="hidden" name="tourId" th:value="${tour.id}">
                                 <input type="hidden" name="nkhId" th:value="${nkh.id}">
 
                                 <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Điểm xuất phát <span class="text-danger">*</span></label>
+                                        <select class="form-select" name="departureId" required>
+                                            <option th:each="dd : ${departureOptions}"
+                                                th:value="${dd.id}"
+                                                th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
+                                                th:text="${dd.ten}"></option>
+                                        </select>
+                                    </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Họ và tên <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
                                         <input type="text" name="hoTen" class="form-control"
                                             placeholder="Nhập họ và tên" th:value="${userHoTen}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Email <span
-                                                class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control" placeholder="Nhập email"
+                                        <label class="form-label">Email <span class="text-danger">*</span></label>
+                                        <input type="email" name="email" class="form-control" placeholder="yourname@gmail.com"
+                                            pattern="^[^\s@]+@gmail\.com$" title="Vui lòng nhập Gmail (@gmail.com)"
                                             th:value="${userEmail}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Số điện thoại <span
-                                                class="text-danger">*</span></label>
+                                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
                                         <input type="tel" name="soDienThoai" class="form-control"
                                             placeholder="Nhập số điện thoại" th:value="${userSoDienThoai}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label fw-bold">Số lượng khách <span
-                                                class="text-danger">*</span></label>
-                                        <input type="number" name="soLuong" class="form-control" value="1" min="1"
-                                            max="20" required id="soLuongInput">
+                                        <label class="form-label">Số lượng khách <span class="text-danger">*</span></label>
+                                        <input type="number" name="soLuong" class="form-control" value="1" min="1" max="20"
+                                            required id="soLuongInput">
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label fw-bold">Địa chỉ</label>
+                                        <label class="form-label">Địa chỉ</label>
                                         <input type="text" name="diaChi" class="form-control"
                                             placeholder="Nhập địa chỉ">
                                     </div>
                                     <div class="col-md-12">
-                                        <label class="form-label fw-bold">Ghi chú</label>
+                                        <label class="form-label">Ghi chú</label>
                                         <textarea name="ghiChu" class="form-control" rows="3"
                                             placeholder="Yêu cầu đặc biệt..."></textarea>
                                     </div>
@@ -73,72 +91,79 @@
                         </div>
                     </div>
 
-                    <!-- Thông tin chuyến bay -->
-                    <div class="card shadow-sm border-0 mb-4">
-                        <div class="card-header bg-info text-white py-3">
-                            <h5 class="mb-0 fw-bold"><i class="bi bi-airplane me-2"></i>THÔNG TIN CHUYẾN BAY</h5>
+                    <!-- Thông tin phương tiện -->
+                    <div class="card shadow-sm border-0 mb-4 card--static booking-card">
+                        <div class="card-header booking-card-header">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="booking-card-icon booking-card-icon--sky"><i th:class="'bi ' + ${transportIcon}"></i></span>
+                                <div>
+                                    <div class="booking-card-title" th:text="${T(edu.bookingtour.util.TransportUi).infoSectionTitle(transportKind)}">Thông tin chuyến bay</div>
+                                    <div class="booking-card-subtitle" th:text="${T(edu.bookingtour.util.TransportUi).infoSectionSubtitle(transportKind)}">Giờ bay và mã chuyến theo ngày bạn chọn</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body p-0">
+                        <div class="card-body p-0 booking-flight">
                             <!-- Chiều đi -->
-                            <div class="p-4 border-bottom">
-                                <div class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-success me-2 px-3 py-2">CHIỀU ĐI</span>
-                                    <span class="text-muted small"
-                                        th:text="'Ngày ' + ${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></span>
+                            <div class="booking-flight-leg border-bottom">
+                                <div class="booking-flight-leg-head">
+                                    <span class="booking-pill booking-pill--go">Chiều đi</span>
+                                    <span class="text-muted small" th:text="'Ngày ' + ${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></span>
+                                    <span class="ms-auto booking-price"
+                                        th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
                                 </div>
-                                <div class="row align-items-center">
-                                    <div class="col-md-3 text-center">
-                                        <div class="fs-3 fw-bold text-dark" th:text="${nkh.gioBayDi ?: 'N/A'}"></div>
-                                        <div class="small text-muted">HAN - Hà Nội</div>
+                                <div class="booking-flight-leg-body">
+                                    <div class="booking-flight-point">
+                                        <div class="booking-flight-time" th:text="${nkh.gioBayDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-place" id="flightFromGo"
+                                            th:text="${tour.idDiemDon != null ? tour.idDiemDon.ten : 'N/A'}">N/A</div>
                                     </div>
-                                    <div class="col-md-6 text-center">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <hr class="flex-grow-1">
-                                            <i class="bi bi-airplane-fill text-primary mx-3 fs-5"></i>
-                                            <hr class="flex-grow-1">
+                                    <div class="booking-flight-mid">
+                                        <div class="booking-flight-line">
+                                            <span class="dot"></span>
+                                            <span class="dash"></span>
+                                            <i th:class="'bi ' + ${transportIconTimeline}"></i>
+                                            <span class="dash"></span>
+                                            <span class="dot"></span>
                                         </div>
-                                        <div class="small text-muted" th:text="${nkh.maChuyenBayDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-code" th:text="${nkh.maChuyenBayDi ?: 'N/A'}"></div>
                                     </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="fs-3 fw-bold text-dark" th:text="${nkh.gioDenDi ?: 'N/A'}"></div>
-                                        <div class="small text-muted">SGN - TP.HCM</div>
+                                    <div class="booking-flight-point text-md-end">
+                                        <div class="booking-flight-time" th:text="${nkh.gioDenDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-place" id="flightToGo"
+                                            th:text="${tour.idDiemDen != null ? tour.idDiemDen.thanhPho : 'N/A'}">N/A</div>
                                     </div>
-                                </div>
-                                <div class="text-end mt-2">
-                                    <span class="text-danger fw-bold"
-                                        th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' VND' : 'N/A'}"></span>
                                 </div>
                             </div>
 
                             <!-- Chiều về -->
-                            <div class="p-4">
-                                <div class="d-flex align-items-center mb-3">
-                                    <span class="badge bg-warning text-dark me-2 px-3 py-2">CHIỀU VỀ</span>
-                                    <span class="text-muted small"
-                                        th:text="${nkh.ngayVe != null ? 'Ngày ' + #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : ''}"></span>
+                            <div class="booking-flight-leg">
+                                <div class="booking-flight-leg-head">
+                                    <span class="booking-pill booking-pill--back">Chiều về</span>
+                                    <span class="text-muted small" th:text="${nkh.ngayVe != null ? 'Ngày ' + #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : ''}"></span>
+                                    <span class="ms-auto booking-price"
+                                        th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
                                 </div>
-                                <div class="row align-items-center">
-                                    <div class="col-md-3 text-center">
-                                        <div class="fs-3 fw-bold text-dark" th:text="${nkh.gioBayVe ?: 'N/A'}"></div>
-                                        <div class="small text-muted">SGN - TP.HCM</div>
+                                <div class="booking-flight-leg-body">
+                                    <div class="booking-flight-point">
+                                        <div class="booking-flight-time" th:text="${nkh.gioBayVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-place" id="flightFromBack"
+                                            th:text="${tour.idDiemDen != null ? tour.idDiemDen.thanhPho : 'N/A'}">N/A</div>
                                     </div>
-                                    <div class="col-md-6 text-center">
-                                        <div class="d-flex align-items-center justify-content-center">
-                                            <hr class="flex-grow-1">
-                                            <i class="bi bi-airplane-fill text-primary mx-3 fs-5"
-                                                style="transform: scaleX(-1);"></i>
-                                            <hr class="flex-grow-1">
+                                    <div class="booking-flight-mid">
+                                        <div class="booking-flight-line">
+                                            <span class="dot"></span>
+                                            <span class="dash"></span>
+                                            <i th:class="'bi ' + ${transportIconTimeline}" th:style="${transportKind == 'plane'} ? 'transform: scaleX(-1);' : null"></i>
+                                            <span class="dash"></span>
+                                            <span class="dot"></span>
                                         </div>
-                                        <div class="small text-muted" th:text="${nkh.maChuyenBayVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-code" th:text="${nkh.maChuyenBayVe ?: 'N/A'}"></div>
                                     </div>
-                                    <div class="col-md-3 text-center">
-                                        <div class="fs-3 fw-bold text-dark" th:text="${nkh.gioDenVe ?: 'N/A'}"></div>
-                                        <div class="small text-muted">HAN - Hà Nội</div>
+                                    <div class="booking-flight-point text-md-end">
+                                        <div class="booking-flight-time" th:text="${nkh.gioDenVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-place" id="flightToBack"
+                                            th:text="${tour.idDiemDon != null ? tour.idDiemDon.ten : 'N/A'}">N/A</div>
                                     </div>
-                                </div>
-                                <div class="text-end mt-2">
-                                    <span class="text-danger fw-bold"
-                                        th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' VND' : 'N/A'}"></span>
                                 </div>
                             </div>
                         </div>
@@ -154,8 +179,8 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i> Điểm đón:</span>
-                                <strong class="small"
-                                    th:text="${tour.idDiemDon != null ? tour.idDiemDon.ten : 'Hà Nội'}"></strong>
+                                <strong class="small" id="sidebarDepartureText"
+                                    th:text="${departureOptions != null and !departureOptions.isEmpty() ? departureOptions.get(0).ten : (tour.idDiemDon != null ? tour.idDiemDon.ten : 'N/A')}"></strong>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted small"><i class="bi bi-calendar3 me-1"></i> Ngày đi:</span>
@@ -173,12 +198,12 @@
                                     th:text="${#numbers.formatDecimal(tour.gia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="small">Vé máy bay (đi):</span>
+                                <span class="small" th:text="${T(edu.bookingtour.util.TransportUi).ticketLabelOutbound(transportKind)}">Vé (đi):</span>
                                 <span class="small fw-bold"
                                     th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
-                                <span class="small">Vé máy bay (về):</span>
+                                <span class="small" th:text="${T(edu.bookingtour.util.TransportUi).ticketLabelReturn(transportKind)}">Vé (về):</span>
                                 <span class="small fw-bold"
                                     th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
                             </div>
@@ -227,6 +252,23 @@
 
         <script th:inline="javascript">
             (function () {
+                // Sync sidebar "Điểm đón" with selected departure.
+                var depSelect = document.querySelector('select[name="departureId"]');
+                var sidebarText = document.getElementById('sidebarDepartureText');
+                var flightFromGo = document.getElementById('flightFromGo');
+                var flightToBack = document.getElementById('flightToBack');
+                if (depSelect && sidebarText) {
+                    var sync = function () {
+                        var opt = depSelect.options[depSelect.selectedIndex];
+                        if (!opt) return;
+                        sidebarText.textContent = opt.textContent;
+                        if (flightFromGo) flightFromGo.textContent = opt.textContent;
+                        if (flightToBack) flightToBack.textContent = opt.textContent;
+                    };
+                    depSelect.addEventListener('change', sync);
+                    sync();
+                }
+
                 var tourId = /*[[${tour.id}]]*/ 0;
                 var nkhId = /*[[${nkh.id}]]*/ 0;
                 var unitPrice = parseFloat(document.getElementById('totalPrice').getAttribute('data-unit-price'));

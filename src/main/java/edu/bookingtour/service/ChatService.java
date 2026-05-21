@@ -33,6 +33,15 @@ public class ChatService {
             "gemini-1.5-flash-8b"
     );
 
+    private static final String CHAT_ERROR_USER =
+            "Xin lỗi, tôi đang gặp sự cố tạm thời. Bạn thử lại sau hoặc liên hệ hotline **+84 866147595** — [form liên hệ](/contact).";
+
+    private static final String CHAT_MAINTENANCE =
+            "Chatbot đang bảo trì. Vui lòng thử lại sau hoặc liên hệ hotline **+84 866147595**.";
+
+    private static final String CHAT_CONTENT_FILTER =
+            "Không thể trả lời do nội dung bị lọc. Hãy thử câu hỏi khác.";
+
     private final ObjectMapper mapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(15))
@@ -90,7 +99,7 @@ public class ChatService {
                 return ex.getUserMessage();
             } catch (Exception ex) {
                 log.error("Groq unexpected error", ex);
-                return "Lỗi kết nối Groq. Thử lại sau hoặc gọi **+84 866147595**.";
+                return CHAT_ERROR_USER;
             }
         }
 
@@ -105,12 +114,12 @@ public class ChatService {
                 return ex.getUserMessage();
             } catch (Exception ex) {
                 log.error("OpenRouter unexpected error", ex);
-                return "Lỗi kết nối OpenRouter. Thử lại sau hoặc gọi **+84 866147595**.";
+                return CHAT_ERROR_USER;
             }
         }
 
         if (geminiApiKey == null || geminiApiKey.isBlank()) {
-            return "Chatbot đang bảo trì (thiếu API Key). Cấu hình **GROQ_API_KEY**, **OPENROUTER_API_KEY** hoặc **GEMINI_API_KEY**. Hotline: **+84 866147595**.";
+            return CHAT_MAINTENANCE;
         }
 
         for (String model : GEMINI_MODELS) {
@@ -129,7 +138,7 @@ public class ChatService {
             }
         }
 
-        return "Tôi đang quá tải hoặc gặp sự cố kết nối AI. Thử lại sau, hoặc gọi **+84 866147595** / [/contact](/contact).";
+        return CHAT_ERROR_USER;
     }
 
     /** Groq & OpenRouter — OpenAI-compatible chat/completions */
@@ -173,19 +182,14 @@ public class ChatService {
         JsonNode root = mapper.readTree(body != null && !body.isBlank() ? body : "{}");
 
         if (statusCode == 429) {
-            throw new ChatApiException(429,
-                    provider + " quá tải (rate limit). Đợi 1–2 phút rồi thử lại.",
-                    true);
+            throw new ChatApiException(429, provider + " rate limit: " + body, true);
         }
         if (statusCode == 401 || statusCode == 403) {
-            String hint = "Groq".equals(provider)
-                    ? "Tạo key mới tại console.groq.com/keys (dạng gsk_...)."
-                    : "Tạo key mới tại openrouter.ai/keys.";
-            throw new ChatApiException(statusCode, provider + " API key không hợp lệ. " + hint, false);
+            throw new ChatApiException(statusCode, provider + " auth error: " + body, false);
         }
         if (statusCode >= 400) {
-            String msg = root.path("error").path("message").asText("Lỗi " + provider);
-            throw new ChatApiException(statusCode, msg, statusCode >= 500);
+            String apiMsg = root.path("error").path("message").asText("");
+            throw new ChatApiException(statusCode, provider + " HTTP " + statusCode + ": " + apiMsg, statusCode >= 500);
         }
 
         JsonNode choices = root.path("choices");
@@ -249,27 +253,22 @@ public class ChatService {
         JsonNode root = mapper.readTree(body != null && !body.isBlank() ? body : "{}");
 
         if (statusCode == 429) {
-            throw new ChatApiException(429,
-                    "Đã vượt giới hạn Gemini. Đợi 1–2 phút rồi thử lại.",
-                    true);
+            throw new ChatApiException(429, "Gemini rate limit: " + body, true);
         }
         if (statusCode == 401 || statusCode == 403) {
-            throw new ChatApiException(statusCode,
-                    "API Key Gemini không hợp lệ hoặc hết hạn. Tạo key mới tại Google AI Studio.",
-                    false);
+            throw new ChatApiException(statusCode, "Gemini auth error: " + body, false);
         }
         if (statusCode >= 400) {
-            String msg = root.path("error").path("message").asText("Lỗi kết nối Gemini");
-            throw new ChatApiException(statusCode, msg, statusCode == 404 || statusCode >= 500);
+            String apiMsg = root.path("error").path("message").asText("");
+            throw new ChatApiException(statusCode, "Gemini HTTP " + statusCode + ": " + apiMsg,
+                    statusCode == 404 || statusCode >= 500);
         }
 
         JsonNode candidates = root.path("candidates");
         if (!candidates.isArray() || candidates.isEmpty()) {
             String blockReason = root.path("promptFeedback").path("blockReason").asText("");
             if (!blockReason.isBlank()) {
-                throw new ChatApiException(400,
-                        "Không thể trả lời do nội dung bị lọc. Hãy thử câu hỏi khác.",
-                        false);
+                throw new ChatApiException(400, "Gemini content filter: " + blockReason, false, CHAT_CONTENT_FILTER);
             }
             return null;
         }
@@ -438,14 +437,18 @@ public class ChatService {
 
     private static final class ChatApiException extends Exception {
         private final int statusCode;
-        private final String userMessage;
         private final boolean retryable;
+        private final String userReply;
 
-        ChatApiException(int statusCode, String userMessage, boolean retryable) {
-            super(userMessage);
+        ChatApiException(int statusCode, String technicalMessage, boolean retryable) {
+            this(statusCode, technicalMessage, retryable, null);
+        }
+
+        ChatApiException(int statusCode, String technicalMessage, boolean retryable, String userReply) {
+            super(technicalMessage);
             this.statusCode = statusCode;
-            this.userMessage = userMessage;
             this.retryable = retryable;
+            this.userReply = userReply;
         }
 
         int getStatusCode() {
@@ -453,7 +456,7 @@ public class ChatService {
         }
 
         String getUserMessage() {
-            return userMessage;
+            return userReply != null ? userReply : CHAT_ERROR_USER;
         }
 
         boolean isRetryable() {
