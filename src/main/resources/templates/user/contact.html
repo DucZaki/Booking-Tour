@@ -1,62 +1,137 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="layout/layout :: layout(~{::section})">
 <section>
-    <div class="container py-5">
-        <div class="text-center m-4">
-            <h2 class="fw-bold text-primary">LIÊN HỆ</h2>
-            <p class="text-muted">Để có thể đáp ứng được các yêu cầu và đóng góp ý kiến của quý khách, xin vui lòng gửi thông tin hoặc gọi đến hotline các chi nhánh bên dưới để liên hệ một cách nhanh chóng</p>
+    <link rel="stylesheet" th:href="@{/css/contact.css(v=2)}">
+
+    <div class="contact-hero">
+        <div class="container">
+            <span class="contact-badge"><i class="bi bi-headset me-1"></i> Hỗ trợ 24/7</span>
+            <h1 class="contact-hero-title">Liên hệ <span class="brand-gradient">ZakiBooking</span></h1>
+            <p class="contact-hero-lead">Gửi yêu cầu tư vấn tour, hỗ trợ đơn hàng hoặc góp ý — đội ngũ phản hồi trong vòng 24 giờ làm việc.</p>
         </div>
-        <div th:if="${success}" class="alert alert-success rounded-3 shadow-sm border-0 d-flex">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill">
-                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 11.03a.75.75 0 0 0 1.08.022l3.992-4.99a.75.75 0 1 0-1.164-.94L7.477 9.417 5.384 7.323a.75.75 0 1 0-1.06 1.06l2.646 2.647z"></path>
-            </svg>
-            <div>
-                Gửi thông tin thành công!
-            </div>
-        </div>
-        <form th:action="@{/contact}" th:object="${contact}" method="post">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Họ tên *</label>
-                    <input type="text" class="form-control" th:field="*{name}" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Email *</label>
-                    <input type="email" class="form-control" th:field="*{email}" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Điện thoại</label>
-                    <input type="text" class="form-control" th:field="*{phone_number}">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Loại liên hệ</label>
-                    <select class="form-select" th:field="*{type}">
-                        <option value="TOUR">Du lịch</option>
-                        <option value="SUPPORT">Chăm sóc khách hàng</option>
-                        <option value="OTHER">Khác</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Địa chỉ</label>
-                    <input type="text" class="form-control" th:field="*{address}">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Số khách</label>
-                    <input type="number" class="form-control" th:field="*{guest_number}">
-                </div>
-                <div class="col-12">
-                    <label class="form-label">Tiêu đề *</label>
-                    <input type="text" class="form-control" th:field="*{tittle}" required>
-                </div>
-                <div class="col-12">
-                    <label class="form-label">Nội dung *</label>
-                    <textarea class="form-control" rows="5" th:field="*{content}" required></textarea>
-                </div>
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary rounded-pill px-4">Gửi ngay</button>
-                </div>
-            </div>
-        </form>
     </div>
+
+    <div class="container contact-main pb-5">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="contact-info-stack">
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-telephone-fill"></i></div>
+                        <div>
+                            <h3>Hotline</h3>
+                            <a href="tel:+84866147595">+84 866 147 595</a>
+                            <p class="text-muted small mb-0">8:00 – 22:00 hàng ngày</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-envelope-fill"></i></div>
+                        <div>
+                            <h3>Email</h3>
+                            <a href="mailto:minhd4360@gmail.com">minhd4360@gmail.com</a>
+                        </div>
+                    </div>
+                    <div class="contact-info-card">
+                        <div class="contact-info-icon"><i class="bi bi-geo-alt-fill"></i></div>
+                        <div>
+                            <h3>Văn phòng</h3>
+                            <p class="mb-0">TP. Hà Nội, Việt Nam</p>
+                        </div>
+                    </div>
+                    <div class="contact-info-card contact-info-ai">
+                        <div class="contact-info-icon"><i class="bi bi-robot"></i></div>
+                        <div>
+                            <h3>Trợ lý AI</h3>
+                            <p class="mb-2 small text-muted">Hỏi nhanh về tour, giá, lịch trình</p>
+                            <button type="button" class="btn btn-sm btn-dark rounded-pill" id="openChatFromContact">
+                                <i class="bi bi-chat-dots me-1"></i> Mở chatbot
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <div class="contact-form-card">
+                    <h2 class="h4 fw-bold mb-1">Gửi tin nhắn cho chúng tôi</h2>
+                    <p class="text-muted small mb-4">Các trường có dấu * là bắt buộc</p>
+
+                    <div th:if="${success}" class="alert alert-success border-0 rounded-4 d-flex align-items-center gap-2" role="alert">
+                        <i class="bi bi-check-circle-fill fs-5"></i>
+                        <span>Cảm ơn bạn! Chúng tôi đã nhận thông tin và sẽ phản hồi sớm.</span>
+                    </div>
+
+                    <form th:action="@{/contact}" th:object="${contact}" method="post" novalidate>
+                        <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Họ tên *</label>
+                                <input type="text" class="form-control contact-input" th:field="*{name}"
+                                       th:classappend="${#fields.hasErrors('name')} ? 'is-invalid' : ''"
+                                       placeholder="Nguyễn Văn A" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Email *</label>
+                                <input type="email" class="form-control contact-input" th:field="*{email}"
+                                       th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                                       placeholder="email@example.com" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Điện thoại</label>
+                                <input type="tel" class="form-control contact-input" th:field="*{phone_number}"
+                                       placeholder="09xx xxx xxx">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Loại liên hệ</label>
+                                <select class="form-select contact-input" th:field="*{type}">
+                                    <option value="TOUR">Tư vấn tour</option>
+                                    <option value="SUPPORT">Hỗ trợ đơn hàng</option>
+                                    <option value="OTHER">Khác</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Địa chỉ</label>
+                                <input type="text" class="form-control contact-input" th:field="*{address}"
+                                       placeholder="Tỉnh / thành phố">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Số khách dự kiến</label>
+                                <input type="number" min="1" class="form-control contact-input" th:field="*{guest_number}"
+                                       placeholder="2">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Tiêu đề *</label>
+                                <input type="text" class="form-control contact-input" th:field="*{tittle}"
+                                       th:classappend="${#fields.hasErrors('tittle')} ? 'is-invalid' : ''"
+                                       placeholder="VD: Tư vấn tour Phú Quốc 3 ngày 2 đêm" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tittle')}" th:errors="*{tittle}"></div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Nội dung *</label>
+                                <textarea class="form-control contact-input" rows="5" th:field="*{content}"
+                                          th:classappend="${#fields.hasErrors('content')} ? 'is-invalid' : ''"
+                                          placeholder="Mô tả nhu cầu, ngày dự kiến, ngân sách..." required></textarea>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                            </div>
+                            <div class="col-12 d-flex flex-wrap gap-2 justify-content-between align-items-center pt-2">
+                                <span class="text-muted small"><i class="bi bi-shield-check me-1"></i> Thông tin được bảo mật</span>
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 py-2 fw-bold">
+                                    <i class="bi bi-send-fill me-1"></i> Gửi ngay
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('openChatFromContact')?.addEventListener('click', function () {
+            document.getElementById('chatbotTrigger')?.click();
+        });
+    </script>
 </section>
 </html>

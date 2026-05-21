@@ -337,6 +337,8 @@
             </div>
         </div>
 
+        <link rel="stylesheet" th:href="@{/css/itinerary.css(v=1)}">
+
         <!-- Modal Lịch trình chi tiết -->
         <div class="modal fade" id="itineraryModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -376,7 +378,7 @@
                             </div>
 
                             <h6 class="fw-bold mb-3">Hành trình chi tiết</h6>
-                            <div id="itineraryTimeline" class="itinerary-timeline ms-2">
+                            <div id="itineraryTimeline" class="itinerary-timeline-v2">
                                 <!-- Timeline items will be injected here -->
                             </div>
                         </div>
@@ -386,47 +388,7 @@
         </div>
 
         <style>
-            .itinerary-timeline {
-                border-left: 2px solid #e9ecef;
-                padding-left: 1.5rem;
-                position: relative;
-            }
-            .timeline-item {
-                position: relative;
-                margin-bottom: 1.5rem;
-            }
-            .timeline-item::before {
-                content: '';
-                position: absolute;
-                left: -1.5rem;
-                top: 0;
-                width: 0.8rem;
-                height: 0.8rem;
-                background-color: var(--bs-primary);
-                border-radius: 50%;
-                transform: translateX(-50%);
-                border: 2px solid #fff;
-            }
-            .timeline-day {
-                font-size: 0.8rem;
-                font-weight: bold;
-                color: var(--bs-primary);
-                text-transform: uppercase;
-                margin-bottom: 0.2rem;
-            }
-            .timeline-title {
-                font-weight: bold;
-                margin-bottom: 0.3rem;
-            }
-            .timeline-body {
-                font-size: 0.9rem;
-                color: #6c757d;
-            }
-            .timeline-footer {
-                font-size: 0.8rem;
-                color: #adb5bd;
-                margin-top: 0.3rem;
-            }
+            /* Bổ sung cho modal đơn hàng — timeline dùng itinerary.css */
         </style>
 
         <script>
@@ -464,6 +426,12 @@
                 modal.show();
             }
 
+            function escapeItineraryHtml(text) {
+                const d = document.createElement('div');
+                d.textContent = text || '';
+                return d.innerHTML;
+            }
+
             async function showItinerary(btn) {
                 const tourId = btn.dataset.tourId;
                 const modal = new bootstrap.Modal(document.getElementById('itineraryModal'));
@@ -496,18 +464,30 @@
                     // Build timeline
                     timeline.innerHTML = '';
                     if (data.itinerary && data.itinerary.length > 0) {
-                        data.itinerary.sort((a,b) => a.ngayThu - b.ngayThu).forEach(item => {
+                        data.itinerary.sort((a, b) => a.ngayThu - b.ngayThu).forEach(item => {
+                            const lines = (item.noiDung || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                            const mainAct = item.hoatDongChinh || (lines.length ? lines[0] : '');
+                            const imgSrc = item.hinhAnh || '';
+                            const bullets = lines.map(l => `<li>${escapeItineraryHtml(l)}</li>`).join('');
                             const div = document.createElement('div');
-                            div.className = 'timeline-item';
+                            div.className = 'itinerary-day-block';
                             div.innerHTML = `
-                                <div class="timeline-day">Ngày ${item.ngayThu}</div>
-                                <div class="timeline-title">${item.tieuDe}</div>
-                                <div class="timeline-body">${item.noiDung}</div>
-                                <div class="timeline-footer">
-                                    ${item.soBuaAn ? `<i class="bi bi-cup-hot me-1"></i> Bữa ăn: ${item.soBuaAn}` : ''}
-                                    ${item.nghiDem ? `<span class="mx-2">|</span><i class="bi bi-moon-stars me-1"></i> Nghỉ đêm: ${item.nghiDem}` : ''}
-                                </div>
-                            `;
+                                <div class="itinerary-pin"><i class="bi bi-geo-alt-fill"></i></div>
+                                <div class="itinerary-card">
+                                    <div class="itinerary-card-header">
+                                        <div class="itinerary-card-header-text">
+                                            <div class="itinerary-day-label">Ngày ${item.ngayThu}</div>
+                                            <div class="itinerary-route">${escapeItineraryHtml(item.tieuDe || '')}</div>
+                                            ${item.soBuaAn ? `<div class="itinerary-meals"><i class="bi bi-cup-hot me-1"></i>${escapeItineraryHtml(item.soBuaAn)}</div>` : ''}
+                                        </div>
+                                        ${imgSrc ? `<img class="itinerary-day-img" src="${escapeItineraryHtml(imgSrc)}" alt="">` : ''}
+                                    </div>
+                                    <div class="itinerary-card-body">
+                                        ${mainAct ? `<p class="itinerary-main-activity"><strong>Hoạt động chính:</strong> ${escapeItineraryHtml(mainAct)}</p>` : ''}
+                                        ${bullets ? `<ul class="itinerary-activity-list">${bullets}</ul>` : ''}
+                                        ${item.nghiDem ? `<p class="itinerary-sleep"><i class="bi bi-moon-stars me-1"></i>Nghỉ đêm tại ${escapeItineraryHtml(item.nghiDem)}</p>` : ''}
+                                    </div>
+                                </div>`;
                             timeline.appendChild(div);
                         });
                     } else {

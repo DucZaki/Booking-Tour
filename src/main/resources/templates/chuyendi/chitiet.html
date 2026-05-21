@@ -65,23 +65,31 @@
                                     <div class="day-label text-danger">CN</div>
 
                                     <th:block th:each="day : ${calendar}">
-                                        <!-- Ngày khởi hành (có chuyến đi) -->
+                                        <!-- Ngày khởi hành (admin đã tạo) -->
                                         <a th:if="${day.hasDeparture and !day.isPast and day.isCurrentMonth}"
                                             th:href="@{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
                                             class="calendar-day text-decoration-none departure-day"
-                                            th:classappend="${day.isSelected ? ' active-day' : ''}">
+                                            th:classappend="${day.isSelected ? ' active-day' : ''}"
+                                            th:attr="data-date=${day.date}, title='Ngày khởi hành - bấm để chọn'">
+                                            <span class="departure-dot" aria-hidden="true"></span>
                                             <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
+                                            <span class="departure-tag">Khởi hành</span>
                                             <span class="price-sub" th:if="${day.flightPrice > 0}"
                                                 th:text="${#numbers.formatDecimal(day.flightPrice/1000, 0, 'POINT', 0, 'POINT')} + 'K'">
                                             </span>
                                         </a>
-                                        <!-- Ngày bình thường (không có chuyến đi) -->
+                                        <!-- Ngày bình thường -->
                                         <div th:if="${!day.hasDeparture or day.isPast or !day.isCurrentMonth}"
-                                            class="calendar-day text-dark"
+                                            class="calendar-day"
                                             th:classappend="${!day.isCurrentMonth ? ' other-month' : ''} + ${day.isPast ? ' disabled-day' : ''}">
                                             <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
                                         </div>
                                     </th:block>
+                                </div>
+
+                                <div class="calendar-legend mt-3 d-flex flex-wrap justify-content-center gap-3 small">
+                                    <span class="legend-item"><span class="legend-swatch departure-swatch"></span> Ngày có chuyến khởi hành</span>
+                                    <span class="legend-item"><span class="legend-swatch active-swatch"></span> Ngày bạn đang chọn</span>
                                 </div>
 
                                 <p class="text-center text-danger mt-4 small italic">
@@ -350,38 +358,83 @@
                         </div>
                     </div>
 
-                    <h3 class="h5 fw-bold text-center mb-4">LỊCH TRÌNH</h3>
+                    <link rel="stylesheet" th:href="@{/css/itinerary.css(v=1)}">
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                        <h3 class="h5 fw-bold mb-0">LỊCH TRÌNH</h3>
+                        <button type="button" class="btn btn-primary btn-view-itinerary"
+                                th:if="${!#lists.isEmpty(lichTrinhs)}"
+                                data-bs-toggle="modal" data-bs-target="#itineraryModal">
+                            <i class="bi bi-map me-1"></i> Xem lịch trình chi tiết
+                        </button>
+                    </div>
+
                     <div th:if="${#lists.isEmpty(lichTrinhs)}"
                          class="text-center py-5 schedule-empty">
                         <i class="bi bi-calendar-x fs-1 mb-3"></i>
                         <p class="mb-0">Tạm thời chưa có lịch trình cho chuyến đi này</p>
                     </div>
 
-                    <div class="accordion" id="tourSchedule" th:if="${!#lists.isEmpty(lichTrinhs)}">
-                        <div class="accordion-item schedule-item" th:each="lich,iter : ${lichTrinhs}">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" th:attr="data-bs-target='#day' + ${lich.ngayThu}">
-                                    <div class="w-100">
-                                        <div class="fw-bold">
-                                            Ngày [[${lich.ngayThu}]]: [[${lich.tieuDe}]]
-                                        </div>
-                                        <div class="small schedule-meal mt-1">
-                                            <i class="bi bi-cup-hot me-1"></i>
-                                            [[${lich.soBuaAn}]]
-                                        </div>
+                    <div th:if="${!#lists.isEmpty(lichTrinhs)}">
+                        <p class="text-muted small mb-3">
+                            Tour <strong th:text="${#lists.size(lichTrinhs)} + ' ngày'"></strong>
+                            · Bấm nút bên trên để xem đầy đủ hành trình
+                        </p>
+                        <div class="itinerary-preview">
+                            <div class="itinerary-preview-item" th:each="lich, iter : ${lichTrinhs}" th:if="${iter.index < 3}">
+                                <div class="itinerary-preview-day">
+                                    <span>Ngày</span>
+                                    <span th:text="${lich.ngayThu}"></span>
+                                </div>
+                                <div class="itinerary-preview-text">
+                                    <div class="route" th:text="${lich.tieuDe}"></div>
+                                    <div class="meals" th:if="${lich.soBuaAn}">
+                                        <i class="bi bi-cup-hot me-1"></i><span th:text="${lich.soBuaAn}"></span>
                                     </div>
-                                </button>
-                            </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <div class="accordion-collapse collapse"
-                                 th:id="'day' + ${lich.ngayThu}">
-                                <div class="accordion-body">
-                                    <div class="schedule-line">
-                                        <div class="schedule-content">
-                                            <p th:text="${lich.noiDung}"></p>
-                                            <p class="fw-bold mt-3">
-                                                Nghỉ đêm tại [[${lich.nghiDem}]]
-                                            </p>
+                    <!-- Modal lịch trình -->
+                    <div class="modal fade" id="itineraryModal" tabindex="-1" aria-labelledby="itineraryModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content border-0 rounded-4 shadow-lg">
+                                <div class="modal-header border-0 pb-0">
+                                    <h5 class="modal-title fw-bold" id="itineraryModalLabel">Lịch trình</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                </div>
+                                <div class="modal-body pt-2 pb-4">
+                                    <div class="itinerary-timeline-v2">
+                                        <div class="itinerary-day-block" th:each="lich : ${lichTrinhs}">
+                                            <div class="itinerary-pin"><i class="bi bi-geo-alt-fill"></i></div>
+                                            <div class="itinerary-card">
+                                                <div class="itinerary-card-header">
+                                                    <div class="itinerary-card-header-text">
+                                                        <div class="itinerary-day-label" th:text="'Ngày ' + ${lich.ngayThu}"></div>
+                                                        <div class="itinerary-route" th:text="${lich.tieuDe}"></div>
+                                                        <div class="itinerary-meals" th:if="${lich.soBuaAn}">
+                                                            <i class="bi bi-cup-hot me-1"></i>
+                                                            <span th:text="${lich.soBuaAn}"></span>
+                                                        </div>
+                                                    </div>
+                                                    <img class="itinerary-day-img" alt=""
+                                                         th:src="${lich.hinhAnh != null and !lich.hinhAnh.isBlank() ? lich.hinhAnh : id.hinhAnh}">
+                                                </div>
+                                                <div class="itinerary-card-body">
+                                                    <p class="itinerary-main-activity" th:if="${lich.resolvedHoatDongChinh != null}">
+                                                        <strong>Hoạt động chính:</strong>
+                                                        <span th:text="${lich.resolvedHoatDongChinh}"></span>
+                                                    </p>
+                                                    <ul class="itinerary-activity-list" th:if="${!#lists.isEmpty(lich.noiDungLines)}">
+                                                        <li th:each="line : ${lich.noiDungLines}" th:text="${line}"></li>
+                                                    </ul>
+                                                    <p class="itinerary-sleep" th:if="${lich.nghiDem != null and !lich.nghiDem.isBlank()}">
+                                                        <i class="bi bi-moon-stars me-1"></i>
+                                                        Nghỉ đêm tại <span th:text="${lich.nghiDem}"></span>
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -610,6 +663,11 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const locationEl = document.querySelector('[data-location]');
                 if (locationEl) showWeather(locationEl);
+
+                var activeDay = document.querySelector('.departure-day.active-day');
+                if (activeDay) {
+                    activeDay.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
             });
 
             function getWeatherIcon(code) {
@@ -664,35 +722,6 @@
                 background: #fff3cd;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 10px rgba(255,193,7,0.3);
-            }
-            .departure-day {
-                background-color: #fff3cd !important;
-                border: 2px solid #ffc107 !important;
-                color: #856404 !important;
-                font-weight: bold;
-                cursor: pointer;
-                transition: all 0.2s ease;
-            }
-
-            .departure-day:hover {
-                background-color: #ffc107 !important;
-                color: #fff !important;
-                transform: scale(1.05);
-            }
-
-            .departure-day.active-day {
-                background-color: #ffc107 !important;
-                color: #fff !important;
-                box-shadow: 0 2px 8px rgba(255, 193, 7, 0.5);
-            }
-
-            .departure-day .price-sub {
-                font-size: 0.6rem;
-                color: #dc3545;
-                font-weight: bold;
-                display: block;
-                line-height: 1;
-                margin-top: 2px;
             }
             .schedule-item {
                 border: none;

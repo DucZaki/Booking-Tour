@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head th:replace="~{layout/admin_layout :: head(${promo.id != null ? 'Sửa mã' : 'Thêm mã'})}"></head>
+<body>
+<header th:replace="~{layout/admin_layout :: header()}"></header>
+<div class="d-flex">
+    <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
+    <main class="flex-grow-1 p-4">
+        <h2 class="fw-bold mb-4" th:text="${promo.id != null ? 'Sửa mã giảm giá' : 'Thêm mã giảm giá'}"></h2>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <form th:action="@{/admin/promo/save}" th:object="${promo}" method="post" class="card border-0 shadow-sm rounded-4 p-4">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Mã *</label>
+                    <input class="form-control" th:field="*{ma}" required placeholder="VD: SUMMER25">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Loại giảm *</label>
+                    <select class="form-select" th:field="*{loaiGiam}" id="loaiGiam">
+                        <option value="PERCENT">Phần trăm (%)</option>
+                        <option value="FIXED">Số tiền cố định (VND)</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Giá trị *</label>
+                    <input type="number" min="0" step="1" class="form-control" th:field="*{giaTriGiam}" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Mô tả</label>
+                    <input class="form-control" th:field="*{moTa}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Giá tour tối thiểu / khách (VND)</label>
+                    <input type="number" min="0" step="1000" class="form-control" th:field="*{giaToiThieu}" placeholder="Để trống = không giới hạn">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Từ ngày</label>
+                    <input type="date" class="form-control" th:field="*{ngayBatDau}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Đến ngày</label>
+                    <input type="date" class="form-control" th:field="*{ngayKetThuc}">
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <label class="form-label fw-bold">Áp dụng cho tour</label>
+            <div class="mb-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="applyScope" id="scopeAll" value="ALL"
+                           th:checked="${promo.apDungTatCa}">
+                    <label class="form-check-label" for="scopeAll">Tất cả tour</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="applyScope" id="scopePick" value="PICK"
+                           th:checked="${!promo.apDungTatCa}">
+                    <label class="form-check-label" for="scopePick">Chọn tour cụ thể</label>
+                </div>
+            </div>
+            <div id="tourPicker" class="row g-2" style="max-height:280px;overflow-y:auto">
+                <div class="col-md-6" th:each="t : ${allTours}">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="tourIds" th:value="${t.id}"
+                               th:checked="${promo.tourIds != null and promo.tourIds.contains(t.id)}">
+                        <label class="form-check-label small" th:text="'#' + ${t.id} + ' - ' + ${t.tieuDe}"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary px-4">Lưu</button>
+                <a th:href="@{/admin/promo}" class="btn btn-outline-secondary ms-2">Hủy</a>
+            </div>
+        </form>
+    </main>
+</div>
+<footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+</body>
+</html>

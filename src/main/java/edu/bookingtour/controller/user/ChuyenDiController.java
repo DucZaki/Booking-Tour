@@ -39,7 +39,11 @@ public class ChuyenDiController {
         model.addAttribute("diemDenSelected", diemDen);
         model.addAttribute("khoangGiaSelected", khoangGia);
         model.addAttribute("sortSelected", sort);
+        model.addAttribute("ngayDiSelected", ngayDi);
+        model.addAttribute("thanhPhoSelected", thanhPho);
+        model.addAttribute("quocGiaSelected", quocGia);
         model.addAttribute("page", page);
+        model.addAttribute("size", size);
         model.addAttribute("perPage", size);
         model.addAttribute("totalPage", dschuyendi.getTotalPages());
         return "chuyendi/tour";

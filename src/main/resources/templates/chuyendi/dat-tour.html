@@ -29,6 +29,7 @@
                         </div>
                         <div class="card-body p-4">
                             <form th:action="@{/booking/submit}" method="post" id="bookingForm">
+                                <input type="hidden" th:if="${_csrf}" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                 <input type="hidden" name="tourId" th:value="${tour.id}">
                                 <input type="hidden" name="nkhId" th:value="${nkh.id}">
 
@@ -182,6 +183,20 @@
                                     th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
                             </div>
                             <hr>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold small">Mã giảm giá</label>
+                                <div class="input-group">
+                                    <input type="text" name="maGiamGia" id="maGiamGiaInput" class="form-control"
+                                           placeholder="Nhập mã (nếu có)" form="bookingForm">
+                                    <button type="button" class="btn btn-outline-primary" id="btnApplyPromo">Áp dụng</button>
+                                </div>
+                                <div id="promoMessage" class="small mt-1 text-muted"></div>
+                                <div th:if="${promoError}" class="small text-danger mt-1" th:text="${promoError}"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 d-none" id="discountLine">
+                                <span class="small text-success">Giảm giá:</span>
+                                <span class="small text-success fw-bold" id="discountAmount">0 ₫</span>
+                            </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span class="fw-bold">Giá/khách:</span>
                                 <span class="text-danger fw-bold"
@@ -210,14 +225,66 @@
             </div>
         </div>
 
-        <script>
-            // Cập nhật tổng giá khi thay đổi số lượng khách
-            document.getElementById('soLuongInput').addEventListener('change', function () {
+        <script th:inline="javascript">
+            (function () {
+                var tourId = /*[[${tour.id}]]*/ 0;
+                var nkhId = /*[[${nkh.id}]]*/ 0;
                 var unitPrice = parseFloat(document.getElementById('totalPrice').getAttribute('data-unit-price'));
-                var soLuong = parseInt(this.value) || 1;
-                var total = unitPrice * soLuong;
-                document.getElementById('totalPrice').textContent = total.toLocaleString('vi-VN') + ' ₫';
-            });
+                var appliedDiscount = 0;
+
+                function formatVnd(n) {
+                    return Math.round(n).toLocaleString('vi-VN') + ' ₫';
+                }
+
+                function recalcTotal() {
+                    var soLuong = parseInt(document.getElementById('soLuongInput').value) || 1;
+                    var subtotal = unitPrice * soLuong;
+                    var total = Math.max(0, subtotal - appliedDiscount);
+                    document.getElementById('totalPrice').textContent = formatVnd(total);
+                    document.getElementById('totalPrice').setAttribute('data-subtotal', subtotal);
+                }
+
+                document.getElementById('soLuongInput').addEventListener('change', function () {
+                    appliedDiscount = 0;
+                    document.getElementById('discountLine').classList.add('d-none');
+                    document.getElementById('promoMessage').textContent = '';
+                    recalcTotal();
+                });
+
+                document.getElementById('btnApplyPromo').addEventListener('click', function () {
+                    var ma = document.getElementById('maGiamGiaInput').value.trim();
+                    var soLuong = parseInt(document.getElementById('soLuongInput').value) || 1;
+                    var msg = document.getElementById('promoMessage');
+                    if (!ma) {
+                        msg.textContent = 'Vui lòng nhập mã';
+                        msg.className = 'small mt-1 text-danger';
+                        return;
+                    }
+                    fetch('/api/promo/validate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ ma: ma, tourId: tourId, nkhId: nkhId, soLuong: soLuong })
+                    }).then(function (r) { return r.json(); }).then(function (data) {
+                        if (data.valid) {
+                            appliedDiscount = data.discount;
+                            document.getElementById('discountLine').classList.remove('d-none');
+                            document.getElementById('discountAmount').textContent = '-' + formatVnd(data.discount);
+                            document.getElementById('totalPrice').textContent = formatVnd(data.total);
+                            msg.textContent = data.message || 'Áp dụng mã thành công';
+                            msg.className = 'small mt-1 text-success';
+                        } else {
+                            appliedDiscount = 0;
+                            document.getElementById('discountLine').classList.add('d-none');
+                            recalcTotal();
+                            msg.textContent = data.message || 'Mã không hợp lệ';
+                            msg.className = 'small mt-1 text-danger';
+                        }
+                    }).catch(function () {
+                        msg.textContent = 'Không kiểm tra được mã. Thử lại.';
+                        msg.className = 'small mt-1 text-danger';
+                    });
+                });
+            })();
         </script>
     </th:block>
 </body>

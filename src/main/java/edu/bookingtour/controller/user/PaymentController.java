@@ -5,7 +5,9 @@ import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
+import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.service.DatChoService;
+import edu.bookingtour.service.MaGiamGiaService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
@@ -16,14 +18,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -46,6 +47,9 @@ public class PaymentController {
     @Autowired
     private VNPayConfig vnPayConfig;
 
+    @Autowired
+    private MaGiamGiaService maGiamGiaService;
+
     @PostMapping("/booking/submit")
     public String submitBooking(
             @RequestParam Integer tourId,
@@ -56,8 +60,10 @@ public class PaymentController {
             @RequestParam Integer soLuong,
             @RequestParam(required = false) String diaChi,
             @RequestParam(required = false) String ghiChu,
+            @RequestParam(required = false) String maGiamGia,
             Principal principal,
-            HttpServletRequest request) throws UnsupportedEncodingException {
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 
         ChuyenDi tour = tourService.findByIdd(tourId);
         NgayKhoiHanh nkh = ngayKhoiHanhService.findById(nkhId);
@@ -83,109 +89,110 @@ public class PaymentController {
         datCho.setDiaChi(diaChi);
         datCho.setGhiChu(ghiChu);
 
-        // Calculate total amount including transport fees
-        double totalAmount = (tour.getGia().doubleValue() + nkh.getTongGiaVe()) * soLuong;
+        double unitPrice = tour.getGia().doubleValue() + nkh.getTongGiaVe();
+        PromoApplyResult promoResult = maGiamGiaService.validateAndApply(maGiamGia, tourId, unitPrice, soLuong);
+        if (maGiamGia != null && !maGiamGia.isBlank() && !promoResult.isValid()) {
+            redirectAttributes.addFlashAttribute("promoError", promoResult.getMessage());
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+
+        double totalAmount = promoResult.isValid() ? promoResult.getTotal()
+                : unitPrice * soLuong;
+        if (promoResult.isValid() && promoResult.getMaGiamGia() != null) {
+            datCho.setIdMaGiamGia(promoResult.getMaGiamGia());
+        }
         datCho.setTongGia(totalAmount);
 
         datCho = datChoService.save(datCho);
 
-        // Prepare VNPay parameters
-        long amount = (long) (totalAmount * 100);
-        String vnp_TxnRef = String.valueOf(datCho.getId());
-        String vnp_IpAddr = vnPayConfig.getIpAddress(request);
-        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
-
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan tour: " + tour.getTieuDe());
-        vnp_Params.put("vnp_OrderType", "other");
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
-        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-        cld.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
-        vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
-
-        // Build query string and hash data
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
-
-        StringBuilder query = new StringBuilder();
-        boolean first = true;
-        for (String fieldName : fieldNames) {
-            String fieldValue = vnp_Params.get(fieldName);
-            if (fieldValue != null && fieldValue.length() > 0) {
-                if (!first) {
-                    query.append('&');
-                }
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                first = false;
-            }
+        long amountVnd = (long) Math.round(totalAmount);
+        if (amountVnd < 5000L) {
+            redirectAttributes.addFlashAttribute("promoError", "Số tiền tối thiểu thanh toán VNPay là 5.000₫");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
-
-        String vnp_SecureHash = vnPayConfig.hashAllFields(vnp_Params);
-        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
-
-        return "redirect:" + paymentUrl;
+        String orderInfo = "Donhang" + datCho.getId();
+        try {
+            Map<String, String> vnpParams = vnPayConfig.createPayParams(request, String.valueOf(datCho.getId()), amountVnd,
+                    orderInfo);
+            String paymentUrl = vnPayConfig.buildPaymentUrl(vnpParams);
+            return "redirect:" + paymentUrl;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("promoError", "Không tạo được link VNPay: " + e.getMessage());
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
     }
 
     @GetMapping("/payment/vnpay-callback")
     public String vnpayCallback(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        Map<String, String> fields = new HashMap<>();
-        for (Enumeration<String> params = request.getParameterNames(); params.hasMoreElements();) {
-            String fieldName = params.nextElement();
-            String fieldValue = request.getParameter(fieldName);
-            if ((fieldValue != null) && (fieldValue.length() > 0)) {
-                fields.put(fieldName, fieldValue);
-            }
+        Map<String, String> ipnResult = processVnpayNotification(request);
+        if ("00".equals(ipnResult.get("RspCode")) || "02".equals(ipnResult.get("RspCode"))) {
+            String resultUrl = "/payment/vnpay-result?" + request.getQueryString();
+            return "redirect:" + resultUrl;
         }
+        redirectAttributes.addFlashAttribute("error", ipnResult.get("Message"));
+        return "redirect:/tour";
+    }
 
-        String vnp_SecureHash = request.getParameter("vnp_SecureHash");
-        if (fields.containsKey("vnp_SecureHashType")) {
-            fields.remove("vnp_SecureHashType");
-        }
-        if (fields.containsKey("vnp_SecureHash")) {
-            fields.remove("vnp_SecureHash");
-        }
+    @RequestMapping(value = "/payment/vnpay-ipn", method = { org.springframework.web.bind.annotation.RequestMethod.GET,
+            org.springframework.web.bind.annotation.RequestMethod.POST })
+    @ResponseBody
+    public Map<String, String> vnpayIpn(HttpServletRequest request) {
+        return processVnpayNotification(request);
+    }
 
-        // Check hash
+    private Map<String, String> processVnpayNotification(HttpServletRequest request) {
+        Map<String, String> response = new HashMap<>();
         try {
-            String signValue = vnPayConfig.hashAllFields(fields);
-            if (signValue.equals(vnp_SecureHash)) {
-                String orderId = request.getParameter("vnp_TxnRef");
-                String responseCode = request.getParameter("vnp_ResponseCode");
+            Map<String, String> fields = vnPayConfig.extractRawFields(request);
+            String vnpSecureHash = request.getParameter("vnp_SecureHash");
+            fields.remove("vnp_SecureHashType");
+            fields.remove("vnp_SecureHash");
 
-                if ("00".equals(responseCode)) {
-                    // Payment success
-                    datChoService.updateStatus(Integer.parseInt(orderId), "PAID");
-                } else {
-                    // Payment failed
-                    datChoService.updateStatus(Integer.parseInt(orderId), "FAILED");
-                }
-
-                // Redirect to a dedicated result page with all info from VNPay
-                String resultUrl = "/payment/vnpay-result?" + request.getQueryString();
-                return "redirect:" + resultUrl;
-            } else {
-                redirectAttributes.addFlashAttribute("error", "Chữ ký không hợp lệ!");
-                return "redirect:/tour";
+            if (!vnPayConfig.verifyCallbackSignature(request, vnpSecureHash)) {
+                response.put("RspCode", "97");
+                response.put("Message", "Invalid Checksum");
+                return response;
             }
-        } catch (UnsupportedEncodingException e) {
-            redirectAttributes.addFlashAttribute("error", "Lỗi mã hóa: " + e.getMessage());
-            return "redirect:/tour";
+
+            String orderId = request.getParameter("vnp_TxnRef");
+            String responseCode = request.getParameter("vnp_ResponseCode");
+            String amountStr = request.getParameter("vnp_Amount");
+            DatCho datCho = datChoService.findById(Integer.parseInt(orderId)).orElse(null);
+
+            if (datCho == null) {
+                response.put("RspCode", "01");
+                response.put("Message", "Order not Found");
+                return response;
+            }
+
+            if (amountStr != null) {
+                long paidAmountCents = Long.parseLong(amountStr);
+                long orderAmountCents = (long) Math.round(datCho.getTongGia() * 100);
+                if (paidAmountCents != orderAmountCents) {
+                    response.put("RspCode", "04");
+                    response.put("Message", "Invalid Amount");
+                    return response;
+                }
+            }
+
+            if ("PAID".equals(datCho.getTrangThai())) {
+                response.put("RspCode", "02");
+                response.put("Message", "Order already confirmed");
+                return response;
+            }
+
+            if ("00".equals(responseCode)) {
+                datChoService.updateStatus(Integer.parseInt(orderId), "PAID");
+            } else {
+                datChoService.updateStatus(Integer.parseInt(orderId), "FAILED");
+            }
+            response.put("RspCode", "00");
+            response.put("Message", "Confirm Success");
+            return response;
+        } catch (Exception e) {
+            response.put("RspCode", "99");
+            response.put("Message", "Unknown error");
+            return response;
         }
     }
 
@@ -197,6 +204,8 @@ public class PaymentController {
         model.addAttribute("amount", amountStr != null ? Long.parseLong(amountStr) : 0L);
         model.addAttribute("orderInfo", request.getParameter("vnp_OrderInfo"));
         model.addAttribute("bankCode", request.getParameter("vnp_BankCode"));
+        model.addAttribute("payDate", request.getParameter("vnp_PayDate"));
+        model.addAttribute("message", request.getParameter("vnp_Message"));
         return "chuyendi/vnpay-result";
     }
 
@@ -215,52 +224,11 @@ public class PaymentController {
             return "redirect:/user/bookings";
         }
 
-        ChuyenDi tour = datCho.getIdChuyenDi();
-        long amount = (long) (datCho.getTongGia() * 100);
-
-        String vnp_TxnRef = String.valueOf(datCho.getId());
-        String vnp_IpAddr = vnPayConfig.getIpAddress(request);
-        String vnp_TmnCode = vnPayConfig.vnp_TmnCode;
-
-        Map<String, String> vnp_Params = new HashMap<>();
-        vnp_Params.put("vnp_Version", "2.1.0");
-        vnp_Params.put("vnp_Command", "pay");
-        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
-        vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "Thanh toan lai tour: " + tour.getTieuDe());
-        vnp_Params.put("vnp_OrderType", "other");
-        vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", vnPayConfig.vnp_Returnurl);
-        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        vnp_Params.put("vnp_CreateDate", formatter.format(cld.getTime()));
-
-        cld.add(Calendar.MINUTE, 15);
-        vnp_Params.put("vnp_ExpireDate", formatter.format(cld.getTime()));
-
-        List<String> fieldNames = new ArrayList<>(vnp_Params.keySet());
-        Collections.sort(fieldNames);
-
-        StringBuilder query = new StringBuilder();
-        boolean first = true;
-        for (String fieldName : fieldNames) {
-            String fieldValue = vnp_Params.get(fieldName);
-            if (fieldValue != null && fieldValue.length() > 0) {
-                if (!first)
-                    query.append('&');
-                query.append(URLEncoder.encode(fieldName, StandardCharsets.US_ASCII.toString()));
-                query.append('=');
-                query.append(URLEncoder.encode(fieldValue, StandardCharsets.US_ASCII.toString()));
-                first = false;
-            }
-        }
-
-        String vnp_SecureHash = vnPayConfig.hashAllFields(vnp_Params);
-        String paymentUrl = vnPayConfig.vnp_PayUrl + "?" + query.toString() + "&vnp_SecureHash=" + vnp_SecureHash;
+        long amountVnd = (long) Math.round(datCho.getTongGia());
+        String orderInfo = "Thanh toan lai don hang " + datCho.getId();
+        Map<String, String> vnpParams = vnPayConfig.createPayParams(request, String.valueOf(datCho.getId()), amountVnd,
+                orderInfo);
+        String paymentUrl = vnPayConfig.buildPaymentUrl(vnpParams);
 
         return "redirect:" + paymentUrl;
     }

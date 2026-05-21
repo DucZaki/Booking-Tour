@@ -41,6 +41,61 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // =============================================
+    // Nav search — trang chủ: scroll tới form; trang khác: dropdown navbar
+    // =============================================
+    const navSearchToggle = document.getElementById('navSearchToggle');
+    const navSearchPanel = document.getElementById('navSearchPanel');
+    const navSearchScrim = document.getElementById('navSearchScrim');
+    const navSearchClose = document.getElementById('navSearchClose');
+    const homeSearchSection = document.getElementById('homeSearch');
+
+    function setNavSearchOpen(open) {
+        if (!navSearchPanel || !navSearchToggle) return;
+        navSearchPanel.classList.toggle('open', open);
+        if (navSearchScrim) navSearchScrim.classList.toggle('open', open);
+        navSearchToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        navSearchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+        if (open) {
+            var firstInput = navSearchPanel.querySelector('input[name="diemDen"]');
+            if (firstInput) setTimeout(function () { firstInput.focus(); }, 120);
+        }
+    }
+
+    function openHomeSearch() {
+        if (!homeSearchSection) return false;
+        homeSearchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var input = homeSearchSection.querySelector('input[name="diemDen"]');
+        if (input) setTimeout(function () { input.focus(); }, 400);
+        return true;
+    }
+
+    if (navSearchToggle) {
+        navSearchToggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (homeSearchSection) {
+                openHomeSearch();
+                setNavSearchOpen(false);
+                return;
+            }
+            setNavSearchOpen(!navSearchPanel.classList.contains('open'));
+        });
+        if (navSearchScrim) {
+            navSearchScrim.addEventListener('click', function () { setNavSearchOpen(false); });
+        }
+        if (navSearchClose) {
+            navSearchClose.addEventListener('click', function () { setNavSearchOpen(false); });
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') setNavSearchOpen(false);
+        });
+        document.addEventListener('click', function (e) {
+            if (!navSearchPanel.classList.contains('open')) return;
+            if (navSearchPanel.contains(e.target) || navSearchToggle.contains(e.target)) return;
+            setNavSearchOpen(false);
+        });
+    }
+
+    // =============================================
     // AI Chatbot - with sessionStorage persistence
     // =============================================
     const CHAT_STORAGE_KEY = 'zaki_chat_history';
@@ -174,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
             chatBody.appendChild(greeting);
             const chips = document.createElement('div');
             chips.className = 'chat-suggestions';
-            chips.innerHTML = '<div class="suggestion-chip">Tour giá rẻ</div><div class="suggestion-chip">Điểm đến hot</div>';
+            chips.innerHTML = '<div class="suggestion-chip">Tour giá rẻ dưới 5 triệu</div><div class="suggestion-chip">Điểm đến hot nhất</div><div class="suggestion-chip">Tư vấn tour biển</div><div class="suggestion-chip">Tra cứu đơn hàng</div>';
             chatBody.appendChild(chips);
             attachChipListeners();
         });
@@ -200,42 +255,66 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         attachChipListeners();
 
+        function getCsrfHeaders() {
+            const token = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+            const header = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+            const headers = { 'Content-Type': 'application/json' };
+            if (token && header) {
+                headers[header] = token;
+            }
+            return headers;
+        }
+
+        let chatSending = false;
+
         // ── send message ──────────────────────────────────────────
         async function handleSend() {
             const message = chatInput.value.trim();
-            if (!message) return;
+            if (!message || chatSending) return;
 
-            // Hide suggestion chips after first message
             const suggestions = chatBody.querySelector('.chat-suggestions');
             if (suggestions) suggestions.style.display = 'none';
 
             appendMessage('user', message);
             chatInput.value = '';
+            chatSending = true;
+            sendBtn.disabled = true;
 
             const loadingDiv = document.createElement('div');
             loadingDiv.className = 'chat-bubble ai loading';
-            loadingDiv.innerText = '...';
+            loadingDiv.innerHTML = '<span class="chat-typing"><span></span><span></span><span></span></span>';
             chatBody.appendChild(loadingDiv);
             chatBody.scrollTop = chatBody.scrollHeight;
 
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getCsrfHeaders(),
                     body: JSON.stringify({ message: message })
                 });
-                const data = await response.json();
+                const data = await response.json().catch(function () { return {}; });
                 chatBody.removeChild(loadingDiv);
-                appendMessage('ai', data.reply);
+                if (!response.ok) {
+                    appendMessage('ai', data.reply || 'Không thể gửi tin nhắn. Vui lòng thử lại.');
+                    return;
+                }
+                appendMessage('ai', data.reply || 'Xin lỗi, không nhận được phản hồi.');
             } catch (error) {
-                chatBody.removeChild(loadingDiv);
-                appendMessage('ai', 'Xin lỗi, tôi gặp sự cố kết nối. Vui lòng thử lại sau.');
+                if (chatBody.contains(loadingDiv)) chatBody.removeChild(loadingDiv);
+                appendMessage('ai', 'Mất kết nối máy chủ. Kiểm tra mạng hoặc thử lại sau.');
+            } finally {
+                chatSending = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
             }
         }
 
         sendBtn.addEventListener('click', handleSend);
-        chatInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') handleSend();
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
         });
 
         // Restore history last (after DOM is ready)

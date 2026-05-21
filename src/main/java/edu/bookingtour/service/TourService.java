@@ -191,6 +191,6 @@ public class TourService {
     }
 
     private String emptyToNull(String s) {
-        return (s == null || s.isBlank()) ? null : s;
+        return (s == null || s.isBlank()) ? null : s.trim();
     }
 }

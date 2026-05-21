@@ -999,3 +999,222 @@ a:hover {
 .diamond {
     background: linear-gradient(90deg, #42a5f5, #5c6bc0);
 }
+
+/* ===================== SEARCH CARD (hero + nav) ===================== */
+.search-card {
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(254, 207, 47, 0.22);
+}
+
+.search-field-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--bs-dark);
+    margin-bottom: 8px;
+}
+
+.search-field-label i {
+    color: #C9A000;
+    font-size: 1rem;
+}
+
+.search-field-input {
+    height: 54px !important;
+    border: none !important;
+    border-radius: 12px !important;
+    background: #F3F3F6 !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    font-weight: 500;
+}
+
+.search-field-input:focus {
+    background: #fff !important;
+    box-shadow: 0 0 0 3px rgba(254, 207, 47, 0.35) !important;
+}
+
+/* Select trong search card — 1 mũi tên duy nhất */
+.search-field-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 14px 10px !important;
+    padding-right: 2.5rem !important;
+}
+
+.search-section .search-field-input {
+    height: 54px !important;
+}
+
+/* Nav search dropdown (không full-screen) */
+.nav-search-toggle {
+    background: none !important;
+    color: inherit;
+    line-height: 1;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.nav-search-toggle:hover {
+    transform: scale(1.08);
+    color: var(--bs-primary);
+}
+
+.nav-search-dropdown {
+    position: fixed;
+    top: 88px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    width: min(920px, calc(100vw - 32px));
+    z-index: 1060;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+}
+
+.nav-search-dropdown.open {
+    pointer-events: auto;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.nav-search-dropdown-inner {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(254, 207, 47, 0.25);
+}
+
+.search-card--nav {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+.nav-search-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    background: rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.nav-search-scrim.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.search-dropdown-title {
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+}
+
+/* ===================== DEPARTURE CALENDAR HIGHLIGHT ===================== */
+.departure-day {
+    position: relative;
+    background: linear-gradient(160deg, #fff9e6 0%, #fff3cd 100%) !important;
+    border: 2px solid #FECF2F !important;
+    color: #5c4a00 !important;
+    font-weight: 700;
+    cursor: pointer;
+    animation: departurePulse 2.4s ease-in-out infinite;
+    box-shadow: 0 4px 14px rgba(254, 207, 47, 0.35);
+}
+
+.departure-day:hover {
+    background: linear-gradient(160deg, #FECF2F 0%, #f5b800 100%) !important;
+    color: #1A1C1E !important;
+    transform: translateY(-3px) scale(1.04);
+    box-shadow: 0 8px 22px rgba(254, 207, 47, 0.5);
+}
+
+.departure-day.active-day {
+    background: linear-gradient(160deg, #FECF2F 0%, #e6b800 100%) !important;
+    color: #1A1C1E !important;
+    border-color: #1A1C1E !important;
+    animation: none;
+    box-shadow: 0 0 0 3px rgba(26, 28, 30, 0.15), 0 8px 24px rgba(254, 207, 47, 0.55);
+    transform: scale(1.06);
+}
+
+.departure-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #dc3545;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.departure-day.active-day .departure-dot {
+    background: #1A1C1E;
+}
+
+.departure-tag {
+    font-size: 0.55rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #b8860b;
+    margin-top: 1px;
+    line-height: 1;
+}
+
+.departure-day.active-day .departure-tag {
+    color: #1A1C1E;
+}
+
+.departure-day .price-sub {
+    font-size: 0.62rem;
+    color: #dc3545;
+    font-weight: 800;
+    display: block;
+    line-height: 1;
+    margin-top: 2px;
+}
+
+.departure-day.active-day .price-sub {
+    color: #1A1C1E;
+}
+
+.calendar-legend .legend-swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.legend-swatch.departure-swatch {
+    background: linear-gradient(160deg, #fff9e6, #FECF2F);
+    border: 2px solid #FECF2F;
+}
+
+.legend-swatch.active-swatch {
+    background: #FECF2F;
+    border: 2px solid #1A1C1E;
+}
+
+@keyframes departurePulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(254, 207, 47, 0.35); }
+    50% { box-shadow: 0 4px 20px rgba(254, 207, 47, 0.65), 0 0 0 4px rgba(254, 207, 47, 0.15); }
+}

@@ -254,7 +254,9 @@
   <section class="admin-header w-100 px-0 py-0 border-bottom">
     <div class="d-flex justify-content-between align-items-center px-4">
       <div class="d-flex align-items-center gap-2">
+       <a th:href="@{/}">
         <img th:src="@{/favicon.icon}" alt="Logo" height="80" class="rounded">
+       </a>
         <h3 class="fw-bold mb-0 text-dark"></h3>
       </div>
       <div class="d-flex align-items-center gap-3">
@@ -311,6 +313,12 @@
           </li>
         </ul>
       </div>
+    </li>
+    <li class="nav-item mb-1">
+      <a class="nav-link" th:href="@{/admin/promo}">
+        <i class="bi bi-ticket-perforated me-2"></i>
+        Mã giảm giá
+      </a>
     </li>
     <li class="nav-item mb-1">
       <a class="nav-link" th:href="@{/admin/contact}">

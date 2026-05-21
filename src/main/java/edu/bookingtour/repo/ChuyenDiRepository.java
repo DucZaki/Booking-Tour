@@ -28,7 +28,8 @@ public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
             JOIN cd.idDiemDen dd
             WHERE (:thanhPho IS NULL OR LOWER(dd.thanhPho) = LOWER(:thanhPho))
             AND (:quocGia IS NULL OR LOWER(dd.quocGia) = LOWER(:quocGia))
-            AND (:diemDen IS NULL OR LOWER(dd.thanhPho) = LOWER(:diemDen) OR LOWER(dd.quocGia) = LOWER(:diemDen))
+            AND (:diemDen IS NULL OR LOWER(dd.thanhPho) LIKE LOWER(CONCAT('%', :diemDen, '%'))
+                OR LOWER(dd.quocGia) LIKE LOWER(CONCAT('%', :diemDen, '%')))
             AND (:ngayDi IS NULL OR cd.ngayKhoiHanh >= :ngayDi)
             AND (:minGia IS NULL OR :maxGia IS NULL OR cd.gia BETWEEN :minGia AND :maxGia)
             """)
