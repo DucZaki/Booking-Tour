@@ -160,6 +160,10 @@
 
 [data-theme="dark"] .form-select {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 14px 10px !important;
+    padding-right: 2.5rem !important;
 }
 
 [data-theme="dark"] .form-control::placeholder {
@@ -530,4 +534,177 @@
 [data-theme="dark"] .table-hover > tbody > tr:hover > * {
     background-color: #2a2a2a !important;
     color: #e0e0e0 !important;
+}
+
+/* === PREMIUM NAV DOCK === */
+[data-theme="dark"] .premium-nav-dock {
+    background: rgba(26, 28, 30, 0.88) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45) !important;
+}
+
+[data-theme="dark"] .premium-nav-dock.scrolled {
+    background: rgba(18, 20, 22, 0.95) !important;
+}
+
+[data-theme="dark"] .premium-nav-dock .nav-link {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-theme="dark"] .premium-nav-dock .nav-link:hover,
+[data-theme="dark"] .premium-nav-dock .nav-link.active {
+    color: #FECF2F !important;
+}
+
+[data-theme="dark"] .premium-nav-dock .nav-search-toggle,
+[data-theme="dark"] .premium-nav-dock .bi-search {
+    color: #fff !important;
+}
+
+[data-theme="dark"] .premium-nav-dock .user-profile-icon {
+    background: #2a2d31;
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+[data-theme="dark"] #darkModeToggle {
+    color: #FECF2F !important;
+}
+
+/* === SEARCH CARD — dark glass, đồng bộ brand vàng === */
+[data-theme="dark"] .search-card {
+    background: linear-gradient(145deg, rgba(28, 30, 34, 0.92) 0%, rgba(18, 20, 22, 0.96) 100%) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(254, 207, 47, 0.18) !important;
+    box-shadow:
+        0 24px 48px rgba(0, 0, 0, 0.45),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 1px 0 rgba(254, 207, 47, 0.12) inset !important;
+}
+
+[data-theme="dark"] .search-field-label {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+[data-theme="dark"] .search-field-label i {
+    color: #FECF2F !important;
+}
+
+[data-theme="dark"] .search-card .search-field-input {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    color: #F5F5F7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .search-card .search-field-input::placeholder {
+    color: rgba(255, 255, 255, 0.38) !important;
+}
+
+[data-theme="dark"] .search-card .form-select.search-field-input,
+[data-theme="dark"] .search-field-select {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23FECF2F' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 14px 10px !important;
+    color: #F5F5F7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .search-card .search-field-input:focus {
+    background-color: rgba(255, 255, 255, 0.09) !important;
+    border-color: rgba(254, 207, 47, 0.45) !important;
+    box-shadow: 0 0 0 3px rgba(254, 207, 47, 0.15) !important;
+}
+
+[data-theme="dark"] input[type="date"].search-field-input::-webkit-calendar-picker-indicator {
+    filter: invert(0.85) sepia(1) saturate(3) hue-rotate(5deg);
+    opacity: 0.85;
+}
+
+[data-theme="dark"] .search-card .form-control,
+[data-theme="dark"] .search-card .form-select {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    color: #F5F5F7 !important;
+}
+
+[data-theme="dark"] .search-card .btn-primary {
+    background: linear-gradient(135deg, #FECF2F 0%, #F5B800 100%) !important;
+    color: #121416 !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(254, 207, 47, 0.35) !important;
+}
+
+[data-theme="dark"] .search-card .btn-primary:hover {
+    background: linear-gradient(135deg, #FFE066 0%, #FECF2F 100%) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px rgba(254, 207, 47, 0.45) !important;
+}
+
+[data-theme="dark"] .nav-search-dropdown-inner {
+    background: linear-gradient(145deg, rgba(28, 30, 34, 0.97) 0%, rgba(18, 20, 22, 0.99) 100%);
+    border: 1px solid rgba(254, 207, 47, 0.2);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .search-dropdown-title {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .nav-search-scrim {
+    background: rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] .nav-search-dropdown .btn-close {
+    filter: invert(1);
+    opacity: 0.55;
+}
+
+[data-theme="dark"] .search-section {
+    background: transparent !important;
+}
+
+[data-theme="dark"] section.py-5 h2.fw-800,
+[data-theme="dark"] section.py-5 .text-dark {
+    color: #F5F5F7 !important;
+}
+
+[data-theme="dark"] section.py-5 a.text-dark {
+    color: rgba(255, 255, 255, 0.85) !important;
+    border-bottom-color: #FECF2F !important;
+}
+
+/* === DEPARTURE CALENDAR === */
+[data-theme="dark"] .departure-day {
+    background: linear-gradient(160deg, #3d3500 0%, #5c4f00 100%) !important;
+    border-color: #FECF2F !important;
+    color: #FECF2F !important;
+    box-shadow: 0 4px 16px rgba(254, 207, 47, 0.25);
+}
+
+[data-theme="dark"] .departure-day:hover {
+    background: linear-gradient(160deg, #FECF2F 0%, #e6b800 100%) !important;
+    color: #1A1C1E !important;
+}
+
+[data-theme="dark"] .departure-day.active-day {
+    background: linear-gradient(160deg, #FECF2F 0%, #fcd752 100%) !important;
+    color: #1A1C1E !important;
+    border-color: #fff !important;
+}
+
+[data-theme="dark"] .departure-tag {
+    color: rgba(254, 207, 47, 0.85);
+}
+
+[data-theme="dark"] .departure-day.active-day .departure-tag,
+[data-theme="dark"] .departure-day.active-day .price-sub {
+    color: #1A1C1E !important;
+}
+
+[data-theme="dark"] .calendar-legend {
+    color: #aaa;
 }

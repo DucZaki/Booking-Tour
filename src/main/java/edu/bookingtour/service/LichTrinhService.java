@@ -25,6 +25,8 @@ public class LichTrinhService {
         lt.setSoBuaAn(lichTrinh.getSoBuaAn());
         lt.setNoiDung(lichTrinh.getNoiDung());
         lt.setNghiDem(lichTrinh.getNghiDem());
+        lt.setHoatDongChinh(lichTrinh.getHoatDongChinh());
+        lt.setHinhAnh(lichTrinh.getHinhAnh());
         return repository.save(lt);
     }
 

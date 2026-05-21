@@ -1,26 +1,66 @@
 package edu.bookingtour.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import edu.bookingtour.entity.ChuyenDi;
+import edu.bookingtour.entity.MaGiamGia;
 import edu.bookingtour.repo.DatChoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class ChatService {
 
+    private static final Logger log = LoggerFactory.getLogger(ChatService.class);
+    private static final List<String> GEMINI_MODELS = List.of(
+            "gemini-2.0-flash",
+            "gemini-2.0-flash-lite",
+            "gemini-1.5-flash-8b"
+    );
+
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final HttpClient httpClient = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(15))
+            .build();
+
+    @Value("${groq.api.key:${GROQ_API_KEY:}}")
+    private String groqApiKey;
+
+    @Value("${groq.api.url:https://api.groq.com/openai/v1/chat/completions}")
+    private String groqApiUrl;
+
+    @Value("${groq.api.model:llama-3.1-8b-instant}")
+    private String groqModel;
+
+    @Value("${openrouter.api.key:${OPENROUTER_API_KEY:}}")
+    private String openRouterApiKey;
+
+    @Value("${openrouter.api.url:https://openrouter.ai/api/v1/chat/completions}")
+    private String openRouterApiUrl;
+
+    @Value("${openrouter.api.model:google/gemini-2.0-flash-exp:free}")
+    private String openRouterModel;
+
     @Value("${gemini.api.url:}")
-    private String apiUrl;
+    private String configuredGeminiApiUrl;
+
+    @Value("${GEMINI_API_KEY:${gemini.api.key:}}")
+    private String geminiApiKey;
 
     @Autowired
     private TourService tourService;
@@ -28,91 +68,396 @@ public class ChatService {
     @Autowired
     private DatChoRepository datChoRepository;
 
-    @Value("${GEMINI_API_KEY:${gemini.api.key:}}")
-    private String apiKey;
+    @Autowired
+    private MaGiamGiaService maGiamGiaService;
 
     public String ask(String message) {
-        if (apiKey == null || apiKey.isEmpty()) {
-            return "Xin lỗi, Chatbot hiện đang bảo trì (thiếu API Key).";
+        if (message == null || message.isBlank()) {
+            return "Vui lòng nhập câu hỏi của bạn.";
         }
 
-        try {
-            String systemPrompt = constructSystemPrompt(message);
-            
-            RestTemplate rt = new RestTemplate();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+        String systemPrompt = constructSystemPrompt(message);
+        String userText = message.trim();
 
-            // Google Gemini API
-            String url = (apiUrl != null && !apiUrl.isEmpty()) ? apiUrl + "?key=" + apiKey 
-                         : "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=" + apiKey;
-
-            Map<String, Object> contents = new HashMap<>();
-            Map<String, Object> parts = new HashMap<>();
-            parts.put("text", systemPrompt + "\n\nUser: " + message);
-            contents.put("parts", new Object[]{parts});
-            
-            Map<String, Object> payload = new HashMap<>();
-            payload.put("contents", new Object[]{contents});
-
-            HttpEntity<Map<String, Object>> req = new HttpEntity<>(payload, headers);
-            ResponseEntity<String> resp = rt.postForEntity(url, req, String.class);
-
-            if (resp.getStatusCode().is2xxSuccessful()) {
-                ObjectMapper om = new ObjectMapper();
-                JsonNode root = om.readTree(resp.getBody());
-                return root.path("candidates").get(0).path("content").path("parts").get(0).path("text").asText();
-            } else {
-                return "Tôi gặp sự cố khi kết nối với AI. Vui lòng thử lại sau.";
+        if (groqApiKey != null && !groqApiKey.isBlank()) {
+            try {
+                String reply = callOpenAiChat(groqApiUrl, groqApiKey, groqModel, systemPrompt, userText, "Groq");
+                if (reply != null && !reply.isBlank()) {
+                    return reply;
+                }
+            } catch (ChatApiException ex) {
+                log.warn("Groq failed: {} {}", ex.getStatusCode(), ex.getMessage());
+                return ex.getUserMessage();
+            } catch (Exception ex) {
+                log.error("Groq unexpected error", ex);
+                return "Lỗi kết nối Groq. Thử lại sau hoặc gọi **+84 866147595**.";
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return "Đã có lỗi xảy ra: " + ex.getMessage();
         }
+
+        if (openRouterApiKey != null && !openRouterApiKey.isBlank()) {
+            try {
+                String reply = callOpenAiChat(openRouterApiUrl, openRouterApiKey, openRouterModel, systemPrompt, userText, "OpenRouter");
+                if (reply != null && !reply.isBlank()) {
+                    return reply;
+                }
+            } catch (ChatApiException ex) {
+                log.warn("OpenRouter failed: {} {}", ex.getStatusCode(), ex.getMessage());
+                return ex.getUserMessage();
+            } catch (Exception ex) {
+                log.error("OpenRouter unexpected error", ex);
+                return "Lỗi kết nối OpenRouter. Thử lại sau hoặc gọi **+84 866147595**.";
+            }
+        }
+
+        if (geminiApiKey == null || geminiApiKey.isBlank()) {
+            return "Chatbot đang bảo trì (thiếu API Key). Cấu hình **GROQ_API_KEY**, **OPENROUTER_API_KEY** hoặc **GEMINI_API_KEY**. Hotline: **+84 866147595**.";
+        }
+
+        for (String model : GEMINI_MODELS) {
+            try {
+                String reply = callGemini(model, systemPrompt, userText);
+                if (reply != null && !reply.isBlank()) {
+                    return reply;
+                }
+            } catch (ChatApiException ex) {
+                log.warn("Gemini model {} failed: {} {}", model, ex.getStatusCode(), ex.getMessage());
+                if (!ex.isRetryable()) {
+                    return ex.getUserMessage();
+                }
+            } catch (Exception ex) {
+                log.error("Gemini unexpected error for model {}", model, ex);
+            }
+        }
+
+        return "Tôi đang quá tải hoặc gặp sự cố kết nối AI. Thử lại sau, hoặc gọi **+84 866147595** / [/contact](/contact).";
+    }
+
+    /** Groq & OpenRouter — OpenAI-compatible chat/completions */
+    private String callOpenAiChat(String apiUrl, String apiKey, String model,
+                                  String systemPrompt, String userText, String provider) throws Exception {
+        ObjectNode payload = mapper.createObjectNode();
+        payload.put("model", model);
+
+        ArrayNode messages = mapper.createArrayNode();
+        messages.add(mapper.createObjectNode()
+                .put("role", "system")
+                .put("content", systemPrompt));
+        messages.add(mapper.createObjectNode()
+                .put("role", "user")
+                .put("content", userText));
+        payload.set("messages", messages);
+        payload.put("temperature", 0.3);
+        payload.put("max_tokens", 1024);
+
+        HttpRequest.Builder builder = HttpRequest.newBuilder()
+                .uri(URI.create(apiUrl))
+                .timeout(Duration.ofSeconds(60))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + apiKey.trim());
+
+        if ("OpenRouter".equals(provider)) {
+            builder.header("HTTP-Referer", "http://localhost:8080")
+                    .header("X-Title", "ZakiBooking");
+        }
+
+        HttpRequest request = builder
+                .POST(HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(payload), StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return parseOpenAiChatResponse(response.statusCode(), response.body(), provider);
+    }
+
+    private String parseOpenAiChatResponse(int statusCode, String body, String provider)
+            throws ChatApiException, com.fasterxml.jackson.core.JsonProcessingException {
+        JsonNode root = mapper.readTree(body != null && !body.isBlank() ? body : "{}");
+
+        if (statusCode == 429) {
+            throw new ChatApiException(429,
+                    provider + " quá tải (rate limit). Đợi 1–2 phút rồi thử lại.",
+                    true);
+        }
+        if (statusCode == 401 || statusCode == 403) {
+            String hint = "Groq".equals(provider)
+                    ? "Tạo key mới tại console.groq.com/keys (dạng gsk_...)."
+                    : "Tạo key mới tại openrouter.ai/keys.";
+            throw new ChatApiException(statusCode, provider + " API key không hợp lệ. " + hint, false);
+        }
+        if (statusCode >= 400) {
+            String msg = root.path("error").path("message").asText("Lỗi " + provider);
+            throw new ChatApiException(statusCode, msg, statusCode >= 500);
+        }
+
+        JsonNode choices = root.path("choices");
+        if (!choices.isArray() || choices.isEmpty()) {
+            return null;
+        }
+        return choices.get(0).path("message").path("content").asText("").trim();
+    }
+
+    private String callGemini(String model, String systemPrompt, String userText) throws Exception {
+        String url = resolveGeminiApiUrl(model);
+        ObjectNode payload = mapper.createObjectNode();
+
+        ObjectNode systemInstruction = mapper.createObjectNode();
+        ArrayNode systemParts = mapper.createArrayNode();
+        systemParts.add(mapper.createObjectNode().put("text", systemPrompt));
+        systemInstruction.set("parts", systemParts);
+        payload.set("systemInstruction", systemInstruction);
+
+        ObjectNode userContent = mapper.createObjectNode();
+        userContent.put("role", "user");
+        ArrayNode userParts = mapper.createArrayNode();
+        userParts.add(mapper.createObjectNode().put("text", userText));
+        userContent.set("parts", userParts);
+
+        ArrayNode contents = mapper.createArrayNode();
+        contents.add(userContent);
+        payload.set("contents", contents);
+
+        ObjectNode generationConfig = mapper.createObjectNode();
+        generationConfig.put("temperature", 0.3);
+        generationConfig.put("maxOutputTokens", 1024);
+        payload.set("generationConfig", generationConfig);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .timeout(Duration.ofSeconds(45))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(mapper.writeValueAsString(payload), StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return parseGeminiResponse(response.statusCode(), response.body());
+    }
+
+    private String resolveGeminiApiUrl(String model) {
+        String base = "https://generativelanguage.googleapis.com/v1beta/models/"
+                + model + ":generateContent";
+        if (configuredGeminiApiUrl != null && !configuredGeminiApiUrl.isBlank()) {
+            base = configuredGeminiApiUrl.replaceAll("/models/[^/:]+:generateContent",
+                    "/models/" + model + ":generateContent");
+            if (!base.contains(":generateContent")) {
+                base = "https://generativelanguage.googleapis.com/v1beta/models/"
+                        + model + ":generateContent";
+            }
+        }
+        return base + "?key=" + geminiApiKey.trim();
+    }
+
+    private String parseGeminiResponse(int statusCode, String body) throws ChatApiException, com.fasterxml.jackson.core.JsonProcessingException {
+        JsonNode root = mapper.readTree(body != null && !body.isBlank() ? body : "{}");
+
+        if (statusCode == 429) {
+            throw new ChatApiException(429,
+                    "Đã vượt giới hạn Gemini. Đợi 1–2 phút rồi thử lại.",
+                    true);
+        }
+        if (statusCode == 401 || statusCode == 403) {
+            throw new ChatApiException(statusCode,
+                    "API Key Gemini không hợp lệ hoặc hết hạn. Tạo key mới tại Google AI Studio.",
+                    false);
+        }
+        if (statusCode >= 400) {
+            String msg = root.path("error").path("message").asText("Lỗi kết nối Gemini");
+            throw new ChatApiException(statusCode, msg, statusCode == 404 || statusCode >= 500);
+        }
+
+        JsonNode candidates = root.path("candidates");
+        if (!candidates.isArray() || candidates.isEmpty()) {
+            String blockReason = root.path("promptFeedback").path("blockReason").asText("");
+            if (!blockReason.isBlank()) {
+                throw new ChatApiException(400,
+                        "Không thể trả lời do nội dung bị lọc. Hãy thử câu hỏi khác.",
+                        false);
+            }
+            return null;
+        }
+
+        JsonNode parts = candidates.get(0).path("content").path("parts");
+        if (!parts.isArray() || parts.isEmpty()) {
+            return null;
+        }
+        return parts.get(0).path("text").asText("").trim();
     }
 
     private String constructSystemPrompt(String userMessage) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Bạn là 'Zaki AI' - Chuyên gia tư vấn du lịch nhiệt tình của ZakiBooking.\n");
-        sb.append("PHONG CÁCH:\n");
-        sb.append("- Thân thiện, chuyên nghiệp, sử dụng biểu tượng cảm xúc (emoji) phù hợp.\n");
-        sb.append("- Trả lời ngắn gọn, súc tích, trình bày bằng Markdown (dùng bullet points, chữ đậm).\n\n");
-        
-        sb.append("NHIỆM VỤ:\n");
-        sb.append("1. Dựa vào danh sách tour bên dưới để tư vấn. LUÔN cung cấp link xem chi tiết dạng: [Xem chi tiết tại đây](/tour/ID).\n");
-        sb.append("2. Nếu khách hỏi về đơn hàng, hãy nhắc họ cung cấp email để bạn tra cứu.\n");
-        sb.append("3. Nếu không có tour nào khớp hoàn toàn, hãy gợi ý các tour gần giống nhất.\n\n");
+        sb.append("Bạn là 'Zaki AI' - tư vấn viên ZakiBooking.\n\n");
 
-        // Thêm dữ liệu tour đang hoạt động
-        sb.append("--- CƠ SỞ DỮ LIỆU TOUR (DÙNG ĐỂ TƯ VẤN) ---\n");
-        tourService.findAll().stream().limit(15).forEach(t -> {
-            sb.append(String.format("- **ID %d**: %s | Giá: %s VND | Điểm đến: %s\n", 
-                t.getId(), t.getTieuDe(), t.getGia(), t.getIdDiemDen() != null ? t.getIdDiemDen().getThanhPho() : "Nhiều nơi"));
-            sb.append(String.format("  Mô tả ngắn: %s\n", t.getMoTa() != null && t.getMoTa().length() > 100 ? t.getMoTa().substring(0, 100) + "..." : t.getMoTa()));
-            sb.append(String.format("  Link: /tour/%d\n", t.getId()));
-        });
-        sb.append("\n");
+        sb.append("CÁCH TRẢ LỜI CHO KHÁCH (hiển thị trên web):\n");
+        sb.append("- Ngắn gọn, thân thiện, Markdown.\n");
+        sb.append("- **CẤM** paste nguyên danh mục tour, **CẤM** lộ chuỗi nội bộ (ID thô, Điểm nổi bật dài, trạng thái [HẾT HẠN]).\n");
+        sb.append("- Gợi ý tối đa 1–3 tour: **tên tour** + giá + link [Xem chi tiết](/tour/ID).\n");
+        sb.append("- **CẤM** bịa mã giảm giá hoặc gán số tiền giảm cố định cho từng tour.\n");
+        sb.append("- Hỏi mã giảm: chỉ dùng mục MÃ GIẢM GIÁ. Nếu không có mã hiệu lực → trả lời: ");
+        sb.append("\"Hiện chưa có mã giảm giá. Vui lòng theo dõi trang web thường xuyên để đón nhận ưu đãi mới.\" ");
+        sb.append("Hotline +84 866147595, /contact.\n");
+        sb.append("- Hỏi \"tour đang giảm giá\": chỉ liệt kê tour trong TOUR ĐANG CÓ KHUYẾN MÃI (nếu có).\n\n");
 
-        // Tra cứu đơn hàng nếu user message có chứa email
+        appendFullTourCatalog(sb);
+        appendPromoCodes(sb);
+        appendToursOnSale(sb);
+
         if (userMessage.contains("@")) {
             String email = extractEmail(userMessage);
             if (email != null) {
-                sb.append("--- THÔNG TIN ĐƠN HÀNG CỦA KHÁCH (DÙNG ĐỂ PHẢN HỒI) ---\n");
+                sb.append("\n--- ĐƠN HÀNG (email ").append(email).append(") ---\n");
                 datChoRepository.findByEmailOrderByNgayDatDesc(email).stream().limit(3).forEach(d -> {
-                    sb.append(String.format("- Đơn #%d: Tour '%s', Ngày đặt: %s, Trạng thái: %s, Tổng tiền: %s VND\n", 
-                        d.getId(), d.getIdChuyenDi().getTieuDe(), d.getNgayDat(), d.getTrangThai(), d.getTongGia()));
+                    sb.append(String.format("- Đơn #%d: %s | %s | %s | %s VND\n",
+                            d.getId(), d.getIdChuyenDi().getTieuDe(), d.getNgayDat(), d.getTrangThai(), d.getTongGia()));
                 });
-                sb.append("\n");
-                sb.append("Hãy xác nhận thông tin đơn hàng trên với khách một cách tế nhị.\n");
             }
         }
 
-        sb.append("\nLƯU Ý: Nếu không tìm thấy tour phù hợp hoặc khách cần hỗ trợ gấp, hãy bảo khách gọi Hotline: **+84 866147595**.");
+        sb.append("\nHotline: **+84 866147595** | Form liên hệ: **/contact**");
         return sb.toString();
     }
 
+    /** Đưa toàn bộ tour trong DB vào prompt để AI tư vấn theo danh mục thật. */
+    private void appendFullTourCatalog(StringBuilder sb) {
+        List<ChuyenDi> tours = tourService.findAll().stream()
+                .sorted(Comparator.comparing(ChuyenDi::getId, Comparator.nullsLast(Integer::compareTo)))
+                .toList();
+        LocalDate today = LocalDate.now();
+        long bookable = tours.stream()
+                .filter(t -> t.getNgayKetThuc() == null || !t.getNgayKetThuc().isBefore(today))
+                .count();
+
+        sb.append("NHIỆM VỤ TƯ VẤN:\n");
+        sb.append("- Bạn có danh mục **đầy đủ ").append(tours.size()).append(" tour** (");
+        sb.append(bookable).append(" tour còn trong hạn / có thể đặt).\n");
+        sb.append("- Khi khách hỏi (điểm đến, giá, ngày, phương tiện, gia đình, biển, núi...), ");
+        sb.append("hãy **so sánh và gợi ý 1–3 tour phù hợp nhất** từ danh sách, nêu lý do ngắn (giá, lịch, điểm đến).\n");
+        sb.append("- **Không** bịa tour ngoài danh sách. Mỗi tour gợi ý kèm link: [Xem chi tiết](/tour/ID).\n");
+        sb.append("- Tour đánh dấu [HẾT HẠN] chỉ nhắc khi khách hỏi lịch sử, ưu tiên tour còn đặt được.\n\n");
+
+        sb.append("--- DANH MỤC TOUR (TOÀN BỘ) ---\n");
+        if (tours.isEmpty()) {
+            sb.append("(Hiện chưa có tour trong hệ thống.)\n");
+            return;
+        }
+        for (ChuyenDi t : tours) {
+            appendTourCatalogLine(sb, t, today);
+        }
+        sb.append("--- HẾT DANH MỤC ---\n\n");
+    }
+
+    private void appendPromoCodes(StringBuilder sb) {
+        LocalDate today = LocalDate.now();
+        List<MaGiamGia> codes = maGiamGiaService.findAllActive(today);
+
+        sb.append("--- MÃ GIẢM GIÁ (CHỈ ĐƯỢC NHẮC CÁC MÃ SAU) ---\n");
+        if (codes.isEmpty()) {
+            sb.append("(KHÔNG có mã hiệu lực — báo khách theo dõi website.)\n");
+        } else {
+            for (MaGiamGia m : codes) {
+                sb.append("- ").append(maGiamGiaService.formatPromoForChat(m)).append("\n");
+            }
+        }
+        sb.append("--- HẾT MÃ GIẢM GIÁ ---\n\n");
+    }
+
+    private void appendToursOnSale(StringBuilder sb) {
+        LocalDate today = LocalDate.now();
+        List<ChuyenDi> saleTours = maGiamGiaService.findToursWithActivePromo(today);
+        sb.append("--- TOUR ĐANG CÓ KHUYẾN MÃI (mã còn hiệu lực) ---\n");
+        if (saleTours.isEmpty()) {
+            sb.append("(Không có tour khuyến mãi riêng — chỉ mã chung nếu có.)\n");
+        } else {
+            for (ChuyenDi t : saleTours) {
+                sb.append(String.format("- ID %d: %s | %s VND | /tour/%d\n",
+                        t.getId(), nullSafe(t.getTieuDe()),
+                        t.getGia() != null ? t.getGia().toPlainString() : "?",
+                        t.getId()));
+            }
+        }
+        sb.append("--- HẾT TOUR KHUYẾN MÃI ---\n\n");
+    }
+
+    private void appendTourCatalogLine(StringBuilder sb, ChuyenDi t, LocalDate today) {
+        String destination = "Nhiều nơi";
+        if (t.getIdDiemDen() != null) {
+            String tp = t.getIdDiemDen().getThanhPho();
+            String qg = t.getIdDiemDen().getQuocGia();
+            destination = (tp != null ? tp : "") + (qg != null && !qg.isBlank() ? ", " + qg : "");
+            if (destination.isBlank()) {
+                destination = "Nhiều nơi";
+            }
+        }
+
+        String transport = "—";
+        if (t.getIdPhuongTien() != null && t.getIdPhuongTien().getLoai() != null) {
+            transport = t.getIdPhuongTien().getLoai();
+        }
+
+        boolean bookable = t.getNgayKetThuc() == null || !t.getNgayKetThuc().isBefore(today);
+        String status = bookable ? "ĐANG MỞ" : "HẾT HẠN";
+        String dates = formatTourDates(t.getNgayKhoiHanh(), t.getNgayKetThuc());
+        String gia = t.getGia() != null ? t.getGia().toPlainString() : "Liên hệ";
+
+        sb.append(String.format("- **ID %d** [%s] %s | %s VND | %s | PT: %s | %s",
+                t.getId(), status, nullSafe(t.getTieuDe()), gia, destination, transport, dates));
+        if (Boolean.TRUE.equals(t.getNoiBat())) {
+            sb.append(" | ⭐Nổi bật");
+        }
+        sb.append("\n");
+
+        sb.append(" | /tour/").append(t.getId()).append("\n");
+    }
+
+    private static String formatTourDates(LocalDate start, LocalDate end) {
+        if (start == null && end == null) {
+            return "Ngày: linh hoạt";
+        }
+        if (start != null && end != null) {
+            return "Ngày: " + start + " → " + end;
+        }
+        if (start != null) {
+            return "Từ ngày: " + start;
+        }
+        return "Đến ngày: " + end;
+    }
+
+    private static String truncate(String text, int maxLen) {
+        String cleaned = text.replaceAll("\\s+", " ").trim();
+        if (cleaned.length() <= maxLen) {
+            return cleaned;
+        }
+        return cleaned.substring(0, maxLen) + "...";
+    }
+
+    private static String nullSafe(String s) {
+        return s != null ? s : "Tour";
+    }
+
     private String extractEmail(String message) {
-        java.util.regex.Matcher m = java.util.regex.Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(message);
+        var m = java.util.regex.Pattern.compile("[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+").matcher(message);
         return m.find() ? m.group() : null;
+    }
+
+    private static final class ChatApiException extends Exception {
+        private final int statusCode;
+        private final String userMessage;
+        private final boolean retryable;
+
+        ChatApiException(int statusCode, String userMessage, boolean retryable) {
+            super(userMessage);
+            this.statusCode = statusCode;
+            this.userMessage = userMessage;
+            this.retryable = retryable;
+        }
+
+        int getStatusCode() {
+            return statusCode;
+        }
+
+        String getUserMessage() {
+            return userMessage;
+        }
+
+        boolean isRetryable() {
+            return retryable;
+        }
     }
 }

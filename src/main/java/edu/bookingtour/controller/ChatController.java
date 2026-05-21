@@ -23,7 +23,10 @@ public class ChatController {
 
     @PostMapping("/chat")
     public ResponseEntity<Map<String, String>> chat(@RequestBody Map<String, String> body) {
-        String message = body.getOrDefault("message", "");
+        String message = body != null ? body.getOrDefault("message", "") : "";
+        if (message.isBlank()) {
+            return ResponseEntity.badRequest().body(Map.of("reply", "Vui lòng nhập tin nhắn."));
+        }
         String reply = chatService.ask(message);
         return ResponseEntity.ok(Map.of("reply", reply));
     }

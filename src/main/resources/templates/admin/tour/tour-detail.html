@@ -127,20 +127,34 @@
                                             </label>
                                         </div>
                                         <div class="mb-3">
-                                            <label>Tiêu đề</label>
-                                            <input type="text" name="tieuDe" class="form-control" th:value="${lich.tieuDe}">
+                                            <label>Tiêu đề / Tuyến đi</label>
+                                            <input type="text" name="tieuDe" class="form-control" th:value="${lich.tieuDe}"
+                                                   placeholder="VD: Tp.HCM – Nha Trang">
                                         </div>
                                         <div class="mb-3">
-                                            <label>Số bữa ăn</label>
-                                            <input type="text" name="soBuaAn" class="form-control" th:value="${lich.soBuaAn}">
+                                            <label>Bữa ăn</label>
+                                            <input type="text" name="soBuaAn" class="form-control" th:value="${lich.soBuaAn}"
+                                                   placeholder="VD: Ăn sáng, trưa, tối">
                                         </div>
                                         <div class="mb-3">
-                                            <label>Nội dung</label>
-                                            <textarea name="noiDung" rows="4" class="form-control" th:text="${lich.noiDung}"></textarea>
+                                            <label>Hoạt động chính</label>
+                                            <input type="text" name="hoatDongChinh" class="form-control" th:value="${lich.hoatDongChinh}"
+                                                   placeholder="VD: Khám phá vịnh, tham quan hang động">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Ảnh minh họa (URL)</label>
+                                            <input type="text" name="hinhAnh" class="form-control" th:value="${lich.hinhAnh}"
+                                                   placeholder="https://... (để trống = dùng ảnh tour)">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Chi tiết hoạt động</label>
+                                            <textarea name="noiDung" rows="5" class="form-control" th:text="${lich.noiDung}"
+                                                      placeholder="Mỗi dòng = một hoạt động (hiển thị dạng bullet)"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label>Nghỉ đêm</label>
-                                            <input type="text" name="nghiDem" class="form-control" th:value="${lich.nghiDem}">
+                                            <input type="text" name="nghiDem" class="form-control" th:value="${lich.nghiDem}"
+                                                   placeholder="VD: Khách sạn Nha Trang">
                                         </div>
                                         <div class="text-end">
                                             <button class="btn btn-success">Lưu</button>
@@ -163,11 +177,17 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div class="text-muted mb-2" th:if="${lich.soBuaAn}">
+                                <p class="text-muted mb-2 small" th:if="${lich.soBuaAn}">
                                     <i class="bi bi-cup-hot"></i>
                                     [[${lich.soBuaAn}]]
-                                </div>
-                                <p th:text="${lich.noiDung}"></p>
+                                </p>
+                                <p class="fw-semibold small mb-1" th:if="${lich.hoatDongChinh}">
+                                    Hoạt động chính: [[${lich.hoatDongChinh}]]
+                                </p>
+                                <ul class="small mb-2 ps-3" th:if="${!#lists.isEmpty(lich.noiDungLines)}">
+                                    <li th:each="line : ${lich.noiDungLines}" th:text="${line}"></li>
+                                </ul>
+                                <p th:if="${#lists.isEmpty(lich.noiDungLines) and lich.noiDung != null}" th:text="${lich.noiDung}" class="small"></p>
                                 <div class="fw-semibold text-primary" th:if="${lich.nghiDem}">
                                     <i class="bi bi-moon-stars"></i>
                                     Nghỉ đêm: [[${lich.nghiDem}]]
@@ -186,20 +206,34 @@
                                         </label>
                                     </div>
                                     <div class="mb-3">
-                                        <label>Tiêu đề</label>
-                                        <input type="text" name="tieuDe" class="form-control" required>
+                                        <label>Tiêu đề / Tuyến đi</label>
+                                        <input type="text" name="tieuDe" class="form-control" required
+                                               placeholder="VD: Tp.HCM – Nha Trang">
                                     </div>
                                     <div class="mb-3">
-                                        <label>Số bữa ăn</label>
-                                        <input type="text" name="soBuaAn" class="form-control">
+                                        <label>Bữa ăn</label>
+                                        <input type="text" name="soBuaAn" class="form-control"
+                                               placeholder="VD: Ăn sáng, trưa, tối">
                                     </div>
                                     <div class="mb-3">
-                                        <label>Nội dung</label>
-                                        <textarea name="noiDung" rows="4" class="form-control"></textarea>
+                                        <label>Hoạt động chính</label>
+                                        <input type="text" name="hoatDongChinh" class="form-control"
+                                               placeholder="VD: Khám phá vịnh, tham quan hang động">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Ảnh minh họa (URL)</label>
+                                        <input type="text" name="hinhAnh" class="form-control"
+                                               placeholder="https://... (để trống = dùng ảnh tour)">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label>Chi tiết hoạt động</label>
+                                        <textarea name="noiDung" rows="5" class="form-control"
+                                                  placeholder="Mỗi dòng = một hoạt động (hiển thị dạng bullet)"></textarea>
                                     </div>
                                     <div class="mb-3">
                                         <label>Nghỉ đêm</label>
-                                        <input type="text" name="nghiDem" class="form-control">
+                                        <input type="text" name="nghiDem" class="form-control"
+                                               placeholder="VD: Khách sạn Nha Trang">
                                     </div>
                                     <div class="text-end">
                                         <button class="btn btn-success">Lưu</button>

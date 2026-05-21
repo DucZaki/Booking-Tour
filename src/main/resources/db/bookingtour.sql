@@ -262,6 +262,8 @@ CREATE TABLE `lich_trinh` (
   `noi_dung` text,
   `so_bua_an` varchar(255) DEFAULT NULL,
   `tieu_de` varchar(255) DEFAULT NULL,
+  `hoat_dong_chinh` varchar(500) DEFAULT NULL,
+  `hinh_anh` varchar(500) DEFAULT NULL,
   `tour_id` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKpnc5i4nnynpvv6u68h24chauk` (`tour_id`),

@@ -40,6 +40,10 @@
                                     </select>
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Ngày đi (từ)</label>
+                                    <input type="date" class="form-control" name="ngayDi" th:value="${ngayDiSelected}">
+                                </div>
+                                <div class="mb-3">
                                     <label class="form-label">Khoảng giá</label>
                                     <select class="form-select" name="khoangGia">
                                         <option value="">-- Tất cả --</option>
@@ -57,6 +61,7 @@
                                 <form method="get" th:action="@{/tour}">
                                     <input type="hidden" name="diemDen" th:value="${diemDenSelected}">
                                     <input type="hidden" name="khoangGia" th:value="${khoangGiaSelected}">
+                                    <input type="hidden" name="ngayDi" th:value="${ngayDiSelected}">
                                     <select class="form-select w-auto" name="sort" onchange="this.form.submit()">
                                         <option value="">Tất cả</option>
                                         <option value="priceAsc" th:selected="${sortSelected == 'priceAsc'}">Giá tăng dần</option>
@@ -85,13 +90,13 @@
                             <div th:if="${totalPage > 0}" aria-label="Page navigation">
                                 <ul class="pagination justify-content-center mt-4">
                                     <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
-                                        <a class="page-link" th:href="@{/tour(page=${page - 1}, perPage=${perPage})}">&laquo;</a>
+                                        <a class="page-link" th:href="@{/tour(page=${page - 1}, size=${size}, diemDen=${diemDenSelected}, khoangGia=${khoangGiaSelected}, sort=${sortSelected}, ngayDi=${ngayDiSelected}, thanhPho=${thanhPhoSelected}, quocGia=${quocGiaSelected})}">&laquo;</a>
                                     </li>
                                     <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}" th:classappend="${i == page} ? 'active'">
-                                        <a class="page-link" th:href="@{/tour(page=${i}, perPage=${perPage})}" th:text="${i + 1}"></a>
+                                        <a class="page-link" th:href="@{/tour(page=${i}, size=${size}, diemDen=${diemDenSelected}, khoangGia=${khoangGiaSelected}, sort=${sortSelected}, ngayDi=${ngayDiSelected}, thanhPho=${thanhPhoSelected}, quocGia=${quocGiaSelected})}" th:text="${i + 1}"></a>
                                     </li>
                                     <li class="page-item" th:classappend="${page == totalPage - 1} ? 'disabled'">
-                                        <a class="page-link" th:href="@{/tour(page=${page + 1}, perPage=${perPage})}">&raquo;</a>
+                                        <a class="page-link" th:href="@{/tour(page=${page + 1}, size=${size}, diemDen=${diemDenSelected}, khoangGia=${khoangGiaSelected}, sort=${sortSelected}, ngayDi=${ngayDiSelected}, thanhPho=${thanhPhoSelected}, quocGia=${quocGiaSelected})}">&raquo;</a>
                                     </li>
                                 </ul>
                             </div>
