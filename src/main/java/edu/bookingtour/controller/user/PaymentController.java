@@ -114,6 +114,7 @@ public class PaymentController {
         }
         // Persist chosen departure on booking
         datCho.setIdDiemDon(diemDonRepository.getReferenceById(departureId));
+        datCho.setIdNgayKhoiHanh(nkh);
 
         double unitPrice = tour.getGia().doubleValue() + nkh.getTongGiaVe();
         PromoApplyResult promoResult = maGiamGiaService.validateAndApply(maGiamGia, tourId, unitPrice, soLuong);
@@ -211,7 +212,7 @@ public class PaymentController {
             if ("00".equals(responseCode)) {
                 datChoService.updateStatus(Integer.parseInt(orderId), "PAID");
                 try {
-                    DatCho updated = datChoService.findById(Integer.parseInt(orderId)).orElse(null);
+                    DatCho updated = datChoService.findByIdWithDetails(Integer.parseInt(orderId)).orElse(null);
                     if (updated != null) {
                         emailService.sendPaymentSuccess(updated);
                     }
@@ -232,14 +233,23 @@ public class PaymentController {
 
     @GetMapping("/payment/vnpay-result")
     public String vnpayResult(HttpServletRequest request, Model model) {
-        model.addAttribute("responseCode", request.getParameter("vnp_ResponseCode"));
-        model.addAttribute("orderId", request.getParameter("vnp_TxnRef"));
+        String responseCode = request.getParameter("vnp_ResponseCode");
+        String orderIdStr = request.getParameter("vnp_TxnRef");
+        model.addAttribute("responseCode", responseCode);
+        model.addAttribute("orderId", orderIdStr);
         String amountStr = request.getParameter("vnp_Amount");
         model.addAttribute("amount", amountStr != null ? Long.parseLong(amountStr) : 0L);
         model.addAttribute("orderInfo", request.getParameter("vnp_OrderInfo"));
         model.addAttribute("bankCode", request.getParameter("vnp_BankCode"));
         model.addAttribute("payDate", request.getParameter("vnp_PayDate"));
         model.addAttribute("message", request.getParameter("vnp_Message"));
+        if ("00".equals(responseCode) && orderIdStr != null) {
+            try {
+                datChoService.findById(Integer.parseInt(orderIdStr))
+                        .ifPresent(b -> model.addAttribute("checkInToken", b.getMaCheckIn()));
+            } catch (NumberFormatException ignored) {
+            }
+        }
         return "chuyendi/vnpay-result";
     }
 

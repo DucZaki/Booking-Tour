@@ -22,13 +22,13 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Ngày khởi hành</label>
-                        <input type="date" th:field="*{ngayKhoiHanh}" class="form-control"
-                               th:min="${tour.id == null ? #temporals.format(#temporals.createNow(),'yyyy-MM-dd') : null}">
+                        <input type="text" th:field="*{ngayKhoiHanh}" class="form-control zaki-date"
+                               th:attr="data-min=${tour.id == null ? #temporals.format(#temporals.createNow(),'yyyy-MM-dd') : null}" placeholder="dd/mm/yyyy" inputmode="numeric">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Ngày kết thúc</label>
-                        <input type="date" th:field="*{ngayKetThuc}" class="form-control"
-                            th:attr="min=${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}" required>
+                        <input type="text" th:field="*{ngayKetThuc}" class="form-control zaki-date" required
+                            th:attr="data-min=${#temporals.format(#temporals.createNow(),'yyyy-MM-dd')}" placeholder="dd/mm/yyyy" inputmode="numeric">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Phương tiện</label>
@@ -139,11 +139,17 @@
         const quocGiaSelect = document.getElementById("quocGia");
         const thanhPhoSelect = document.getElementById("thanhPho");
 
+        function refreshSelect(sel) {
+            if (window.ZakiSelect) ZakiSelect.refresh(sel);
+        }
+
         chauLucSelect.addEventListener("change", function () {
             const chauLuc = this.value;
 
             quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
             thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+            refreshSelect(quocGiaSelect);
+            refreshSelect(thanhPhoSelect);
 
             if (!dataDiaDiem[chauLuc]) return;
 
@@ -153,12 +159,14 @@
                 option.textContent = qg;
                 quocGiaSelect.appendChild(option);
             });
+            refreshSelect(quocGiaSelect);
         });
         quocGiaSelect.addEventListener("change", function () {
             const chauLuc = chauLucSelect.value;
             const quocGia = this.value;
 
             thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
+            refreshSelect(thanhPhoSelect);
 
             if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
 
@@ -168,6 +176,7 @@
                 option.textContent = tp.ten;
                 thanhPhoSelect.appendChild(option);
             });
+            refreshSelect(thanhPhoSelect);
         });
     </script>
 </body>

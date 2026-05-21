@@ -56,7 +56,7 @@ public interface DashboardRepository extends JpaRepository<DatCho, Integer> {
         List<Object[]> findYearlyRevenue();
 
         @Query(value = "SELECT d.id, COALESCE(d.ho_ten, u.ho_ten), COALESCE(d.email, u.email), c.tieu_de, " +
-                        "d.so_luong, d.tong_gia, d.ngay_dat, d.trang_thai, u.id as user_id " +
+                        "d.so_luong, d.tong_gia, d.ngay_dat, d.trang_thai, u.id as user_id, d.ma_check_in " +
                         "FROM dat_cho d " +
                         "LEFT JOIN nguoi_dung u ON d.id_nguoi_dung = u.id " +
                         "JOIN chuyen_di c ON d.id_chuyen_di = c.id " +

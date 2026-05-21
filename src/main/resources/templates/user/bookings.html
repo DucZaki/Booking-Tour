@@ -206,6 +206,7 @@
                                                             th:data-people="${booking.soLuong}"
                                                             th:data-total="${booking.tongGia}"
                                                             th:data-date="${#temporals.format(booking.ngayDat, 'dd/MM/yyyy')}"
+                                                            th:data-checkin-token="${booking.maCheckIn}"
                                                             onclick="showInvoice(this)">
                                                             <i class="bi bi-file-earmark-text me-1"></i>Hoá đơn
                                                         </button>
@@ -294,6 +295,13 @@
                         <div class="text-center mb-4">
                             <div class="display-6 fw-bold text-dark" id="modalTotal">0 ₫</div>
                             <div class="badge bg-success rounded-pill px-3 py-1 mt-2">Thành công</div>
+                        </div>
+
+                        <div id="invoiceQrBlock" class="text-center mb-4" style="display:none;">
+                            <p class="small text-muted mb-2"><i class="bi bi-qr-code me-1"></i> Quét mã để check-in</p>
+                            <img id="invoiceQrImg" src="" alt="QR check-in" class="border rounded-3 p-2 bg-white"
+                                 style="width:180px;height:180px;object-fit:contain;">
+                            <p class="small text-muted mt-2 mb-0">Đưa mã này cho nhân viên ZakiBooking khi lên tour</p>
                         </div>
 
                         <div class="border-top pt-3">
@@ -400,6 +408,15 @@
                 document.getElementById('modalPeople').textContent = data.people + ' người';
                 document.getElementById('modalTotal').textContent = parseInt(data.total).toLocaleString('vi-VN') + ' ₫';
                 document.getElementById('modalDate').textContent = data.date;
+
+                const qrBlock = document.getElementById('invoiceQrBlock');
+                const qrImg = document.getElementById('invoiceQrImg');
+                if (data.checkinToken) {
+                    qrImg.src = '/check-in/' + data.checkinToken + '/qr.png';
+                    qrBlock.style.display = 'block';
+                } else {
+                    qrBlock.style.display = 'none';
+                }
 
                 new bootstrap.Modal(document.getElementById('invoiceModal')).show();
             }

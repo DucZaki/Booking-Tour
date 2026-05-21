@@ -61,6 +61,19 @@
                                 </div>
                             </div>
 
+                            <!-- QR check-in sau thanh toán thành công -->
+                            <div th:if="${responseCode == '00' and checkInToken != null}" class="mb-4 p-4 bg-warning bg-opacity-10 rounded border border-warning">
+                                <h5 class="fw-bold mb-3"><i class="bi bi-qr-code me-2"></i>Mã QR check-in</h5>
+                                <p class="text-muted small mb-3">Lưu hoặc chụp màn hình mã này — quét khi lên tour để nhân viên xác nhận.</p>
+                                <img th:src="@{/check-in/{token}/qr.png(token=${checkInToken})}" alt="QR check-in"
+                                     width="180" height="180" class="border rounded-3 p-2 bg-white mb-3">
+                                <div>
+                                    <a th:href="@{/check-in/{token}(token=${checkInToken})}" class="btn btn-sm btn-outline-warning">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i> Mở vé online
+                                    </a>
+                                </div>
+                            </div>
+
                             <div class="d-grid gap-2 d-md-block">
                                 <a th:href="@{/tour}" class="btn btn-outline-primary px-4 me-md-2">Tiếp tục xem tour</a>
                                 <a th:href="@{/user/bookings}" class="btn btn-primary px-4">Lịch sử đặt chỗ</a>

@@ -145,13 +145,48 @@ public class AdminDashboardController {
             monthlyData.add(monthlyMap.get(i));
         }
 
-        // Map for JS Charts
-        model.addAttribute("weeklyLabels", weeklyRaw.stream().map(r -> "Tuần " + r[0]).toList());
-        model.addAttribute("weeklyData", weeklyRaw.stream().map(r -> r[1]).toList());
+        // Map for JS Charts — đủ 52 tuần / 12 tháng, năm liên tiếp (giống biểu đồ tháng)
+        Map<Integer, Double> weeklyMap = new HashMap<>();
+        IntStream.rangeClosed(1, 52).forEach(i -> weeklyMap.put(i, 0.0));
+        for (Object[] row : weeklyRaw) {
+            weeklyMap.put(((Number) row[0]).intValue(), ((Number) row[1]).doubleValue());
+        }
+        List<String> weeklyLabels = new ArrayList<>();
+        List<Double> weeklyData = new ArrayList<>();
+        for (int i = 1; i <= 52; i++) {
+            weeklyLabels.add("Tuần " + i);
+            weeklyData.add(weeklyMap.get(i));
+        }
+
+        Map<Integer, Double> yearlyMap = new HashMap<>();
+        int currentYear = LocalDate.now().getYear();
+        int minYear = currentYear - 4;
+        if (!yearlyRaw.isEmpty()) {
+            int dbMin = yearlyRaw.stream()
+                    .mapToInt(r -> ((Number) r[0]).intValue())
+                    .min()
+                    .orElse(minYear);
+            minYear = Math.min(minYear, dbMin);
+        }
+        for (int y = minYear; y <= currentYear; y++) {
+            yearlyMap.put(y, 0.0);
+        }
+        for (Object[] row : yearlyRaw) {
+            yearlyMap.put(((Number) row[0]).intValue(), ((Number) row[1]).doubleValue());
+        }
+        List<String> yearlyLabels = new ArrayList<>();
+        List<Double> yearlyData = new ArrayList<>();
+        for (int y = minYear; y <= currentYear; y++) {
+            yearlyLabels.add("Năm " + y);
+            yearlyData.add(yearlyMap.get(y));
+        }
+
+        model.addAttribute("weeklyLabels", weeklyLabels);
+        model.addAttribute("weeklyData", weeklyData);
         model.addAttribute("monthlyLabels", monthlyLabels);
         model.addAttribute("monthlyData", monthlyData);
-        model.addAttribute("yearlyLabels", yearlyRaw.stream().map(r -> "Năm " + r[0]).toList());
-        model.addAttribute("yearlyData", yearlyRaw.stream().map(r -> r[1]).toList());
+        model.addAttribute("yearlyLabels", yearlyLabels);
+        model.addAttribute("yearlyData", yearlyData);
 
         model.addAttribute("bookings", dashboardRepository.findAllBookingDetails());
         Double totalRevenue = dashboardRepository.calculateTotalRevenue();
@@ -178,19 +213,32 @@ public class AdminDashboardController {
     public String tourPerformance(Model model) {
         List<Object[]> tours = dashboardRepository.findTopSellingTours();
         model.addAttribute("tours", tours);
-        
+
         List<String> tourLabels = new ArrayList<>();
-        List<Long> tourData = new ArrayList<>();
+        List<Long> tourBookings = new ArrayList<>();
+        List<Double> tourRevenues = new ArrayList<>();
+        long maxBookings = 0;
         for (Object[] row : tours) {
             tourLabels.add((String) row[1]);
-            tourData.add(((Number) row[2]).longValue());
+            long bookings = ((Number) row[2]).longValue();
+            tourBookings.add(bookings);
+            tourRevenues.add(row[3] != null ? ((Number) row[3]).doubleValue() : 0.0);
+            maxBookings = Math.max(maxBookings, bookings);
         }
         model.addAttribute("tourLabels", tourLabels);
-        model.addAttribute("tourData", tourData);
+        model.addAttribute("tourBookings", tourBookings);
+        model.addAttribute("tourRevenues", tourRevenues);
+        model.addAttribute("maxTourBookings", maxBookings);
 
-        Long totalBookings = dashboardRepository.countTotalBookings();
-        model.addAttribute("totalBookings", totalBookings != null ? totalBookings : 0L);
-        model.addAttribute("successBookings", dashboardRepository.countSuccessfulBookings());
+        long successBookings = dashboardRepository.countSuccessfulBookings();
+        long failedBookings = dashboardRepository.countFailedBookings();
+        long pendingBookings = Math.max(0,
+                dashboardRepository.countTotalBookings() - successBookings - failedBookings);
+
+        model.addAttribute("totalBookings", dashboardRepository.countTotalBookings());
+        model.addAttribute("successBookings", successBookings);
+        model.addAttribute("failedBookings", failedBookings);
+        model.addAttribute("pendingBookings", pendingBookings);
         return "admin/tour-performance";
     }
 }

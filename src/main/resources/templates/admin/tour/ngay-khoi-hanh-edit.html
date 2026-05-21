@@ -24,14 +24,14 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Ngày đi <span class="text-danger">*</span></label>
-                                <input type="date" name="ngayDi" class="form-control"
-                                    th:value="${#temporals.format(nkh.ngay, 'yyyy-MM-dd')}" required>
+                                <input type="text" name="ngayDi" class="form-control zaki-date"
+                                    th:value="${#temporals.format(nkh.ngay, 'yyyy-MM-dd')}" required placeholder="dd/mm/yyyy" inputmode="numeric">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Ngày về <span class="text-danger">*</span></label>
-                                <input type="date" name="ngayVe" class="form-control"
+                                <input type="text" name="ngayVe" class="form-control zaki-date"
                                     th:value="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'yyyy-MM-dd') : ''}"
-                                    required>
+                                    required placeholder="dd/mm/yyyy" inputmode="numeric">
                             </div>
                         </div>
 

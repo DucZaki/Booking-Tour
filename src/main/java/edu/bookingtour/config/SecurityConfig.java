@@ -70,6 +70,7 @@ public class SecurityConfig {
                                                                 "/tin-tuc",
                                                                 "/contact",
                                                                 "/payment/**",
+                                                                "/check-in/**",
                                                                 "/slogan.png",
                                                                 "/favicon.ico",
                                                                 "/favicon.icon")

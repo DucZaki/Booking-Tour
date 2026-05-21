@@ -19,7 +19,8 @@
                     </div>
                     <div class="col-lg-3">
                         <label class="search-field-label"><i class="bi bi-calendar-event-fill"></i> Ngày đi</label>
-                        <input type="date" class="form-control search-field-input" name="ngayDi" id="ngayDi" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                        <input type="text" class="form-control search-field-input zaki-date" name="ngayDi" id="ngayDi"
+                               th:attr="data-min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" placeholder="dd/mm/yyyy" inputmode="numeric">
                     </div>  
                     <div class="col-lg-3">
                         <label class="search-field-label"><i class="bi bi-tag-fill"></i> Khoảng giá</label>

@@ -16,9 +16,6 @@
       <div class="d-flex gap-2">
         <form th:action="@{/admin/tour/bootstrap/activate-all}" method="post">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-          <button type="submit" class="btn btn-outline-primary">
-            <i class="bi bi-lightning-charge"></i> Kích hoạt tất cả tour
-          </button>
         </form>
         <a th:href="@{/admin/tour/create}" class="btn btn-dark">
           <i class="bi bi-plus-circle"></i> Tạo chuyến đi mới

@@ -48,7 +48,7 @@
                             <div class="tab-pane fade show active" id="month" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <canvas id="monthlyChartLine" style="max-height: 400px;"></canvas>
+                                        <canvas id="monthlyChartLine" style="height: 400px;"></canvas>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
@@ -63,7 +63,7 @@
                                                     <tr th:each="row : ${monthlyRevenue}">
                                                         <td>
                                                             <div class="fw-bold" th:text="'Tháng ' + ${row[0]}"></div>
-                                                            <div class="small text-muted" th:text="'Năm 2026'"></div>
+                                                            <div class="small text-muted" th:text="'Năm ' + ${selectedYear}"></div>
                                                         </td>
                                                         <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
@@ -77,10 +77,10 @@
                             <div class="tab-pane fade" id="week" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <canvas id="weeklyChart" style="max-height: 400px;"></canvas>
+                                        <canvas id="weeklyChart" style="height: 400px;"></canvas>
                                     </div>
                                     <div class="col-lg-4">
-                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
                                             <table class="table table-hover">
                                                 <thead class="sticky-top bg-white">
                                                     <tr>
@@ -90,7 +90,10 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr th:each="row : ${weeklyRevenue}">
-                                                        <td th:text="'Tuần ' + ${row[0]}"></td>
+                                                        <td>
+                                                            <div class="fw-bold" th:text="'Tuần ' + ${row[0]}"></div>
+                                                            <div class="small text-muted" th:text="'Năm ' + ${selectedYear}"></div>
+                                                        </td>
                                                         <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
                                                 </tbody>
@@ -103,10 +106,10 @@
                             <div class="tab-pane fade" id="year" role="tabpanel">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <canvas id="yearlyChart" style="max-height: 400px;"></canvas>
+                                        <canvas id="yearlyChart" style="height: 400px;"></canvas>
                                     </div>
                                     <div class="col-lg-4">
-                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <div class="table-responsive" style="max-height: 700px; overflow-y: auto;">
                                             <table class="table table-hover">
                                                 <thead class="sticky-top bg-white">
                                                     <tr>
@@ -116,7 +119,10 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr th:each="row : ${yearlyRevenue}">
-                                                        <td th:text="'Năm ' + ${row[0]}"></td>
+                                                        <td>
+                                                            <div class="fw-bold" th:text="'Năm ' + ${row[0]}"></div>
+                                                            <div class="small text-muted">Tổng hợp</div>
+                                                        </td>
                                                         <td class="text-end fw-bold text-dark" th:text="${#numbers.formatDecimal(row[1], 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
                                                     </tr>
                                                 </tbody>
@@ -180,45 +186,86 @@
         const yearlyLabels = /*[[${yearlyLabels}]]*/ [];
         const yearlyData = /*[[${yearlyData}]]*/ [];
 
-        function renderChart(id, labels, data, type = 'bar') {
-            const ctx = document.getElementById(id);
-            if (!ctx) return;
-            const isLine = type === 'line';
-            new Chart(ctx.getContext('2d'), {
-                type: type,
+        const revenueCharts = {};
+
+        function createRevenueLineChart(canvasId, labels, data) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return null;
+            return new Chart(canvas.getContext('2d'), {
+                type: 'line',
                 data: {
                     labels: labels,
-                        datasets: [{
+                    datasets: [{
                         label: 'Doanh thu (₫)',
                         data: data,
-                        backgroundColor: isLine ? 'rgba(254, 207, 47, 0.1)' : '#FECF2F',
                         borderColor: '#FECF2F',
-                        borderWidth: isLine ? 3 : 1,
-                        borderRadius: isLine ? 0 : 8,
-                        fill: isLine,
+                        backgroundColor: 'rgba(254, 207, 47, 0.1)',
+                        fill: true,
                         tension: 0.4,
-                        pointRadius: isLine ? 4 : 0,
+                        borderWidth: 3,
+                        pointRadius: labels.length > 20 ? 2 : 4,
+                        pointHoverRadius: 6,
                         pointBackgroundColor: '#fff',
-                        pointBorderColor: '#FECF2F'
+                        pointBorderColor: '#FECF2F',
+                        pointBorderWidth: 2
                     }]
                 },
                 options: {
                     responsive: true,
-                    plugins: { legend: { display: false } },
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => ' ' + Number(ctx.raw).toLocaleString('vi-VN') + ' ₫'
+                            }
+                        }
+                    },
                     scales: {
-                        y: { 
+                        y: {
                             beginAtZero: true,
-                            ticks: { callback: v => v.toLocaleString('vi-VN') + ' ₫' }
+                            grid: { borderDash: [5, 5], color: 'rgba(0,0,0,0.06)' },
+                            ticks: {
+                                callback: v => Number(v).toLocaleString('vi-VN') + ' ₫'
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                maxTicksLimit: labels.length > 20 ? 12 : labels.length,
+                                maxRotation: 0,
+                                autoSkip: true
+                            }
                         }
                     }
                 }
             });
         }
 
+        function ensureChart(key, canvasId, labels, data) {
+            if (revenueCharts[key]) {
+                revenueCharts[key].resize();
+                return;
+            }
+            revenueCharts[key] = createRevenueLineChart(canvasId, labels, data);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            renderChart('weeklyChart', weeklyLabels, weeklyData);
-            renderChart('monthlyChartLine', monthlyLabels, monthlyData, 'line');
-            renderChart('yearlyChart', yearlyLabels, yearlyData);
+            ensureChart('month', 'monthlyChartLine', monthlyLabels, monthlyData);
+
+            const weekTab = document.getElementById('week-tab');
+            const yearTab = document.getElementById('year-tab');
+            if (weekTab) {
+                weekTab.addEventListener('shown.bs.tab', () => {
+                    ensureChart('week', 'weeklyChart', weeklyLabels, weeklyData);
+                });
+            }
+            if (yearTab) {
+                yearTab.addEventListener('shown.bs.tab', () => {
+                    ensureChart('year', 'yearlyChart', yearlyLabels, yearlyData);
+                });
+            }
         });
     </script>
 </body>
