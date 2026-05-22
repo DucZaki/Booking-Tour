@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 
 /** Gán mã QR cho đơn cũ chưa có ma_check_in. */
 @Component
+@ConditionalOnProperty(name = "app.runners.backfill-checkin", havingValue = "true", matchIfMissing = false)
 public class CheckInTokenBackfillRunner implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(CheckInTokenBackfillRunner.class);
@@ -27,16 +29,20 @@ public class CheckInTokenBackfillRunner implements ApplicationRunner {
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
-        List<DatCho> missing = datChoRepository.findAll().stream()
-                .filter(d -> d.getMaCheckIn() == null || d.getMaCheckIn().isBlank())
-                .toList();
-        if (missing.isEmpty()) {
-            return;
+        try {
+            List<DatCho> missing = datChoRepository.findAll().stream()
+                    .filter(d -> d.getMaCheckIn() == null || d.getMaCheckIn().isBlank())
+                    .toList();
+            if (missing.isEmpty()) {
+                return;
+            }
+            for (DatCho d : missing) {
+                d.setMaCheckIn(UUID.randomUUID().toString().replace("-", ""));
+            }
+            datChoRepository.saveAll(missing);
+            log.info("Check-in QR: backfill {} đơn chưa có mã.", missing.size());
+        } catch (Exception e) {
+            log.error("CheckInTokenBackfillRunner thất bại, bỏ qua để không ảnh hưởng khởi động.", e);
         }
-        for (DatCho d : missing) {
-            d.setMaCheckIn(UUID.randomUUID().toString().replace("-", ""));
-        }
-        datChoRepository.saveAll(missing);
-        log.info("Check-in QR: backfill {} đơn chưa có mã.", missing.size());
     }
 }
