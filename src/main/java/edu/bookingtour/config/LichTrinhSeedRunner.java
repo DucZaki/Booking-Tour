@@ -19,6 +19,7 @@ import java.sql.Connection;
 public class LichTrinhSeedRunner implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(LichTrinhSeedRunner.class);
+    private static final int EXPECTED_TOUR_COUNT = 18;
     private static final int MIN_EXPECTED_ROWS = 45;
 
     private final JdbcTemplate jdbcTemplate;
@@ -31,6 +32,15 @@ public class LichTrinhSeedRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        Integer tourCount = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM chuyen_di WHERE id BETWEEN 1 AND 18",
+                Integer.class);
+        if (tourCount == null || tourCount < EXPECTED_TOUR_COUNT) {
+            log.warn("Bỏ qua seed lich_trinh: cần {} tour cha id 1–18 trong chuyen_di, hiện có {}",
+                    EXPECTED_TOUR_COUNT, tourCount == null ? 0 : tourCount);
+            return;
+        }
+
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM lich_trinh WHERE tour_id BETWEEN 1 AND 18",
                 Integer.class);
