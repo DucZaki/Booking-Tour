@@ -10,7 +10,7 @@
 <body>
     <th:block th:fragment="content">
         <div class="container pt-5" style="margin-top: 30px;"
-             th:with="transportKind=${T(edu.bookingtour.util.TransportUi).kind(tour.idPhuongTien)},
+             th:with="transportKind=${T(edu.bookingtour.util.TransportUi).kind(tour.idPhuongTien != null ? tour.idPhuongTien.loai : null, tour.idPhuongTien != null ? tour.idPhuongTien.hang : null)},
                       transportIcon=${T(edu.bookingtour.util.TransportUi).icon(transportKind)},
                       transportIconTimeline=${T(edu.bookingtour.util.TransportUi).iconTimeline(transportKind)}">
             <nav aria-label="breadcrumb" class="mb-3">
@@ -234,7 +234,7 @@
                                     th:data-unit-price="${tongGia}"></span>
                             </div>
 
-                            <button type="submit" form="bookingForm" class="btn btn-danger w-100 py-3 fw-bold fs-5">
+                            <button type="submit" form="bookingForm" class="btn btn-danger w-100 py-3 fw-bold fs-5 booking-sidebar-desktop-submit">
                                 <i class="bi bi-check-circle me-2"></i> XÁC NHẬN ĐẶT TOUR
                             </button>
 
@@ -247,6 +247,19 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="mobile-bottom-summary">
+            <div class="d-flex align-items-center justify-content-between gap-3">
+                <div>
+                    <div class="small text-muted">Tổng thanh toán</div>
+                    <div class="fw-bold text-danger fs-5" id="mobileTotalPrice"
+                         th:text="${#numbers.formatDecimal(tongGia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></div>
+                </div>
+                <button type="submit" form="bookingForm" class="btn btn-danger rounded-4 py-3 px-3 fw-bold">
+                    Đặt tour
+                </button>
             </div>
         </div>
 
@@ -283,6 +296,8 @@
                     var subtotal = unitPrice * soLuong;
                     var total = Math.max(0, subtotal - appliedDiscount);
                     document.getElementById('totalPrice').textContent = formatVnd(total);
+                    var mobileTotal = document.getElementById('mobileTotalPrice');
+                    if (mobileTotal) mobileTotal.textContent = formatVnd(total);
                     document.getElementById('totalPrice').setAttribute('data-subtotal', subtotal);
                 }
 
@@ -312,6 +327,8 @@
                             document.getElementById('discountLine').classList.remove('d-none');
                             document.getElementById('discountAmount').textContent = '-' + formatVnd(data.discount);
                             document.getElementById('totalPrice').textContent = formatVnd(data.total);
+                            var mobileTotal = document.getElementById('mobileTotalPrice');
+                            if (mobileTotal) mobileTotal.textContent = formatVnd(data.total);
                             msg.textContent = data.message || 'Áp dụng mã thành công';
                             msg.className = 'small mt-1 text-success';
                         } else {

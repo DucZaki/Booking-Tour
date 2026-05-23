@@ -9,15 +9,23 @@
 </head>
 <body>
 <content>
-    <section class="container mt-5 pt-4 bg-white" >
-        <h2 class="fw-bold mb-4 text-black">Danh sách Điểm Đến</h2>
+    <section class="container mt-5 pt-4 bg-white tour-list-heading" >
+        <h2 class="fw-bold mb-2 text-black">Danh sách Điểm Đến</h2>
+        <p class="text-muted mb-0 d-md-none">Lọc nhanh, chọn tour phù hợp và đặt chỉ trong vài bước.</p>
     </section>
     <div class="container mb-5 bg-light">
         <div class="row align-items-start" >
             <section class="bg-light py-5">
                 <div class="container">
+                    <div class="mobile-filter-shell d-md-none mb-3">
+                        <button class="btn btn-primary w-100 fw-bold mobile-filter-toggle" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#tourFilters"
+                                aria-expanded="false" aria-controls="tourFilters">
+                            <i class="bi bi-sliders me-2"></i>Lọc tour phù hợp
+                        </button>
+                    </div>
                     <div class="row align-items-start">
-                        <div class="col-md-3 border-end bg-white p-4 rounded shadow-sm filters-panel">
+                        <div class="col-md-3 border-end bg-white p-4 rounded shadow-sm filters-panel collapse d-md-block" id="tourFilters">
                             <h6 class="fw-bold mb-3">BỘ LỌC TÌM KIẾM</h6>
                             <form  method ="GET" th:action ="@{/tour}">
                                 <div class="mb-3">
@@ -56,13 +64,13 @@
                             </form>
                         </div>
                         <div class="col-md-9">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex flex-column flex-md-row gap-2 justify-content-between align-items-md-center mb-3">
                                 <p class="mb-0">Tìm thấy <strong th:text="${dem}"></strong> tour phù hợp</p>
                                 <form method="get" th:action="@{/tour}">
                                     <input type="hidden" name="diemDen" th:value="${diemDenSelected}">
                                     <input type="hidden" name="khoangGia" th:value="${khoangGiaSelected}">
                                     <input type="hidden" name="ngayDi" th:value="${ngayDiSelected}">
-                                    <select class="form-select w-auto select-premium" name="sort" onchange="this.form.submit()">
+                                    <select class="form-select w-100 w-md-auto select-premium" name="sort" onchange="this.form.submit()">
                                         <option value="">Tất cả</option>
                                         <option value="priceAsc" th:selected="${sortSelected == 'priceAsc'}">Giá tăng dần</option>
                                         <option value="priceDesc" th:selected="${sortSelected == 'priceDesc'}">Giá giảm dần</option>
@@ -70,7 +78,7 @@
                                 </form>
                             </div>
                             <div th:if="${not #lists.isEmpty(dschuyendi)}">
-                                <div class="d-flex border rounded mb-3 shadow-sm bg-white" th:each="ds : ${dschuyendi}">
+                                <div class="d-flex border rounded mb-3 shadow-sm bg-white tour-list-card" th:each="ds : ${dschuyendi}">
                                     <img th:src="${ds.hinhAnh}" class="card-img-top rounded" alt="" style="width:260px; height:210px; object-fit: cover;" />
                                     <div class="p-3 flex-grow-1">
                                         <h5 class="fw-bold" th:text="${ds.tieuDe}"></h5>
@@ -78,7 +86,7 @@
                                         <p style="margin-bottom:5px;">Phương tiện:<span th:text="${ds.idPhuongTien.loai}"></span></p>
                                         <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'"></p>
                                     </div>
-                                    <div class="d-flex align-items-center px-3">
+                                    <div class="d-flex align-items-center px-3 tour-card-action">
                                         <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary">Xem chi tiết</a>
                                     </div>
                                 </div>

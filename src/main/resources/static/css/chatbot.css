@@ -218,6 +218,41 @@
     color: var(--bs-dark);
 }
 
+@media (max-width: 576px) {
+    .ai-chatbot-widget {
+        inset: auto 10px 82px 10px;
+        width: auto;
+        height: min(72vh, 560px);
+        max-height: calc(100vh - 110px);
+        border-radius: 20px;
+    }
+
+    .ai-chat-header {
+        padding: 14px 16px;
+    }
+
+    .ai-chat-body {
+        padding: 14px;
+        gap: 12px;
+    }
+
+    .chat-bubble {
+        max-width: 92%;
+        font-size: 0.86rem;
+    }
+
+    .ai-chat-footer {
+        padding: 12px;
+    }
+
+    .ai-chat-trigger {
+        right: 16px;
+        bottom: 86px;
+        width: 52px;
+        height: 52px;
+    }
+}
+
 /* Markdown trong bubble */
 .chat-bubble.ai p:last-child { margin-bottom: 0; }
 .chat-bubble.ai a { color: #2563eb; font-weight: 600; }

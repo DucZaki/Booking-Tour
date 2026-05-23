@@ -11,7 +11,7 @@
         <div class="container py-5 mt-5">
             <div class="row justify-content-center">
                 <div class="col-md-8">
-                    <div class="card shadow border-0">
+                    <div class="card shadow border-0 payment-result-card">
                         <div class="card-body p-5 text-center">
                             <!-- Success Icon -->
                             <div th:if="${responseCode == '00'}" class="mb-4">
@@ -35,27 +35,27 @@
                             <hr class="my-4">
 
                             <!-- Transaction Details -->
-                            <div class="text-start mb-4 bg-light p-4 rounded">
+                            <div class="text-start mb-4 bg-light p-4 rounded payment-detail-box">
                                 <h5 class="fw-bold mb-3 border-bottom pb-2">Thông tin giao dịch</h5>
-                                <div class="row mb-2">
+                                <div class="row mb-2 payment-detail-row">
                                     <div class="col-6 text-muted">Mã đơn hàng:</div>
                                     <div class="col-6 fw-bold" th:text="${orderId}">#123456</div>
                                 </div>
-                                <div class="row mb-2">
+                                <div class="row mb-2 payment-detail-row">
                                     <div class="col-6 text-muted">Số tiền:</div>
                                     <div class="col-6 fw-bold text-primary"
                                         th:text="${#numbers.formatDecimal(amount / 100, 0, 'COMMA', 0, 'POINT') + ' ₫'}">
                                         1,000,000 ₫</div>
                                 </div>
-                                <div class="row mb-2">
+                                <div class="row mb-2 payment-detail-row">
                                     <div class="col-6 text-muted">Nội dung:</div>
                                     <div class="col-6" th:text="${orderInfo}">Thanh toán tour...</div>
                                 </div>
-                                <div class="row mb-2">
+                                <div class="row mb-2 payment-detail-row">
                                     <div class="col-6 text-muted">Ngân hàng:</div>
                                     <div class="col-6" th:text="${bankCode}">NCB</div>
                                 </div>
-                                <div class="row">
+                                <div class="row payment-detail-row">
                                     <div class="col-6 text-muted">Thời gian:</div>
                                     <div class="col-6" th:text="${payDate}">2025-01-01</div>
                                 </div>

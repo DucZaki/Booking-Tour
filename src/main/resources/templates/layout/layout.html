@@ -78,9 +78,9 @@
             <!-- Nút Admin Panel - chỉ hiện với ROLE_ADMIN -->
             <a th:href="@{/admin}"
                sec:authorize="hasRole('ADMIN')"
-               class="btn btn-dark rounded-pill px-3 d-flex align-items-center gap-2"
+               class="btn btn-dark rounded-pill px-3 d-flex align-items-center gap-2 admin-quick-link"
                style="font-size:0.85rem; font-weight:700;">
-                <i class="bi bi-shield-lock-fill"></i> Admin
+                <i class="bi bi-shield-lock-fill"></i> <span>Admin</span>
             </a>
             <div class="dropdown" sec:authorize="isAuthenticated()">
                 <div class="user-profile-icon" data-bs-toggle="dropdown">
@@ -108,8 +108,81 @@
             </div>
             <a th:href="@{/login}" class="btn btn-dark rounded-pill px-4" sec:authorize="isAnonymous()">Sign in</a>
             <button class="btn p-0 border-0 ms-1" id="darkModeToggle" style="background:none; font-size: 1.2rem;">🌙</button>
+            <button class="btn btn-dark rounded-circle d-lg-none mobile-menu-toggle" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
+                    aria-label="Mở menu">
+                <i class="bi bi-list fs-5"></i>
+            </button>
         </div>
     </nav>
+
+    <div class="offcanvas offcanvas-end mobile-menu-panel" tabindex="-1" id="mobileMenu" aria-labelledby="mobileMenuLabel">
+        <div class="offcanvas-header">
+            <div class="d-flex align-items-center gap-2">
+                <img th:src="@{/favicon.icon}" alt="ZakiBooking" height="38" class="rounded-3">
+                <div>
+                    <h5 class="offcanvas-title fw-bold mb-0" id="mobileMenuLabel">ZakiBooking</h5>
+                    <small class="text-muted">Đặt tour nhanh hơn trên điện thoại</small>
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mobile-menu-section">
+                <a class="mobile-menu-link" th:href="@{/tour}">
+                    <i class="bi bi-compass"></i>
+                    <span>Tất cả tour</span>
+                </a>
+                <a class="mobile-menu-link" th:href="@{/tin-tuc}">
+                    <i class="bi bi-newspaper"></i>
+                    <span>Tin tức</span>
+                </a>
+                <a class="mobile-menu-link" th:href="@{/contact}">
+                    <i class="bi bi-headset"></i>
+                    <span>Liên hệ hỗ trợ</span>
+                </a>
+            </div>
+
+            <div class="mobile-menu-section">
+                <div class="mobile-menu-title">Điểm đến phổ biến</div>
+                <div class="mobile-destination-grid">
+                    <a th:href="@{/tour(thanhPho='Sapa')}">Sapa</a>
+                    <a th:href="@{/tour(thanhPho='Hạ Long')}">Hạ Long</a>
+                    <a th:href="@{/tour(thanhPho='Đà Nẵng')}">Đà Nẵng</a>
+                    <a th:href="@{/tour(thanhPho='Huế')}">Huế</a>
+                    <a th:href="@{/tour(quocGia='Thái Lan')}">Thái Lan</a>
+                    <a th:href="@{/tour(quocGia='Hàn Quốc')}">Hàn Quốc</a>
+                </div>
+            </div>
+
+            <div class="mobile-menu-section" sec:authorize="isAuthenticated()">
+                <div class="mobile-menu-title">Tài khoản</div>
+                <a class="mobile-menu-link" th:href="@{/user/profile}">
+                    <i class="bi bi-person"></i>
+                    <span>Hồ sơ cá nhân</span>
+                </a>
+                <a class="mobile-menu-link" th:href="@{/user/bookings}">
+                    <i class="bi bi-luggage"></i>
+                    <span>Đơn đặt chỗ</span>
+                </a>
+                <a class="mobile-menu-link" th:href="@{/favorites/my-favorites}">
+                    <i class="bi bi-bookmark-heart"></i>
+                    <span>Tour yêu thích</span>
+                </a>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <a th:href="@{/login}" sec:authorize="isAnonymous()" class="btn btn-primary rounded-pill py-3 fw-bold">
+                    Đăng nhập để đặt tour
+                </a>
+                <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="m-0">
+                    <button type="submit" class="btn btn-outline-danger rounded-pill py-3 fw-bold w-100">
+                        Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Nav search — dropdown gọn dưới navbar, không phủ full màn -->
     <div class="nav-search-dropdown" id="navSearchPanel" aria-hidden="true">
@@ -191,7 +264,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/vn.js"></script>
     <script th:src="@{/js/select-enhance.js(v=1)}"></script>
     <script th:src="@{/js/date-picker.js(v=1)}"></script>
-    <script th:src="@{/js/script.js(v=6)}"></script>
+    <script th:src="@{/js/script.js(v=7)}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
     <script th:src="@{/js/dark-mode.js}"></script>
 

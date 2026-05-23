@@ -78,7 +78,7 @@
                     </div>
 
                     <!-- Tabs -->
-                    <ul class="nav nav-pills mb-4 bg-white p-2 rounded-3 shadow-sm small fw-bold" id="bookingTabs"
+                    <ul class="nav nav-pills mb-4 bg-white p-2 rounded-3 shadow-sm small fw-bold booking-tabs-scroll" id="bookingTabs"
                         role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active rounded-pill text-dark" id="all-tab" data-bs-toggle="tab"
@@ -127,7 +127,7 @@
 
                         <div class="row g-3" th:if="${not #lists.isEmpty(list)}">
                             <div class="col-12" th:each="booking : ${list}">
-                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3">
+                                <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3 booking-history-card">
                                     <div class="row g-0">
                                         <div class="col-md-3">
                                             <img th:src="${booking.idChuyenDi.hinhAnh}" class="img-fluid h-100"
@@ -178,7 +178,7 @@
                                                             th:text="${#numbers.formatDecimal(booking.tongGia, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
                                                         </h5>
                                                     </div>
-                                                    <div class="d-flex gap-2">
+                                                    <div class="d-flex gap-2 booking-card-actions">
                                                         <!-- Pay Now Button -->
                                                         <a th:if="${booking.trangThai == 'PENDING' && (booking.createdAt == null || !booking.createdAt.plusMinutes(15).isBefore(currentTime))}"
                                                             th:href="@{/booking/repay/{id}(id=${booking.id})}"

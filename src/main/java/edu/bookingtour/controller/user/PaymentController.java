@@ -139,8 +139,12 @@ public class PaymentController {
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
         String orderInfo = "Donhang" + datCho.getId();
+        // VNPay yêu cầu vnp_TxnRef unique; nếu reuse (vd: repay nhiều lần) sandbox thường báo
+        // "Giao dịch đã quá thời gian chờ" ngay lập tức. Dùng suffix timestamp để luôn unique,
+        // callback/IPN sẽ parse lại ID đơn từ phần trước dấu '_'.
+        String txnRef = datCho.getId() + "_" + System.currentTimeMillis();
         try {
-            Map<String, String> vnpParams = vnPayConfig.createPayParams(request, String.valueOf(datCho.getId()), amountVnd,
+            Map<String, String> vnpParams = vnPayConfig.createPayParams(request, txnRef, amountVnd,
                     orderInfo);
             String paymentUrl = vnPayConfig.buildPaymentUrl(vnpParams);
             return "redirect:" + paymentUrl;
@@ -182,10 +186,17 @@ public class PaymentController {
                 return response;
             }
 
-            String orderId = request.getParameter("vnp_TxnRef");
+            String txnRef = request.getParameter("vnp_TxnRef");
             String responseCode = request.getParameter("vnp_ResponseCode");
             String amountStr = request.getParameter("vnp_Amount");
-            DatCho datCho = datChoService.findById(Integer.parseInt(orderId)).orElse(null);
+            if (txnRef == null || txnRef.isBlank()) {
+                response.put("RspCode", "01");
+                response.put("Message", "Order not Found");
+                return response;
+            }
+            // txnRef có dạng "<datChoId>_<timestamp>"; fallback: nếu không có '_' thì coi như id.
+            String orderIdStr = txnRef.split("_", 2)[0];
+            DatCho datCho = datChoService.findById(Integer.parseInt(orderIdStr)).orElse(null);
 
             if (datCho == null) {
                 response.put("RspCode", "01");
@@ -210,16 +221,16 @@ public class PaymentController {
             }
 
             if ("00".equals(responseCode)) {
-                datChoService.updateStatus(Integer.parseInt(orderId), "PAID");
+                datChoService.updateStatus(Integer.parseInt(orderIdStr), "PAID");
                 try {
-                    DatCho updated = datChoService.findByIdWithDetails(Integer.parseInt(orderId)).orElse(null);
+                    DatCho updated = datChoService.findByIdWithDetails(Integer.parseInt(orderIdStr)).orElse(null);
                     if (updated != null) {
                         emailService.sendPaymentSuccess(updated);
                     }
                 } catch (Exception ignored) {
                 }
             } else {
-                datChoService.updateStatus(Integer.parseInt(orderId), "FAILED");
+                datChoService.updateStatus(Integer.parseInt(orderIdStr), "FAILED");
             }
             response.put("RspCode", "00");
             response.put("Message", "Confirm Success");
@@ -234,7 +245,8 @@ public class PaymentController {
     @GetMapping("/payment/vnpay-result")
     public String vnpayResult(HttpServletRequest request, Model model) {
         String responseCode = request.getParameter("vnp_ResponseCode");
-        String orderIdStr = request.getParameter("vnp_TxnRef");
+        String txnRef = request.getParameter("vnp_TxnRef");
+        String orderIdStr = txnRef != null ? txnRef.split("_", 2)[0] : null;
         model.addAttribute("responseCode", responseCode);
         model.addAttribute("orderId", orderIdStr);
         String amountStr = request.getParameter("vnp_Amount");
@@ -270,7 +282,8 @@ public class PaymentController {
 
         long amountVnd = (long) Math.round(datCho.getTongGia());
         String orderInfo = "Thanh toan lai don hang " + datCho.getId();
-        Map<String, String> vnpParams = vnPayConfig.createPayParams(request, String.valueOf(datCho.getId()), amountVnd,
+        String txnRef = datCho.getId() + "_" + System.currentTimeMillis();
+        Map<String, String> vnpParams = vnPayConfig.createPayParams(request, txnRef, amountVnd,
                 orderInfo);
         String paymentUrl = vnPayConfig.buildPaymentUrl(vnpParams);
 

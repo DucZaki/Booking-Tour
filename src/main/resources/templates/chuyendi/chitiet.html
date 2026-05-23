@@ -17,7 +17,7 @@
                 diemDenTp=${id.idDiemDen != null ? id.idDiemDen.thanhPho : null},
                 diemDenQg=${id.idDiemDen != null ? id.idDiemDen.quocGia : null},
                 diemDenLabel=${diemDenTp != null ? (diemDenQg != null and !#strings.isEmpty(diemDenQg) ? diemDenTp + ', ' + diemDenQg : diemDenTp) : 'Đang cập nhật'},
-                transportKind=${T(edu.bookingtour.util.TransportUi).kind(id.idPhuongTien)},
+                transportKind=${T(edu.bookingtour.util.TransportUi).kind(id.idPhuongTien != null ? id.idPhuongTien.loai : null, id.idPhuongTien != null ? id.idPhuongTien.hang : null)},
                 transportIcon=${T(edu.bookingtour.util.TransportUi).icon(transportKind)},
                 transportIconTimeline=${T(edu.bookingtour.util.TransportUi).iconTimeline(transportKind)}">
 
@@ -27,8 +27,8 @@
                     </h1>
                     <hr>
 
-                    <div class="row g-2">
-                        <div class="col-3 d-flex flex-column justify-content-start">
+                    <div class="row g-2 tour-gallery">
+                        <div class="col-3 d-flex flex-column justify-content-start tour-gallery-thumbs">
                             <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__0_11904_hoa-do-quyen-do.webp"
                                 class="img-fluid rounded mb-2 border" alt="Ảnh nhỏ 1">
                             <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__1_11904_the-village-cat-cat-in-sapa.webp"
@@ -36,7 +36,7 @@
                             <img src="https://s3-cmc.travel.com.vn/vtv-image/Images/Tour/tfd__2_11904_beautiful-landscape-with-mountain-view-on-the-train-1.webp"
                                 class="img-fluid rounded mb-2 border" alt="Ảnh nhỏ 3">
                         </div>
-                        <div class="col-9">
+                        <div class="col-9 tour-gallery-main">
                             <img th:src="${id.hinhAnh}" class="img-fluid rounded" alt="Ảnh chính Tour">
                         </div>
                     </div>
@@ -44,9 +44,9 @@
                         <h2 class="h5 fw-bold">LỊCH KHỞI HÀNH</h2>
                     </div>
                     <div class="card-body p-0">
-                        <div class="row g-0">
+                        <div class="row g-0 schedule-calendar-row">
                             <!-- Sidebar 3 tháng -->
-                            <div class="col-3 col-md-2 pe-3">
+                            <div class="col-3 col-md-2 pe-3 month-switcher">
                                 <th:block th:each="i : ${#numbers.sequence(0,2)}">
                                     <a th:href="@{/tour/{id}(id=${id.id}, month=${months[i]}, year=${years[i]})}"
                                         class="btn w-100 mb-2 small fw-bold"
@@ -56,7 +56,7 @@
                                 </th:block>
                             </div>
 
-                            <div class="col-9 col-md-10 border rounded p-3 bg-white shadow-sm">
+                            <div class="col-9 col-md-10 border rounded p-3 bg-white shadow-sm calendar-panel">
                                 <div class="text-center mb-4">
                                     <span class="fw-bold text-uppercase"
                                         th:text="${'THÁNG ' + #numbers.formatInteger(currentMonth, 2) + '/' + currentYear}"></span>
@@ -582,6 +582,18 @@
             </div>
         </div>
 
+        <div th:if="${selectedNkh != null}" class="mobile-sticky-cta">
+            <div>
+                <div class="small text-muted">Giá từ / khách</div>
+                <div class="fw-bold text-danger"
+                     th:text="${#numbers.formatDecimal(id.gia.doubleValue() + price, 0, 'COMMA', 0, 'POINT') + ' ₫'}"></div>
+            </div>
+            <a th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
+               class="btn btn-danger text-decoration-none">
+                Đặt ngay
+            </a>
+        </div>
+
         <script>
             function showWeather(element) {
                 const location = element.getAttribute('data-location');
@@ -606,7 +618,7 @@
                         fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=5')
                             .then(res => res.json())
                             .then(weatherData => {
-                                let html = '<div class="col-12 mb-2"><strong class="small text-muted">Thời tiết tại ' + locName + '</strong> &nbsp;<a href="https://www.windy.com/?'+lat+','+lon+',10" target="_blank" class="small" style="color:#856404;"><i class="bi bi-box-arrow-up-right"></i> Xem chi tiết</a></div>';
+                                let html = '<div class="col-12 mb-2 weather-heading"><strong class="small text-muted">Thời tiết tại ' + locName + '</strong> &nbsp;<a href="https://www.windy.com/?'+lat+','+lon+',10" target="_blank" class="small" style="color:#856404;"><i class="bi bi-box-arrow-up-right"></i> Xem chi tiết</a></div>';
                                 const windyBase = 'https://www.windy.com/?' + lat + ',' + lon + ',10';
                                 const daily = weatherData.daily;
                                 for(let i=0; i<daily.time.length; i++) {
@@ -617,7 +629,7 @@
                                     let icon = getWeatherIcon(wCode);
                                     
                                     html += `
-                                    <div class="col">
+                                    <div class="col weather-day-col">
                                         <a href="${windyBase}" target="_blank" class="text-decoration-none">
                                         <div class="p-2 border rounded h-100 weather-day-card">
                                             <div class="small fw-bold" style="color:#856404;">${dateStr}</div>

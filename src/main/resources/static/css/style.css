@@ -1595,3 +1595,612 @@ a:hover {
 [data-theme="dark"] .booking-flight-line .dash {
     background: rgba(255, 255, 255, 0.12);
 }
+
+/* ===================== MOBILE-FIRST UX UPGRADE ===================== */
+.mobile-menu-toggle {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mobile-menu-panel {
+    border-radius: 24px 0 0 24px;
+}
+
+.mobile-menu-section {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.mobile-menu-section:last-child {
+    border-bottom: 0;
+}
+
+.mobile-menu-title {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(26, 28, 30, 0.55);
+    margin-bottom: 10px;
+}
+
+.mobile-menu-link {
+    min-height: 48px;
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--bs-dark);
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.mobile-menu-link:hover {
+    background: rgba(254, 207, 47, 0.18);
+    color: var(--bs-dark);
+}
+
+.mobile-menu-link i {
+    width: 24px;
+    color: #c49a00;
+    font-size: 1.1rem;
+}
+
+.mobile-destination-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.mobile-destination-grid a {
+    min-height: 44px;
+    border-radius: 14px;
+    background: #f7f7f9;
+    color: var(--bs-dark);
+    text-decoration: none;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px;
+}
+
+.mobile-filter-toggle {
+    min-height: 48px;
+}
+
+.tour-list-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mobile-sticky-cta {
+    display: none;
+}
+
+.mobile-bottom-summary {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .w-md-auto {
+        width: auto !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+}
+
+.payment-result-card {
+    border-radius: 28px !important;
+}
+
+.booking-tabs-scroll {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+}
+
+.booking-tabs-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+@media (max-width: 991.98px) {
+    .premium-nav-dock {
+        top: 12px;
+        width: calc(100% - 24px);
+        padding: 8px 12px !important;
+        border-radius: 24px;
+    }
+
+    .premium-nav-dock .navbar-brand img {
+        height: 42px;
+    }
+
+    .premium-nav-dock .btn.rounded-pill {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    .nav-search-dropdown {
+        top: 74px;
+        width: calc(100vw - 20px);
+    }
+
+    .nav-search-dropdown-inner {
+        padding: 16px;
+        border-radius: 18px;
+        max-height: calc(100vh - 96px);
+        overflow-y: auto;
+    }
+
+    main {
+        padding-bottom: 78px;
+    }
+
+    .newsletter form {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .newsletter form .btn,
+    .newsletter form .form-control {
+        margin-left: 0 !important;
+        width: 100%;
+        min-height: 48px;
+        border-radius: 14px;
+    }
+
+    .card:hover,
+    .tour-list-card:hover {
+        transform: none !important;
+    }
+
+    .sticky-price-box {
+        position: static;
+        top: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 0.95rem;
+    }
+
+    .container {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .hero-section {
+        padding: 112px 0 76px;
+        min-height: auto;
+    }
+
+    .hero-lead {
+        font-size: 1rem;
+        max-width: 95%;
+    }
+
+    .search-section {
+        margin-top: -38px !important;
+    }
+
+    .search-card {
+        padding: 18px !important;
+        border-radius: 24px !important;
+    }
+
+    #nearbyToursSection .d-flex,
+    .search-section + section .d-flex {
+        align-items: stretch !important;
+    }
+
+    #nearbyToursSection h2,
+    section h2[style*="2.5rem"] {
+        font-size: 1.6rem !important;
+        line-height: 1.25;
+    }
+
+    #nearbyCitySelect,
+    #nearbyRetryBtn {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    .search-field-input,
+    .search-section .search-field-input {
+        height: 50px !important;
+        font-size: 1rem;
+    }
+
+    .mobile-filter-shell {
+        position: sticky;
+        top: 78px;
+        z-index: 100;
+        background: var(--bs-body-bg);
+        padding: 8px 0;
+    }
+
+    .filters-panel {
+        margin-bottom: 16px;
+        border-right: 0 !important;
+        border-radius: 20px !important;
+    }
+
+    .tour-list-card {
+        display: block !important;
+        border-radius: 22px !important;
+        overflow: hidden;
+    }
+
+    .tour-list-card > img {
+        width: 100% !important;
+        height: 190px !important;
+        border-radius: 0 !important;
+    }
+
+    .tour-list-card .tour-card-action {
+        padding: 0 16px 16px !important;
+    }
+
+    .tour-list-card .tour-card-action .btn {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 999px;
+        font-weight: 800;
+    }
+
+    .tour-detail-container {
+        padding-bottom: 96px;
+    }
+
+    .tour-detail-container h1 {
+        font-size: 1.35rem;
+        line-height: 1.35;
+    }
+
+    .tour-gallery-thumbs {
+        display: none !important;
+    }
+
+    .tour-gallery-main {
+        width: 100% !important;
+    }
+
+    .tour-gallery-main img {
+        width: 100%;
+        max-height: 260px;
+        object-fit: cover;
+    }
+
+    .calendar-grid {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 5px;
+    }
+
+    .calendar-day {
+        min-width: 0;
+        min-height: 54px;
+        padding: 5px 2px;
+        overflow: hidden;
+    }
+
+    .departure-tag,
+    .price-sub {
+        font-size: 0.58rem;
+    }
+
+    .weather-day-col {
+        flex: 0 0 126px;
+        width: 126px;
+    }
+
+    #weatherContent {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scrollbar-width: thin;
+    }
+
+    #weatherContent .weather-heading {
+        flex: 0 0 100%;
+        width: 100%;
+    }
+
+    .mobile-sticky-cta {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 1080;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: #fff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 22px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+        padding: 12px 14px;
+    }
+
+    .mobile-sticky-cta .btn {
+        min-width: 132px;
+        min-height: 48px;
+        border-radius: 16px;
+        font-weight: 900;
+    }
+
+    .booking-card .card-body,
+    .booking-form {
+        padding: 16px !important;
+    }
+
+    .booking-form .form-control,
+    .booking-form .form-select,
+    .booking-form textarea {
+        min-height: 48px;
+        font-size: 1rem;
+        border-radius: 14px !important;
+    }
+
+    .booking-flight-leg-head {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .mobile-bottom-summary {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        z-index: 1080;
+        display: block;
+        background: #fff;
+        border-radius: 22px;
+        padding: 12px 14px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .booking-sidebar-desktop-submit {
+        display: none !important;
+    }
+
+    .payment-result-card .card-body {
+        padding: 24px 18px !important;
+    }
+
+    .payment-detail-row {
+        display: block !important;
+        padding: 10px 0;
+    }
+
+    .payment-detail-row > div {
+        width: 100%;
+    }
+
+    .booking-tabs-scroll .nav-item {
+        flex: 0 0 auto;
+    }
+
+    .booking-history-card .card-body {
+        padding: 16px !important;
+    }
+
+    .booking-history-card .booking-card-actions {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 8px !important;
+    }
+
+    .booking-history-card .booking-card-actions .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .booking-history-card .row.g-0 > .col-md-3 img {
+        width: 100%;
+        height: 170px !important;
+        min-height: 170px !important;
+    }
+
+    .booking-history-card .d-flex.justify-content-between.align-items-start {
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .list-group.list-group-flush {
+        display: grid;
+        gap: 8px;
+    }
+
+    .list-group-item {
+        min-height: 44px;
+        border-radius: 14px !important;
+        display: flex !important;
+        align-items: center;
+    }
+
+    .favorite-card .card-body .d-flex {
+        align-items: stretch !important;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .favorite-card .card-body .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+
+    .user-profile-actions {
+        width: 100%;
+        display: grid !important;
+        grid-template-columns: 1fr;
+        gap: 10px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .premium-nav-dock {
+        top: 8px;
+        width: calc(100% - 12px);
+        gap: 5px;
+        padding: 6px 8px !important;
+        border-radius: 22px;
+    }
+
+    .premium-nav-dock .navbar-brand img {
+        height: 32px;
+    }
+
+    .premium-nav-dock > .d-flex:last-child {
+        gap: 6px !important;
+        flex-shrink: 0;
+    }
+
+    .premium-nav-dock .user-profile-icon,
+    .mobile-menu-toggle,
+    #darkModeToggle,
+    .nav-search-toggle {
+        width: 36px !important;
+        height: 36px !important;
+        min-width: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin-quick-link {
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
+        padding: 0 !important;
+        justify-content: center;
+        border-radius: 50% !important;
+    }
+
+    .admin-quick-link span {
+        display: none;
+    }
+
+    #darkModeToggle {
+        font-size: 1rem !important;
+    }
+
+    .schedule-calendar-row {
+        display: block;
+    }
+
+    .month-switcher,
+    .calendar-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .month-switcher {
+        display: flex;
+        gap: 8px;
+        padding-right: 0 !important;
+        margin-bottom: 12px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .month-switcher::-webkit-scrollbar {
+        display: none;
+    }
+
+    .month-switcher .btn {
+        flex: 0 0 auto;
+        min-width: 96px;
+        margin-bottom: 0 !important;
+        border-radius: 999px;
+    }
+
+    .calendar-panel {
+        padding: 12px 10px !important;
+        border-radius: 18px !important;
+    }
+
+    .day-label {
+        font-size: 0.72rem;
+        padding-bottom: 6px;
+    }
+
+    .calendar-grid {
+        gap: 4px;
+    }
+
+    .calendar-day {
+        min-height: 48px;
+        border-radius: 10px;
+    }
+
+    .day-num {
+        font-size: 0.78rem;
+    }
+
+    .departure-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    .departure-tag {
+        font-size: 0;
+        margin-top: 0;
+    }
+
+    .departure-tag::after {
+        content: "KH";
+        font-size: 0.52rem;
+        line-height: 1;
+    }
+
+    .departure-day .price-sub {
+        font-size: 0.5rem;
+        line-height: 1;
+        padding: 1px 2px;
+    }
+
+    .newsletter {
+        padding: 44px 0;
+    }
+
+    .newsletter h3 {
+        font-size: 1.35rem;
+    }
+
+    .footer,
+    footer {
+        padding-bottom: 92px !important;
+    }
+}
+
+@media (max-width: 380px) {
+    .premium-nav-dock > .d-flex:last-child {
+        gap: 4px !important;
+    }
+
+    .admin-quick-link {
+        display: none !important;
+    }
+
+    .calendar-day {
+        min-height: 44px;
+    }
+
+    .departure-day .price-sub {
+        display: none;
+    }
+}
