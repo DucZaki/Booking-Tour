@@ -52,6 +52,13 @@ public class VNPayConfig {
     @PostConstruct
     void logConfig() {
         log.info("VNPay TMN={}, payUrl={}, returnUrl={}, ipnUrl={}", vnp_TmnCode, vnp_PayUrl, vnp_Returnurl, vnp_IpnUrl);
+        if (vnp_Returnurl != null && vnp_Returnurl.contains("YOUR_DOMAIN")) {
+            log.error("VNPay returnUrl vẫn là placeholder YOUR_DOMAIN — đặt APP_BASE_URL đúng domain Railway "
+                    + "(Variables) rồi redeploy, và đăng ký URL callback trên cổng VNPay Sandbox.");
+        }
+        if (vnp_TmnCode == null || vnp_TmnCode.isBlank() || vnp_HashSecret == null || vnp_HashSecret.isBlank()) {
+            log.error("Thiếu VNP_TMN_CODE hoặc VNP_HASH_SECRET — không tạo được link thanh toán.");
+        }
     }
 
     public String getReturnUrl(HttpServletRequest request) {

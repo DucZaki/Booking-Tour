@@ -37,6 +37,7 @@ application-local.properties
 railway.raw.env
 .env
 *.db
+scripts/exports/
 .jdk/
 .jdk*/
 src/main/resources/application.properties
