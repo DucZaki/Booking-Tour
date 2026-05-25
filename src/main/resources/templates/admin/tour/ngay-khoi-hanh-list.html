@@ -80,6 +80,24 @@
                 </div>
             </div>
 
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="d-flex justify-content-end mb-3" th:unless="${#lists.isEmpty(danhSach)}">
+                <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/sync-all'}" method="post"
+                    onsubmit="return confirm('Đồng bộ lại vé theo tất cả điểm đón? Có thể mất vài phút.');">
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-repeat"></i> Đồng bộ vé theo điểm đón
+                    </button>
+                </form>
+            </div>
+
             <!-- Bảng danh sách -->
             <div class="card shadow-sm border-0">
                 <div class="card-body">
@@ -91,53 +109,91 @@
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Ngày đi</th>
-                                    <th>Ngày về</th>
+                                    <th>Ngày đi / về</th>
+                                    <th>Điểm đón</th>
+                                    <th>Trạng thái</th>
                                     <th>Mã CB đi</th>
                                     <th>Giờ bay đi</th>
                                     <th>Giá đi</th>
                                     <th>Mã CB về</th>
                                     <th>Giờ bay về</th>
                                     <th>Giá về</th>
-                                    <th>Tổng</th>
+                                    <th>Tổng vé</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="nkh, stat : ${danhSach}">
-                                    <td th:text="${stat.count}"></td>
-                                    <td th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></td>
-                                    <td
-                                        th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}">
-                                    </td>
-                                    <td th:text="${nkh.maChuyenBayDi ?: 'N/A'}"></td>
-                                    <td th:text="${nkh.gioBayDi != null ? nkh.gioBayDi + ' → ' + nkh.gioDenDi : 'N/A'}">
-                                    </td>
-                                    <td class="text-danger fw-bold"
-                                        th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}">
-                                    </td>
-                                    <td th:text="${nkh.maChuyenBayVe ?: 'N/A'}"></td>
-                                    <td th:text="${nkh.gioBayVe != null ? nkh.gioBayVe + ' → ' + nkh.gioDenVe : 'N/A'}">
-                                    </td>
-                                    <td class="text-danger fw-bold"
-                                        th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}">
-                                    </td>
-                                    <td class="fw-bold text-primary"
-                                        th:text="${#numbers.formatDecimal(nkh.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
-                                    </td>
-                                    <td>
-                                        <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/edit/' + ${nkh.id}}"
-                                            class="btn btn-sm btn-outline-primary me-1">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/delete/' + ${nkh.id}}"
-                                            class="btn btn-sm btn-outline-danger"
-                                            onclick="return confirm('Xoá ngày khởi hành này?');">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                <th:block th:each="nkh : ${danhSach}">
+                                    <tr class="table-secondary">
+                                        <td colspan="11" class="fw-bold">
+                                            <i class="bi bi-calendar-event me-1"></i>
+                                            <span th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></span>
+                                            <span class="text-muted mx-1">→</span>
+                                            <span th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></span>
+                                            <span class="ms-3 small text-muted">(Tóm tắt min:
+                                                <span th:text="${#numbers.formatDecimal(nkh.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>)
+                                            </span>
+                                            <span class="float-end">
+                                                <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/edit/' + ${nkh.id}}"
+                                                    class="btn btn-sm btn-outline-primary me-1">
+                                                    <i class="bi bi-pencil"></i> Sửa ngày
+                                                </a>
+                                                <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/delete/' + ${nkh.id}}"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    onclick="return confirm('Xoá ngày khởi hành này?');">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr th:each="row : ${diemDonByNkh[nkh.id]}">
+                                        <td></td>
+                                        <td th:text="${row.diemDon.ten}"></td>
+                                        <td>
+                                            <span th:if="${row.currentlyActive}" class="badge bg-success">Đang bán</span>
+                                            <span th:unless="${row.currentlyActive}" class="badge bg-secondary">Tắt</span>
+                                        </td>
+                                        <td th:text="${row.maChuyenBayDi ?: 'N/A'}"></td>
+                                        <td th:text="${row.gioBayDi != null ? row.gioBayDi + ' → ' + row.gioDenDi : 'N/A'}"></td>
+                                        <td class="text-danger fw-bold"
+                                            th:text="${row.giaVeDi != null ? #numbers.formatDecimal(row.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></td>
+                                        <td th:text="${row.maChuyenBayVe ?: 'N/A'}"></td>
+                                        <td th:text="${row.gioBayVe != null ? row.gioBayVe + ' → ' + row.gioDenVe : 'N/A'}"></td>
+                                        <td class="text-danger fw-bold"
+                                            th:text="${row.giaVeVe != null ? #numbers.formatDecimal(row.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></td>
+                                        <td class="fw-bold text-primary"
+                                            th:text="${#numbers.formatDecimal(row.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                                        <td class="text-nowrap">
+                                            <form th:if="${row.active}"
+                                                th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/diem-don/' + ${row.id} + '/toggle'}"
+                                                method="post" class="d-inline">
+                                                <input type="hidden" name="active" value="false">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" title="Tắt điểm đón">
+                                                    <i class="bi bi-pause-circle"></i>
+                                                </button>
+                                            </form>
+                                            <form th:unless="${row.active}"
+                                                th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/diem-don/' + ${row.id} + '/toggle'}"
+                                                method="post" class="d-inline">
+                                                <input type="hidden" name="active" value="true">
+                                                <button type="submit" class="btn btn-sm btn-outline-success" title="Bật điểm đón">
+                                                    <i class="bi bi-play-circle"></i>
+                                                </button>
+                                            </form>
+                                            <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/diem-don/' + ${row.id} + '/refresh'}"
+                                                method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-info" title="Làm mới Amadeus">
+                                                    <i class="bi bi-arrow-clockwise"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(diemDonByNkh[nkh.id])}">
+                                        <td colspan="11" class="text-muted small ps-4">
+                                            Chưa có cấu hình điểm đón — thêm điểm đón vào tour rồi bấm "Đồng bộ vé theo điểm đón".
+                                        </td>
+                                    </tr>
+                                </th:block>
                             </tbody>
                         </table>
                     </div>

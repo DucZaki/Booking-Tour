@@ -5,10 +5,12 @@ import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
+import edu.bookingtour.dto.FlightQuoteResponse;
 import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.service.DatChoService;
 import edu.bookingtour.service.EmailService;
 import edu.bookingtour.service.MaGiamGiaService;
+import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
@@ -42,6 +44,9 @@ public class PaymentController {
 
     @Autowired
     private NgayKhoiHanhService ngayKhoiHanhService;
+
+    @Autowired
+    private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
 
     @Autowired
     private NguoiDungService nguoiDungService;
@@ -116,7 +121,13 @@ public class PaymentController {
         datCho.setIdDiemDon(diemDonRepository.getReferenceById(departureId));
         datCho.setIdNgayKhoiHanh(nkh);
 
-        double unitPrice = tour.getGia().doubleValue() + nkh.getTongGiaVe();
+        FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, departureId, false);
+        if (!quote.isAvailable()) {
+            redirectAttributes.addFlashAttribute("promoError", quote.getMessage());
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+
+        double unitPrice = quote.getUnitPrice();
         PromoApplyResult promoResult = maGiamGiaService.validateAndApply(maGiamGia, tourId, unitPrice, soLuong);
         if (maGiamGia != null && !maGiamGia.isBlank() && !promoResult.isValid()) {
             redirectAttributes.addFlashAttribute("promoError", promoResult.getMessage());

@@ -23,6 +23,8 @@ public class ChuyenDiController {
     @Autowired
     private NgayKhoiHanhService ngayKhoiHanhService;
     @Autowired
+    private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
+    @Autowired
     private NguoiDungService nguoiDungService;
     @Autowired
     private LichTrinhService lichTrinhService;
@@ -157,20 +159,28 @@ public class ChuyenDiController {
         if (nkh == null)
             return "redirect:/tour/" + tourId;
 
+        tourService.normalizeTourDepartureOptions(chuyenDi);
+        java.util.List<DiemDon> departureOptions = new java.util.ArrayList<>(chuyenDi.getDiemDons());
+        departureOptions.sort(java.util.Comparator.comparing(DiemDon::getId));
+        Integer selectedDepartureId = departureOptions.isEmpty() ? null : departureOptions.get(0).getId();
+
+        edu.bookingtour.dto.FlightQuoteResponse initialQuote = null;
         double tongGia = chuyenDi.getGia().doubleValue() + nkh.getTongGiaVe();
+        if (selectedDepartureId != null) {
+            initialQuote = ngayKhoiHanhDiemDonService.getQuote(nkhId, selectedDepartureId, false);
+            if (initialQuote.isAvailable()) {
+                tongGia = initialQuote.getUnitPrice();
+            }
+        }
 
         model.addAttribute("tour", chuyenDi);
         model.addAttribute("nkh", nkh);
         model.addAttribute("tongGia", tongGia);
+        model.addAttribute("initialQuote", initialQuote);
         model.addAttribute("principal", principal);
 
-        // Departure options (admin-configurable). Default to the first option.
-        tourService.normalizeTourDepartureOptions(chuyenDi);
-        java.util.List<DiemDon> departureOptions = new java.util.ArrayList<>(chuyenDi.getDiemDons());
-        departureOptions.sort(java.util.Comparator.comparing(DiemDon::getId));
         model.addAttribute("departureOptions", departureOptions);
-        model.addAttribute("selectedDepartureId",
-                departureOptions.isEmpty() ? null : departureOptions.get(0).getId());
+        model.addAttribute("selectedDepartureId", selectedDepartureId);
 
         // Tự điền thông tin user nếu đã đăng nhập
         if (principal != null) {

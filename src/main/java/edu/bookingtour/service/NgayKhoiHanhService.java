@@ -26,6 +26,9 @@ public class NgayKhoiHanhService {
     @Autowired
     private AmadeusClient amadeusClient;
 
+    @Autowired
+    private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
+
     /**
      * Lấy danh sách ngày khởi hành của tour theo tháng/năm (do admin set)
      */
@@ -62,8 +65,8 @@ public class NgayKhoiHanhService {
         if (isBus) {
             applyDefaultTransportInfo(nkh, chuyenDi);
         } else {
-            String from = "HAN";
-            String to = "SGN";
+            String from = edu.bookingtour.util.AirportUtil.iataFromDiemDon(chuyenDi.getIdDiemDon());
+            String to = edu.bookingtour.util.AirportUtil.iataFromDestination(chuyenDi);
             fetchFlightInfo(nkh, from, to, ngayDi, true);
             if (ngayVe != null) {
                 fetchFlightInfo(nkh, to, from, ngayVe, false);
@@ -75,7 +78,9 @@ public class NgayKhoiHanhService {
             }
         }
 
-        return ngayKhoiHanhRepository.save(nkh);
+        nkh = ngayKhoiHanhRepository.save(nkh);
+        ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, true);
+        return nkh;
     }
 
     /**
@@ -98,7 +103,9 @@ public class NgayKhoiHanhService {
         nkh.setNam(ngayDi.getYear());
         nkh.setNgayVe(ngayVe);
         applyDefaultTransportInfo(nkh, chuyenDi);
-        return ngayKhoiHanhRepository.save(nkh);
+        nkh = ngayKhoiHanhRepository.save(nkh);
+        ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, false);
+        return nkh;
     }
 
     private void applyDefaultTransportInfo(NgayKhoiHanh nkh, ChuyenDi chuyenDi) {
@@ -207,11 +214,9 @@ public class NgayKhoiHanhService {
             nkh.setGiaVeDi(300000.0);
             nkh.setGiaVeVe(0.0);
         } else {
-            String from = "HAN";
-            String to = "SGN";
-            // Re-fetch flight info chiều đi
+            String from = edu.bookingtour.util.AirportUtil.iataFromDiemDon(chuyenDi.getIdDiemDon());
+            String to = edu.bookingtour.util.AirportUtil.iataFromDestination(chuyenDi);
             fetchFlightInfo(nkh, from, to, ngayDi, true);
-            // Re-fetch flight info chiều về (chỉ khi có ngày về)
             if (ngayVe != null) {
                 fetchFlightInfo(nkh, to, from, ngayVe, false);
             } else {
@@ -222,7 +227,9 @@ public class NgayKhoiHanhService {
             }
         }
 
-        return ngayKhoiHanhRepository.save(nkh);
+        nkh = ngayKhoiHanhRepository.save(nkh);
+        ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, true);
+        return nkh;
     }
 
     /**

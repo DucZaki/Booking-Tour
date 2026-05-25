@@ -108,12 +108,12 @@
                                 <div class="booking-flight-leg-head">
                                     <span class="booking-pill booking-pill--go">Chiều đi</span>
                                     <span class="text-muted small" th:text="'Ngày ' + ${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></span>
-                                    <span class="ms-auto booking-price"
-                                        th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
+                                    <span class="ms-auto booking-price" id="priceOutbound"
+                                        th:text="${initialQuote != null and initialQuote.available ? #numbers.formatDecimal(initialQuote.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : (nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A')}"></span>
                                 </div>
                                 <div class="booking-flight-leg-body">
                                     <div class="booking-flight-point">
-                                        <div class="booking-flight-time" th:text="${nkh.gioBayDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-time" id="timeOutboundGo" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioBayDi : (nkh.gioBayDi ?: 'N/A')}"></div>
                                         <div class="booking-flight-place" id="flightFromGo"
                                             th:text="${tour.idDiemDon != null ? tour.idDiemDon.ten : 'N/A'}">N/A</div>
                                     </div>
@@ -125,10 +125,10 @@
                                             <span class="dash"></span>
                                             <span class="dot"></span>
                                         </div>
-                                        <div class="booking-flight-code" th:text="${nkh.maChuyenBayDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-code" id="codeOutbound" th:text="${initialQuote != null and initialQuote.available ? initialQuote.maChuyenBayDi : (nkh.maChuyenBayDi ?: 'N/A')}"></div>
                                     </div>
                                     <div class="booking-flight-point text-md-end">
-                                        <div class="booking-flight-time" th:text="${nkh.gioDenDi ?: 'N/A'}"></div>
+                                        <div class="booking-flight-time" id="timeOutboundArrive" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioDenDi : (nkh.gioDenDi ?: 'N/A')}"></div>
                                         <div class="booking-flight-place" id="flightToGo"
                                             th:text="${tour.idDiemDen != null ? tour.idDiemDen.thanhPho : 'N/A'}">N/A</div>
                                     </div>
@@ -140,12 +140,12 @@
                                 <div class="booking-flight-leg-head">
                                     <span class="booking-pill booking-pill--back">Chiều về</span>
                                     <span class="text-muted small" th:text="${nkh.ngayVe != null ? 'Ngày ' + #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : ''}"></span>
-                                    <span class="ms-auto booking-price"
-                                        th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
+                                    <span class="ms-auto booking-price" id="priceReturn"
+                                        th:text="${initialQuote != null and initialQuote.available ? #numbers.formatDecimal(initialQuote.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : (nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A')}"></span>
                                 </div>
                                 <div class="booking-flight-leg-body">
                                     <div class="booking-flight-point">
-                                        <div class="booking-flight-time" th:text="${nkh.gioBayVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-time" id="timeReturnGo" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioBayVe : (nkh.gioBayVe ?: 'N/A')}"></div>
                                         <div class="booking-flight-place" id="flightFromBack"
                                             th:text="${tour.idDiemDen != null ? tour.idDiemDen.thanhPho : 'N/A'}">N/A</div>
                                     </div>
@@ -157,10 +157,10 @@
                                             <span class="dash"></span>
                                             <span class="dot"></span>
                                         </div>
-                                        <div class="booking-flight-code" th:text="${nkh.maChuyenBayVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-code" id="codeReturn" th:text="${initialQuote != null and initialQuote.available ? initialQuote.maChuyenBayVe : (nkh.maChuyenBayVe ?: 'N/A')}"></div>
                                     </div>
                                     <div class="booking-flight-point text-md-end">
-                                        <div class="booking-flight-time" th:text="${nkh.gioDenVe ?: 'N/A'}"></div>
+                                        <div class="booking-flight-time" id="timeReturnArrive" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioDenVe : (nkh.gioDenVe ?: 'N/A')}"></div>
                                         <div class="booking-flight-place" id="flightToBack"
                                             th:text="${tour.idDiemDon != null ? tour.idDiemDon.ten : 'N/A'}">N/A</div>
                                     </div>
@@ -199,13 +199,13 @@
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="small" th:text="${T(edu.bookingtour.util.TransportUi).ticketLabelOutbound(transportKind)}">Vé (đi):</span>
-                                <span class="small fw-bold"
-                                    th:text="${nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
+                                <span class="small fw-bold" id="sidebarTicketOutbound"
+                                    th:text="${initialQuote != null and initialQuote.available ? #numbers.formatDecimal(initialQuote.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : (nkh.giaVeDi != null ? #numbers.formatDecimal(nkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A')}"></span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="small" th:text="${T(edu.bookingtour.util.TransportUi).ticketLabelReturn(transportKind)}">Vé (về):</span>
-                                <span class="small fw-bold"
-                                    th:text="${nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A'}"></span>
+                                <span class="small fw-bold" id="sidebarTicketReturn"
+                                    th:text="${initialQuote != null and initialQuote.available ? #numbers.formatDecimal(initialQuote.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : (nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A')}"></span>
                             </div>
                             <hr>
                             <div class="mb-3">
@@ -265,23 +265,10 @@
 
         <script th:inline="javascript">
             (function () {
-                // Sync sidebar "Điểm đón" with selected departure.
                 var depSelect = document.querySelector('select[name="departureId"]');
                 var sidebarText = document.getElementById('sidebarDepartureText');
                 var flightFromGo = document.getElementById('flightFromGo');
                 var flightToBack = document.getElementById('flightToBack');
-                if (depSelect && sidebarText) {
-                    var sync = function () {
-                        var opt = depSelect.options[depSelect.selectedIndex];
-                        if (!opt) return;
-                        sidebarText.textContent = opt.textContent;
-                        if (flightFromGo) flightFromGo.textContent = opt.textContent;
-                        if (flightToBack) flightToBack.textContent = opt.textContent;
-                    };
-                    depSelect.addEventListener('change', sync);
-                    sync();
-                }
-
                 var tourId = /*[[${tour.id}]]*/ 0;
                 var nkhId = /*[[${nkh.id}]]*/ 0;
                 var unitPrice = parseFloat(document.getElementById('totalPrice').getAttribute('data-unit-price'));
@@ -289,6 +276,61 @@
 
                 function formatVnd(n) {
                     return Math.round(n).toLocaleString('vi-VN') + ' ₫';
+                }
+
+                function setText(id, value) {
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = value;
+                }
+
+                function applyQuote(q) {
+                    if (!q || !q.available) return;
+                    unitPrice = q.unitPrice;
+                    document.getElementById('totalPrice').setAttribute('data-unit-price', unitPrice);
+                    setText('priceOutbound', formatVnd(q.giaVeDi));
+                    setText('priceReturn', formatVnd(q.giaVeVe));
+                    setText('sidebarTicketOutbound', formatVnd(q.giaVeDi));
+                    setText('sidebarTicketReturn', formatVnd(q.giaVeVe));
+                    setText('timeOutboundGo', q.gioBayDi);
+                    setText('timeOutboundArrive', q.gioDenDi);
+                    setText('codeOutbound', q.maChuyenBayDi);
+                    setText('timeReturnGo', q.gioBayVe);
+                    setText('timeReturnArrive', q.gioDenVe);
+                    setText('codeReturn', q.maChuyenBayVe);
+                    if (flightFromGo) flightFromGo.textContent = q.diemDonTen;
+                    if (flightToBack) flightToBack.textContent = q.diemDonTen;
+                    if (sidebarText) sidebarText.textContent = q.diemDonTen;
+                    appliedDiscount = 0;
+                    document.getElementById('discountLine').classList.add('d-none');
+                    document.getElementById('promoMessage').textContent = '';
+                    recalcTotal();
+                }
+
+                function loadQuote(refresh) {
+                    if (!depSelect || !depSelect.value) return;
+                    var url = '/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId
+                        + '&diemDonId=' + encodeURIComponent(depSelect.value)
+                        + (refresh ? '&refresh=true' : '');
+                    fetch(url)
+                        .then(function (r) { return r.json(); })
+                        .then(function (q) {
+                            if (q.available) {
+                                applyQuote(q);
+                            } else {
+                                var msg = document.getElementById('promoMessage');
+                                msg.textContent = q.message || 'Không lấy được giá vé';
+                                msg.className = 'small mt-1 text-danger';
+                            }
+                        })
+                        .catch(function () {
+                            var msg = document.getElementById('promoMessage');
+                            msg.textContent = 'Lỗi tải thông tin vé';
+                            msg.className = 'small mt-1 text-danger';
+                        });
+                }
+
+                if (depSelect) {
+                    depSelect.addEventListener('change', function () { loadQuote(false); });
                 }
 
                 function recalcTotal() {
@@ -320,7 +362,13 @@
                     fetch('/api/promo/validate', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ ma: ma, tourId: tourId, nkhId: nkhId, soLuong: soLuong })
+                        body: JSON.stringify({
+                            ma: ma,
+                            tourId: tourId,
+                            nkhId: nkhId,
+                            diemDonId: depSelect ? parseInt(depSelect.value, 10) : 0,
+                            soLuong: soLuong
+                        })
                     }).then(function (r) { return r.json(); }).then(function (data) {
                         if (data.valid) {
                             appliedDiscount = data.discount;

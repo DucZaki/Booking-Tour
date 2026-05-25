@@ -1,8 +1,10 @@
 package edu.bookingtour.controller.user;
 
+import edu.bookingtour.dto.FlightQuoteResponse;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.LichTrinh;
 import edu.bookingtour.service.LichTrinhService;
+import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,9 @@ public class TourApiController {
     @Autowired
     private LichTrinhService lichTrinhService;
 
+    @Autowired
+    private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
+
     @GetMapping("/{id}/details")
     public ResponseEntity<?> getTourDetails(@PathVariable Integer id) {
         ChuyenDi tour = tourService.findByIdd(id);
@@ -46,6 +51,23 @@ public class TourApiController {
         response.put("itinerary", itinerary);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/flight-quote")
+    public ResponseEntity<FlightQuoteResponse> flightQuote(
+            @PathVariable Integer id,
+            @RequestParam Integer nkhId,
+            @RequestParam Integer diemDonId,
+            @RequestParam(defaultValue = "false") boolean refresh) {
+        ChuyenDi tour = tourService.findByIdd(id);
+        if (tour == null) {
+            return ResponseEntity.notFound().build();
+        }
+        FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, diemDonId, refresh);
+        if (!quote.isAvailable()) {
+            return ResponseEntity.badRequest().body(quote);
+        }
+        return ResponseEntity.ok(quote);
     }
 
     @GetMapping("/nearby")
