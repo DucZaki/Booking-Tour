@@ -73,10 +73,10 @@
 
                                     <th:block th:each="day : ${calendar}">
                                         <!-- Ngày khởi hành (admin đã tạo) -->
-                                        <a th:if="${day.hasDeparture and !day.isPast and day.isCurrentMonth}"
+                                        <a th:if="${day.hasDeparture and !day.pastDay and day.currentMonth}"
                                             th:href="@{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
                                             class="calendar-day text-decoration-none departure-day"
-                                            th:classappend="${day.isSelected ? ' active-day' : ''}"
+                                            th:classappend="${day.selected ? ' active-day' : ''}"
                                             th:attr="data-date=${day.date}, title='Ngày khởi hành - bấm để chọn'">
                                             <span class="departure-dot" aria-hidden="true"></span>
                                             <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
@@ -86,9 +86,9 @@
                                             </span>
                                         </a>
                                         <!-- Ngày bình thường -->
-                                        <div th:if="${!day.hasDeparture or day.isPast or !day.isCurrentMonth}"
+                                        <div th:if="${!day.hasDeparture or day.pastDay or !day.currentMonth}"
                                             class="calendar-day"
-                                            th:classappend="(!day.isCurrentMonth ? ' other-month' : '') + (day.isPast ? ' disabled-day' : '')">
+                                            th:classappend="${(!day.currentMonth ? ' other-month' : '') + (day.pastDay ? ' disabled-day' : '')}">
                                             <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
                                         </div>
                                     </th:block>

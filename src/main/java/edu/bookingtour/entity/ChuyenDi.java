@@ -9,9 +9,12 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Getter
 @Setter
@@ -113,14 +116,48 @@ public class ChuyenDi {
     }
 
     public String getDuration() {
-        if (ngayKhoiHanh != null && ngayKetThuc != null) {
-            long days = java.time.temporal.ChronoUnit.DAYS.between(ngayKhoiHanh, ngayKetThuc) + 1;
-            long nights = days - 1;
-            if (nights <= 0) {
-                return days + " Ngày";
-            }
-            return days + " Ngày " + nights + " Đêm";
+        String fromTitle = parseDurationFromTitle(tieuDe);
+        if (fromTitle != null) {
+            return fromTitle;
         }
-        return "3 Ngày 2 Đêm"; // Mặc định nếu không có ngày cụ thể
+        if (ngayKhoiHanhs != null) {
+            for (NgayKhoiHanh nkh : ngayKhoiHanhs) {
+                if (nkh.getNgay() != null && nkh.getNgayVe() != null) {
+                    return formatDuration(
+                            ChronoUnit.DAYS.between(nkh.getNgay(), nkh.getNgayVe()) + 1);
+                }
+            }
+        }
+        return "Liên hệ";
+    }
+
+    private static String parseDurationFromTitle(String title) {
+        if (title == null || title.isBlank()) {
+            return null;
+        }
+        Matcher shortForm = Pattern.compile("(\\d+)\\s*[Nn]\\s*(\\d+)\\s*[ĐDđ]").matcher(title);
+        if (shortForm.find()) {
+            return formatDuration(Long.parseLong(shortForm.group(1)), Long.parseLong(shortForm.group(2)));
+        }
+        Matcher longForm = Pattern.compile("(\\d+)\\s*[Nn]gày(?:\\s*(\\d+)\\s*[ĐD]êm)?", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE)
+                .matcher(title);
+        if (longForm.find()) {
+            long days = Long.parseLong(longForm.group(1));
+            long nights = longForm.group(2) != null ? Long.parseLong(longForm.group(2)) : days - 1;
+            return formatDuration(days, nights);
+        }
+        return null;
+    }
+
+    private static String formatDuration(long days) {
+        long nights = days - 1;
+        return formatDuration(days, nights);
+    }
+
+    private static String formatDuration(long days, long nights) {
+        if (nights <= 0) {
+            return days + " Ngày";
+        }
+        return days + " Ngày " + nights + " Đêm";
     }
 }

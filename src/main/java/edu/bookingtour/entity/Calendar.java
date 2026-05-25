@@ -9,10 +9,10 @@ import java.time.LocalDate;
 @Setter
 public class Calendar {
     private LocalDate date;
-    private boolean isCurrentMonth;
+    private boolean currentMonth;
     private double flightPrice;
-    private boolean isSelected;
-    private boolean isPast;
+    private boolean selected;
+    private boolean pastDay;
     private boolean hasDeparture;
     private Integer ngayKhoiHanhId;
 }

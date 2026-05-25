@@ -69,7 +69,6 @@ public class DatCho {
     @Column(name = "tong_gia")
     private Double tongGia;
 
-    /** Token duy nhất cho QR check-in (quét mã → /check-in/{token}). */
     @Column(name = "ma_check_in", length = 64, unique = true)
     private String maCheckIn;
 

@@ -21,6 +21,18 @@ public final class TransportUi {
         return kind(pt.getLoai(), pt.getHang());
     }
 
+    public static String label(String kind) {
+        return switch (kind) {
+            case BUS -> "Xe khách";
+            case SHIP -> "Tàu thủy";
+            default -> "Máy bay";
+        };
+    }
+
+    public static String label(PhuongTien pt) {
+        return label(kind(pt));
+    }
+
     public static String kind(String loai, String hang) {
         String combined = ((loai != null ? loai : "") + " " + (hang != null ? hang : "")).toLowerCase();
         if (combined.contains("bus") || combined.contains("xe khách") || combined.contains("xe ")) {

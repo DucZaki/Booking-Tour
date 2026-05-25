@@ -180,7 +180,7 @@ public class TourService {
             Calendar day = new Calendar();
             day.setDate(current);
             day.setCurrentMonth(current.getMonthValue() == month);
-            day.setPast(current.isBefore(today));
+            day.setPastDay(current.isBefore(today));
 
             // Kiểm tra ngày khởi hành
             NgayKhoiHanh nkh = departureMap.get(current);

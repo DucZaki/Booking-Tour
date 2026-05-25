@@ -78,72 +78,41 @@
                                 </form>
                             </div>
                             <div th:if="${not #lists.isEmpty(dschuyendi)}">
-                                <div class="d-flex border rounded mb-4 shadow-sm bg-white tour-premium-card overflow-hidden position-relative" th:each="ds : ${dschuyendi}">
-                                    <!-- Hình ảnh trực tiếp làm flex-item để tránh co giãn lỗi -->
-                                    <img th:src="${ds.hinhAnh}" class="tour-img flex-shrink-0" alt="Hình ảnh tour" />
-                                    
-                                    <!-- Badge Nổi bật nếu có -->
-                                    <span th:if="${ds.noiBat}" class="badge bg-danger position-absolute px-3 py-2 rounded-pill shadow-sm" style="font-size: 0.75rem; font-weight: 700; z-index: 2; top: 12px; left: 12px;">
-                                        <i class="bi bi-fire me-1"></i> HOT TOUR
-                                    </span>
-                                    
-                                    <!-- Nội dung tour -->
-                                    <div class="p-4 flex-grow-1 d-flex flex-column justify-content-between">
-                                        <div>
-                                            <!-- Tiêu đề -->
-                                            <h5 class="fw-bold mb-2 tour-title text-dark">
-                                                <a th:href="@{/tour/{id}(id=${ds.id})}" class="text-decoration-none text-dark-hover" th:text="${ds.tieuDe}">Tour Hà Nội 3N2Đ</a>
-                                            </h5>
-                                            
-                                            <!-- Đánh giá và số lượt đặt -->
-                                            <div class="d-flex align-items-center gap-3 mb-3" style="font-size: 0.9rem;">
-                                                <!-- Rating -->
-                                                <div class="d-flex align-items-center text-warning fw-bold">
-                                                    <i class="bi bi-star-fill me-1"></i>
-                                                    <span th:text="${ds.getAverageRating()}">4.8</span>
-                                                    <span class="text-muted fw-normal ms-1" th:text="'(' + ${ds.getRatingCount()} + ')'">(24)</span>
-                                                </div>
-                                                <div class="text-muted">|</div>
-                                                <!-- Số lượt đặt -->
-                                                <div class="d-flex align-items-center text-secondary fw-semibold">
-                                                    <i class="bi bi-people-fill me-1 text-primary"></i>
-                                                    <span th:text="${ds.getBookingCount()} + '+ đã đặt'">120+ đã đặt</span>
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- Thông tin chi tiết dịch vụ đi kèm -->
-                                            <div class="d-flex flex-wrap gap-x-4 gap-y-2 text-muted mb-2" style="font-size: 0.85rem; row-gap: 8px;">
-                                                <span class="d-flex align-items-center">
-                                                    <i class="bi bi-ticket-perforated me-1 text-primary"></i>
-                                                    Mã: <strong class="ms-1 text-dark" th:text="${T(edu.bookingtour.util.TourCodeUtil).format(ds.id)}">ZAKI1</strong>
-                                                </span>
-                                                <span class="d-flex align-items-center">
-                                                    <i class="bi bi-clock me-1 text-primary"></i>
-                                                    Thời gian: <strong class="ms-1 text-dark" th:text="${ds.getDuration()}">3 Ngày 2 Đêm</strong>
-                                                </span>
-                                                <span class="d-flex align-items-center">
-                                                    <i class="bi bi-bus-front me-1 text-primary"></i>
-                                                    Phương tiện: <strong class="ms-1 text-dark" th:text="${ds.idPhuongTien.loai}">Bus</strong>
-                                                </span>
-                                                <span th:if="${ds.idNoiLuuTru != null}" class="d-flex align-items-center">
-                                                    <i class="bi bi-building me-1 text-primary"></i>
-                                                    Lưu trú: <strong class="ms-1 text-dark" th:text="${ds.idNoiLuuTru.ten}">Khách sạn 3*</strong>
-                                                </span>
-                                            </div>
+                                <div class="d-flex border rounded mb-3 shadow-sm tour-list-card overflow-hidden position-relative"
+                                     th:each="ds : ${dschuyendi}"
+                                     th:with="diemDonLabel=${ds.idDiemDon != null ? ds.idDiemDon.ten : '—'}">
+                                    <div class="tour-list-card-media flex-shrink-0">
+                                        <img th:src="${ds.hinhAnh}" class="tour-list-card-img" alt="Hình ảnh tour" />
+                                        <span th:if="${ds.noiBat}" class="badge bg-danger tour-list-hot-badge">
+                                            <i class="bi bi-fire me-1"></i>HOT TOUR
+                                        </span>
+                                    </div>
+                                    <div class="p-3 flex-grow-1 tour-list-card-info min-w-0">
+                                        <h5 class="fw-bold mb-2 tour-list-card-title">
+                                            <a th:href="@{/tour/{id}(id=${ds.id})}" class="text-decoration-none" th:text="${ds.tieuDe}">Tour Hà Nội 3N2Đ</a>
+                                        </h5>
+                                        <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3 mb-2 tour-list-card-stats">
+                                            <span class="text-warning fw-bold">
+                                                <i class="bi bi-star-fill me-1"></i>
+                                                <span th:text="${ds.getAverageRating()}">4.8</span>
+                                                <span class="text-muted fw-normal" th:text="'(' + ${ds.getRatingCount()} + ')'">(24)</span>
+                                            </span>
+                                            <span class="text-muted d-none d-sm-inline">|</span>
+                                            <span class="text-secondary fw-semibold">
+                                                <i class="bi bi-people-fill me-1 text-primary"></i>
+                                                <span th:text="${ds.getBookingCount()} + '+ đã đặt'">120+ đã đặt</span>
+                                            </span>
                                         </div>
-                                        
-                                        <!-- Giá cả và nút bấm -->
-                                        <div class="d-flex justify-content-between align-items-end mt-2 pt-2 border-top">
-                                            <div>
-                                                <span class="text-muted d-block" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Giá chỉ từ</span>
-                                                <span class="text-danger fw-bold fs-4" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">2,500,000 VND</span>
-                                            </div>
-                                            <div>
-                                                <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-outline-primary px-4 py-2 fw-bold rounded-pill">
-                                                    Xem chi tiết <i class="bi bi-arrow-right-short fs-5 align-middle"></i>
-                                                </a>
-                                            </div>
-                                        </div>
+                                        <p class="mb-1 text-muted">Mã tour: <strong class="text-body" th:text="${T(edu.bookingtour.util.TourCodeUtil).format(ds.id)}">ZAKI1</strong></p>
+                                        <p class="mb-2 text-muted">
+                                            Phương tiện: <span th:text="${ds.idPhuongTien != null ? ds.idPhuongTien.loai : '—'}">Plane</span>
+                                            <span class="mx-1">|</span>
+                                            Khởi hành: <span th:text="${diemDonLabel}">Hà Nội</span>
+                                        </p>
+                                        <p class="text-danger fw-bold fs-5 mb-0" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">2,500,000 VND</p>
+                                    </div>
+                                    <div class="d-flex align-items-center px-3 tour-list-card-action flex-shrink-0">
+                                        <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-primary fw-bold px-4">Xem chi tiết</a>
                                     </div>
                                 </div>
                             </div>
