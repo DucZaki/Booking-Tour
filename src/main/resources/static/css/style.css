@@ -283,6 +283,18 @@ h6 {
     color: rgba(26, 28, 30, 0.75);
 }
 
+.filters-panel {
+    position: sticky;
+    top: 110px;
+    z-index: 5;
+}
+
+@media (max-width: 767.98px) {
+    .filters-panel {
+        position: static;
+    }
+}
+
 /* Flatpickr (date picker) theme for public site */
 .flatpickr-calendar {
     border-radius: 18px;
@@ -2203,4 +2215,67 @@ a:hover {
     .departure-day .price-sub {
         display: none;
     }
+
+/* ===================== PREMIUM TOUR CARD LISTING ===================== */
+.tour-premium-card {
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border: 1px solid rgba(26, 28, 30, 0.08) !important;
+}
+
+.tour-premium-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(26, 28, 30, 0.08) !important;
+    border-color: rgba(254, 207, 47, 0.4) !important;
+}
+
+.tour-img {
+    width: 280px;
+    min-height: 210px;
+    align-self: stretch;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tour-premium-card:hover .tour-img {
+    transform: scale(1.08);
+}
+
+.text-dark-hover {
+    color: var(--bs-dark) !important;
+    transition: color 0.25s ease;
+}
+
+.text-dark-hover:hover {
+    color: var(--primary-hover) !important;
+}
+
+.gap-x-4 {
+    column-gap: 1.5rem !important;
+}
+
+/* Dark mode overrides for premium tour card */
+[data-theme="dark"] .tour-premium-card {
+    background-color: #1e2126 !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .tour-premium-card:hover {
+    border-color: rgba(254, 207, 47, 0.4) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .tour-premium-card .tour-title a {
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .tour-premium-card .tour-title a:hover {
+    color: var(--bs-primary) !important;
+}
+
+[data-theme="dark"] .tour-premium-card .text-dark {
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .tour-premium-card .border-top {
+    border-color: rgba(255, 255, 255, 0.08) !important;
 }

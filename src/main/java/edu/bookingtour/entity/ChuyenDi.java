@@ -83,4 +83,44 @@ public class ChuyenDi {
 
     @OneToMany(mappedBy = "idChuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<YeuThich> yeuThichs;
+
+    public double getAverageRating() {
+        if (danhGias == null || danhGias.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0;
+        for (DanhGia dg : danhGias) {
+            sum += dg.getDiem();
+        }
+        return Math.round((sum / danhGias.size()) * 10.0) / 10.0;
+    }
+
+    public int getRatingCount() {
+        return danhGias == null ? 0 : danhGias.size();
+    }
+
+    public int getBookingCount() {
+        if (datChos == null) {
+            return 0;
+        }
+        int count = 0;
+        for (DatCho dc : datChos) {
+            if (dc.getSoLuong() != null) {
+                count += dc.getSoLuong();
+            }
+        }
+        return count;
+    }
+
+    public String getDuration() {
+        if (ngayKhoiHanh != null && ngayKetThuc != null) {
+            long days = java.time.temporal.ChronoUnit.DAYS.between(ngayKhoiHanh, ngayKetThuc) + 1;
+            long nights = days - 1;
+            if (nights <= 0) {
+                return days + " Ngày";
+            }
+            return days + " Ngày " + nights + " Đêm";
+        }
+        return "3 Ngày 2 Đêm"; // Mặc định nếu không có ngày cụ thể
+    }
 }

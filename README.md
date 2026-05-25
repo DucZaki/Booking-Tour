@@ -1,86 +1,131 @@
-# 🌍 BookingTour - Hệ Thống Đặt Tour Du Lịch Trực Tuyến
+# 🌍 BookingTour - Hệ Thống Đặt Tour Du Lịch Trực Tuyến & Hỗ Trợ Khách Hàng Bằng AI
 
-**BookingTour** là một ứng dụng web hiện đại được xây dựng trên nền tảng Spring Boot, giúp người dùng dễ dàng tìm kiếm, khám phá và đặt các tour du lịch hấp dẫn. Hệ thống cung cấp trải nghiệm mượt mà từ khâu chọn điểm đến đến khâu thanh toán trực tuyến.
-
----
-
-## ✨ Tính Năng Chính
-
-### 🛡️ Người Dùng (User)
-*   **Tìm Kiếm & Lọc Tour:** Tìm kiếm tours theo điểm đến, ngày khởi hành, giá cả và phương tiện.
-*   **Xem Chi Tiết Tour:** Thông tin chi tiết về lịch trình, điểm đón, nơi lưu trú và đánh giá từ khách hàng khác.
-*   **Đặt Chỗ (Booking):** Quy trình đặt tour nhanh chóng, quản lý số lượng chỗ còn trống.
-*   **Thanh Toán Trực Tuyến:** Tích hợp cổng thanh toán **VNPay** an toàn và tiện lợi.
-*   **Quản Lý Tài Khoản:** Đăng nhập (hỗ trợ **OAuth2 Google**), xem lịch sử đặt tour, quản lý tour yêu thích.
-*   **Đánh Giá & Phản Hồi:** Gửi nhận xét và chấm điểm cho các tour đã tham gia.
-
-### ⚙️ Quản Trị Viên (Admin)
-*   **Quản Lý Tour:** Thêm, sửa, xóa các tour du lịch, quản lý ngày khởi hành và lịch trình.
-*   **Quản Lý Đơn Hàng:** Theo dõi danh sách đặt chỗ, xác nhận thanh toán và trạng thái tour.
-*   **Thống Kê & Báo Cáo:** Theo dõi doanh thu và lượt đặt tour qua biểu đồ trực quan.
-*   **Quản Lý Người Dùng & Liên Hệ:** Tiếp nhận thông tin liên hệ và quản lý danh sách khách hàng.
+**BookingTour** là một ứng dụng web hiện đại được phát triển trên nền tảng **Spring Boot 3**, cung cấp giải pháp toàn diện cho việc quản lý, tìm kiếm, đặt chỗ và thanh toán các tour du lịch trực tuyến. Đặc biệt, hệ thống tích hợp công nghệ AI tiên tiến giúp tư vấn, giải đáp thắc mắc và đề xuất lịch trình tự động cho khách hàng.
 
 ---
 
-## 🛠️ Công Nghệ Sử Dụng
+## ✨ Tính Năng Nổi Bật
 
-*   **Backend:** Java 17, Spring Boot 3.x
-*   **Security:** Spring Security (Form Login & OAuth2 Google)
-*   **Database:** MySQL, Spring Data JPA
-*   **Frontend:** Thymeleaf, HTML5, CSS3, JavaScript
-*   **Payment:** VNPay API Integration
-*   **API:** Amadeus API (dành cho các dịch vụ liên quan đến chuyến bay/du lịch)
-*   **Công cụ khác:** Lombok, Maven, Git
+### 🧑‍💻 Phân Hệ Khách Hàng (User)
+*   **Tìm kiếm & Bộ lọc Thông minh:** Tìm kiếm tour theo điểm xuất phát/đích, ngày khởi hành, khoảng giá mong muốn và phương tiện di chuyển.
+*   **Chi Tiết Chuyến Đi Phong Phú:** Hiển thị chi tiết lịch trình từng ngày, phương tiện di chuyển, điểm đón khách, chính sách phụ thu, số chỗ trống, đánh giá thực tế và số lượng đã đặt.
+*   **Đặt Tour Tiện Lợi:** Quy trình đặt chỗ (Booking) tự động kiểm tra số lượng chỗ khả dụng và cập nhật tức thì.
+*   **Tích Hợp AI Chatbot:** Trợ lý ảo thông minh hoạt động 24/7 (sử dụng Groq, Gemini hoặc OpenRouter) tự động truy xuất dữ liệu hệ thống (tour, lịch trình, mã giảm giá) để tư vấn cụ thể và cá nhân hóa trải nghiệm người dùng.
+*   **Thanh Toán Trực Tuyến:** Tích hợp cổng thanh toán quốc dân **VNPay** hỗ trợ giao dịch tức thì, cập nhật trạng thái đơn hàng thời gian thực qua cơ chế IPN Callback.
+*   **Mã QR Check-in:** Tự động tạo mã QR Code tiện dụng hỗ trợ check-in nhanh chóng khi bắt đầu chuyến đi.
+*   **Quản Lý Cá Nhân:**
+    *   Đăng nhập linh hoạt (Form đăng ký/đăng nhập truyền thống và **OAuth2 Google / Facebook**).
+    *   Lưu trữ danh sách tour yêu thích (Favorites).
+    *   Quản lý lịch sử đặt tour, trạng thái thanh toán và thông tin check-in.
+    *   Đánh giá (Rating & Review) trực quan cho những chuyến đi đã trải nghiệm.
+
+### ⚙️ Phân Hệ Quản Trị (Admin)
+*   **Dashboard Thống Kê:** Biểu đồ doanh thu trực quan, số lượt đặt tour, thống kê tỉ lệ thanh toán thành công và tăng trưởng người dùng.
+*   **Quản Lý Sản Phẩm (Tour):** Thêm mới, chỉnh sửa thông tin chi tiết tour, cập nhật hình ảnh trực tiếp, lịch trình ngày đi, các ngày khởi hành và kiểm soát số lượng hành khách.
+*   **Quản Lý Đơn Hàng:** Xem chi tiết giao dịch, xác nhận trạng thái đặt chỗ, xử lý hoàn tiền hoặc hủy tour.
+*   **Quản Lý Người Dùng & Phân Quyền:** Quản lý tài khoản khách hàng, vai trò hệ thống, tiếp nhận thông tin liên hệ và phản hồi từ người dùng.
+*   **Quản Lý Khuyến Mãi:** Tạo và theo dõi hiệu lực của các mã giảm giá (Vouchers) áp dụng cho các tour cụ thể.
 
 ---
 
-## 📂 Cấu Trúc Project
+## 🛠️ Công Nghệ & Thư Viện Sử Dụng
+
+### Backend
+*   **Ngôn ngữ:** Java 17
+*   **Framework chính:** Spring Boot 3.x, Spring MVC, Spring Data JPA
+*   **Bảo mật:** Spring Security, OAuth2 Client
+*   **Database:** MySQL 8.x
+*   **Migration Tool:** Flyway (quản lý lịch sử thay đổi schema tự động)
+*   **API Bên Thứ Ba:**
+    *   **VNPay API:** Cổng thanh toán trực tuyến.
+    *   **Amadeus API:** Tìm kiếm thông tin chuyến bay và dịch vụ liên quan.
+    *   **News API:** Tự động cập nhật tin tức du lịch thế giới.
+    *   **AI Providers (Groq, Gemini, OpenRouter):** Cung cấp mô hình ngôn ngữ lớn (LLM) hỗ trợ Chatbot.
+
+### Frontend
+*   **Template Engine:** Thymeleaf (kết xuất HTML phía server)
+*   **UI/UX:** HTML5, CSS3, Vanilla JavaScript, Bootstrap 5, FontAwesome Icons
+
+---
+
+## 📂 Cấu Trúc Mã Nguồn
 
 ```text
 src/main/java/edu/bookingtour/
-├── client/         # Client gọi API bên thứ 3 (Amadeus, VNPay)
-├── config/         # Cấu hình hệ thống (Security, VNPay, MVC)
-├── controller/     # Xử lý Request từ người dùng (Admin & User)
-├── dto/            # Data Transfer Objects
-├── entity/         # Các thực thể database (JPA)
-├── repo/           # Interface tương tác với database
-└── service/        # Xử lý logic nghiệp vụ
+├── client/         # Các Client tích hợp API bên thứ 3 (Amadeus, NewsAPI)
+├── config/         # Cấu hình hệ thống (SecurityConfig, VNPayConfig, WebMvcConfig)
+├── controller/     # Lớp điều khiển xử lý HTTP Request
+│   ├── admin/      # Các Controller dành riêng cho khu vực quản trị viên
+│   └── user/       # Các Controller phục vụ người dùng cuối
+├── dto/            # Data Transfer Objects (chuyển đổi dữ liệu)
+├── entity/         # Thực thể JPA mapping trực tiếp với bảng trong Database
+├── repo/           # Các JPA Repository giao tiếp với Database
+├── service/        # Lớp xử lý Logic nghiệp vụ (Business Logic)
+└── util/           # Lớp tiện ích hỗ trợ (Mã hóa, Sinh mã QR, Xử lý chuỗi)
 ```
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt
+## 🚀 Hướng Dẫn Cài Đặt Dưới Local
 
-### 1. Yêu Cầu Hệ Thống
-*   Java JDK 17+
-*   MySQL Server 8.0+
-*   Maven 3.x
+### 1. Chuẩn Bị Môi Trường
+*   Cài đặt **Java Development Kit (JDK) 17** trở lên.
+*   Cài đặt hệ quản trị cơ sở dữ liệu **MySQL Server 8.0+**.
+*   Cài đặt công cụ build **Maven 3.x** (hoặc dùng wrapper `mvnw` đi kèm).
 
-### 2. Cài Đặt Database
-1. Tạo một database mới trong MySQL:
-   ```sql
-   CREATE DATABASE booking_tour CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
-2. Cấu hình thông tin kết nối trong file `src/main/resources/application.properties` (hoặc file `.env` nếu có).
+### 2. Tạo Cơ Sở Dữ Liệu
+Mở MySQL Command Line hoặc công cụ quản trị (như DBeaver, Navicat) và thực thi câu lệnh:
+```sql
+CREATE DATABASE booking_tour CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
 
-### 3. Chạy Ứng Dụng
-1. Clone dự án về máy:
+### 3. Cấu Hình Biến Môi Trường & Bí Mật
+Để chạy dự án đầy đủ tính năng, bạn nên cấu hình các API Key của bên thứ 3 trong file `src/main/resources/application-local.properties` (đã được bỏ qua trong Git để bảo mật):
+
+```properties
+# Cơ sở dữ liệu local
+spring.datasource.url=jdbc:mysql://localhost:3306/booking_tour
+spring.datasource.username=YOUR_MYSQL_USERNAME
+spring.datasource.password=YOUR_MYSQL_PASSWORD
+
+# OAuth2 Google & Facebook (Nếu cần tính năng đăng nhập mạng xã hội)
+spring.security.oauth2.client.registration.google.client-id=YOUR_GOOGLE_CLIENT_ID
+spring.security.oauth2.client.registration.google.client-secret=YOUR_GOOGLE_CLIENT_SECRET
+spring.security.oauth2.client.registration.facebook.client-id=YOUR_FACEBOOK_CLIENT_ID
+spring.security.oauth2.client.registration.facebook.client-secret=YOUR_FACEBOOK_CLIENT_SECRET
+
+# Tích Hợp VNPay Sandbox
+vnp.tmn-code=YOUR_VNPAY_TMN_CODE
+vnp.hash-secret=YOUR_VNPAY_HASH_SECRET
+
+# News API Token (Cập nhật tin tức)
+news.api.token=YOUR_NEWS_API_TOKEN
+
+# Trợ Lý AI Chatbot (Groq / Gemini)
+groq.api.key=YOUR_GROQ_API_KEY
+```
+
+> [!NOTE]
+> Hệ thống sử dụng **Flyway** để quản lý cơ sở dữ liệu. Khi ứng dụng khởi chạy lần đầu tiên, toàn bộ cấu trúc bảng và dữ liệu mẫu sẽ tự động được tạo từ thư mục `src/main/resources/db/migration` mà không cần import tay.
+
+### 4. Khởi Chạy Ứng Dụng
+1. Clone dự án về máy tính:
    ```bash
    git clone https://github.com/DucZaki/Booking-Tour.git
-   ```
-2. Di chuyển vào thư mục dự án:
-   ```bash
    cd Booking-Tour
    ```
-3. Chạy ứng dụng bằng Maven:
+2. Cấp quyền thực thi và khởi chạy dự án:
    ```bash
-   mvn spring-boot:run
+   chmod +x mvnw
+   ./mvnw spring-boot:run
    ```
-4. Truy cập vào trình duyệt: `http://localhost:8080`
-
-## 📞 Liên Hệ
-
-Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với các thành viên nhóm hoặc qua github dự án.
+3. Truy cập vào trình duyệt tại địa chỉ: [http://localhost:8080](http://localhost:8080)
 
 ---
-*Cảm ơn bạn đã quan tâm đến dự án của chúng tôi!* 😊
+
+## 📞 Liên Hệ & Hỗ Trợ
+
+Nếu bạn gặp khó khăn trong quá trình cài đặt hoặc có ý kiến đóng góp cho dự án, vui lòng tạo **Issue** trên trang Github hoặc liên hệ trực tiếp với nhóm phát triển qua thông tin hỗ trợ được tích hợp trên website.
+
+---
+*Chúc bạn có những trải nghiệm tuyệt vời cùng BookingTour!* 🚀✨
