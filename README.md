@@ -3,16 +3,7 @@
 **Website đặt tour du lịch trực tuyến** — đồ án tốt nghiệp, xây dựng bằng Java Spring Boot.
 
 Trong bối cảnh du lịch chuyển sang số, người dùng cần tra cứu tour, so sánh giá và thanh toán nhanh trên một nền tảng thống nhất; doanh nghiệp cần công cụ quản lý tour, đơn đặt và doanh thu tập trung. **ZakiBooking** ra đời để giải quyết hai nhu cầu đó trong một hệ thống web hoàn chỉnh: giao diện thân thiện cho khách hàng và khu vực quản trị cho admin.
-
-| | |
-|---|---|
-| **Tác giả** | Nguyễn Minh Đức — MSSV 23010634 |
-| **Khoa** | Hệ thống thông tin — Trường Đại học Phenikaa |
-| **GVHD** | TS. Đặng Thị Thúy An |
-| **Mã nguồn** | [github.com/DucZaki/Booking-Tour](https://github.com/DucZaki/Booking-Tour) |
-
 ---
-
 ## Mô tả dự án
 
 ZakiBooking là ứng dụng web full-stack theo mô hình **MVC phân tầng** (Controller → Service → Repository → Entity). Giao diện render phía server bằng **Thymeleaf + Bootstrap 5**; dữ liệu lưu trên **MySQL** (18 bảng, quản lý schema qua **Flyway V1–V7**). Bảo mật bằng **Spring Security**: đăng nhập form, phân quyền USER/ADMIN, OAuth2 Google và Facebook.
@@ -191,16 +182,6 @@ java -jar target/*.jar
 
 ---
 
-## Tài liệu
-
-| Tài liệu | Đường dẫn |
-|----------|-----------|
-| Báo cáo đồ án | [`docs/BAO-CAO-DO-AN.md`](docs/BAO-CAO-DO-AN.md) |
-| Sơ đồ UML | [`docs/diagrams/`](docs/diagrams/) |
-| Đồng bộ DB Railway | [`scripts/SYNC-DB-TO-RAILWAY.md`](scripts/SYNC-DB-TO-RAILWAY.md) |
-
----
-
 ## Troubleshooting
 
 | Lỗi / Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
@@ -214,7 +195,6 @@ java -jar target/*.jar
 ---
 
 ## Liên hệ
-
 **Nguyễn Minh Đức** · minhd4360@gmail.com · [GitHub Issues](https://github.com/DucZaki/Booking-Tour/issues)
 
 ---
