@@ -13,7 +13,7 @@
                     <i class="bi bi-arrow-left"></i> Quay lại
                 </a>
                 <div>
-                    <a th:if="${source == 'active'}" th:href="@{'/admin/tour/edit/' + ${tour.id}}"
+                    <a th:href="@{'/admin/tour/edit/' + ${tour.id}}"
                         class="btn btn-warning">
                         <i class="bi bi-pencil"></i> Sửa
                     </a>
@@ -21,6 +21,10 @@
                         <i class="bi bi-trash"></i> Xóa
                     </a>
                 </div>
+            </div>
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
             <h3 class="fw-bold mb-3" th:text="${tour.tieuDe}"></h3>
             <ul class="nav nav-tabs" id="tourTab" role="tablist">
@@ -35,6 +39,9 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button">Lịch trình</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel" type="button">Khách sạn</button>
                 </li>
             </ul>
 
@@ -57,6 +64,13 @@
                                         <div class="col-md-4 fw-semibold text-muted">Giá dịch vụ</div>
                                         <div class="col-md-8 text-danger fw-bold"
                                             th:text="${#numbers.formatDecimal(tour.gia,0,'POINT',0,'COMMA')} + ' ₫'">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-4 fw-semibold text-muted">Sức chứa mặc định</div>
+                                        <div class="col-md-8">
+                                            <span class="badge bg-primary" th:text="${tour.sucChuaMacDinh != null ? tour.sucChuaMacDinh : 50} + ' khách / đợt'"></span>
+                                            <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh'}" class="small ms-2">Quản lý từng ngày →</a>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -255,6 +269,49 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="hotel" role="tabpanel">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3">
+                                <i class="bi bi-building me-1"></i> Khách sạn / nơi lưu trú
+                            </h5>
+                            <form th:action="@{/admin/tour/{id}/khach-san(id=${tour.id})}" method="post" autocomplete="off"
+                                onsubmit="sessionStorage.setItem('tourTab','#hotel-tab')">
+                                <input type="hidden" name="source" th:value="${source}">
+                                <div class="row g-3">
+                                    <div class="col-md-7">
+                                        <label class="form-label fw-semibold">Khách sạn</label>
+                                        <select id="hotelNoiLuuTruSelect" class="form-select" name="noiLuuTruId">
+                                            <option value="">-- Chưa chọn khách sạn --</option>
+                                            <option th:each="hotel : ${noiLuuTruList}"
+                                                th:value="${hotel.id}"
+                                                th:text="${hotel.ten}"
+                                                th:selected="${tour.idNoiLuuTru != null and tour.idNoiLuuTru.id == hotel.id}"
+                                                th:attr="data-gia-phong-don=${hotel.giaPhongDon != null ? hotel.giaPhongDon : defaultGiaPhongDon},data-dia-chi=${hotel.diaChi != null ? hotel.diaChi : ''},data-loai=${hotel.loai != null ? hotel.loai : ''}"></option>
+                                        </select>
+                                        <div class="small text-muted mt-2" id="hotelMetaText"
+                                            th:text="${tour.idNoiLuuTru != null ? ((tour.idNoiLuuTru.loai != null ? tour.idNoiLuuTru.loai : 'Khách sạn') + ' - ' + (tour.idNoiLuuTru.diaChi != null ? tour.idNoiLuuTru.diaChi : 'Chưa có địa chỉ')) : 'Chọn khách sạn cho tour này'}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label class="form-label fw-semibold">Giá phòng đơn</label>
+                                        <div class="input-group">
+                                            <input type="number" id="hotelGiaPhongDonInput" name="giaPhongDon" class="form-control" min="0" step="1000"
+                                                th:value="${tour.idNoiLuuTru != null and tour.idNoiLuuTru.giaPhongDon != null ? tour.idNoiLuuTru.giaPhongDon : defaultGiaPhongDon}" required>
+                                            <span class="input-group-text">đ / phòng</span>
+                                        </div>
+                                        <div class="small text-muted mt-2">Mặc định 500.000đ. Giá này dùng cho phụ thu phòng đơn khi khách đặt tour.</div>
+                                    </div>
+                                    <div class="col-12 text-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-save me-1"></i> Lưu khách sạn
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     <script>
@@ -290,9 +347,11 @@
         document.addEventListener("DOMContentLoaded", function () {
 
             const savedTab = sessionStorage.getItem("tourTab");
+            const tabParam = new URLSearchParams(window.location.search).get("tab");
+            const tabFromParam = tabParam === "hotel" ? "#hotel-tab" : null;
 
-            if (savedTab) {
-                const tab = document.querySelector(savedTab);
+            if (tabFromParam || savedTab) {
+                const tab = document.querySelector(tabFromParam || savedTab);
                 if (tab) new bootstrap.Tab(tab).show();
             } else {
                 new bootstrap.Tab(document.querySelector("#info-tab")).show();
@@ -303,6 +362,20 @@
                     sessionStorage.setItem("tourTab", "#" + this.id);
                 });
             });
+
+            const hotelSelect = document.getElementById("hotelNoiLuuTruSelect");
+            const hotelPrice = document.getElementById("hotelGiaPhongDonInput");
+            const hotelMeta = document.getElementById("hotelMetaText");
+            if (hotelSelect && hotelPrice) {
+                hotelSelect.addEventListener("change", function () {
+                    const option = this.options[this.selectedIndex];
+                    const price = option ? option.getAttribute("data-gia-phong-don") : "";
+                    const loai = option ? option.getAttribute("data-loai") : "";
+                    const diaChi = option ? option.getAttribute("data-dia-chi") : "";
+                    if (price) hotelPrice.value = Math.round(parseFloat(price));
+                    if (hotelMeta) hotelMeta.textContent = option && option.value ? ((loai || "Khách sạn") + " - " + (diaChi || "Chưa có địa chỉ")) : "Chọn khách sạn cho tour này";
+                });
+            }
         });
     </script>
     <footer th:replace="~{layout/admin_layout :: footer()}"></footer>

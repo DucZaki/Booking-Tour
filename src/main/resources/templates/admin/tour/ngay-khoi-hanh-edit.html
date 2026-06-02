@@ -33,6 +33,15 @@
                                     th:value="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'yyyy-MM-dd') : ''}"
                                     required placeholder="dd/mm/yyyy" inputmode="numeric">
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Sức chứa đợt này</label>
+                                <input type="number" name="sucChua" class="form-control" min="1" max="500" required
+                                    th:value="${nkh.sucChua != null ? nkh.sucChua : (tour.sucChuaMacDinh != null ? tour.sucChuaMacDinh : 50)}">
+                                <small class="text-muted" th:if="${capacity != null}">
+                                    Đã đặt/giữ chỗ: <strong th:text="${capacity.booked}"></strong> —
+                                    không được đặt thấp hơn số này.
+                                </small>
+                            </div>
                         </div>
 
                         <!-- Thông tin hiện tại (readonly) -->

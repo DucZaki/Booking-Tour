@@ -63,8 +63,16 @@ public class TourService {
         if (chuyenDi.getIdDiemDen() != null && chuyenDi.getIdDiemDen().getId() != null) {
             chuyenDi.setIdDiemDen(diemDenRepository.findById(chuyenDi.getIdDiemDen().getId()).orElse(null));
         }
+        if (chuyenDi.getIdNoiLuuTru() != null && chuyenDi.getIdNoiLuuTru().getId() != null) {
+            chuyenDi.setIdNoiLuuTru(noiLuuTruRepository.findById(chuyenDi.getIdNoiLuuTru().getId()).orElse(null));
+        } else {
+            chuyenDi.setIdNoiLuuTru(null);
+        }
         if (chuyenDi.getIdDiemDon() != null && chuyenDi.getIdDiemDon().getId() != null) {
             chuyenDi.setIdDiemDon(diemDonRepository.findById(chuyenDi.getIdDiemDon().getId()).orElse(null));
+        }
+        if (chuyenDi.getSucChuaMacDinh() == null || chuyenDi.getSucChuaMacDinh() < TourCapacityService.MIN_CAPACITY) {
+            chuyenDi.setSucChuaMacDinh(TourCapacityService.DEFAULT_CAPACITY);
         }
         normalizeTourDepartureOptions(chuyenDi);
         return chuyenDiRepository.save(chuyenDi);
@@ -80,6 +88,9 @@ public class TourService {
         tour.setNgayKetThuc(chuyenDi.getNgayKetThuc());
         tour.setNoiBat(chuyenDi.getNoiBat());
         tour.setHighlight(chuyenDi.getHighlight());
+        if (chuyenDi.getSucChuaMacDinh() != null && chuyenDi.getSucChuaMacDinh() >= TourCapacityService.MIN_CAPACITY) {
+            tour.setSucChuaMacDinh(Math.min(chuyenDi.getSucChuaMacDinh(), TourCapacityService.MAX_CAPACITY));
+        }
 
         if (chuyenDi.getIdPhuongTien() != null && chuyenDi.getIdPhuongTien().getId() != null) {
             tour.setIdPhuongTien(phuongTienRepository.findById(chuyenDi.getIdPhuongTien().getId()).orElse(null));
@@ -89,6 +100,8 @@ public class TourService {
         }
         if (chuyenDi.getIdNoiLuuTru() != null && chuyenDi.getIdNoiLuuTru().getId() != null) {
             tour.setIdNoiLuuTru(noiLuuTruRepository.findById(chuyenDi.getIdNoiLuuTru().getId()).orElse(null));
+        } else {
+            tour.setIdNoiLuuTru(null);
         }
         if (chuyenDi.getIdDiemDon() != null && chuyenDi.getIdDiemDon().getId() != null) {
             tour.setIdDiemDon(diemDonRepository.findById(chuyenDi.getIdDiemDon().getId()).orElse(null));

@@ -75,6 +75,10 @@ public class ChuyenDi {
     @Column(name = "highlight", columnDefinition = "TEXT")
     private String highlight;
 
+    @ColumnDefault("50")
+    @Column(name = "suc_chua_mac_dinh", nullable = false)
+    private Integer sucChuaMacDinh = 50;
+
     @OneToMany(mappedBy = "chuyenDi", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<NgayKhoiHanh> ngayKhoiHanhs;
 

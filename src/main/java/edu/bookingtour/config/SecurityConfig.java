@@ -77,7 +77,7 @@ public class SecurityConfig {
                                                 .permitAll()
 
                                                 // Admin only endpoints
-                                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                                .requestMatchers("/admin/**", "/api/dia-diem/**").hasRole("ADMIN")
 
                                                 // User and Admin endpoints
                                                 .requestMatchers("/user/**", "/booking/**").authenticated()

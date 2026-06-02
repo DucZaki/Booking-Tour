@@ -12,6 +12,10 @@
 <body>
     <th:block th:fragment="content">
         <div class="container pt-5 tour-detail-container">
+            <div th:if="${capacityError}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <span th:text="${capacityError}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <div class="row" style="margin-top:30px;" th:with="
                 diemDonTen=${id.idDiemDon != null and id.idDiemDon.ten != null ? id.idDiemDon.ten : 'Hà Nội'},
                 diemDenTp=${id.idDiemDen != null ? id.idDiemDen.thanhPho : null},
@@ -72,19 +76,27 @@
                                     <div class="day-label text-danger">CN</div>
 
                                     <th:block th:each="day : ${calendar}">
-                                        <!-- Ngày khởi hành (admin đã tạo) -->
-                                        <a th:if="${day.hasDeparture and !day.pastDay and day.currentMonth}"
+                                        <!-- Ngày khởi hành còn chỗ -->
+                                        <a th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and !day.soldOut}"
                                             th:href="@{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
                                             class="calendar-day text-decoration-none departure-day"
                                             th:classappend="${day.selected ? ' active-day' : ''}"
-                                            th:attr="data-date=${day.date}, title='Ngày khởi hành - bấm để chọn'">
+                                            th:attr="data-date=${day.date}, title=${'Còn ' + day.remainingGuests + ' chỗ - bấm để chọn'}">
                                             <span class="departure-dot" aria-hidden="true"></span>
                                             <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
                                             <span class="departure-tag">Khởi hành</span>
+                                            <span class="price-sub small text-success" th:text="'Còn ' + ${day.remainingGuests}"></span>
                                             <span class="price-sub" th:if="${day.flightPrice > 0}"
                                                 th:text="${#numbers.formatDecimal(day.flightPrice/1000, 0, 'POINT', 0, 'POINT') + 'K'}">
                                             </span>
                                         </a>
+                                        <!-- Ngày khởi hành hết chỗ -->
+                                        <div th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and day.soldOut}"
+                                            class="calendar-day departure-day sold-out-day"
+                                            title="Hết chỗ">
+                                            <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
+                                            <span class="departure-tag text-danger">Hết chỗ</span>
+                                        </div>
                                         <!-- Ngày bình thường -->
                                         <div th:if="${!day.hasDeparture or day.pastDay or !day.currentMonth}"
                                             class="calendar-day"
@@ -106,128 +118,149 @@
                         </div>
                     </div>
 
-                    <!-- ===== THÔNG TIN PHƯƠNG TIỆN KHI CHỌN NGÀY ===== -->
-                    <div th:if="${selectedNkh != null}" class="mt-4">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-primary text-white py-3">
-                                <h5 class="mb-0 fw-bold">
-                                    <i th:class="|bi ${transportIcon} me-2|"></i>
-                                    <span th:text="${T(edu.bookingtour.util.TransportUi).infoSectionTitle(transportKind)}">THÔNG TIN CHUYẾN BAY</span>
-                                </h5>
+                    <!-- ===== TÓM TẮT LỊCH TRÌNH KHI CHỌN NGÀY ===== -->
+                    <div th:if="${selectedNkh != null}" class="mt-4"
+                         th:with="
+                            giaTour=${id.gia != null ? id.gia.doubleValue() : 0},
+                            giaVeNguoiLon=${price},
+                            airline=${id.idPhuongTien != null and id.idPhuongTien.hang != null ? #strings.toLowerCase(id.idPhuongTien.hang) : ''},
+                            domestic=${id.idDiemDen == null or id.idDiemDen.quocGia == null or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'việt') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'viet') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'vn')},
+                            veTreEm=${#strings.contains(airline, 'vietnam airlines') or #strings.contains(airline, 'vna') ? (domestic ? giaVeNguoiLon * 0.9 : giaVeNguoiLon * 0.75) : (#strings.contains(airline, 'vietjet') ? giaVeNguoiLon : (#strings.contains(airline, 'bamboo') ? giaVeNguoiLon * 0.75 : giaVeNguoiLon * 0.75))},
+                            veEmBe=${#strings.contains(airline, 'vietnam airlines') or #strings.contains(airline, 'vna') ? giaVeNguoiLon * 0.1 : (#strings.contains(airline, 'vietjet') ? (domestic ? 200000 : 400000) : (#strings.contains(airline, 'bamboo') ? (domestic ? 200000 : 500000) : (domestic ? 200000 : 400000)))},
+                            giaNguoiLon=${giaTour + giaVeNguoiLon},
+                            giaTreEm=${giaTour * 0.75 + veTreEm},
+                            giaTreNho=${giaTour * 0.5 + veTreEm},
+                            giaEmBe=${veEmBe}">
+                        <h3 class="h4 fw-bold mb-3">Lịch trình khởi hành</h3>
+                        <div class="departure-summary border rounded-4 overflow-hidden">
+                            <div class="departure-summary-head d-flex align-items-center justify-content-between px-3 py-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="departure-date-pill"
+                                          th:text="${#temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}">05/06/2026</span>
+                                    <span class="text-muted small"><i class="bi bi-clipboard me-1"></i>Thông tin tour:</span>
+                                </div>
+                                <span class="btn btn-primary btn-sm rounded-pill px-3">Đang chọn</span>
                             </div>
-                            <div class="card-body p-0">
-                                <!-- Chiều đi -->
-                                <div class="p-4 border-bottom">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <span class="badge bg-success me-2 px-3 py-2">CHIỀU ĐI</span>
-                                        <span class="text-muted small"
-                                            th:text="${'Ngày ' + #temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}"></span>
-                                    </div>
-                                    <div class="row align-items-center">
-                                        <div class="col-md-3 text-center">
-                                            <div class="fs-3 fw-bold text-dark"
-                                                th:text="${selectedNkh.gioBayDi ?: 'N/A'}"></div>
-                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
-                                                th:switch="${diemDonTen}">
-                                                <span th:case="'Hà Nội'">HAN</span>
-                                                <span th:case="'Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'Đà Nẵng'">DAD</span>
-                                                <span th:case="*">—</span>
-                                            </div>
-                                            <div class="small text-muted" th:text="${diemDonTen}">Hà Nội</div>
+
+                            <div class="p-3 border-top">
+                                <div class="mb-3" th:if="${departureOptions != null and !departureOptions.isEmpty()}">
+                                    <label class="form-label fw-semibold small mb-1">Điểm đón</label>
+                                    <select id="summaryDepartureSelect" class="form-select form-select-sm"
+                                            th:attr="data-tour-id=${id.id},data-nkh-id=${selectedNkh.id},data-gia-tour=${id.gia != null ? id.gia.doubleValue() : 0},data-airline=${id.idPhuongTien != null and id.idPhuongTien.hang != null ? id.idPhuongTien.hang : ''},data-domestic=${id.idDiemDen == null or id.idDiemDen.quocGia == null or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'việt') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'viet') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'vn')},data-single-room=${singleRoomSurcharge}">
+                                        <option th:each="dd : ${departureOptions}"
+                                                th:value="${dd.id}"
+                                                th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
+                                                th:text="${dd.ten}"></option>
+                                    </select>
+                                </div>
+                                <h6 class="text-center fw-bold mb-3">Phương tiện di chuyển</h6>
+                                <div class="row g-0 small">
+                                    <div class="col-md-6 pe-md-3 border-end">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Ngày đi: <strong th:text="${#temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}"></strong></span>
+                                            <span class="text-danger"><i th:class="|bi ${transportIcon} me-1|"></i><span th:text="${id.idPhuongTien != null ? id.idPhuongTien.loai : 'Phương tiện'}"></span></span>
                                         </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <hr class="flex-grow-1">
-                                                <i th:class="|bi ${transportIconTimeline} text-primary mx-3 fs-5|"></i>
-                                                <hr class="flex-grow-1">
-                                            </div>
-                                            <div class="small text-muted"
-                                                th:text="${T(edu.bookingtour.util.TransportUi).tripCodeLabel(transportKind) + ': ' + (selectedNkh.maChuyenBayDi ?: 'N/A')}">
-                                            </div>
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span id="summaryGioDi" th:text="${selectedNkh.gioBayDi ?: 'N/A'}">05:00</span>
+                                            <span id="summaryGioDenDi" th:text="${selectedNkh.gioDenDi ?: 'N/A'}">10:00</span>
                                         </div>
-                                        <div class="col-md-3 text-center">
-                                            <div class="fs-3 fw-bold text-dark"
-                                                th:text="${selectedNkh.gioDenDi ?: 'N/A'}"></div>
-                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
-                                                th:switch="${diemDenTp}">
-                                                <span th:case="'Hà Nội'">HAN</span>
-                                                <span th:case="'Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'TP. Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'Đà Nẵng'">DAD</span>
-                                                <span th:case="'Phú Quốc'">PQC</span>
-                                                <span th:case="'Nha Trang'">CXR</span>
-                                                <span th:case="*">—</span>
-                                            </div>
-                                            <div class="small text-muted" th:text="${diemDenTp ?: diemDenLabel}">TP. HCM</div>
+                                        <div class="d-flex justify-content-between pt-2 border-top">
+                                            <span id="summaryDiemDonDi" th:text="${diemDonTen}">TP. Hồ Chí Minh</span>
+                                            <span th:text="${diemDenTp ?: diemDenLabel}">Ninh Thuận</span>
                                         </div>
                                     </div>
-                                    <div class="text-end mt-2">
-                                        <span class="text-danger fw-bold fs-5"
-                                            th:text="${selectedNkh.giaVeDi != null ? #numbers.formatDecimal(selectedNkh.giaVeDi, 0, 'COMMA', 0, 'POINT') + ' VND' : 'N/A'}"></span>
+                                    <div class="col-md-6 ps-md-3 mt-3 mt-md-0">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Ngày về: <strong th:text="${selectedNkh.ngayVe != null ? #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></strong></span>
+                                            <span class="text-danger"><i th:class="|bi ${transportIcon} me-1|"></i><span th:text="${id.idPhuongTien != null ? id.idPhuongTien.loai : 'Phương tiện'}"></span></span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span id="summaryGioVe" th:text="${selectedNkh.gioBayVe ?: 'N/A'}">15:00</span>
+                                            <span id="summaryGioDenVe" th:text="${selectedNkh.gioDenVe ?: 'N/A'}">20:30</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between pt-2 border-top">
+                                            <span th:text="${diemDenTp ?: diemDenLabel}">Ninh Thuận</span>
+                                            <span id="summaryDiemDonVe" th:text="${diemDonTen}">TP. Hồ Chí Minh</span>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Chiều về -->
-                                <div class="p-4 border-bottom">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <span class="badge bg-info me-2 px-3 py-2">CHIỀU VỀ</span>
-                                        <span class="text-muted small"
-                                            th:text="${selectedNkh.ngayVe != null ? 'Ngày ' + #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'Chưa xác định'}"></span>
-                                    </div>
-                                    <div class="row align-items-center">
-                                        <div class="col-md-3 text-center">
-                                            <div class="fs-3 fw-bold text-dark"
-                                                th:text="${selectedNkh.gioBayVe ?: 'N/A'}"></div>
-                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
-                                                th:switch="${diemDenTp}">
-                                                <span th:case="'Hà Nội'">HAN</span>
-                                                <span th:case="'Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'TP. Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'Đà Nẵng'">DAD</span>
-                                                <span th:case="'Phú Quốc'">PQC</span>
-                                                <span th:case="'Nha Trang'">CXR</span>
-                                                <span th:case="*">—</span>
+                                <hr>
+                                <h6 class="text-center fw-bold mb-3">Giá combo</h6>
+                                <div class="row g-0">
+                                    <div class="col-md-6 pe-md-3 border-end">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <div>
+                                                <div class="fw-semibold">Người lớn</div>
+                                                <small class="text-muted">(Từ 12 tuổi trở lên)</small>
                                             </div>
-                                            <div class="small text-muted" th:text="${diemDenTp ?: diemDenLabel}">TP. HCM</div>
+                                            <strong id="summaryGiaNguoiLon" class="text-danger" th:text="${#numbers.formatDecimal(giaNguoiLon, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
                                         </div>
-                                        <div class="col-md-6 text-center">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <hr class="flex-grow-1">
-                                                <i th:class="|bi ${transportIconTimeline} text-primary mx-3 fs-5|"
-                                                    th:style="${transportKind == 'plane' ? 'transform: scaleX(-1);' : null}"></i>
-                                                <hr class="flex-grow-1">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <div>
+                                                <div class="fw-semibold">Trẻ em</div>
+                                                <small class="text-muted">(Từ 5 đến 11 tuổi)</small>
                                             </div>
-                                            <div class="small text-muted"
-                                                th:text="${T(edu.bookingtour.util.TransportUi).tripCodeLabel(transportKind) + ': ' + (selectedNkh.maChuyenBayVe ?: 'N/A')}">
-                                            </div>
+                                            <strong id="summaryGiaTreEm" class="text-danger" th:text="${#numbers.formatDecimal(giaTreEm, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
                                         </div>
-                                        <div class="col-md-3 text-center">
-                                            <div class="fs-3 fw-bold text-dark"
-                                                th:text="${selectedNkh.gioDenVe ?: 'N/A'}"></div>
-                                            <div class="small text-muted fw-semibold" th:if="${T(edu.bookingtour.util.TransportUi).showAirportCodes(transportKind)}"
-                                                th:switch="${diemDonTen}">
-                                                <span th:case="'Hà Nội'">HAN</span>
-                                                <span th:case="'Hồ Chí Minh'">SGN</span>
-                                                <span th:case="'Đà Nẵng'">DAD</span>
-                                                <span th:case="*">—</span>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <div class="fw-semibold">Trẻ nhỏ</div>
+                                                <small class="text-muted">(Từ 2 - 4 tuổi)</small>
                                             </div>
-                                            <div class="small text-muted" th:text="${diemDonTen}">Hà Nội</div>
+                                            <strong id="summaryGiaTreNho" class="text-danger" th:text="${#numbers.formatDecimal(giaTreNho, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
                                         </div>
                                     </div>
-                                    <div class="text-end mt-2">
-                                        <span class="text-danger fw-bold fs-5"
-                                            th:text="${selectedNkh.giaVeVe != null ? #numbers.formatDecimal(selectedNkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' VND' : 'N/A'}"></span>
+                                    <div class="col-md-6 ps-md-3 mt-3 mt-md-0">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <div>
+                                                <div class="fw-semibold">Em bé</div>
+                                                <small class="text-muted">(Dưới 2 tuổi)</small>
+                                            </div>
+                                            <strong id="summaryGiaEmBe" class="text-danger" th:text="${#numbers.formatDecimal(giaEmBe, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="fw-semibold">Phụ thu phòng đơn</div>
+                                            <strong id="summaryGiaPhongDon" class="text-danger" th:text="${#numbers.formatDecimal(singleRoomSurcharge, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Tổng giá vé -->
-                                <div class="p-4 bg-light">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="fw-bold fs-6" th:text="${T(edu.bookingtour.util.TransportUi).totalTicketPriceLabel(transportKind)}">TỔNG GIÁ VÉ</span>
-                                        <span class="text-danger fw-bold fs-4"
-                                            th:text="${#numbers.formatDecimal(selectedNkh.tongGiaVe, 0, 'COMMA', 0, 'POINT') + ' VND'}"></span>
+                                <div class="mt-3 p-2 rounded-3 bg-light border">
+                                    <div class="fw-semibold mb-2">Giá vé máy bay (2 chiều)</div>
+                                    <div class="row g-2 small">
+                                        <div class="col-md-4 d-flex justify-content-between">
+                                            <span>Người lớn:</span>
+                                            <strong id="summaryVeNguoiLon" class="text-danger" th:text="${#numbers.formatDecimal(giaVeNguoiLon, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
+                                        </div>
+                                        <div class="col-md-4 d-flex justify-content-between">
+                                            <span>Trẻ em / Trẻ nhỏ:</span>
+                                            <strong id="summaryVeTreEm" class="text-danger" th:text="${#numbers.formatDecimal(veTreEm, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
+                                        </div>
+                                        <div class="col-md-4 d-flex justify-content-between">
+                                            <span>Em bé:</span>
+                                            <strong id="summaryVeEmBe" class="text-danger" th:text="${#numbers.formatDecimal(veEmBe, 0, 'COMMA', 0, 'POINT') + 'đ'}">0đ</strong>
+                                        </div>
                                     </div>
+                                </div>
+
+                                <hr>
+                                <h6 class="text-center fw-bold mb-3">Thông tin thêm</h6>
+                                <div class="row g-0">
+                                    <div class="col-md-6 pe-md-3 border-end">
+                                        <div class="fw-bold mb-1">Địa điểm tập trung:</div>
+                                        <div id="summaryMeetingPoint" class="text-muted">00:00 <span th:text="${#temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}"></span> Tập trung tại văn phòng quận 5: địa chỉ: 95 Nguyễn Duy Dương, Phường 9, Quận 5, Hồ Chí Minh</div>
+                                    </div>
+                                    <div class="col-md-6 ps-md-3 mt-3 mt-md-0">
+                                        <div class="fw-bold mb-1">Địa điểm khách sạn:</div>
+                                        <div id="summaryHotelPoint" class="text-muted">Đường Yên Ninh, Phường Văn Hải, TP. Phan Rang - Tháp Chàm, tỉnh Ninh Thuận.</div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 departure-note">
+                                    Combo không hoàn, không hủy, không đổi. Giá áp dụng tối thiểu cho 2 khách/booking.
+                                    Quý khách cần mang theo CCCD/Passport gốc còn hạn để làm thủ tục nhận phòng.
+                                    Giá chưa bao gồm chỗ ngồi cho trẻ em dưới 4 tuổi, nếu muốn mua thêm ghế ngồi trên xe vui lòng liên hệ phụ trách để được báo giá.
+                                    Tổng đài tư vấn 1800.646.888 (miễn phí) từ 8:00 - 23:00 hằng ngày.
                                 </div>
                             </div>
                         </div>
@@ -518,52 +551,76 @@
                                 </button>
                             </div>
 
-                            <!-- Khi đã chọn ngày: giá tour + giá vé máy bay -->
-                            <div th:if="${selectedNkh != null}">
+                            <!-- Khi đã chọn ngày: tóm tắt giá theo nhóm tuổi -->
+                            <div th:if="${selectedNkh != null}"
+                                 th:with="
+                                    giaTour=${id.gia != null ? id.gia.doubleValue() : 0},
+                                    giaVeNguoiLon=${price},
+                                    unitPrice=${giaTour + giaVeNguoiLon},
+                                    airline=${id.idPhuongTien != null and id.idPhuongTien.hang != null ? #strings.toLowerCase(id.idPhuongTien.hang) : ''},
+                                    domestic=${id.idDiemDen == null or id.idDiemDen.quocGia == null or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'việt') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'viet') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'vn')},
+                                    veTreEm=${#strings.contains(airline, 'vietnam airlines') or #strings.contains(airline, 'vna') ? (domestic ? giaVeNguoiLon * 0.9 : giaVeNguoiLon * 0.75) : (#strings.contains(airline, 'vietjet') ? giaVeNguoiLon : (#strings.contains(airline, 'bamboo') ? giaVeNguoiLon * 0.75 : giaVeNguoiLon * 0.75))},
+                                    veEmBe=${#strings.contains(airline, 'vietnam airlines') or #strings.contains(airline, 'vna') ? giaVeNguoiLon * 0.1 : (#strings.contains(airline, 'vietjet') ? (domestic ? 200000 : 400000) : (#strings.contains(airline, 'bamboo') ? (domestic ? 200000 : 500000) : (domestic ? 200000 : 400000)))},
+                                    giaNguoiLon=${giaTour + giaVeNguoiLon},
+                                    giaTreEm=${giaTour * 0.75 + veTreEm},
+                                    giaTreNho=${giaTour * 0.5 + veTreEm},
+                                    giaEmBe=${veEmBe},
+                                    phuThuPhongDon=${singleRoomSurcharge}">
                                 <h2 class="card-title text-danger fw-bold"
-                                    th:text="${#numbers.formatDecimal(id.gia.doubleValue() + price, 0, 'COMMA', 0, 'POINT') + ' VND'}">
+                                    th:text="${#numbers.formatDecimal(unitPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}">
                                     <span class="small text-secondary">/Khách</span>
                                 </h2>
-                                <div class="small text-muted mb-1">
-                                    <span>Giá dịch vụ: </span>
-                                    <strong
-                                        th:text="${#numbers.formatDecimal(id.gia, 0, 'COMMA', 0, 'POINT') + ' VND'}"></strong>
+                                <div class="small text-muted mb-2">
+                                    <span>Giá combo cơ bản (dịch vụ + vé): </span>
+                                    <strong th:text="${#numbers.formatDecimal(unitPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></strong>
                                 </div>
-                                <div class="small text-muted mb-3">
-                                    <span th:text="${T(edu.bookingtour.util.TransportUi).ticketLabel(transportKind) + ': '}">Vé: </span>
-                                    <strong
-                                        th:text="${#numbers.formatDecimal(price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></strong>
+                                <div class="small border rounded-3 p-2 mb-3 bg-light-subtle">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Người lớn (từ 12 tuổi)</span>
+                                        <strong class="text-danger" th:text="${#numbers.formatDecimal(giaNguoiLon, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Trẻ em (5-11 tuổi)</span>
+                                        <strong class="text-danger" th:text="${#numbers.formatDecimal(giaTreEm, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Trẻ nhỏ (2-4 tuổi)</span>
+                                        <strong class="text-danger" th:text="${#numbers.formatDecimal(giaTreNho, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Em bé (dưới 2 tuổi)</span>
+                                        <strong class="text-danger" th:text="${#numbers.formatDecimal(giaEmBe, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span>Phụ thu phòng đơn</span>
+                                        <strong class="text-danger" th:text="${#numbers.formatDecimal(phuThuPhongDon, 0, 'COMMA', 0, 'POINT') + 'đ'}"></strong>
+                                    </div>
                                 </div>
                                 <p class="small text-muted mb-2">
                                     <i class="bi bi-calendar3 me-1"></i> Ngày đi:
                                     <strong th:text="${#temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}"></strong>
                                 </p>
-                                <p class="small text-muted mb-2">
-                                    <i class="bi bi-calendar3 me-1"></i> Ngày về:
-                                    <strong
-                                        th:text="${selectedNkh.ngayVe != null ? #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></strong>
-                                </p>
-                                <p class="small text-muted mb-2">
-                                    <i th:class="|bi ${transportIcon} me-1|"></i>
-                                    <span th:text="${T(edu.bookingtour.util.TransportUi).outboundTripLabel(transportKind) + ':'}">Chuyến đi:</span>
-                                    <strong th:text="${selectedNkh.maChuyenBayDi ?: 'N/A'}"></strong>
-                                    (<span th:text="${selectedNkh.gioBayDi ?: ''}"></span> → <span
-                                        th:text="${selectedNkh.gioDenDi ?: ''}"></span>)
-                                </p>
                                 <p class="small text-muted mb-3">
-                                    <i th:class="|bi ${transportIcon} me-1|"
-                                        th:style="${transportKind == 'plane' ? 'transform: scaleX(-1); display:inline-block;' : null}"></i>
-                                    <span th:text="${T(edu.bookingtour.util.TransportUi).returnTripLabel(transportKind) + ':'}">Chuyến về:</span>
-                                    <strong th:text="${selectedNkh.maChuyenBayVe ?: 'N/A'}"></strong>
-                                    (<span th:text="${selectedNkh.gioBayVe ?: ''}"></span> → <span
-                                        th:text="${selectedNkh.gioDenVe ?: ''}"></span>)
+                                    <i class="bi bi-calendar3 me-1"></i> Ngày về:
+                                    <strong th:text="${selectedNkh.ngayVe != null ? #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></strong>
+                                </p>
+                                <p class="small mb-3" th:if="${selectedCapacity != null}">
+                                    <span th:if="${selectedCapacity.remaining > 0}" class="badge bg-success">
+                                        Còn <span th:text="${selectedCapacity.remaining}"></span>/<span th:text="${selectedCapacity.capacity}"></span> chỗ
+                                    </span>
+                                    <span th:unless="${selectedCapacity.remaining > 0}" class="badge bg-danger">Hết chỗ</span>
                                 </p>
 
                                 <!-- Nút ĐẶT NGAY -->
-                                <a th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
+                                <a th:if="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+                                    th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
                                     class="btn btn-danger w-100 mb-2 py-2 fw-bold text-decoration-none">
                                     <i class="bi bi-cart-check me-2"></i> ĐẶT NGAY
                                 </a>
+                                <button th:unless="${selectedCapacity == null or selectedCapacity.remaining > 0}" type="button"
+                                    class="btn btn-secondary w-100 mb-2 py-2 fw-bold" disabled>
+                                    Hết chỗ
+                                </button>
                             </div>
 
                             <a sec:authorize="isAnonymous()" th:href="@{/login}"
@@ -586,12 +643,15 @@
             <div>
                 <div class="small text-muted">Giá từ / khách</div>
                 <div class="fw-bold text-danger"
-                     th:text="${#numbers.formatDecimal(id.gia.doubleValue() + price, 0, 'COMMA', 0, 'POINT') + ' ₫'}"></div>
+                     th:text="${#numbers.formatDecimal((id.gia != null ? id.gia.doubleValue() : 0) + price, 0, 'COMMA', 0, 'POINT') + ' ₫'}"></div>
             </div>
-            <a th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
+            <a th:if="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+               th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
                class="btn btn-danger text-decoration-none">
                 Đặt ngay
             </a>
+            <span th:unless="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+                  class="btn btn-secondary disabled">Hết chỗ</span>
         </div>
 
         <script>
@@ -740,6 +800,115 @@
                 if (activeDay) {
                     activeDay.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
                 }
+
+                const departureSelect = document.getElementById('summaryDepartureSelect');
+                if (departureSelect) {
+                    const tourId = departureSelect.getAttribute('data-tour-id');
+                    const nkhId = departureSelect.getAttribute('data-nkh-id');
+                    const giaTour = parseFloat(departureSelect.getAttribute('data-gia-tour') || '0');
+                    const airline = (departureSelect.getAttribute('data-airline') || '').toLowerCase();
+                    const isDomestic = (departureSelect.getAttribute('data-domestic') || 'true') === 'true';
+                    const singleRoom = parseFloat(departureSelect.getAttribute('data-single-room') || '0');
+                    const quoteCache = {};
+
+                    function formatMoney(v) {
+                        return Math.round(v).toLocaleString('vi-VN') + 'đ';
+                    }
+
+                    function isVna() {
+                        return airline.includes('vietnam airlines') || airline.includes('vna');
+                    }
+                    function isVietjet() {
+                        return airline.includes('vietjet');
+                    }
+                    function isBamboo() {
+                        return airline.includes('bamboo');
+                    }
+                    function calcChildTicket(adultTicket) {
+                        if (isVna()) return adultTicket * (isDomestic ? 0.9 : 0.75);
+                        if (isVietjet()) return adultTicket;
+                        if (isBamboo()) return adultTicket * 0.75;
+                        return adultTicket * 0.75;
+                    }
+                    function calcInfantTicket(adultTicket) {
+                        if (isVna()) return adultTicket * 0.1;
+                        if (isVietjet()) return isDomestic ? 200000 : 400000;
+                        if (isBamboo()) return isDomestic ? 200000 : 500000;
+                        return isDomestic ? 200000 : 400000;
+                    }
+                    function meetingByDeparture(name, ngay) {
+                        if ((name || '').toLowerCase().includes('hồ chí minh') || (name || '').toLowerCase().includes('hcm')) {
+                            return '00:00 ' + ngay + ' Tập trung tại văn phòng quận 5: địa chỉ: 95 Nguyễn Duy Dương, Phường 9, Quận 5, Hồ Chí Minh';
+                        }
+                        if ((name || '').toLowerCase().includes('hà nội')) {
+                            return '00:00 ' + ngay + ' Tập trung tại văn phòng Cầu Giấy: 12 Trần Thái Tông, Dịch Vọng, Hà Nội';
+                        }
+                        if ((name || '').toLowerCase().includes('đà nẵng')) {
+                            return '00:00 ' + ngay + ' Tập trung tại văn phòng Hải Châu: 224 Trưng Nữ Vương, Đà Nẵng';
+                        }
+                        return '00:00 ' + ngay + ' Tập trung tại điểm đón đã chọn: ' + name + '. Nhân viên sẽ liên hệ xác nhận trước giờ khởi hành.';
+                    }
+                    function hotelByDeparture(name) {
+                        if ((name || '').toLowerCase().includes('hà nội')) {
+                            return 'Khách sạn trung tâm: 12A Trần Quang Khải, Hoàn Kiếm, Hà Nội.';
+                        }
+                        if ((name || '').toLowerCase().includes('đà nẵng')) {
+                            return 'Khách sạn ven biển: 201 Võ Nguyên Giáp, Sơn Trà, Đà Nẵng.';
+                        }
+                        return 'Đường Yên Ninh, Phường Văn Hải, TP. Phan Rang - Tháp Chàm, tỉnh Ninh Thuận.';
+                    }
+
+                    function applyQuote(q) {
+                        if (!q || !q.available) return;
+                        const adultTicket = (q.giaVeDi || 0) + (q.giaVeVe || 0);
+                        const childTicket = calcChildTicket(adultTicket);
+                        const infantTicket = calcInfantTicket(adultTicket);
+                        const giaNguoiLon = giaTour + adultTicket;
+                        const giaTreEm = giaTour * 0.75 + childTicket;
+                        const giaTreNho = giaTour * 0.5 + childTicket;
+                        const giaEmBe = infantTicket;
+
+                        const setText = (id, value) => {
+                            const el = document.getElementById(id);
+                            if (el) el.textContent = value;
+                        };
+                        setText('summaryGioDi', q.gioBayDi || 'N/A');
+                        setText('summaryGioDenDi', q.gioDenDi || 'N/A');
+                        setText('summaryGioVe', q.gioBayVe || 'N/A');
+                        setText('summaryGioDenVe', q.gioDenVe || 'N/A');
+                        setText('summaryDiemDonDi', q.diemDonTen || '');
+                        setText('summaryDiemDonVe', q.diemDonTen || '');
+                        setText('summaryGiaNguoiLon', formatMoney(giaNguoiLon));
+                        setText('summaryGiaTreEm', formatMoney(giaTreEm));
+                        setText('summaryGiaTreNho', formatMoney(giaTreNho));
+                        setText('summaryGiaEmBe', formatMoney(giaEmBe));
+                        setText('summaryGiaPhongDon', formatMoney(singleRoom));
+                        setText('summaryVeNguoiLon', formatMoney(adultTicket));
+                        setText('summaryVeTreEm', formatMoney(childTicket));
+                        setText('summaryVeEmBe', formatMoney(infantTicket));
+                        setText('summaryMeetingPoint', meetingByDeparture(q.diemDonTen || '', q.ngayDi || ''));
+                        setText('summaryHotelPoint', hotelByDeparture(q.diemDonTen || ''));
+                    }
+
+                    function loadQuote() {
+                        const departureId = departureSelect.value;
+                        if (!departureId) return;
+                        if (quoteCache[departureId]) {
+                            applyQuote(quoteCache[departureId]);
+                            return;
+                        }
+                        fetch('/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId + '&diemDonId=' + encodeURIComponent(departureId))
+                            .then(r => r.json())
+                            .then(q => {
+                                quoteCache[departureId] = q;
+                                applyQuote(q);
+                            })
+                            .catch(() => {});
+                    }
+
+                    departureSelect.addEventListener('change', loadQuote);
+                    loadQuote();
+                }
             });
 
             function getWeatherIcon(code) {
@@ -794,6 +963,34 @@
                 background: #fff3cd;
                 transform: translateY(-2px);
                 box-shadow: 0 4px 10px rgba(255,193,7,0.3);
+            }
+            .sold-out-day {
+                opacity: 0.65;
+                cursor: not-allowed;
+                background: #f8f9fa;
+            }
+            .departure-summary {
+                border-color: #0d6efd !important;
+                background: #fff;
+            }
+            .departure-summary-head {
+                background: #fff;
+            }
+            .departure-date-pill {
+                display: inline-block;
+                padding: 8px 14px;
+                border-radius: 999px;
+                background: #eaf3ff;
+                color: #0d6efd;
+                font-weight: 700;
+            }
+            .departure-note {
+                border-radius: 14px;
+                background: #fff2eb;
+                color: #ff6b3d;
+                padding: 12px 14px;
+                font-size: 0.95rem;
+                line-height: 1.55;
             }
             .schedule-item {
                 border: none;

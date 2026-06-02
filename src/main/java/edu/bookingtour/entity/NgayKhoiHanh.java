@@ -59,6 +59,9 @@ public class NgayKhoiHanh {
     @Column(name = "gio_den_ve")
     private String gioDenVe;
 
+    @Column(name = "suc_chua")
+    private Integer sucChua;
+
     // Tổng giá vé (đi + về)
     public double getTongGiaVe() {
         return (giaVeDi != null ? giaVeDi : 0) + (giaVeVe != null ? giaVeVe : 0);

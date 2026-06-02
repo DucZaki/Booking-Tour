@@ -5,6 +5,7 @@ import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.LichTrinh;
 import edu.bookingtour.service.LichTrinhService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
+import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,21 @@ public class TourApiController {
 
     @Autowired
     private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
+
+    @Autowired
+    private TourCapacityService tourCapacityService;
+
+    @GetMapping("/departure/{nkhId}/capacity")
+    public ResponseEntity<Map<String, Object>> departureCapacity(@PathVariable Integer nkhId) {
+        TourCapacityService.CapacitySnapshot snap = tourCapacityService.getSnapshot(nkhId);
+        Map<String, Object> body = new HashMap<>();
+        body.put("nkhId", nkhId);
+        body.put("capacity", snap.getCapacity());
+        body.put("booked", snap.getBooked());
+        body.put("remaining", snap.getRemaining());
+        body.put("soldOut", snap.isSoldOut());
+        return ResponseEntity.ok(body);
+    }
 
     @GetMapping("/{id}/details")
     public ResponseEntity<?> getTourDetails(@PathVariable Integer id) {

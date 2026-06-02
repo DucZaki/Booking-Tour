@@ -5,6 +5,7 @@ import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
+import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -32,6 +33,9 @@ public class AdminNgayKhoiHanhController {
     @Autowired
     private TourService tourService;
 
+    @Autowired
+    private TourCapacityService tourCapacityService;
+
     /**
      * Danh sách ngày khởi hành của tour
      */
@@ -54,6 +58,7 @@ public class AdminNgayKhoiHanhController {
         model.addAttribute("tour", tour);
         model.addAttribute("danhSach", danhSach);
         model.addAttribute("diemDonByNkh", diemDonByNkh);
+        model.addAttribute("capacityByNkh", tourCapacityService.snapshotsForDepartures(danhSach));
         return "admin/tour/ngay-khoi-hanh-list";
     }
 
@@ -88,6 +93,7 @@ public class AdminNgayKhoiHanhController {
 
         model.addAttribute("tour", tour);
         model.addAttribute("nkh", nkh);
+        model.addAttribute("capacity", tourCapacityService.getSnapshot(nkh.getId()));
         return "admin/tour/ngay-khoi-hanh-edit";
     }
 
@@ -98,8 +104,19 @@ public class AdminNgayKhoiHanhController {
     public String update(@PathVariable Integer tourId,
             @PathVariable Integer id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayDi,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayVe) {
-        ngayKhoiHanhService.updateDepartureDate(id, ngayDi, ngayVe);
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayVe,
+            @RequestParam(required = false) Integer sucChua,
+            RedirectAttributes redirectAttributes) {
+        try {
+            ngayKhoiHanhService.updateDepartureDate(id, ngayDi, ngayVe);
+            if (sucChua != null) {
+                ngayKhoiHanhService.updateCapacity(id, sucChua);
+            }
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/edit/" + id;
+        }
+        redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật ngày khởi hành.");
         return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
     }
 

@@ -38,6 +38,24 @@ public class DatCho {
     @Column(name = "so_luong")
     private Integer soLuong;
 
+    @Column(name = "so_nguoi_lon")
+    private Integer soNguoiLon;
+
+    @Column(name = "so_tre_em")
+    private Integer soTreEm;
+
+    @Column(name = "so_tre_nho")
+    private Integer soTreNho;
+
+    @Column(name = "so_em_be")
+    private Integer soEmBe;
+
+    @Column(name = "so_phong_don")
+    private Integer soPhongDon;
+
+    @Column(name = "phu_thu_phong_don")
+    private Double phuThuPhongDon;
+
     @Column(name = "ngay_dat")
     private LocalDate ngayDat;
 

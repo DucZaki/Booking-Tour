@@ -5,6 +5,7 @@ import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.service.MaGiamGiaService;
+import edu.bookingtour.service.BookingPricingService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.TourService;
@@ -31,13 +32,20 @@ public class PromoApiController {
     @Autowired
     private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
 
+    @Autowired
+    private BookingPricingService bookingPricingService;
+
     @PostMapping("/validate")
     public ResponseEntity<Map<String, Object>> validate(@RequestBody Map<String, Object> body) {
         String ma = body.get("ma") != null ? body.get("ma").toString() : "";
         int tourId = parseInt(body.get("tourId"), 0);
         int nkhId = parseInt(body.get("nkhId"), 0);
         int diemDonId = parseInt(body.get("diemDonId"), 0);
-        int soLuong = Math.max(1, parseInt(body.get("soLuong"), 1));
+        int soNguoiLon = Math.max(1, parseInt(body.get("soNguoiLon"), 1));
+        int soTreEm = Math.max(0, parseInt(body.get("soTreEm"), 0));
+        int soTreNho = Math.max(0, parseInt(body.get("soTreNho"), 0));
+        int soEmBe = Math.max(0, parseInt(body.get("soEmBe"), 0));
+        int soPhongDon = Math.max(0, parseInt(body.get("soPhongDon"), 0));
 
         ChuyenDi tour = tourService.findByIdd(tourId);
         NgayKhoiHanh nkh = ngayKhoiHanhService.findById(nkhId);
@@ -54,13 +62,20 @@ public class PromoApiController {
         }
 
         double unitPrice = quote.getUnitPrice();
-        PromoApplyResult result = maGiamGiaService.validateAndApply(ma, tourId, unitPrice, soLuong);
+        BookingPricingService.BookingPriceBreakdown pricing = bookingPricingService.calculate(
+                tour, quote, soNguoiLon, soTreEm, soTreNho, soEmBe, soPhongDon
+        );
+        PromoApplyResult result = maGiamGiaService.validateAndApplyOnSubtotal(
+                ma, tourId, unitPrice, pricing.getSubtotal()
+        );
 
         Map<String, Object> resp = new HashMap<>();
         resp.put("valid", result.isValid());
         resp.put("message", result.getMessage());
+        resp.put("subtotal", pricing.getSubtotal());
+        resp.put("singleRoomTotal", pricing.getSingleRoomTotal());
+        resp.put("singleRoomCount", pricing.getSingleRoomCount());
         if (result.isValid()) {
-            resp.put("subtotal", result.getSubtotal());
             resp.put("discount", result.getDiscount());
             resp.put("total", result.getTotal());
         }

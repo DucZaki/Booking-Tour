@@ -30,6 +30,9 @@ public class NoiLuuTru {
     @Column(name = "gia", precision = 10, scale = 2)
     private BigDecimal gia;
 
+    @Column(name = "gia_phong_don", precision = 10, scale = 2)
+    private BigDecimal giaPhongDon = BigDecimal.valueOf(500000);
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_diem_den")
     private DiemDen idDiemDen;

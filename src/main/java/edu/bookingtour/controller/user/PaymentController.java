@@ -10,9 +10,11 @@ import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.service.DatChoService;
 import edu.bookingtour.service.EmailService;
 import edu.bookingtour.service.MaGiamGiaService;
+import edu.bookingtour.service.BookingPricingService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.NguoiDungService;
+import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourService;
 import edu.bookingtour.repo.DiemDonRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +33,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
+import java.util.Objects;
 
 @Controller
 public class PaymentController {
@@ -63,6 +67,12 @@ public class PaymentController {
     @Autowired
     private DiemDonRepository diemDonRepository;
 
+    @Autowired
+    private BookingPricingService bookingPricingService;
+
+    @Autowired
+    private TourCapacityService tourCapacityService;
+
     @PostMapping("/booking/submit")
     public String submitBooking(
             @RequestParam Integer tourId,
@@ -71,10 +81,27 @@ public class PaymentController {
             @RequestParam String hoTen,
             @RequestParam String email,
             @RequestParam String soDienThoai,
-            @RequestParam Integer soLuong,
+            @RequestParam(defaultValue = "1") Integer soNguoiLon,
+            @RequestParam(defaultValue = "0") Integer soTreEm,
+            @RequestParam(defaultValue = "0") Integer soTreNho,
+            @RequestParam(defaultValue = "0") Integer soEmBe,
+            @RequestParam(defaultValue = "0") Integer soPhongDon,
             @RequestParam(required = false) String diaChi,
             @RequestParam(required = false) String ghiChu,
             @RequestParam(required = false) String maGiamGia,
+            @RequestParam(required = false, name = "adultNames") List<String> adultNames,
+            @RequestParam(required = false, name = "adultDob") List<String> adultDob,
+            @RequestParam(required = false, name = "adultGender") List<String> adultGender,
+            @RequestParam(required = false, name = "adultPhone") List<String> adultPhone,
+            @RequestParam(required = false, name = "childNames") List<String> childNames,
+            @RequestParam(required = false, name = "childDob") List<String> childDob,
+            @RequestParam(required = false, name = "childGender") List<String> childGender,
+            @RequestParam(required = false, name = "smallChildNames") List<String> smallChildNames,
+            @RequestParam(required = false, name = "smallChildDob") List<String> smallChildDob,
+            @RequestParam(required = false, name = "smallChildGender") List<String> smallChildGender,
+            @RequestParam(required = false, name = "babyNames") List<String> babyNames,
+            @RequestParam(required = false, name = "babyDob") List<String> babyDob,
+            @RequestParam(required = false, name = "babyGender") List<String> babyGender,
             Principal principal,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
@@ -99,7 +126,6 @@ public class PaymentController {
             datCho.setIdNguoiDung(user);
         }
         datCho.setIdChuyenDi(tour);
-        datCho.setSoLuong(soLuong);
         datCho.setNgayDat(LocalDate.now());
         datCho.setCreatedAt(LocalDateTime.now());
         datCho.setTrangThai("PENDING");
@@ -118,7 +144,7 @@ public class PaymentController {
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
         // Persist chosen departure on booking
-        datCho.setIdDiemDon(diemDonRepository.getReferenceById(departureId));
+        datCho.setIdDiemDon(diemDonRepository.getReferenceById(Objects.requireNonNull(departureId)));
         datCho.setIdNgayKhoiHanh(nkh);
 
         FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, departureId, false);
@@ -127,22 +153,93 @@ public class PaymentController {
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
 
+        BookingPricingService.BookingPriceBreakdown pricing = bookingPricingService.calculate(
+                tour,
+                quote,
+                soNguoiLon,
+                soTreEm,
+                soTreNho,
+                soEmBe,
+                soPhongDon
+        );
+        if (pricing.getAdults() <= 0) {
+            redirectAttributes.addFlashAttribute("promoError", "Cần tối thiểu 1 người lớn cho mỗi booking.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (pricing.getTotalGuests() <= 0) {
+            redirectAttributes.addFlashAttribute("promoError", "Vui lòng chọn số lượng hành khách hợp lệ.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        try {
+            tourCapacityService.assertCanBook(nkhId, pricing.getTotalGuests());
+        } catch (TourCapacityService.CapacityExceededException ex) {
+            redirectAttributes.addFlashAttribute("capacityRemaining", ex.getRemaining());
+            redirectAttributes.addFlashAttribute("showCapacityToast", true);
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("promoError",
+                    "Không kiểm tra được sức chứa. Vui lòng thử lại hoặc liên hệ hỗ trợ.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        List<String> normalizedAdultNames = adultNames == null ? List.of()
+                : adultNames.stream().map(s -> s == null ? "" : s.trim()).filter(s -> !s.isEmpty()).toList();
+        if (normalizedAdultNames.size() < pricing.getAdults()) {
+            redirectAttributes.addFlashAttribute("promoError", "Vui lòng nhập đầy đủ thông tin người lớn.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (!validatePassengerGroup(pricing.getAdults(), adultNames, adultDob, adultGender, 12, 200, nkh.getNgay(), "Người lớn")) {
+            redirectAttributes.addFlashAttribute("promoError", "Thông tin người lớn không hợp lệ hoặc sai độ tuổi (>=12).");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (!validateRequiredPhones(pricing.getAdults(), adultPhone)) {
+            redirectAttributes.addFlashAttribute("promoError", "Vui lòng nhập số điện thoại cho toàn bộ người lớn.");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (!validatePassengerGroup(pricing.getChildren(), childNames, childDob, childGender, 5, 11, nkh.getNgay(), "Trẻ em")) {
+            redirectAttributes.addFlashAttribute("promoError", "Thông tin trẻ em không hợp lệ hoặc sai độ tuổi (5-11).");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (!validatePassengerGroup(pricing.getSmallChildren(), smallChildNames, smallChildDob, smallChildGender, 2, 4, nkh.getNgay(), "Trẻ nhỏ")) {
+            redirectAttributes.addFlashAttribute("promoError", "Thông tin trẻ nhỏ không hợp lệ hoặc sai độ tuổi (2-4).");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+        if (!validatePassengerGroup(pricing.getBabies(), babyNames, babyDob, babyGender, 0, 1, nkh.getNgay(), "Em bé")) {
+            redirectAttributes.addFlashAttribute("promoError", "Thông tin em bé không hợp lệ hoặc sai độ tuổi (<2).");
+            return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+
         double unitPrice = quote.getUnitPrice();
-        PromoApplyResult promoResult = maGiamGiaService.validateAndApply(maGiamGia, tourId, unitPrice, soLuong);
+        PromoApplyResult promoResult = maGiamGiaService.validateAndApplyOnSubtotal(
+                maGiamGia,
+                tourId,
+                unitPrice,
+                pricing.getSubtotal()
+        );
         if (maGiamGia != null && !maGiamGia.isBlank() && !promoResult.isValid()) {
             redirectAttributes.addFlashAttribute("promoError", promoResult.getMessage());
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
 
-        double totalAmount = promoResult.isValid() ? promoResult.getTotal()
-                : unitPrice * soLuong;
+        double totalAmount = promoResult.isValid() ? promoResult.getTotal() : pricing.getSubtotal();
         if (promoResult.isValid() && promoResult.getMaGiamGia() != null) {
             datCho.setIdMaGiamGia(promoResult.getMaGiamGia());
         }
+        datCho.setSoNguoiLon(pricing.getAdults());
+        datCho.setSoTreEm(pricing.getChildren());
+        datCho.setSoTreNho(pricing.getSmallChildren());
+        datCho.setSoEmBe(pricing.getBabies());
+        datCho.setSoLuong(pricing.getTotalGuests());
+        datCho.setSoPhongDon(pricing.getSingleRoomCount());
+        datCho.setPhuThuPhongDon(pricing.getSingleRoomTotal());
         datCho.setTongGia(totalAmount);
+        datCho.setGhiChu(appendBookingBreakdownNote(ghiChu, pricing, normalizedAdultNames));
 
         datCho = datChoService.save(datCho);
-        emailService.sendBookingCreated(datCho);
+        try {
+            emailService.sendBookingCreated(datCho);
+        } catch (Exception mailEx) {
+            // Không chặn thanh toán nếu gửi mail lỗi
+        }
 
         long amountVnd = (long) Math.round(totalAmount);
         if (amountVnd < 5000L) {
@@ -162,6 +259,88 @@ public class PaymentController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("promoError", "Không tạo được link VNPay: " + e.getMessage());
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
+        }
+    }
+
+    private String appendBookingBreakdownNote(String rawNote,
+                                              BookingPricingService.BookingPriceBreakdown pricing,
+                                              List<String> adultNames) {
+        String userNote = rawNote == null ? "" : rawNote.trim();
+        String breakdown = String.format(
+                "Co cau hanh khach: NL=%d, TE(5-11)=%d, TN(2-4)=%d, EB(<2)=%d, phong don=%d, phu thu phong don=%.0f",
+                pricing.getAdults(),
+                pricing.getChildren(),
+                pricing.getSmallChildren(),
+                pricing.getBabies(),
+                pricing.getSingleRoomCount(),
+                pricing.getSingleRoomTotal()
+        );
+        String adultInfo = adultNames == null || adultNames.isEmpty()
+                ? ""
+                : " | Nguoi lon: " + String.join(", ", adultNames);
+        if (userNote.isBlank()) {
+            return breakdown + adultInfo;
+        }
+        return userNote + " | " + breakdown + adultInfo;
+    }
+
+    private boolean validatePassengerGroup(int expectedCount,
+                                           List<String> names,
+                                           List<String> dobs,
+                                           List<String> genders,
+                                           int minAge,
+                                           int maxAge,
+                                           LocalDate departureDate,
+                                           String label) {
+        if (expectedCount == 0) {
+            return true;
+        }
+        if (names == null || dobs == null || genders == null) {
+            return false;
+        }
+        if (names.size() < expectedCount || dobs.size() < expectedCount || genders.size() < expectedCount) {
+            return false;
+        }
+        for (int i = 0; i < expectedCount; i++) {
+            String name = names.get(i) == null ? "" : names.get(i).trim();
+            String dobText = dobs.get(i) == null ? "" : dobs.get(i).trim();
+            String gender = genders.get(i) == null ? "" : genders.get(i).trim();
+            if (name.isBlank() || dobText.isBlank() || gender.isBlank()) {
+                return false;
+            }
+            LocalDate dob = parseDateSafe(dobText);
+            if (dob == null) {
+                return false;
+            }
+            int age = Period.between(dob, departureDate).getYears();
+            if (age < minAge || age > maxAge) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean validateRequiredPhones(int expectedCount, List<String> phones) {
+        if (expectedCount == 0) {
+            return true;
+        }
+        if (phones == null || phones.size() < expectedCount) {
+            return false;
+        }
+        for (int i = 0; i < expectedCount; i++) {
+            String phone = phones.get(i) == null ? "" : phones.get(i).trim();
+            if (phone.isBlank()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private LocalDate parseDateSafe(String value) {
+        try {
+            return LocalDate.parse(value);
+        } catch (Exception ignored) {
+            return null;
         }
     }
 

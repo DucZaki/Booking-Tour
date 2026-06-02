@@ -15,4 +15,6 @@ public class Calendar {
     private boolean pastDay;
     private boolean hasDeparture;
     private Integer ngayKhoiHanhId;
+    private int remainingGuests;
+    private boolean soldOut;
 }

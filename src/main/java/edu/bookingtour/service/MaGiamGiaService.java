@@ -85,6 +85,36 @@ public class MaGiamGiaService {
         return PromoApplyResult.ok(promo, subtotal, discount, total);
     }
 
+    public PromoApplyResult validateAndApplyOnSubtotal(String maCode,
+                                                       int tourId,
+                                                       double referenceUnitPrice,
+                                                       double subtotal) {
+        if (maCode == null || maCode.isBlank()) {
+            return PromoApplyResult.invalid("Vui lòng nhập mã giảm giá");
+        }
+        MaGiamGia promo = maGiamGiaRepository.findByMaIgnoreCase(maCode.trim()).orElse(null);
+        if (promo == null) {
+            return PromoApplyResult.invalid("Mã giảm giá không tồn tại");
+        }
+        if (!isActive(promo, LocalDate.now())) {
+            return PromoApplyResult.invalid("Mã giảm giá đã hết hạn hoặc chưa có hiệu lực");
+        }
+        if (!appliesToTour(promo, tourId)) {
+            return PromoApplyResult.invalid("Mã không áp dụng cho tour này");
+        }
+        if (promo.getGiaToiThieu() != null
+                && BigDecimal.valueOf(referenceUnitPrice).compareTo(promo.getGiaToiThieu()) < 0) {
+            return PromoApplyResult.invalid("Tour chưa đủ điều kiện giá tối thiểu ("
+                    + formatMoney(promo.getGiaToiThieu().doubleValue()) + " VND/khách)");
+        }
+        double discount = calculateDiscount(promo, subtotal);
+        if (discount <= 0) {
+            return PromoApplyResult.invalid("Mã giảm giá không áp dụng được cho đơn này");
+        }
+        double total = Math.max(0, subtotal - discount);
+        return PromoApplyResult.ok(promo, subtotal, discount, total);
+    }
+
     public boolean isActive(MaGiamGia m, LocalDate today) {
         if (m.getNgayBatDau() != null && today.isBefore(m.getNgayBatDau())) {
             return false;

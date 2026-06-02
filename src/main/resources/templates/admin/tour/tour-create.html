@@ -9,8 +9,10 @@
     <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
     <div class="container mt-4">
       <h3 class="fw-bold text-primary mb-3">Thêm chuyến đi</h3>
+      <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
       <form th:action="@{/admin/tour/save}" th:object="${tour}" method="post" enctype="multipart/form-data"
         class="shadow p-4 rounded bg-light" autocomplete="off">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label fw-bold">Tiêu đề</label>
@@ -20,6 +22,12 @@
           <div class="col-md-6">
             <label class="form-label fw-bold">Giá cả</label>
             <input type="text" th:field="*{gia}" class="form-control" required>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Sức chứa mặc định / đợt</label>
+            <input type="number" th:field="*{sucChuaMacDinh}" class="form-control" min="1" max="500" value="50" required>
+            <small class="text-muted">Mỗi ngày khởi hành mới sẽ dùng giới hạn này (mặc định 50 khách).</small>
           </div>
 
           <div class="col-md-4">
@@ -75,6 +83,22 @@
             <select id="thanhPho" class="form-select" th:field="*{idDiemDen.id}">
               <option value="">-- Chọn thành phố --</option>
             </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Nơi lưu trú</label>
+            <select id="noiLuuTruSelect" class="form-select" name="idNoiLuuTru.id">
+              <option value="">-- Chọn nơi lưu trú --</option>
+              <option th:each="hotel : ${noiLuuTruList}" th:value="${hotel.id}" th:text="${hotel.ten}"
+                th:attr="data-gia-phong-don=${hotel.giaPhongDon != null ? hotel.giaPhongDon : defaultGiaPhongDon}"></option>
+            </select>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label fw-bold">Giá phòng đơn</label>
+            <input type="number" name="giaPhongDon" id="giaPhongDonInput" class="form-control" min="0" step="1000"
+              th:value="${defaultGiaPhongDon}" required>
+            <small class="text-muted">Mặc định 500.000đ, có thể chỉnh riêng theo nơi lưu trú.</small>
           </div>
 
           <div class="col-md-6">
@@ -143,6 +167,8 @@
     const chauLucSelect = document.getElementById("chauLuc");
     const quocGiaSelect = document.getElementById("quocGia");
     const thanhPhoSelect = document.getElementById("thanhPho");
+    const noiLuuTruSelect = document.getElementById("noiLuuTruSelect");
+    const giaPhongDonInput = document.getElementById("giaPhongDonInput");
 
     function refreshSelect(sel) {
       if (window.ZakiSelect) ZakiSelect.refresh(sel);
@@ -184,6 +210,14 @@
       });
       refreshSelect(thanhPhoSelect);
     });
+
+    if (noiLuuTruSelect && giaPhongDonInput) {
+      noiLuuTruSelect.addEventListener("change", function () {
+        const option = this.options[this.selectedIndex];
+        const price = option ? option.getAttribute("data-gia-phong-don") : "";
+        if (price) giaPhongDonInput.value = Math.round(parseFloat(price));
+      });
+    }
   </script>
 
 </body>

@@ -8,10 +8,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
+
+    @org.springframework.data.jpa.repository.Query("""
+            SELECT COALESCE(SUM(d.soLuong), 0) FROM DatCho d
+            WHERE d.idNgayKhoiHanh.id = :nkhId AND d.trangThai IN :statuses
+            """)
+    Integer sumGuestsByNgayKhoiHanhAndStatuses(
+            @org.springframework.data.repository.query.Param("nkhId") Integer nkhId,
+            @org.springframework.data.repository.query.Param("statuses") Collection<String> statuses);
     List<DatCho> findByIdNguoiDungOrderByIdDesc(NguoiDung user);
 
     List<DatCho> findByIdNguoiDungAndIdChuyenDiAndTrangThai(NguoiDung user, ChuyenDi tour, String status);

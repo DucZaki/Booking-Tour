@@ -9,8 +9,11 @@
         <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
         <div class="container mt-4">
             <h3 class="fw-bold text-primary mb-3">Cập nhật chuyến đi</h3>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
             <form th:action="@{'/admin/tour/update/' + ${tour.id}}" th:object="${tour}" method="post"
                 enctype="multipart/form-data" class="shadow p-4 rounded bg-light">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Tiêu đề</label>
@@ -19,6 +22,11 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Giá cả</label>
                         <input type="text" th:field="*{gia}" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Sức chứa mặc định / đợt</label>
+                        <input type="number" th:field="*{sucChuaMacDinh}" class="form-control" min="1" max="500" required>
+                        <small class="text-muted">Áp dụng cho ngày KH mới; có thể chỉnh từng ngày ở mục Ngày khởi hành.</small>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label fw-bold">Ngày khởi hành</label>
@@ -42,7 +50,7 @@
                             <div class="form-check" th:each="dd : ${diemDonList}">
                                 <input class="form-check-input" type="checkbox" name="departureIds" th:value="${dd.id}"
                                     th:id="${'dep_' + dd.id}"
-                                    th:checked="${tour.diemDons != null and tour.diemDons.contains(dd)}" />
+                                    th:checked="${selectedDepartureIds != null and selectedDepartureIds.contains(dd.id)}" />
                                 <label class="form-check-label fw-semibold" th:for="${'dep_' + dd.id}" th:text="${dd.ten}"></label>
                             </div>
                             <div class="small text-muted mt-2">Bỏ chọn hết để hệ thống tự gán theo điểm đến.</div>
@@ -71,6 +79,21 @@
                             <option value="">-- Chọn thành phố --</option>
                         </select>
                     </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Nơi lưu trú</label>
+                        <select id="noiLuuTruSelect" class="form-select" name="idNoiLuuTru.id">
+                            <option value="">-- Chọn nơi lưu trú --</option>
+                            <option th:each="hotel : ${noiLuuTruList}" th:value="${hotel.id}" th:text="${hotel.ten}"
+                                th:selected="${tour.idNoiLuuTru != null and tour.idNoiLuuTru.id == hotel.id}"
+                                th:attr="data-gia-phong-don=${hotel.giaPhongDon != null ? hotel.giaPhongDon : defaultGiaPhongDon}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Giá phòng đơn</label>
+                        <input type="number" name="giaPhongDon" id="giaPhongDonInput" class="form-control" min="0" step="1000"
+                            th:value="${tour.idNoiLuuTru != null and tour.idNoiLuuTru.giaPhongDon != null ? tour.idNoiLuuTru.giaPhongDon : defaultGiaPhongDon}" required>
+                        <small class="text-muted">Mặc định 500.000đ, có thể chỉnh riêng theo nơi lưu trú.</small>
+                    </div>
                     <div class="col-md-6">
                         <label>Nổi bật:</label><br>
                         <input type="radio" th:field="*{noiBat}" th:value="true" id="yes">
@@ -90,6 +113,7 @@
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Đổi ảnh mới (nếu có)</label>
                         <input type="file" name="file" class="form-control" accept="image/*">
+                        <small class="text-muted">Để trống nếu giữ ảnh hiện tại.</small>
                         <label class="form-label fw-bold">Ảnh hiện tại</label>
                         <div>
                             <img th:src="@{${tour.hinhAnh}}" alt="Tour Picture" class="rounded shadow-sm mt-2"
@@ -108,75 +132,79 @@
             </form>
         </div>
     </div>
-    <script>
-        const dataDiaDiem = {
-            "Trong nước": {
-                "Việt Nam": [
-                    { id: 1, ten: "Sapa" },
-                    { id: 2, ten: "Hạ Long" },
-                    { id: 3, ten: "Đà Nẵng" },
-                    { id: 4, ten: "Huế" },
-                    { id: 5, ten: "Phú Quốc" },
-                    { id: 6, ten: "Cần Thơ" }
-                ]
-            },
-            "Châu Á": {
-                "Thái Lan": [{ id: 7, ten: "Bangkok" }],
-                "Singapore": [{ id: 8, ten: "Singapore" }],
-                "Hàn Quốc": [{ id: 9, ten: "Seoul" }]
-            },
-            "Châu Âu": {
-                "Pháp": [{ id: 10, ten: "Paris" }],
-                "Đức": [{ id: 11, ten: "Berlin" }]
-            },
-            "Châu Mỹ": {
-                "Mỹ": [{ id: 12, ten: "New York" }],
-                "Canada": [{ id: 13, ten: "Toronto" }]
-            }
-        };
-
+    <script th:inline="javascript">
         const chauLucSelect = document.getElementById("chauLuc");
         const quocGiaSelect = document.getElementById("quocGia");
         const thanhPhoSelect = document.getElementById("thanhPho");
+        const noiLuuTruSelect = document.getElementById("noiLuuTruSelect");
+        const giaPhongDonInput = document.getElementById("giaPhongDonInput");
+        const initialChauLuc = /*[[${selectedChauLuc}]]*/ '';
+        const initialQuocGia = /*[[${selectedQuocGia}]]*/ '';
+        const initialThanhPho = /*[[${selectedThanhPho}]]*/ '';
 
         function refreshSelect(sel) {
             if (window.ZakiSelect) ZakiSelect.refresh(sel);
         }
 
-        chauLucSelect.addEventListener("change", function () {
-            const chauLuc = this.value;
-
+        function loadQuocGia(chauLuc, selectedQg) {
             quocGiaSelect.innerHTML = '<option value="">-- Chọn quốc gia --</option>';
             thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
             refreshSelect(quocGiaSelect);
             refreshSelect(thanhPhoSelect);
+            if (!chauLuc) return Promise.resolve();
+            return fetch('/api/dia-diem/quoc-gia?chauLuc=' + encodeURIComponent(chauLuc))
+                .then(function (r) { return r.json(); })
+                .then(function (list) {
+                    list.forEach(function (qg) {
+                        const option = document.createElement('option');
+                        option.value = qg;
+                        option.textContent = qg;
+                        if (selectedQg && qg === selectedQg) option.selected = true;
+                        quocGiaSelect.appendChild(option);
+                    });
+                    refreshSelect(quocGiaSelect);
+                });
+        }
 
-            if (!dataDiaDiem[chauLuc]) return;
-
-            Object.keys(dataDiaDiem[chauLuc]).forEach(qg => {
-                const option = document.createElement("option");
-                option.value = qg;
-                option.textContent = qg;
-                quocGiaSelect.appendChild(option);
-            });
-            refreshSelect(quocGiaSelect);
-        });
-        quocGiaSelect.addEventListener("change", function () {
-            const chauLuc = chauLucSelect.value;
-            const quocGia = this.value;
-
+        function loadThanhPho(quocGia, selectedTp) {
             thanhPhoSelect.innerHTML = '<option value="">-- Chọn thành phố --</option>';
             refreshSelect(thanhPhoSelect);
+            if (!quocGia) return Promise.resolve();
+            return fetch('/api/dia-diem/thanh-pho?quocGia=' + encodeURIComponent(quocGia))
+                .then(function (r) { return r.json(); })
+                .then(function (list) {
+                    list.forEach(function (tp) {
+                        const option = document.createElement('option');
+                        option.value = tp.id;
+                        option.textContent = tp.thanhPho || tp.ten || ('#' + tp.id);
+                        if (selectedTp && String(tp.id) === String(selectedTp)) option.selected = true;
+                        thanhPhoSelect.appendChild(option);
+                    });
+                    refreshSelect(thanhPhoSelect);
+                });
+        }
 
-            if (!dataDiaDiem[chauLuc] || !dataDiaDiem[chauLuc][quocGia]) return;
+        chauLucSelect.addEventListener('change', function () {
+            loadQuocGia(this.value, null);
+        });
+        quocGiaSelect.addEventListener('change', function () {
+            loadThanhPho(this.value, null);
+        });
 
-            dataDiaDiem[chauLuc][quocGia].forEach(tp => {
-                const option = document.createElement("option");
-                option.value = tp.id;
-                option.textContent = tp.ten;
-                thanhPhoSelect.appendChild(option);
+        if (noiLuuTruSelect && giaPhongDonInput) {
+            noiLuuTruSelect.addEventListener('change', function () {
+                const option = this.options[this.selectedIndex];
+                const price = option ? option.getAttribute('data-gia-phong-don') : '';
+                if (price) giaPhongDonInput.value = Math.round(parseFloat(price));
             });
-            refreshSelect(thanhPhoSelect);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (initialChauLuc) {
+                chauLucSelect.value = initialChauLuc;
+                loadQuocGia(initialChauLuc, initialQuocGia)
+                    .then(function () { return loadThanhPho(initialQuocGia, initialThanhPho); });
+            }
         });
     </script>
 </body>

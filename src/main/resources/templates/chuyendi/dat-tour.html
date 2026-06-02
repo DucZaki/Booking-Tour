@@ -9,6 +9,7 @@
 
 <body>
     <th:block th:fragment="content">
+        <link rel="stylesheet" th:href="@{/css/capacity-toast.css(v=1)}">
         <div class="container pt-5" style="margin-top: 30px;"
              th:with="transportKind=${T(edu.bookingtour.util.TransportUi).kind(tour.idPhuongTien != null ? tour.idPhuongTien.loai : null, tour.idPhuongTien != null ? tour.idPhuongTien.hang : null)},
                       transportIcon=${T(edu.bookingtour.util.TransportUi).icon(transportKind)},
@@ -22,6 +23,16 @@
                     <li class="breadcrumb-item active">Đặt tour</li>
                 </ol>
             </nav>
+            <div class="booking-hero mb-3">
+                <h1 class="h3 fw-bold mb-1">Đặt tour của bạn</h1>
+                <p class="text-muted mb-0">Hãy đảm bảo tất cả thông tin chi tiết trên trang này đã chính xác trước khi tiến hành thanh toán.</p>
+                <div class="alert alert-info py-2 mt-2 mb-0 small" th:if="${capacity != null and capacity.remaining > 0}">
+                    <i class="bi bi-people me-1"></i>
+                    Đợt <strong th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></strong>:
+                    còn <strong th:text="${capacity.remaining}"></strong>/<span th:text="${capacity.capacity}"></span> chỗ
+                    (đã đặt <span th:text="${capacity.booked}"></span>).
+                </div>
+            </div>
 
             <div class="row">
                 <!-- Form bên trái -->
@@ -45,6 +56,13 @@
                                 <input type="hidden" name="tourId" th:value="${tour.id}">
                                 <input type="hidden" name="nkhId" th:value="${nkh.id}">
 
+                                <div class="contact-block mb-4">
+                                    <div class="contact-block-title mb-2">Thông tin liên lạc</div>
+                                    <div class="contact-login-hint mb-3">
+                                        <i class="bi bi-person-circle me-1"></i>
+                                        <a href="/login" class="contact-login-link">Đăng nhập</a> để nhận ưu đãi, tích điểm và quản lý đơn hàng dễ dàng hơn!
+                                    </div>
+                                </div>
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <label class="form-label">Điểm xuất phát <span class="text-danger">*</span></label>
@@ -55,36 +73,124 @@
                                                 th:text="${dd.ten}"></option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Họ và tên <span class="text-danger">*</span></label>
-                                        <input type="text" name="hoTen" class="form-control"
-                                            placeholder="Nhập họ và tên" th:value="${userHoTen}" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control" placeholder="yourname@gmail.com"
-                                            pattern="^[^\s@]+@gmail\.com$" title="Vui lòng nhập Gmail (@gmail.com)"
-                                            th:value="${userEmail}" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
-                                        <input type="tel" name="soDienThoai" class="form-control"
-                                            placeholder="Nhập số điện thoại" th:value="${userSoDienThoai}" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Số lượng khách <span class="text-danger">*</span></label>
-                                        <input type="number" name="soLuong" class="form-control" value="1" min="1" max="20"
-                                            required id="soLuongInput">
-                                    </div>
                                     <div class="col-md-12">
-                                        <label class="form-label">Địa chỉ</label>
-                                        <input type="text" name="diaChi" class="form-control"
-                                            placeholder="Nhập địa chỉ">
+                                        <div class="contact-panel">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Họ tên <span class="text-danger">*</span></label>
+                                                    <input type="text" name="hoTen" class="form-control contact-input"
+                                                        placeholder="Ví dụ: Nguyễn Văn A" th:value="${userHoTen}" required>
+                                                    <div class="contact-required-msg">Vui lòng nhập Họ tên</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                                    <input type="tel" name="soDienThoai" class="form-control contact-input"
+                                                        placeholder="Ví dụ: 0901234567 / +84901234567" th:value="${userSoDienThoai}" required>
+                                                    <div class="contact-required-msg">Vui lòng nhập Số điện thoại</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Email <span class="text-danger">*</span></label>
+                                                    <input type="email" name="email" class="form-control contact-input"
+                                                        placeholder="Ví dụ: email@example.com" pattern="^[^\s@]+@gmail\.com$"
+                                                        title="Vui lòng nhập Gmail (@gmail.com)" th:value="${userEmail}" required>
+                                                    <div class="contact-required-msg">Vui lòng nhập Email</div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label">Địa chỉ</label>
+                                                    <input type="text" name="diaChi" class="form-control contact-input"
+                                                        placeholder="Ví dụ: 190 Pasteur, Phường Xuân Hoà, TP.HCM">
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <input type="hidden" name="soNguoiLon" id="soNguoiLonInput" value="1">
+                                    <input type="hidden" name="soTreEm" id="soTreEmInput" value="0">
+                                    <input type="hidden" name="soTreNho" id="soTreNhoInput" value="0">
+                                    <input type="hidden" name="soEmBe" id="soEmBeInput" value="0">
+                                    <input type="hidden" name="soPhongDon" id="soPhongDonInput" value="0">
+                                    <input type="hidden" name="soLuong" id="soLuongInput" value="1">
                                     <div class="col-md-12">
                                         <label class="form-label">Ghi chú</label>
                                         <textarea name="ghiChu" class="form-control" rows="3"
                                             placeholder="Yêu cầu đặc biệt..."></textarea>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="border rounded-4 p-3">
+                                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                                <div class="fw-bold">Hành khách</div>
+                                                <small class="text-muted">Mỗi lần thêm khách có thể chọn ở phòng đơn hoặc ghép chỗ</small>
+                                            </div>
+                                            <div class="row g-2">
+                                                <div class="col-sm-6">
+                                                    <label class="small fw-semibold">Người lớn (từ 12 tuổi)</label>
+                                                    <div class="input-group">
+                                                        <button class="btn btn-outline-secondary guest-minus" type="button" data-target="adult">-</button>
+                                                        <input type="number" class="form-control text-center guest-count" id="adultCount"
+                                                            data-target="adult" value="1" min="1" max="50" inputmode="numeric" autocomplete="off">
+                                                        <button class="btn btn-outline-secondary guest-plus" type="button" data-target="adult">+</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="small fw-semibold">Trẻ em (5-11 tuổi)</label>
+                                                    <div class="input-group">
+                                                        <button class="btn btn-outline-secondary guest-minus" type="button" data-target="child">-</button>
+                                                        <input type="number" class="form-control text-center guest-count" id="childCount"
+                                                            data-target="child" value="0" min="0" max="50" inputmode="numeric" autocomplete="off">
+                                                        <button class="btn btn-outline-secondary guest-plus" type="button" data-target="child">+</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="small fw-semibold">Trẻ nhỏ (2-4 tuổi)</label>
+                                                    <div class="input-group">
+                                                        <button class="btn btn-outline-secondary guest-minus" type="button" data-target="smallChild">-</button>
+                                                        <input type="number" class="form-control text-center guest-count" id="smallChildCount"
+                                                            data-target="smallChild" value="0" min="0" max="50" inputmode="numeric" autocomplete="off">
+                                                        <button class="btn btn-outline-secondary guest-plus" type="button" data-target="smallChild">+</button>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <label class="small fw-semibold">Em bé (dưới 2 tuổi)</label>
+                                                    <div class="input-group">
+                                                        <button class="btn btn-outline-secondary guest-minus" type="button" data-target="baby">-</button>
+                                                        <input type="number" class="form-control text-center guest-count" id="babyCount"
+                                                            data-target="baby" value="0" min="0" max="50" inputmode="numeric" autocomplete="off">
+                                                        <button class="btn btn-outline-secondary guest-plus" type="button" data-target="baby">+</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mt-3">
+                                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                                    <div>
+                                                        <div class="small fw-semibold mb-1">Thông tin hành khách (bắt buộc)</div>
+                                                        <small class="text-muted">Bấm vào từng dòng hành khách để điền thông tin chi tiết.</small>
+                                                    </div>
+                                                    <button type="button" class="btn btn-outline-primary btn-sm" id="openPassengerModalBtn">
+                                                        <i class="bi bi-person-vcard me-1"></i> Nhập thông tin
+                                                    </button>
+                                                </div>
+                                                <div id="passengerSummaryList" class="d-flex flex-column gap-2 mt-3"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal fade" id="passengerInfoModal" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                                        <div class="modal-content border-0 shadow">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title fw-bold">Thông tin hành khách</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="passengerModalSubtitle" class="small text-muted mb-3"></div>
+                                                <div id="passengerInfoFields" class="d-flex flex-column gap-3"></div>
+                                                <small class="text-muted">Tất cả thông tin trong form này là bắt buộc và phải đúng độ tuổi tại ngày khởi hành.</small>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Xác nhận</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -208,6 +314,27 @@
                                     th:text="${initialQuote != null and initialQuote.available ? #numbers.formatDecimal(initialQuote.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : (nkh.giaVeVe != null ? #numbers.formatDecimal(nkh.giaVeVe, 0, 'COMMA', 0, 'POINT') + ' ₫' : 'N/A')}"></span>
                             </div>
                             <hr>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Người lớn × giá chuẩn:</span>
+                                <span class="small fw-bold" id="lineAdultTotal">0 ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Trẻ em 5-11 (75%):</span>
+                                <span class="small fw-bold" id="lineChildTotal">0 ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Trẻ nhỏ 2-4 (50%):</span>
+                                <span class="small fw-bold" id="lineSmallChildTotal">0 ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Em bé &lt;2 tuổi (free):</span>
+                                <span class="small fw-bold" id="lineBabyTotal">0 ₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="small">Phụ thu phòng đơn:</span>
+                                <span class="small fw-bold" id="lineSingleRoomTotal">0 ₫</span>
+                            </div>
+                            <hr>
                             <div class="mb-3">
                                 <label class="form-label fw-bold small">Mã giảm giá</label>
                                 <div class="input-group">
@@ -216,22 +343,28 @@
                                     <button type="button" class="btn btn-outline-primary" id="btnApplyPromo">Áp dụng</button>
                                 </div>
                                 <div id="promoMessage" class="small mt-1 text-muted"></div>
-                                <div th:if="${promoError}" class="small text-danger mt-1" th:text="${promoError}"></div>
+                                <div th:if="${promoError != null and (showCapacityToast == null or !showCapacityToast)}" class="small text-danger mt-1" th:text="${promoError}"></div>
                             </div>
                             <div class="d-flex justify-content-between mb-2 d-none" id="discountLine">
                                 <span class="small text-success">Giảm giá:</span>
                                 <span class="small text-success fw-bold" id="discountAmount">0 ₫</span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
-                                <span class="fw-bold">Giá/khách:</span>
+                                <span class="fw-bold">Giá chuẩn/người lớn:</span>
                                 <span class="text-danger fw-bold"
+                                    id="baseUnitPrice"
                                     th:text="${#numbers.formatDecimal(tongGia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
                             </div>
                             <div class="d-flex justify-content-between mb-3" id="totalLine">
                                 <span class="fw-bold fs-5">TỔNG CỘNG:</span>
                                 <span class="text-danger fw-bold fs-5" id="totalPrice"
                                     th:text="${#numbers.formatDecimal(tongGia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"
-                                    th:data-unit-price="${tongGia}"></span>
+                                    th:data-unit-price="${tongGia}"
+                                    th:data-tour-price="${initialQuote != null and initialQuote.available ? initialQuote.giaTour : (tour.gia != null ? tour.gia.doubleValue() : 0)}"
+                                    th:data-ticket-outbound="${initialQuote != null and initialQuote.available ? initialQuote.giaVeDi : (nkh.giaVeDi != null ? nkh.giaVeDi : 0)}"
+                                    th:data-ticket-return="${initialQuote != null and initialQuote.available ? initialQuote.giaVeVe : (nkh.giaVeVe != null ? nkh.giaVeVe : 0)}"
+                                    th:data-airline="${tour.idPhuongTien != null and tour.idPhuongTien.hang != null ? tour.idPhuongTien.hang : ''}"
+                                    th:data-domestic="${tour.idDiemDen == null or tour.idDiemDen.quocGia == null or #strings.containsIgnoreCase(tour.idDiemDen.quocGia, 'việt') or #strings.containsIgnoreCase(tour.idDiemDen.quocGia, 'viet') or #strings.containsIgnoreCase(tour.idDiemDen.quocGia, 'vn')}"></span>
                             </div>
 
                             <button type="submit" form="bookingForm" class="btn btn-danger w-100 py-3 fw-bold fs-5 booking-sidebar-desktop-submit">
@@ -263,16 +396,78 @@
             </div>
         </div>
 
+        <script th:src="@{/js/capacity-toast.js(v=1)}"></script>
         <script th:inline="javascript">
             (function () {
+                function showCapacityToast(remaining) {
+                    if (window.ZakiCapacityToast) {
+                        window.ZakiCapacityToast.show(remaining);
+                    }
+                }
+
+                var flashCapacityRemaining = /*[[${capacityRemaining}]]*/ null;
+                var flashShowCapacityToast = /*[[${showCapacityToast}]]*/ false;
+                if (flashShowCapacityToast && flashCapacityRemaining != null && window.ZakiCapacityToast) {
+                    showCapacityToast(flashCapacityRemaining);
+                }
+
                 var depSelect = document.querySelector('select[name="departureId"]');
                 var sidebarText = document.getElementById('sidebarDepartureText');
                 var flightFromGo = document.getElementById('flightFromGo');
                 var flightToBack = document.getElementById('flightToBack');
                 var tourId = /*[[${tour.id}]]*/ 0;
                 var nkhId = /*[[${nkh.id}]]*/ 0;
-                var unitPrice = parseFloat(document.getElementById('totalPrice').getAttribute('data-unit-price'));
+                var totalPriceEl = document.getElementById('totalPrice');
+                var unitPrice = parseFloat(totalPriceEl.getAttribute('data-unit-price'));
+                var tourPrice = parseFloat(totalPriceEl.getAttribute('data-tour-price')) || 0;
+                var ticketOutbound = parseFloat(totalPriceEl.getAttribute('data-ticket-outbound')) || 0;
+                var ticketReturn = parseFloat(totalPriceEl.getAttribute('data-ticket-return')) || 0;
+                var airline = (totalPriceEl.getAttribute('data-airline') || '').toLowerCase();
+                var isDomestic = (totalPriceEl.getAttribute('data-domestic') || 'true') === 'true';
+                var singleRoomSurcharge = /*[[${singleRoomSurcharge}]]*/ 500000;
+                var maxRemainingGuests = /*[[${capacity != null ? capacity.remaining : 50}]]*/ 50;
+                var departureDateStr = /*[[${#temporals.format(nkh.ngay, 'yyyy-MM-dd')}]]*/ '2026-01-01';
                 var appliedDiscount = 0;
+                var guestCounts = {
+                    adult: 1,
+                    child: 0,
+                    smallChild: 0,
+                    baby: 0
+                };
+                var activePassengerTarget = null;
+                var passengerModalEl = document.getElementById('passengerInfoModal');
+                var passengerModal = null;
+                function getPassengerModal() {
+                    if (!passengerModalEl || !window.bootstrap || !bootstrap.Modal) return null;
+                    if (!passengerModal) {
+                        passengerModal = bootstrap.Modal.getOrCreateInstance(passengerModalEl);
+                    }
+                    return passengerModal;
+                }
+                if (passengerModalEl) {
+                    passengerModalEl.addEventListener('hidden.bs.modal', function () {
+                        capturePassengerDraft();
+                        renderPassengerSummaryList();
+                        activePassengerTarget = null;
+                    });
+                    passengerModalEl.querySelectorAll('[data-bs-dismiss="modal"]').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            if (getPassengerModal()) return;
+                            passengerModalEl.classList.remove('show');
+                            passengerModalEl.style.display = 'none';
+                            passengerModalEl.setAttribute('aria-hidden', 'true');
+                            capturePassengerDraft();
+                            renderPassengerSummaryList();
+                            activePassengerTarget = null;
+                        });
+                    });
+                }
+                var passengerDraft = {
+                    adult: { names: [], dob: [], gender: [], phone: [] },
+                    child: { names: [], dob: [], gender: [], phone: [] },
+                    smallChild: { names: [], dob: [], gender: [], phone: [] },
+                    baby: { names: [], dob: [], gender: [], phone: [] }
+                };
 
                 function formatVnd(n) {
                     return Math.round(n).toLocaleString('vi-VN') + ' ₫';
@@ -286,9 +481,16 @@
                 function applyQuote(q) {
                     if (!q || !q.available) return;
                     unitPrice = q.unitPrice;
-                    document.getElementById('totalPrice').setAttribute('data-unit-price', unitPrice);
+                    tourPrice = q.giaTour || 0;
+                    ticketOutbound = q.giaVeDi || 0;
+                    ticketReturn = q.giaVeVe || 0;
+                    totalPriceEl.setAttribute('data-unit-price', unitPrice);
+                    totalPriceEl.setAttribute('data-tour-price', tourPrice);
+                    totalPriceEl.setAttribute('data-ticket-outbound', ticketOutbound);
+                    totalPriceEl.setAttribute('data-ticket-return', ticketReturn);
                     setText('priceOutbound', formatVnd(q.giaVeDi));
                     setText('priceReturn', formatVnd(q.giaVeVe));
+                    setText('baseUnitPrice', formatVnd(unitPrice));
                     setText('sidebarTicketOutbound', formatVnd(q.giaVeDi));
                     setText('sidebarTicketReturn', formatVnd(q.giaVeVe));
                     setText('timeOutboundGo', q.gioBayDi);
@@ -304,6 +506,46 @@
                     document.getElementById('discountLine').classList.add('d-none');
                     document.getElementById('promoMessage').textContent = '';
                     recalcTotal();
+                }
+
+                function isVietnamAirlines() {
+                    return airline.indexOf('vietnam airlines') >= 0 || airline.indexOf('vna') >= 0;
+                }
+
+                function isVietjet() {
+                    return airline.indexOf('vietjet') >= 0;
+                }
+
+                function isBamboo() {
+                    return airline.indexOf('bamboo') >= 0;
+                }
+
+                function childTicket() {
+                    var adultTicket = ticketOutbound + ticketReturn;
+                    if (isVietnamAirlines()) {
+                        return adultTicket * (isDomestic ? 0.9 : 0.75);
+                    }
+                    if (isVietjet()) {
+                        return adultTicket;
+                    }
+                    if (isBamboo()) {
+                        return adultTicket * 0.75;
+                    }
+                    return adultTicket * 0.75;
+                }
+
+                function infantTicket() {
+                    var adultTicket = ticketOutbound + ticketReturn;
+                    if (isVietnamAirlines()) {
+                        return adultTicket * 0.1;
+                    }
+                    if (isVietjet()) {
+                        return (isDomestic ? 100000 : 200000) * 2;
+                    }
+                    if (isBamboo()) {
+                        return (isDomestic ? 100000 : 250000) * 2;
+                    }
+                    return (isDomestic ? 100000 : 200000) * 2;
                 }
 
                 function loadQuote(refresh) {
@@ -333,26 +575,398 @@
                     depSelect.addEventListener('change', function () { loadQuote(false); });
                 }
 
-                function recalcTotal() {
-                    var soLuong = parseInt(document.getElementById('soLuongInput').value) || 1;
-                    var subtotal = unitPrice * soLuong;
-                    var total = Math.max(0, subtotal - appliedDiscount);
-                    document.getElementById('totalPrice').textContent = formatVnd(total);
-                    var mobileTotal = document.getElementById('mobileTotalPrice');
-                    if (mobileTotal) mobileTotal.textContent = formatVnd(total);
-                    document.getElementById('totalPrice').setAttribute('data-subtotal', subtotal);
+                function capturePassengerDraft() {
+                    ['adult', 'child', 'smallChild', 'baby'].forEach(function (key) {
+                        passengerDraft[key].names = Array.from(document.querySelectorAll('input[name="' + key + 'Names"]')).map(function (el) { return el.value || ''; });
+                        passengerDraft[key].dob = Array.from(document.querySelectorAll('input[name="' + key + 'Dob"]')).map(function (el) { return el.value || ''; });
+                        passengerDraft[key].gender = Array.from(document.querySelectorAll('select[name="' + key + 'Gender"]')).map(function (el) { return el.value || ''; });
+                        passengerDraft[key].phone = Array.from(document.querySelectorAll('input[name="' + key + 'Phone"]')).map(function (el) { return el.value || ''; });
+                    });
                 }
 
-                document.getElementById('soLuongInput').addEventListener('change', function () {
+                function firstIncompletePassengerInput() {
+                    var inputs = Array.from(document.querySelectorAll('.passenger-required-input'));
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (!(inputs[i].value || '').trim()) return inputs[i];
+                    }
+                    return null;
+                }
+
+                function passengerTypeLabel(key) {
+                    if (key === 'adult') return 'Người lớn';
+                    if (key === 'child') return 'Trẻ em';
+                    if (key === 'smallChild') return 'Trẻ nhỏ';
+                    return 'Em bé';
+                }
+
+                function passengerTypeSubtitle(key) {
+                    if (key === 'adult') return '(Từ 12 tuổi trở lên)';
+                    if (key === 'child') return '(Từ 5 - 11 tuổi)';
+                    if (key === 'smallChild') return '(Từ 2 - 4 tuổi)';
+                    return '(Dưới 2 tuổi)';
+                }
+
+                function passengerFieldSelector(group, index) {
+                    return '.passenger-group-card[data-group="' + group + '"] [data-passenger-index="' + index + '"]';
+                }
+
+                function passengerIsComplete(key, idx) {
+                    var name = (passengerDraft[key].names[idx] || '').trim();
+                    var dob = (passengerDraft[key].dob[idx] || '').trim();
+                    var gender = (passengerDraft[key].gender[idx] || '').trim();
+                    var phone = (passengerDraft[key].phone[idx] || '').trim();
+                    if (!name || !dob || !gender) return false;
+                    if (key === 'adult' && !phone) return false;
+                    return true;
+                }
+
+                function openPassengerModalFor(group, index) {
+                    activePassengerTarget = { group: group, index: index };
+                    openPassengerModalSafely();
+                }
+
+                function focusPassengerTarget() {
+                    setTimeout(function () {
+                        var subtitle = document.getElementById('passengerModalSubtitle');
+                        if (subtitle && activePassengerTarget) {
+                            subtitle.textContent = passengerTypeLabel(activePassengerTarget.group) + ' #' + (activePassengerTarget.index + 1) + ' ' + passengerTypeSubtitle(activePassengerTarget.group);
+                        } else if (subtitle) {
+                            subtitle.textContent = '';
+                        }
+
+                        if (!activePassengerTarget) {
+                            focusFirstIncompletePassenger();
+                            return;
+                        }
+
+                        var card = document.querySelector(passengerFieldSelector(activePassengerTarget.group, activePassengerTarget.index));
+                        if (card) {
+                            card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            var focusEl = card.querySelector('.passenger-required-input');
+                            if (focusEl) focusEl.focus();
+                        } else {
+                            focusFirstIncompletePassenger();
+                        }
+                    }, 180);
+                }
+
+                function focusFirstIncompletePassenger() {
+                    var first = firstIncompletePassengerInput();
+                    if (first) setTimeout(function () { first.focus(); }, 120);
+                }
+
+                function openPassengerModalSafely() {
+                    var modal = getPassengerModal();
+                    if (modal) {
+                        modal.show();
+                        focusPassengerTarget();
+                        return true;
+                    }
+                    if (passengerModalEl) {
+                        passengerModalEl.classList.add('show');
+                        passengerModalEl.style.display = 'block';
+                        passengerModalEl.removeAttribute('aria-hidden');
+                        focusPassengerTarget();
+                        return true;
+                    }
+                    return false;
+                }
+
+                function buildPassengerInfoFields() {
+                    var container = document.getElementById('passengerInfoFields');
+                    if (!container) return;
+                    container.innerHTML = '';
+
+                    function appendGroup(title, key, count, includePhone) {
+                        if (count <= 0) return;
+                        var group = document.createElement('div');
+                        group.className = 'border rounded-3 p-3 passenger-group-card';
+                        group.setAttribute('data-group', key);
+                        var html = '<div class="fw-semibold mb-2">' + title + '</div>';
+                        for (var i = 1; i <= count; i++) {
+                            var idx = i - 1;
+                            var nameVal = (passengerDraft[key].names[idx] || '').replace(/"/g, '&quot;');
+                            var dobVal = passengerDraft[key].dob[idx] || '';
+                            var genderVal = passengerDraft[key].gender[idx] || '';
+                            var phoneVal = (passengerDraft[key].phone[idx] || '').replace(/"/g, '&quot;');
+                            var requiredMark = ' <span class="text-danger">*</span>';
+                            var requiredAttr = ' required';
+                            var requiredClass = ' passenger-required-input';
+                            html +=
+                                '<div class="border rounded-3 p-2 mb-2 passenger-field-card" data-passenger-index="' + idx + '">' +
+                                '  <div class="small fw-semibold mb-2">#' + i + '</div>' +
+                                '  <div class="row g-2">' +
+                                '    <div class="col-md-6">' +
+                                '      <label class="small">Họ tên' + requiredMark + '</label>' +
+                                '      <input type="text" class="form-control form-control-sm' + requiredClass + '" name="' + key + 'Names" value="' + nameVal + '"' + requiredAttr + '>' +
+                                '    </div>' +
+                                '    <div class="col-md-3">' +
+                                '      <label class="small">Ngày sinh' + requiredMark + '</label>' +
+                                '      <input type="date" class="form-control form-control-sm passenger-dob' + requiredClass + '" data-group="' + key + '" name="' + key + 'Dob" value="' + dobVal + '"' + requiredAttr + '>' +
+                                '    </div>' +
+                                '    <div class="col-md-3">' +
+                                '      <label class="small">Giới tính' + requiredMark + '</label>' +
+                                '      <select class="form-select form-select-sm' + requiredClass + '" name="' + key + 'Gender"' + requiredAttr + '>' +
+                                '        <option value="">Chọn</option>' +
+                                '        <option value="Nam"' + (genderVal === 'Nam' ? ' selected' : '') + '>Nam</option>' +
+                                '        <option value="Nữ"' + (genderVal === 'Nữ' ? ' selected' : '') + '>Nữ</option>' +
+                                '      </select>' +
+                                '    </div>';
+                            if (includePhone) {
+                                html +=
+                                    '    <div class="col-md-6">' +
+                                    '      <label class="small">Số điện thoại' + requiredMark + '</label>' +
+                                    '      <input type="tel" class="form-control form-control-sm' + requiredClass + '" name="' + key + 'Phone" value="' + phoneVal + '"' + requiredAttr + '>' +
+                                    '    </div>';
+                            }
+                            html += '  </div></div>';
+                        }
+                        group.innerHTML = html;
+                        container.appendChild(group);
+                    }
+
+                    appendGroup('Người lớn (>=12 tuổi)', 'adult', guestCounts.adult, true);
+                    appendGroup('Trẻ em (5-11 tuổi)', 'child', guestCounts.child, false);
+                    appendGroup('Trẻ nhỏ (2-4 tuổi)', 'smallChild', guestCounts.smallChild, false);
+                    appendGroup('Em bé (<2 tuổi)', 'baby', guestCounts.baby, false);
+                }
+
+                function renderPassengerSummaryList() {
+                    var container = document.getElementById('passengerSummaryList');
+                    if (!container) return;
+                    var selectedSingleRoomIndexes = Array.from(document.querySelectorAll('.single-room-switch:checked:not(:disabled)'))
+                        .map(function (el) { return el.getAttribute('data-idx'); });
+                    container.innerHTML = '';
+
+                    var groups = [
+                        { key: 'adult', count: guestCounts.adult },
+                        { key: 'child', count: guestCounts.child },
+                        { key: 'smallChild', count: guestCounts.smallChild },
+                        { key: 'baby', count: guestCounts.baby }
+                    ];
+
+                    if (!groups.some(function (group) { return group.count > 0; })) {
+                        container.innerHTML = '<div class="small text-muted">Chưa có hành khách nào.</div>';
+                        return;
+                    }
+
+                    groups.forEach(function (group) {
+                        if (group.count <= 0) return;
+
+                        var heading = document.createElement('div');
+                        heading.className = 'passenger-summary-group-title';
+                        heading.innerHTML = '<i class="bi bi-people me-1"></i> <span>' + passengerTypeLabel(group.key) + '</span> <small>' + passengerTypeSubtitle(group.key) + '</small>';
+                        container.appendChild(heading);
+
+                        if (group.key === 'adult') {
+                            var note = document.createElement('div');
+                            note.className = 'passenger-summary-note';
+                            note.innerHTML = 'Phòng đơn dành cho khách hàng từ 12 tuổi trở lên, giá phòng đơn là: <strong>' + formatVnd(singleRoomSurcharge).replace(' ₫', 'đ') + ' / phòng</strong>';
+                            container.appendChild(note);
+                        }
+
+                        for (var i = 0; i < group.count; i++) {
+                            var item = { group: group.key, index: i };
+                            var rowWrap = document.createElement('div');
+                            rowWrap.className = 'passenger-summary-line-wrap';
+
+                            var number = document.createElement('div');
+                            number.className = 'passenger-summary-number';
+                            number.textContent = '#' + (i + 1);
+
+                            var row = document.createElement('button');
+                            row.type = 'button';
+                            row.className = 'passenger-summary-row text-start';
+                            var complete = passengerIsComplete(item.group, item.index);
+                            row.innerHTML =
+                                '<span>' + passengerTypeLabel(item.group) + ' <span class="text-danger">(*)</span></span>' +
+                                '<span class="passenger-summary-action ' + (complete ? 'text-success' : 'text-danger') + '">' + (complete ? 'Đã nhập' : 'Nhập thông tin') + ' <i class="bi bi-arrow-right ms-1"></i></span>';
+                            row.addEventListener('click', function (clickedItem) {
+                                return function () {
+                                    openPassengerModalFor(clickedItem.group, clickedItem.index);
+                                };
+                            }(item));
+
+                            rowWrap.appendChild(number);
+                            rowWrap.appendChild(row);
+
+                            if (group.key === 'adult') {
+                                var singleRoomIdx = i;
+                                var switchWrap = document.createElement('label');
+                                switchWrap.className = 'passenger-summary-room';
+                                switchWrap.innerHTML =
+                                    '<span>Phòng đơn:</span>' +
+                                    '<div class="form-check form-switch m-0">' +
+                                    '  <input class="form-check-input single-room-switch" type="checkbox" data-idx="' + singleRoomIdx + '"' +
+                                    (selectedSingleRoomIndexes.indexOf(String(singleRoomIdx)) >= 0 ? ' checked' : '') + '>' +
+                                    '</div>';
+                                rowWrap.appendChild(switchWrap);
+                            }
+
+                            container.appendChild(rowWrap);
+                        }
+                    });
+                }
+
+                function totalGuestCount() {
+                    return guestCounts.adult + guestCounts.child + guestCounts.smallChild + guestCounts.baby;
+                }
+
+                function minGuestsForKey(key) {
+                    return key === 'adult' ? 1 : 0;
+                }
+
+                function maxGuestsForKey(key) {
+                    var min = minGuestsForKey(key);
+                    var current = guestCounts[key] || 0;
+                    var remainingSlots = Math.max(0, maxRemainingGuests - totalGuestCount());
+                    return Math.max(min, current + remainingSlots);
+                }
+
+                function updateGuestInputLimits() {
+                    document.querySelectorAll('.guest-count[data-target]').forEach(function (input) {
+                        var key = input.getAttribute('data-target');
+                        var min = minGuestsForKey(key);
+                        input.min = String(min);
+                        input.max = String(maxGuestsForKey(key));
+                    });
+                }
+
+                function applyGuestCount(key, rawValue, showToastOnCap) {
+                    capturePassengerDraft();
+                    var min = minGuestsForKey(key);
+                    var parsed = parseInt(String(rawValue).trim(), 10);
+                    if (isNaN(parsed)) {
+                        parsed = min;
+                    }
+                    parsed = Math.max(min, parsed);
+
+                    var others = totalGuestCount() - (guestCounts[key] || 0);
+                    var allowedMax = Math.max(min, maxRemainingGuests - others);
+                    if (parsed > allowedMax) {
+                        if (showToastOnCap !== false) {
+                            showCapacityToast(allowedMax > 0 ? allowedMax : maxRemainingGuests);
+                        }
+                        parsed = allowedMax;
+                    }
+
+                    guestCounts[key] = parsed;
+                    renderGuests();
+                }
+
+                function bindGuestInputs() {
+                    document.querySelectorAll('.guest-count[data-target]').forEach(function (input) {
+                        if (input.dataset.bound === '1') {
+                            return;
+                        }
+                        input.dataset.bound = '1';
+                        var key = input.getAttribute('data-target');
+
+                        input.addEventListener('keydown', function (e) {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                input.blur();
+                            }
+                        });
+
+                        input.addEventListener('blur', function () {
+                            applyGuestCount(key, input.value, true);
+                        });
+
+                        input.addEventListener('change', function () {
+                            applyGuestCount(key, input.value, true);
+                        });
+                    });
+                }
+
+                function bindGuestButtons() {
+                    document.querySelectorAll('.guest-plus').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            capturePassengerDraft();
+                            if (totalGuestCount() >= maxRemainingGuests) {
+                                showCapacityToast(maxRemainingGuests);
+                                return;
+                            }
+                            var key = btn.getAttribute('data-target');
+                            guestCounts[key] = (guestCounts[key] || 0) + 1;
+                            if (key === 'adult' && guestCounts[key] < 1) guestCounts[key] = 1;
+                            renderGuests();
+                        });
+                    });
+                    document.querySelectorAll('.guest-minus').forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            capturePassengerDraft();
+                            var key = btn.getAttribute('data-target');
+                            var min = key === 'adult' ? 1 : 0;
+                            guestCounts[key] = Math.max(min, (guestCounts[key] || 0) - 1);
+                            renderGuests();
+                        });
+                    });
+                }
+
+                function selectedSingleRoomCount() {
+                    return document.querySelectorAll('.single-room-switch:checked').length;
+                }
+
+                function syncHiddenInputs() {
+                    var totalGuests = guestCounts.adult + guestCounts.child + guestCounts.smallChild + guestCounts.baby;
+                    document.getElementById('soNguoiLonInput').value = guestCounts.adult;
+                    document.getElementById('soTreEmInput').value = guestCounts.child;
+                    document.getElementById('soTreNhoInput').value = guestCounts.smallChild;
+                    document.getElementById('soEmBeInput').value = guestCounts.baby;
+                    document.getElementById('soLuongInput').value = totalGuests;
+                    document.getElementById('soPhongDonInput').value = selectedSingleRoomCount();
+                }
+
+                function renderGuests() {
+                    capturePassengerDraft();
+                    document.getElementById('adultCount').value = guestCounts.adult;
+                    document.getElementById('childCount').value = guestCounts.child;
+                    document.getElementById('smallChildCount').value = guestCounts.smallChild;
+                    document.getElementById('babyCount').value = guestCounts.baby;
+                    updateGuestInputLimits();
+                    renderPassengerSummaryList();
+                    buildPassengerInfoFields();
+                    document.querySelectorAll('.single-room-switch').forEach(function (cb) {
+                        cb.addEventListener('change', function () {
+                            appliedDiscount = 0;
+                            document.getElementById('discountLine').classList.add('d-none');
+                            document.getElementById('promoMessage').textContent = '';
+                            recalcTotal();
+                        });
+                    });
                     appliedDiscount = 0;
                     document.getElementById('discountLine').classList.add('d-none');
                     document.getElementById('promoMessage').textContent = '';
                     recalcTotal();
-                });
+                }
+
+                function recalcTotal() {
+                    var adultPerGuest = tourPrice + ticketOutbound + ticketReturn;
+                    var childPerGuest = (tourPrice * 0.75) + childTicket();
+                    var smallChildPerGuest = (tourPrice * 0.5) + childTicket();
+                    var babyPerGuest = infantTicket();
+                    var adultTotal = guestCounts.adult * adultPerGuest;
+                    var childTotal = guestCounts.child * childPerGuest;
+                    var smallChildTotal = guestCounts.smallChild * smallChildPerGuest;
+                    var babyTotal = guestCounts.baby * babyPerGuest;
+                    var singleRoomTotal = selectedSingleRoomCount() * singleRoomSurcharge;
+                    var subtotal = adultTotal + childTotal + smallChildTotal + babyTotal + singleRoomTotal;
+                    var total = Math.max(0, subtotal - appliedDiscount);
+                    setText('lineAdultTotal', formatVnd(adultTotal));
+                    setText('lineChildTotal', formatVnd(childTotal));
+                    setText('lineSmallChildTotal', formatVnd(smallChildTotal));
+                    setText('lineBabyTotal', formatVnd(babyTotal));
+                    setText('lineSingleRoomTotal', formatVnd(singleRoomTotal));
+                    document.getElementById('totalPrice').textContent = formatVnd(total);
+                    var mobileTotal = document.getElementById('mobileTotalPrice');
+                    if (mobileTotal) mobileTotal.textContent = formatVnd(total);
+                    document.getElementById('totalPrice').setAttribute('data-subtotal', subtotal);
+                    syncHiddenInputs();
+                }
 
                 document.getElementById('btnApplyPromo').addEventListener('click', function () {
                     var ma = document.getElementById('maGiamGiaInput').value.trim();
-                    var soLuong = parseInt(document.getElementById('soLuongInput').value) || 1;
                     var msg = document.getElementById('promoMessage');
                     if (!ma) {
                         msg.textContent = 'Vui lòng nhập mã';
@@ -367,7 +981,11 @@
                             tourId: tourId,
                             nkhId: nkhId,
                             diemDonId: depSelect ? parseInt(depSelect.value, 10) : 0,
-                            soLuong: soLuong
+                            soNguoiLon: guestCounts.adult,
+                            soTreEm: guestCounts.child,
+                            soTreNho: guestCounts.smallChild,
+                            soEmBe: guestCounts.baby,
+                            soPhongDon: selectedSingleRoomCount()
                         })
                     }).then(function (r) { return r.json(); }).then(function (data) {
                         if (data.valid) {
@@ -391,8 +1009,225 @@
                         msg.className = 'small mt-1 text-danger';
                     });
                 });
+
+                bindGuestButtons();
+                bindGuestInputs();
+                renderGuests();
+                var openModalBtn = document.getElementById('openPassengerModalBtn');
+                if (openModalBtn && passengerModalEl) {
+                    openModalBtn.addEventListener('click', function () {
+                        openPassengerModalFor('adult', 0);
+                    });
+                }
+
+                var bookingForm = document.getElementById('bookingForm');
+                if (bookingForm) {
+                    bookingForm.addEventListener('submit', function (e) {
+                        if (totalGuestCount() > maxRemainingGuests) {
+                            e.preventDefault();
+                            showCapacityToast(maxRemainingGuests);
+                            return;
+                        }
+                        if (maxRemainingGuests <= 0) {
+                            e.preventDefault();
+                            showCapacityToast(0);
+                            return;
+                        }
+                        var requiredInputs = document.querySelectorAll('.passenger-required-input');
+                        var hasBlank = false;
+                        var missingMessages = [];
+                        requiredInputs.forEach(function (inp) {
+                            if (!inp.value || !inp.value.trim()) {
+                                hasBlank = true;
+                            }
+                        });
+                        function calcAge(dobStr) {
+                            if (!dobStr) return -1;
+                            var dob = new Date(dobStr + 'T00:00:00');
+                            var dep = new Date(departureDateStr + 'T00:00:00');
+                            var age = dep.getFullYear() - dob.getFullYear();
+                            var m = dep.getMonth() - dob.getMonth();
+                            if (m < 0 || (m === 0 && dep.getDate() < dob.getDate())) age--;
+                            return age;
+                        }
+                        var ageError = '';
+                        document.querySelectorAll('.passenger-dob').forEach(function (dobEl) {
+                            var age = calcAge(dobEl.value);
+                            var group = dobEl.getAttribute('data-group');
+                            if (group === 'adult' && age < 12) ageError = 'Người lớn phải từ 12 tuổi trở lên.';
+                            if (group === 'child' && (age < 5 || age > 11)) ageError = 'Trẻ em phải từ 5 - 11 tuổi.';
+                            if (group === 'smallChild' && (age < 2 || age > 4)) ageError = 'Trẻ nhỏ phải từ 2 - 4 tuổi.';
+                            if (group === 'baby' && age >= 2) ageError = 'Em bé phải dưới 2 tuổi.';
+                        });
+                        if (hasBlank) missingMessages.push('Thiếu thông tin bắt buộc của hành khách.');
+                        if (ageError) missingMessages.push(ageError);
+                        if (hasBlank || ageError) {
+                            e.preventDefault();
+                            var msg = document.getElementById('promoMessage');
+                            if (msg) {
+                                msg.textContent = missingMessages.join(' ');
+                                msg.className = 'small mt-1 text-danger';
+                            }
+                            if (requiredInputs.length > 0) {
+                                requiredInputs[0].focus();
+                            }
+                            var modal = getPassengerModal();
+                            if (modal) modal.show();
+                        }
+                    });
+                }
             })();
         </script>
+        <style>
+            .booking-hero h1 {
+                letter-spacing: 0.2px;
+            }
+            .guest-count {
+                min-width: 4.5rem;
+                font-weight: 600;
+                -moz-appearance: textfield;
+            }
+            .guest-count::-webkit-outer-spin-button,
+            .guest-count::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+            .guest-count:focus {
+                border-color: #ffc107;
+                box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+            }
+            .contact-block-title {
+                font-size: 1.1rem;
+                font-weight: 700;
+            }
+            .contact-login-hint {
+                background: #e9f2ff;
+                color: #0d6efd;
+                border-radius: 12px;
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            .contact-login-link {
+                color: #0d6efd;
+                font-weight: 700;
+                text-decoration: none;
+            }
+            .contact-login-link:hover {
+                text-decoration: underline;
+            }
+            .contact-panel {
+                background: #f2f3f5;
+                border-radius: 16px;
+                padding: 14px;
+            }
+            .contact-panel .form-label {
+                font-weight: 600;
+                margin-bottom: 6px;
+            }
+            .contact-input {
+                background: #ececec;
+                border: 1px solid transparent;
+                border-radius: 999px !important;
+                min-height: 42px !important;
+            }
+            .contact-input::placeholder {
+                color: #9aa0a6;
+            }
+            .contact-required-msg {
+                margin-top: 4px;
+                font-size: 0.8rem;
+                color: #dc3545;
+            }
+            .passenger-summary-group-title {
+                color: #0d6efd;
+                font-weight: 700;
+                margin-top: 10px;
+            }
+            .passenger-summary-group-title small {
+                color: #8b96a8;
+                font-weight: 500;
+            }
+            .passenger-summary-note {
+                color: #0d6efd;
+                font-size: 0.86rem;
+                margin: 6px 0 8px;
+            }
+            .passenger-summary-line-wrap {
+                display: grid;
+                grid-template-columns: 34px minmax(0, 1fr) auto;
+                gap: 10px;
+                align-items: center;
+            }
+            .passenger-summary-number {
+                font-weight: 700;
+                color: #111827;
+            }
+            .passenger-summary-row {
+                appearance: none;
+                -webkit-appearance: none;
+                border: 1px dashed #d7dce5;
+                background: #fff;
+                border-radius: 999px;
+                padding: 11px 16px;
+                width: 100%;
+                text-align: left;
+                color: inherit;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                cursor: pointer;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+            }
+            .passenger-summary-row:hover {
+                border-color: #0d6efd;
+                box-shadow: 0 6px 18px rgba(13, 110, 253, 0.08);
+                transform: translateY(-1px);
+            }
+            .passenger-summary-action {
+                white-space: nowrap;
+                font-size: 0.88rem;
+            }
+            .passenger-summary-room {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 3px;
+                margin: 0;
+                font-size: 0.86rem;
+                font-weight: 600;
+                white-space: nowrap;
+            }
+            .passenger-summary-room .form-check-input {
+                width: 2.6rem;
+                height: 1.35rem;
+                cursor: pointer;
+            }
+            @media (max-width: 576px) {
+                .passenger-summary-line-wrap {
+                    grid-template-columns: 28px minmax(0, 1fr);
+                }
+                .passenger-summary-room {
+                    grid-column: 2;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                }
+                .passenger-summary-row {
+                    padding: 10px 12px;
+                }
+            }
+            .passenger-field-card {
+                background: #fafbfd;
+            }
+            #bookingForm .form-control,
+            #bookingForm .form-select {
+                border-radius: 14px;
+                min-height: 44px;
+            }
+            #bookingForm textarea.form-control {
+                min-height: 88px;
+            }
+        </style>
     </th:block>
 </body>
 

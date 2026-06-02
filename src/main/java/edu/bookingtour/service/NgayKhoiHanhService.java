@@ -29,6 +29,9 @@ public class NgayKhoiHanhService {
     @Autowired
     private NgayKhoiHanhDiemDonService ngayKhoiHanhDiemDonService;
 
+    @Autowired
+    private TourCapacityService tourCapacityService;
+
     /**
      * Lấy danh sách ngày khởi hành của tour theo tháng/năm (do admin set)
      */
@@ -57,6 +60,7 @@ public class NgayKhoiHanhService {
         nkh.setThang(ngayDi.getMonthValue());
         nkh.setNam(ngayDi.getYear());
         nkh.setNgayVe(ngayVe);
+        tourCapacityService.applyDefaultCapacity(nkh, chuyenDi);
 
         // Kiểm tra phương tiện
         boolean isBus = chuyenDi.getIdPhuongTien() != null
@@ -102,10 +106,16 @@ public class NgayKhoiHanhService {
         nkh.setThang(ngayDi.getMonthValue());
         nkh.setNam(ngayDi.getYear());
         nkh.setNgayVe(ngayVe);
+        tourCapacityService.applyDefaultCapacity(nkh, chuyenDi);
         applyDefaultTransportInfo(nkh, chuyenDi);
         nkh = ngayKhoiHanhRepository.save(nkh);
         ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, false);
         return nkh;
+    }
+
+    @Transactional
+    public void updateCapacity(Integer id, Integer sucChua) {
+        tourCapacityService.updateDepartureCapacity(id, sucChua);
     }
 
     private void applyDefaultTransportInfo(NgayKhoiHanh nkh, ChuyenDi chuyenDi) {

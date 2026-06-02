@@ -133,6 +133,13 @@
                                             <span class="ms-3 small text-muted">(Tóm tắt min:
                                                 <span th:text="${#numbers.formatDecimal(nkh.tongGiaVe, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>)
                                             </span>
+                                            <span class="ms-3" th:if="${capacityByNkh != null and capacityByNkh[nkh.id] != null}"
+                                                  th:with="cap=${capacityByNkh[nkh.id]}">
+                                                <span class="badge bg-secondary" th:text="'Sức chứa: ' + ${cap.capacity}"></span>
+                                                <span class="badge bg-warning text-dark" th:text="'Đã đặt: ' + ${cap.booked}"></span>
+                                                <span class="badge" th:classappend="${cap.remaining > 0 ? 'bg-success' : 'bg-danger'}"
+                                                      th:text="${cap.remaining > 0 ? 'Còn ' + cap.remaining : 'Hết chỗ'}"></span>
+                                            </span>
                                             <span class="float-end">
                                                 <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/edit/' + ${nkh.id}}"
                                                     class="btn btn-sm btn-outline-primary me-1">
