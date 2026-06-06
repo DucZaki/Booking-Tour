@@ -20,40 +20,72 @@
                     <tr>
                         <th class="px-4">Mã</th>
                         <th>Loại</th>
-                        <th>Giá trị</th>
-                        <th>Áp dụng</th>
+                        <th>Giảm</th>
+                        <th>Chiến dịch</th>
+                        <th>Đơn tối thiểu</th>
+                        <th>Lượt dùng</th>
                         <th>Hiệu lực</th>
+                        <th>Trạng thái</th>
                         <th class="text-center">Thao tác</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="p : ${promos}">
+                    <tr th:each="p : ${promos.content}">
                         <td class="px-4 fw-bold" th:text="${p.ma}"></td>
-                        <td th:text="${p.loaiGiam == 'FIXED' ? 'Số tiền' : '%'}"></td>
+                        <td th:text="${p.isAmountType() ? 'Tiền' : '%'}"></td>
                         <td>
-                            <span th:if="${p.loaiGiam == 'FIXED' and p.giaTriGiam != null}" th:text="${#numbers.formatDecimal(p.giaTriGiam, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
-                            <span th:if="${p.loaiGiam != 'FIXED' and p.giaTriGiam != null}" th:text="${p.giaTriGiam} + '%'"></span>
-                            <span th:if="${p.giaTriGiam == null and p.phanTramGiam != null}" th:text="${p.phanTramGiam} + '%'"></span>
+                            <span th:if="${p.isAmountType() and p.giaTriGiam != null}"
+                                  th:text="${#numbers.formatDecimal(p.giaTriGiam, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            <span th:unless="${p.isAmountType()}">
+                                <span th:text="${p.resolvedGiaTri()} + '%'"></span>
+                                <span th:if="${p.giamToiDa != null}"
+                                      th:text="' (max ' + ${#numbers.formatDecimal(p.giamToiDa, 0, 'COMMA', 0, 'POINT')} + ' ₫)'"></span>
+                            </span>
                         </td>
+                        <td class="small" th:text="${p.kieuChienDichLabel()}"></td>
                         <td>
-                            <span th:if="${p.apDungTatCa}">Tất cả tour</span>
-                            <span th:unless="${p.apDungTatCa}" th:text="${p.tourIds != null ? p.tourIds.size() : 0} + ' tour'"></span>
+                            <span th:if="${p.donToiThieu != null}"
+                                  th:text="${#numbers.formatDecimal(p.donToiThieu, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                            <span th:unless="${p.donToiThieu != null}">—</span>
                         </td>
+                        <td class="small"
+                            th:text="${(p.soLanDaDung != null ? p.soLanDaDung : 0) + (p.soLanDungToiDa != null ? ' / ' + p.soLanDungToiDa : '')}"></td>
+                        <td class="small"
+                            th:text="${(p.ngayBatDau != null ? p.ngayBatDau : '—') + ' → ' + (p.ngayKetThuc != null ? p.ngayKetThuc : '—')}"></td>
                         <td>
-                            <span th:text="${(p.ngayBatDau != null ? p.ngayBatDau : '—') + ' → ' + (p.ngayKetThuc != null ? p.ngayKetThuc : '—')}"></span>
-                            <span th:if="${(p.ngayBatDau != null and today.isBefore(p.ngayBatDau)) or (p.ngayKetThuc != null and today.isAfter(p.ngayKetThuc))}" class="badge bg-secondary ms-1">Hết hạn</span>
-                            <span th:unless="${(p.ngayBatDau != null and today.isBefore(p.ngayBatDau)) or (p.ngayKetThuc != null and today.isAfter(p.ngayKetThuc))}" class="badge bg-success ms-1">Active</span>
+                            <span th:if="${!p.active or (p.ngayBatDau != null and today.isBefore(p.ngayBatDau)) or (p.ngayKetThuc != null and today.isAfter(p.ngayKetThuc))}"
+                                  class="badge bg-secondary">Hết hạn</span>
+                            <span th:unless="${!p.active or (p.ngayBatDau != null and today.isBefore(p.ngayBatDau)) or (p.ngayKetThuc != null and today.isAfter(p.ngayKetThuc))}"
+                                  class="badge bg-success">Active</span>
                         </td>
                         <td class="text-center">
-                            <a th:href="@{/admin/promo/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary">Sửa</a>
+                            <a th:href="@{/admin/promo/edit/{id}(id=${p.id})}" class="btn btn-sm btn-outline-primary me-1">Sửa</a>
                             <a th:href="@{/admin/promo/delete/{id}(id=${p.id})}" class="btn btn-sm btn-outline-danger"
                                onclick="return confirm('Xóa mã này?')">Xóa</a>
                         </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(promos.content)}">
+                        <td colspan="9" class="text-center py-5 text-muted">Chưa có mã.</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+        <nav th:if="${totalPage > 1}" class="mt-3">
+            <ul class="pagination justify-content-center mb-0">
+                <li class="page-item" th:classappend="${page == 0} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/promo(page=${page - 1})}">Trước</a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPage - 1)}"
+                    th:classappend="${i == page} ? 'active'">
+                    <a class="page-link" th:href="@{/admin/promo(page=${i})}" th:text="${i + 1}"></a>
+                </li>
+                <li class="page-item" th:classappend="${page + 1 >= totalPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/promo(page=${page + 1})}">Sau</a>
+                </li>
+            </ul>
+        </nav>
     </main>
 </div>
 <footer th:replace="~{layout/admin_layout :: footer()}"></footer>

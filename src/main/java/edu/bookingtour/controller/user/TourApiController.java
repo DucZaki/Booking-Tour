@@ -97,7 +97,7 @@ public class TourApiController {
         if (radiusKm < 1) {
             radiusKm = 100;
         }
-        if (limit < 1 || limit > 20) {
+        if (limit < 1 || limit > 100) {
             limit = 6;
         }
         if (page < 0) {

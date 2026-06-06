@@ -34,19 +34,34 @@ h6 {
     font-family: var(--font-heading);
 }
 
-/* ===================== PREMIUM NAVIGATION DOCK ===================== */
+/* ===================== PREMIUM NAVIGATION DOCK (sync distribute_project) ===================== */
+.tour-list-heading,
+.news-page-shell {
+    padding-top: 11.5rem !important;
+    margin-top: 0 !important;
+}
+
+@media (max-width: 991.98px) {
+    .tour-list-heading,
+    .news-page-shell {
+        padding-top: 9rem !important;
+    }
+}
+
 .premium-nav-dock {
     position: fixed;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1200px;
+    top: 12px;
+    left: 82px;
+    right: 82px;
+    width: auto;
+    max-width: 1368px;
+    margin: 0 auto;
+    transform: none;
     background: var(--nav-glass-bg) !important;
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-radius: var(--pill-radius);
-    padding: 10px 32px !important;
+    padding: 12px 34px !important;
     box-shadow: var(--nav-shadow);
     z-index: 1050;
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -54,9 +69,8 @@ h6 {
 }
 
 .premium-nav-dock.scrolled {
-    top: 12px;
-    width: 95%;
-    padding: 6px 32px !important;
+    top: 8px;
+    padding: 8px 34px !important;
     background: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -66,34 +80,64 @@ h6 {
     font-size: 1.4rem;
     color: var(--bs-dark) !important;
     padding: 0;
+    flex-shrink: 0;
 }
 
-.premium-nav-dock .nav-link {
+.premium-nav-dock .nav-brand-logo {
+    height: 92px;
+    width: auto;
+    max-width: min(340px, 44vw);
+    object-fit: contain;
+    display: block;
+}
+
+.premium-nav-dock.scrolled .nav-brand-logo {
+    height: 78px;
+}
+
+.nav-dock-inner {
+    gap: 16px;
+    min-width: 0;
+}
+
+.nav-main-links {
+    flex: 1;
+    justify-content: center;
+    gap: 0;
+    min-width: 0;
+    overflow: visible;
+}
+
+.nav-main-links .nav-link {
     font-family: var(--font-heading);
-    font-weight: 700;
-    font-size: 0.85rem;
+    font-weight: 800;
+    font-size: 0.78rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: rgba(26, 28, 30, 0.7) !important;
-    padding: 8px 16px !important;
-    transition: color 0.3s ease;
+    letter-spacing: 0.055em;
+    color: rgba(26, 28, 30, 0.65) !important;
+    padding: 10px 12px !important;
+    border-radius: 999px;
+    white-space: nowrap;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.premium-nav-dock .nav-link:hover,
-.premium-nav-dock .nav-link.active {
+.nav-main-links .nav-link:hover,
+.nav-main-links .nav-link.active {
     color: var(--bs-dark) !important;
+    background: rgba(254, 207, 47, 0.18);
+    transform: translateY(-1px);
 }
 
 .premium-nav-dock .user-profile-icon {
-    width: 36px;
-    height: 36px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     background: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--bs-dark);
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -102,6 +146,22 @@ h6 {
 .premium-nav-dock .user-profile-icon:hover {
     transform: scale(1.05);
     background: var(--bs-primary);
+}
+.mt-3 {
+    margin-top: 0 !important;
+}
+.premium-nav-dock .btn.rounded-pill {
+    min-height: 46px;
+    padding: 0 22px !important;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.premium-nav-dock #darkModeToggle,
+.premium-nav-dock .mobile-menu-toggle {
+    width: 46px;
+    height: 46px;
+    font-size: 1.25rem;
 }
 
 /* Removal of old navbar styles that conflict */
@@ -348,15 +408,6 @@ h6 {
 }
 
 /* ===================== HERO SECTION ===================== */
-.hero-section {
-    background: linear-gradient(180deg, #FFF9E6 0%, #F9F9FC 100%);
-    min-height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 80px 0;
-}
-
 #typing-text {
     font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 800;
@@ -415,46 +466,45 @@ h6 {
     letter-spacing: -0.04em;
 }
 
-.premium-nav-dock .nav-link {
-    font-size: 0.75rem !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 10px 20px !important;
-    color: rgba(26, 28, 30, 0.6) !important;
-}
-
-.premium-nav-dock .nav-link:hover {
-    color: var(--bs-dark) !important;
-}
-
 /* ===================== EDITORIAL NEWSLETTER & FOOTER ===================== */
 .newsletter {
-    background: #000000 !important;
+    background: rgba(255, 255, 255, 0.04) !important;
     color: #FFFFFF !important;
-    padding: 100px 0 !important;
-    text-align: center;
+    padding: 1.1rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    text-align: left;
 }
 
 .newsletter h3 {
-    font-size: 2.8rem;
+    font-size: 1rem;
     font-weight: 800;
-    letter-spacing: -0.04em;
-    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.45rem;
     color: #FFF !important;
 }
 
 .newsletter p {
     color: rgba(255, 255, 255, 0.7) !important;
-    font-size: 1.1rem;
-    margin-bottom: 40px;
+    font-size: 0.82rem;
+    margin-bottom: 0.85rem;
+}
+
+.newsletter form {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .newsletter input {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #FFFFFF !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    max-width: 400px;
+    min-width: 0;
+}
+
+.footer-newsletter .btn {
+    white-space: nowrap;
+    font-weight: 700;
 }
 
 footer {
@@ -541,21 +591,16 @@ footer {
 /* Hero Section - Banner đầu trang */
 /* ============================= */
 .hero-section {
-    height: 35vh;
-    /* Chiều cao banner */
-    background-color: #f5f5f5;
-    /* Nền sáng dịu */
+    min-height: 50vh;
+    background: linear-gradient(180deg, #FFF9E6 0%, #F9F9FC 100%) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Căn giữa theo chiều dọc */
     align-items: center;
-    /* Căn giữa theo chiều ngang */
     text-align: center;
     overflow: hidden;
     position: relative;
-    padding-top: 90px;
-    /* Đẩy nội dung xuống để không bị navbar che */
+    padding: 148px 0 84px;
     box-sizing: border-box;
 }
 
@@ -589,9 +634,8 @@ footer {
 /* Responsive cho màn nhỏ */
 @media (max-width: 768px) {
     .hero-section {
-        padding-top: 100px;
-        /* đẩy thêm chút cho mobile */
-        height: auto;
+        min-height: auto;
+        padding: 128px 0 72px;
     }
 
     #typing-text {
@@ -1780,18 +1824,39 @@ a:hover {
 @media (max-width: 991.98px) {
     .premium-nav-dock {
         top: 12px;
-        width: calc(100% - 24px);
+        left: 12px;
+        right: 12px;
+        width: auto;
         padding: 8px 12px !important;
         border-radius: 24px;
     }
 
-    .premium-nav-dock .navbar-brand img {
-        height: 42px;
+    .premium-nav-dock .nav-brand-logo {
+        height: 58px;
+        max-width: 200px;
+    }
+
+    .premium-nav-dock.scrolled .nav-brand-logo {
+        height: 52px;
     }
 
     .premium-nav-dock .btn.rounded-pill {
         padding-left: 14px !important;
         padding-right: 14px !important;
+        min-height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .premium-nav-dock .user-profile-icon,
+    .premium-nav-dock #darkModeToggle,
+    .premium-nav-dock .mobile-menu-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+    }
+
+    .nav-search-toggle {
+        font-size: 1.25rem;
     }
 
     .nav-search-dropdown {
@@ -1845,8 +1910,8 @@ a:hover {
     }
 
     .hero-section {
-        padding: 112px 0 76px;
         min-height: auto;
+        padding: 120px 0 76px;
     }
 
     .hero-lead {
@@ -2127,17 +2192,23 @@ a:hover {
 @media (max-width: 576px) {
     .premium-nav-dock {
         top: 8px;
-        width: calc(100% - 12px);
+        left: 8px;
+        right: 8px;
         gap: 5px;
         padding: 6px 8px !important;
         border-radius: 22px;
     }
 
-    .premium-nav-dock .navbar-brand img {
-        height: 32px;
+    .premium-nav-dock .nav-brand-logo {
+        height: 46px;
+        max-width: 160px;
     }
 
-    .premium-nav-dock > .d-flex:last-child {
+    .premium-nav-dock.scrolled .nav-brand-logo {
+        height: 42px;
+    }
+
+    .nav-utilities {
         gap: 6px !important;
         flex-shrink: 0;
     }
@@ -2154,6 +2225,7 @@ a:hover {
         justify-content: center;
     }
 
+    .nav-admin-btn,
     .admin-quick-link {
         width: 38px;
         height: 38px;
@@ -2163,6 +2235,7 @@ a:hover {
         border-radius: 50% !important;
     }
 
+    .nav-admin-btn span,
     .admin-quick-link span {
         display: none;
     }
@@ -2442,4 +2515,7 @@ a:hover {
 
 [data-theme="dark"] .tour-premium-card .border-top {
     border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.public-page-offset {
+    margin-top: 100px;
 }

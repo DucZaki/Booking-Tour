@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="stats(tourId)" th:with="s=${tourStats != null ? tourStats.get(tourId) : null}"
+     th:if="${s != null}" class="d-flex flex-wrap align-items-center gap-2 gap-md-3 mb-2 tour-list-card-stats">
+    <span class="text-warning fw-bold">
+        <i class="bi bi-star-fill me-1"></i>
+        <span th:text="${s.formattedRating}">0.0</span>
+        <span class="text-muted fw-normal" th:text="| (${s.formattedRatingCount})|"></span>
+    </span>
+    <span class="text-muted d-none d-sm-inline">|</span>
+    <span class="text-secondary fw-semibold">
+        <i class="bi bi-people-fill me-1 text-primary"></i>
+        <span th:text="|${s.formattedBookingCount} đã đặt|"></span>
+    </span>
+</div>
+</body>
+</html>

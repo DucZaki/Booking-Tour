@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +26,7 @@ public class AdminMaGiamGiaController {
 
     @GetMapping
     public String list(@RequestParam(defaultValue = "0") int page,
-                       @RequestParam(defaultValue = "10") int size,
+                       @RequestParam(defaultValue = "20") int size,
                        Model model) {
         var promos = maGiamGiaService.findAll(page, size);
         model.addAttribute("promos", promos);
@@ -54,6 +53,20 @@ public class AdminMaGiamGiaController {
         }
         if (promo.getLoaiGiam() == null || promo.getLoaiGiam().isBlank()) {
             promo.setLoaiGiam(MaGiamGia.LOAI_PHAN_TRAM);
+        } else if (MaGiamGia.LOAI_SO_TIEN.equalsIgnoreCase(promo.getLoaiGiam())) {
+            promo.setLoaiGiam(MaGiamGia.LOAI_AMOUNT);
+        }
+        if (promo.getKieuChienDich() == null || promo.getKieuChienDich().isBlank()) {
+            promo.setKieuChienDich(MaGiamGia.KIEU_STANDARD);
+        }
+        if (promo.getGioiHanMoiUser() == null) {
+            promo.setGioiHanMoiUser(1);
+        }
+        if (promo.getSoNgayDatTruoc() == null) {
+            promo.setSoNgayDatTruoc(30);
+        }
+        if (promo.getSoGioLastMinute() == null) {
+            promo.setSoGioLastMinute(48);
         }
         model.addAttribute("promo", promo);
         addFormData(model);
@@ -62,13 +75,11 @@ public class AdminMaGiamGiaController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute("promo") MaGiamGia promo,
-                       @RequestParam(required = false) String applyScope,
                        @RequestParam(required = false) Integer[] tourIds,
                        RedirectAttributes ra) {
         try {
-            boolean allTours = !"PICK".equals(applyScope);
             List<Integer> ids = tourIds != null ? Arrays.asList(tourIds) : List.of();
-            maGiamGiaService.save(promo, ids, allTours);
+            maGiamGiaService.save(promo, ids);
             ra.addFlashAttribute("success", true);
             return "redirect:/admin/promo";
         } catch (IllegalArgumentException ex) {
@@ -87,8 +98,11 @@ public class AdminMaGiamGiaController {
         MaGiamGia m = new MaGiamGia();
         m.setLoaiGiam(MaGiamGia.LOAI_PHAN_TRAM);
         m.setApDungTatCa(true);
-        m.setNgayBatDau(LocalDate.now());
-        m.setNgayKetThuc(LocalDate.now().plusMonths(3));
+        m.setActive(true);
+        m.setGioiHanMoiUser(1);
+        m.setKieuChienDich(MaGiamGia.KIEU_STANDARD);
+        m.setSoNgayDatTruoc(30);
+        m.setSoGioLastMinute(48);
         return m;
     }
 

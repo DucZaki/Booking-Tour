@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: layout(~{::section})">
+<section class="about-page">
+    <section class="about-hero py-5 public-page-offset">
+        <div class="container py-4 style="padding-top: 0px !important"">
+            <span class="text-primary fw-bold text-uppercase ls-wide">Về chúng tôi</span>
+            <h1 class="display-5 fw-bold mb-3">ZakiBooking — Kiến tạo hành trình đáng nhớ</h1>
+            <p class="lead text-muted mb-0" style="max-width:720px">
+                Chúng tôi là nền tảng đặt tour du lịch thông minh, kết hợp công nghệ AI và dịch vụ tư vấn cá nhân hóa
+                để giúp bạn lên kế hoạch, so sánh và đặt tour chỉ trong vài phút.
+            </p>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <img src="/anh/diemden/halong.jpg" alt="Du lịch Việt Nam" class="img-fluid rounded-4 shadow">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-3">Câu chuyện của chúng tôi</h2>
+                <p class="text-muted">Xuất phát từ đam mê du lịch và mong muốn đơn giản hóa trải nghiệm đặt tour, ZakiBooking xây dựng
+                    hệ sinh thái dịch vụ gồm tour trong nước, quốc tế, báo giá vé máy bay và hỗ trợ di chuyển linh hoạt.</p>
+                <p class="text-muted mb-4">Với đội ngũ am hiểu điểm đến và quy trình vận hành chuyên nghiệp, chúng tôi cam kết đồng hành cùng
+                    bạn từ bước chọn tour đến khi hoàn thành chuyến đi.</p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a th:href="@{/tour}" class="btn btn-primary rounded-pill px-4 fw-bold">Khám phá tour</a>
+                    <a href="tel:+84866147595" class="btn btn-outline-dark rounded-pill px-4 fw-bold">
+                        <i class="bi bi-telephone me-2"></i>+84 866147595
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light py-5">
+        <div class="container">
+            <h2 class="fw-bold text-center mb-5">Vì sao chọn ZakiBooking?</h2>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card h-100 text-center p-4">
+                        <div class="about-value-icon mx-auto mb-3"><i class="bi bi-shield-check"></i></div>
+                        <h5 class="fw-bold">Uy tín &amp; minh bạch</h5>
+                        <p class="text-muted small mb-0">Thông tin tour rõ ràng, giá công khai, hỗ trợ trước – trong – sau chuyến đi.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card h-100 text-center p-4">
+                        <div class="about-value-icon mx-auto mb-3"><i class="bi bi-stars"></i></div>
+                        <h5 class="fw-bold">Trải nghiệm được chọn lọc</h5>
+                        <p class="text-muted small mb-0">Tour nội địa và quốc tế cân bằng tham quan, nghỉ ngơi và khám phá.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card h-100 text-center p-4">
+                        <div class="about-value-icon mx-auto mb-3"><i class="bi bi-headset"></i></div>
+                        <h5 class="fw-bold">Hỗ trợ tận tâm</h5>
+                        <p class="text-muted small mb-0">Hotline và chatbot 24/7 giúp bạn giải đáp nhanh mọi thắc mắc.</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <div class="about-value-card h-100 text-center p-4">
+                        <div class="about-value-icon mx-auto mb-3"><i class="bi bi-credit-card-2-front"></i></div>
+                        <h5 class="fw-bold">Thanh toán an toàn</h5>
+                        <p class="text-muted small mb-0">Tích hợp VNPay và quy trình xác nhận đặt chỗ minh bạch.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 text-center">
+        <h3 class="fw-bold mb-3">Sẵn sàng bắt đầu hành trình?</h3>
+        <p class="text-muted mb-4">Xem ưu đãi hot hoặc liên hệ để được tư vấn lộ trình phù hợp.</p>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            <a th:href="@{/uu-dai}" class="btn btn-danger rounded-pill px-4 fw-bold">Xem khuyến mãi</a>
+            <a th:href="@{/contact}" class="btn btn-outline-primary rounded-pill px-4 fw-bold">Liên hệ hỗ trợ</a>
+        </div>
+    </section>
+</section>
+</html>

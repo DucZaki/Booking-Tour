@@ -6,76 +6,143 @@
 <div class="d-flex">
     <nav th:replace="~{layout/admin_layout :: nav()}"></nav>
     <main class="flex-grow-1 p-4">
-        <h2 class="fw-bold mb-4" th:text="${promo.id != null ? 'Sửa mã giảm giá' : 'Thêm mã giảm giá'}"></h2>
-        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-        <form th:action="@{/admin/promo/save}" th:object="${promo}" method="post" class="card border-0 shadow-sm rounded-4 p-4">
-            <input type="hidden" th:field="*{id}"/>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-0" th:text="${promo.id != null ? 'Sửa mã giảm giá' : 'Thêm mã giảm giá'}"></h2>
+            <a th:href="@{/admin/promo}" class="btn btn-outline-secondary btn-sm">Quay lại</a>
+        </div>
 
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Mã *</label>
-                    <input class="form-control" th:field="*{ma}" required placeholder="VD: SUMMER25">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Loại giảm *</label>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/admin/promo/save}" th:object="${promo}" method="post"
+              class="card border-0 shadow-sm rounded-4 p-4" style="max-width:720px">
+            <input type="hidden" th:field="*{id}"/>
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+
+            <h6 class="fw-bold text-uppercase text-muted small mb-3">Thông tin cơ bản</h6>
+            <div class="mb-3">
+                <label class="form-label">Mã coupon *</label>
+                <input class="form-control text-uppercase" th:field="*{ma}" required placeholder="HE2026">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mô tả</label>
+                <input class="form-control" th:field="*{moTa}">
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Loại giảm *</label>
                     <select class="form-select" th:field="*{loaiGiam}" id="loaiGiam">
-                        <option value="PERCENT">Phần trăm (%)</option>
-                        <option value="FIXED">Số tiền cố định (VND)</option>
+                        <option value="PERCENT">Theo phần trăm (%)</option>
+                        <option value="AMOUNT">Số tiền cố định (VND)</option>
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Giá trị *</label>
-                    <input type="number" min="0" step="1" class="form-control" th:field="*{giaTriGiam}" required>
-                </div>
                 <div class="col-md-6">
-                    <label class="form-label fw-bold">Mô tả</label>
-                    <input class="form-control" th:field="*{moTa}">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Giá tour tối thiểu / khách (VND)</label>
-                    <input type="number" min="0" step="1000" class="form-control" th:field="*{giaToiThieu}" placeholder="Để trống = không giới hạn">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Từ ngày</label>
-                    <input type="text" class="form-control zaki-date" th:field="*{ngayBatDau}" placeholder="dd/mm/yyyy" inputmode="numeric">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Đến ngày</label>
-                    <input type="text" class="form-control zaki-date" th:field="*{ngayKetThuc}" placeholder="dd/mm/yyyy" inputmode="numeric">
+                    <label class="form-label">Giá trị *</label>
+                    <input type="number" class="form-control" th:field="*{giaTriGiam}" required min="1" step="1">
+                    <small class="text-muted" id="giaTriHint">VD: 10 = giảm 10%</small>
                 </div>
             </div>
 
-            <hr class="my-4">
-            <label class="form-label fw-bold">Áp dụng cho tour</label>
+            <div class="mb-3" id="giamToiDaWrap">
+                <label class="form-label">Giảm tối đa (VND)</label>
+                <input type="number" class="form-control" th:field="*{giamToiDa}" placeholder="500000" min="0" step="1000">
+            </div>
+
             <div class="mb-3">
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="applyScope" id="scopeAll" value="ALL"
-                           th:checked="${promo.apDungTatCa}">
-                    <label class="form-check-label" for="scopeAll">Tất cả tour</label>
+                <label class="form-label">Đơn tối thiểu (VND)</label>
+                <input type="number" class="form-control" th:field="*{donToiThieu}" placeholder="2000000" min="0" step="1000">
+            </div>
+
+            <h6 class="fw-bold text-uppercase text-muted small mb-3 mt-4">Chiến dịch</h6>
+            <div class="mb-3">
+                <label class="form-label">Kiểu mã</label>
+                <select class="form-select" th:field="*{kieuChienDich}" id="kieuChienDich">
+                    <option value="STANDARD">Thường</option>
+                    <option value="EARLY_BIRD">Early Bird (đặt sớm)</option>
+                    <option value="LAST_MINUTE">Last-minute (phút chót)</option>
+                </select>
+            </div>
+            <div class="mb-3" id="earlyBirdWrap">
+                <label class="form-label">Đặt trước ít nhất (ngày)</label>
+                <input type="number" class="form-control" th:field="*{soNgayDatTruoc}" min="1">
+            </div>
+            <div class="mb-3" id="lastMinuteWrap">
+                <label class="form-label">Khởi hành trong vòng (giờ)</label>
+                <input type="number" class="form-control" th:field="*{soGioLastMinute}" min="1">
+            </div>
+
+            <h6 class="fw-bold text-uppercase text-muted small mb-3 mt-4">Giới hạn &amp; thời hạn</h6>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Ngày bắt đầu</label>
+                    <input type="date" class="form-control" th:field="*{ngayBatDau}">
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="applyScope" id="scopePick" value="PICK"
-                           th:checked="${!promo.apDungTatCa}">
-                    <label class="form-check-label" for="scopePick">Chọn tour cụ thể</label>
+                <div class="col-md-6">
+                    <label class="form-label">Ngày hết hạn</label>
+                    <input type="date" class="form-control" th:field="*{ngayKetThuc}">
                 </div>
             </div>
-            <div id="tourPicker" class="row g-2" style="max-height:280px;overflow-y:auto">
-                <div class="col-md-6" th:each="t : ${allTours}">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="tourIds" th:value="${t.id}"
-                               th:checked="${promo.tourIds != null and promo.tourIds.contains(t.id)}">
-                        <label class="form-check-label small" th:text="'#' + ${t.id} + ' - ' + ${t.tieuDe}"></label>
-                    </div>
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Tổng lượt dùng tối đa</label>
+                    <input type="number" class="form-control" th:field="*{soLanDungToiDa}" placeholder="50" min="1">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Giới hạn mỗi user</label>
+                    <input type="number" class="form-control" th:field="*{gioiHanMoiUser}" min="1">
                 </div>
             </div>
 
-            <div class="mt-4">
-                <button type="submit" class="btn btn-primary px-4">Lưu</button>
-                <a th:href="@{/admin/promo}" class="btn btn-outline-secondary ms-2">Hủy</a>
+            <h6 class="fw-bold text-uppercase text-muted small mb-2 mt-4">Tour áp dụng</h6>
+            <p class="small text-muted">Không chọn = áp dụng tất cả tour</p>
+            <div class="border rounded-3 p-3 mb-3" style="max-height:220px;overflow-y:auto">
+                <div th:each="t : ${allTours}" class="form-check">
+                    <input class="form-check-input" type="checkbox" name="tourIds" th:value="${t.id}"
+                           th:id="${'tour-' + t.id}"
+                           th:checked="${promo.tourIds != null and promo.tourIds.contains(t.id)}">
+                    <label class="form-check-label" th:for="${'tour-' + t.id}">
+                        <span th:text="'#' + ${t.id} + ' — ' + ${t.tieuDe}"></span>
+                        <span class="text-muted" th:if="${t.gia != null}"
+                              th:text="'(' + ${#numbers.formatDecimal(t.gia, 0, 'COMMA', 0, 'POINT')} + ' ₫)'"></span>
+                    </label>
+                </div>
             </div>
+
+            <div class="form-check mb-4">
+                <input type="hidden" name="active" value="false"/>
+                <input class="form-check-input" type="checkbox" name="active" value="true" id="promoActive"
+                       th:checked="${promo.active != false}">
+                <label class="form-check-label" for="promoActive">Đang kích hoạt</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu mã</button>
         </form>
     </main>
 </div>
 <footer th:replace="~{layout/admin_layout :: footer()}"></footer>
+<script>
+(function () {
+    var loai = document.getElementById('loaiGiam');
+    var kieu = document.getElementById('kieuChienDich');
+    var giamWrap = document.getElementById('giamToiDaWrap');
+    var earlyWrap = document.getElementById('earlyBirdWrap');
+    var lastWrap = document.getElementById('lastMinuteWrap');
+    var hint = document.getElementById('giaTriHint');
+
+    function syncLoai() {
+        var isPercent = loai.value === 'PERCENT';
+        giamWrap.style.display = isPercent ? '' : 'none';
+        hint.textContent = isPercent ? 'VD: 10 = giảm 10%' : 'VD: 200000 = giảm 200.000đ';
+    }
+    function syncKieu() {
+        earlyWrap.style.display = kieu.value === 'EARLY_BIRD' ? '' : 'none';
+        lastWrap.style.display = kieu.value === 'LAST_MINUTE' ? '' : 'none';
+    }
+    loai.addEventListener('change', syncLoai);
+    kieu.addEventListener('change', syncKieu);
+    syncLoai();
+    syncKieu();
+})();
+</script>
 </body>
 </html>

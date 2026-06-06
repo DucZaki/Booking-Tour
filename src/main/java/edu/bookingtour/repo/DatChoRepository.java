@@ -66,4 +66,14 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
             WHERE d.maCheckIn = :token
             """)
     java.util.Optional<DatCho> findByMaCheckInWithDetails(@Param("token") String token);
+
+    long countByIdChuyenDi_IdAndTrangThaiIn(Integer tourId, Collection<String> statuses);
+
+    @Query("""
+            select count(d) from DatCho d
+             where d.idNguoiDung.id = :userId
+               and d.idMaGiamGia.id = :promoId
+               and d.trangThai <> 'CANCELLED'
+            """)
+    long countPromoUsageByUser(@Param("userId") Integer userId, @Param("promoId") Integer promoId);
 }

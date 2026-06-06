@@ -40,52 +40,49 @@
             </form>
         </div>
     </section>
-    <section class="py-5 bg-white" id="nearbyToursSection">
+    <section class="py-5 home-section-nearby" id="nearbyToursSection">
         <div class="container">
-            <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
-                <div>
-                    <h6 class="text-primary fw-bold text-uppercase ls-wide">Gần bạn</h6>
-                    <h2 class="fw-800 mb-0" style="font-size: 2.5rem; letter-spacing: -0.02em;">Chuyến đi gần bạn</h2>
-                    <p class="text-muted mb-0 mt-2">Tour khởi hành từ điểm đón gần vị trí hiện tại của bạn</p>
-                </div>
-                <div class="d-flex flex-wrap align-items-center gap-2">
-                    <select class="form-select" id="nearbyCitySelect" style="min-width: 180px;" aria-label="Chọn thành phố xuất phát">
-                        <option value="">Hoặc chọn thành phố</option>
-                        <option value="Hà Nội">Hà Nội</option>
-                        <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                        <option value="Đà Nẵng">Đà Nẵng</option>
-                    </select>
-                    <button type="button" class="btn btn-outline-primary" id="nearbyRetryBtn">
-                        <i class="bi bi-crosshair"></i> Dùng vị trí của tôi
-                    </button>
-                </div>
+            <div class="home-section-heading text-center mb-4 mx-auto">
+                <span class="text-primary fw-bold text-uppercase ls-wide mb-2 d-inline-block">Gần bạn</span>
+                <h2 class="fw-800 mb-2 home-section-title">Chuyến đi gần bạn</h2>
+                <p class="text-muted mb-0">Tour khởi hành từ điểm đón gần vị trí hiện tại của bạn</p>
             </div>
-            <div id="nearbyToursStatus" class="nearby-status mb-4 text-muted">
+            <div class="d-flex flex-wrap align-items-center justify-content-center gap-2 mb-4">
+                <select class="form-select" id="nearbyCitySelect" style="width:auto;min-width:180px;" aria-label="Chọn thành phố xuất phát">
+                    <option value="">Hoặc chọn thành phố</option>
+                    <option value="Hà Nội">Hà Nội</option>
+                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                    <option value="Đà Nẵng">Đà Nẵng</option>
+                </select>
+                <button type="button" class="btn btn-outline-primary" id="nearbyRetryBtn">
+                    <i class="bi bi-crosshair"></i> Dùng vị trí của tôi
+                </button>
+            </div>
+            <div id="nearbyToursStatus" class="nearby-status text-center mb-4 text-muted">
                 <span class="spinner-border spinner-border-sm me-2"></span>Đang lấy vị trí...
             </div>
-            <div class="row g-4" id="nearbyToursGrid"></div>
+            <div class="row g-4 nearby-tours-grid" id="nearbyToursGrid"></div>
             <div class="d-flex justify-content-center mt-4" id="nearbyToursPagination" style="display:none;"></div>
         </div>
     </section>
-    <section class="py-5">
+    <section class="py-5 home-section-destinations">
         <div class="container">
-            <div class="d-flex align-items-end justify-content-between mb-5">
-                <div>
-                    <h6 class="text-primary fw-bold text-uppercase ls-wide">Explore</h6>
-                    <h2 class="fw-800 mb-0" style="font-size: 2.5rem; letter-spacing: -0.02em;">Điểm đến nổi bật</h2>
-                </div>
-                <a th:href="@{/tour}" class="text-dark fw-bold text-decoration-none border-bottom border-2 border-primary pb-1">Xem tất cả</a>
+            <div class="home-section-heading text-center mb-5 mx-auto">
+                <span class="text-primary fw-bold text-uppercase ls-wide mb-2 d-inline-block">Khám phá</span>
+                <h2 class="fw-800 mb-2 home-section-title">Điểm đến nổi bật</h2>
+                <p class="text-muted mb-3">Khám phá các địa danh du lịch hot nhất trong và ngoài nước</p>
+                <a th:href="@{/tour}" class="home-section-link">Xem tất cả điểm đến</a>
             </div>
             <div class="row g-4">
                 <div class="col-md-4" th:each="dd : ${dsNoiBat}">
-                    <a th:href="@{/tour/{id}(id=${dd.id})}" class="text-decoration-none">
-                        <div class="card h-100 group">
-                            <div class="img-zoom" style="height: 300px;">
+                    <a th:href="@{/tour(diemDen=${dd.thanhPho})}" class="text-decoration-none">
+                        <div class="card h-100 group border-0 shadow-sm">
+                            <div class="img-zoom" style="height:300px">
                                 <img th:src="@{${dd.hinhAnh}}" class="w-100 h-100 object-cover" alt="">
-                                <div class="card-img-overlay d-flex flex-column justify-content-end p-4" 
-                                     style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);">
+                                <div class="card-img-overlay d-flex flex-column justify-content-end p-4"
+                                     style="background:linear-gradient(to top,rgba(0,0,0,0.8) 0%,transparent 60%)">
                                     <h4 class="text-white fw-bold mb-1" th:text="${dd.thanhPho}"></h4>
-                                    <p class="text-white-50 mb-0 fs-7" th:text="${dd.chauLuc}"></p>
+                                    <p class="text-white-50 mb-0 small" th:text="${dd.chauLuc}"></p>
                                 </div>
                             </div>
                         </div>
@@ -94,18 +91,25 @@
             </div>
         </div>
     </section>
-    <section class="bg-brand-light py-5">
-        <div class="container text-center">
-            <h2 class="fw-bold mb-4">Tour được yêu thích nhất</h2>
-            <div class="row g-4">
+    <section class="home-section-popular py-5">
+        <div class="container">
+            <div class="home-section-heading text-center mb-5 mx-auto">
+                <span class="text-primary fw-bold text-uppercase ls-wide mb-2 d-inline-block">Phổ biến</span>
+                <h2 class="fw-800 mb-2 home-section-title">Tour được yêu thích nhất</h2>
+                <p class="text-muted mb-0">Những hành trình tuyệt vời được khách hàng bình chọn và đánh giá hàng đầu</p>
+            </div>
+            <div class="row g-4 justify-content-center">
                 <div class="col-md-4" th:each="ds : ${dsnoibatcd}">
-                    <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+                    <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden group position-relative">
                         <div class="img-zoom">
-                            <img th:src="@{${ds.hinhAnh}}" class="card-img-top" alt="" style="width:100%; height:250px; object-fit: cover;" />
+                            <img th:src="@{${ds.hinhAnh}}" class="card-img-top" alt="" style="width:100%;height:250px;object-fit:cover">
+                            <span th:if="${ds.noiBat}" class="badge bg-danger position-absolute top-0 start-0 m-2"><i class="bi bi-fire me-1"></i>HOT TOUR</span>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body text-start">
                             <h5 class="card-title fw-bold" th:text="${ds.tieuDe}"></h5>
-                            <p th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' ₫'" class="fw-bold text-danger fs-5 mb-3" ></p>
+                            <div th:replace="~{fragments/tour-card-stats :: stats(tourId=${ds.id})}"></div>
+                            <p th:if="${ds.idDiemDon != null}" class="text-muted small mb-2">Khởi hành: <strong th:text="${ds.idDiemDon.ten}"></strong></p>
+                            <p class="fw-bold text-danger fs-5 mb-3" th:text="${#numbers.formatDecimal(ds.gia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></p>
                             <a th:href="@{/tour/{id}(id=${ds.id})}" class="btn btn-primary rounded-pill px-4">Xem chi tiết</a>
                         </div>
                     </div>
@@ -113,9 +117,13 @@
             </div>
         </div>
     </section>
-    <section class="py-5 text-center bg-light">
+    <section class="py-5 text-center home-section-reviews">
         <div class="container">
-            <h2 class="fw-bold mb-4">Khách hàng nói gì?</h2>
+            <div class="home-section-heading text-center mb-5 mx-auto">
+                <span class="text-primary fw-bold text-uppercase ls-wide mb-2 d-inline-block">Đánh giá</span>
+                <h2 class="fw-800 mb-2 home-section-title">Khách hàng nói gì?</h2>
+                <p class="text-muted mb-0">Những chia sẻ thực tế từ hành khách sau mỗi chuyến đi</p>
+            </div>
             <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000"
                  style="background: none !important;">
                 <div class="carousel-inner" style="background: none !important;">

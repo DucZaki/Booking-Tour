@@ -17,7 +17,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Kích hoạt hàng loạt tour: gia hạn ngày tour + 3 ngày khởi hành trong tháng hiện tại.
+ * Kích hoạt hàng loạt tour (dev): gia hạn ngày tour + tối đa 3 ngày KH/tháng
+ * cho tour chưa có ngày KH nào trong tháng hiện tại.
  */
 @Service
 public class TourBootstrapService {
@@ -51,15 +52,21 @@ public class TourBootstrapService {
         for (ChuyenDi tour : tours) {
             long tripDays = resolveTripDays(tour);
 
-            extendTourLikeAdmin(tour, today, monthEnd);
-            toursExtended++;
-
-            List<LocalDate> targetDates = pickDepartureDates(today, monthEnd, DEPARTURES_PER_TOUR);
             Set<LocalDate> existingDates = ngayKhoiHanhRepository
                     .findByChuyenDiIdAndThangAndNam(tour.getId(), month, year)
                     .stream()
                     .map(NgayKhoiHanh::getNgay)
                     .collect(Collectors.toSet());
+
+            // Đã có ngày KH trong tháng → không seed thêm (tránh cộng dồn mỗi lần restart app)
+            if (!existingDates.isEmpty()) {
+                continue;
+            }
+
+            extendTourLikeAdmin(tour, today, monthEnd);
+            toursExtended++;
+
+            List<LocalDate> targetDates = pickDepartureDates(today, monthEnd, DEPARTURES_PER_TOUR);
 
             for (LocalDate ngayDi : targetDates) {
                 if (existingDates.contains(ngayDi)) {

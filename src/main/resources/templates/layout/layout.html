@@ -9,8 +9,9 @@
     <meta name="keywords" content="đặt tour du lịch, tour giá rẻ, du lịch thông minh, zaki booking, trợ lý du lịch AI" />
     <title>Zaki Booking - Khám phá thế giới, kiến tạo kỷ niệm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link class="style-sheet-main" rel="stylesheet" th:href="@{/css/style.css(v=11)}">
-    <link rel="stylesheet" th:href="@{/css/dark-mode.css(v=2)}">
+    <link class="style-sheet-main" rel="stylesheet" th:href="@{/css/style.css(v=14)}">
+    <link rel="stylesheet" th:href="@{/css/distribute-ui.css(v=4)}">
+    <link rel="stylesheet" th:href="@{/css/dark-mode.css(v=3)}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@10.2.0/public/assets/styles/choices.min.css">
     <link rel="stylesheet" th:href="@{/css/select-enhance.css(v=1)}">
     <link rel="icon" href="/favicon.icon" type="image/x-icon">
@@ -33,86 +34,178 @@
 </head>
 
 <body>
-    <nav class="premium-nav-dock d-flex align-items-center justify-content-between">
-        <!-- Logo Section -->
-        <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/favicon.icon}" alt="Logo" height="50" class="rounded-3">
+    <nav class="premium-nav-dock">
+        <div class="nav-dock-inner d-flex align-items-center w-100">
+        <a class="navbar-brand d-flex align-items-center flex-shrink-0" th:href="@{/}">
+            <img th:src="@{/favicon.icon}" alt="ZakiBooking" class="nav-brand-logo rounded-3"
+                 onerror="this.style.display='none'">
         </a>
 
-        <!-- Links Section -->
-        <div class="d-none d-lg-flex align-items-center gap-2">
-            <div class="nav-item dropdown position-static">
-                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Điểm đến</a>
-                <div class="dropdown-menu border-0 shadow-lg mt-3 mega-menu p-4" style="border-radius: 24px; min-width: 600px;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6 class="fw-bold mb-3" style="color: var(--bs-primary)">TRONG NƯỚC</h6>
-                            <div class="d-flex flex-column gap-1">
-                                <a th:href="@{/tour(thanhPho='Sapa')}" class="dropdown-item rounded-3">Sapa</a>
-                                <a th:href="@{/tour(thanhPho='Hạ Long')}" class="dropdown-item rounded-3">Hạ Long</a>
-                                <a th:href="@{/tour(thanhPho='Đà Nẵng')}" class="dropdown-item rounded-3">Đà Nẵng</a>
-                                <a th:href="@{/tour(thanhPho='Huế')}" class="dropdown-item rounded-3">Huế</a>
+        <div class="nav-main-links d-none d-lg-flex align-items-center">
+            <div class="nav-item dropdown">
+                <button type="button" class="nav-link dropdown-toggle border-0 bg-transparent"
+                        data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">Điểm đến</button>
+                <div class="dropdown-menu border-0 shadow-lg mega-menu mega-menu-wide">
+                    <div class="mega-dest-header">
+                        <span class="mega-dest-label">Khám phá các điểm đến phổ biến</span>
+                        <a th:href="@{/tour}" class="mega-dest-viewall">Xem bản đồ du lịch <i class="bi bi-geo-alt-fill"></i></a>
+                    </div>
+                    <div class="mega-dest-body">
+                        <div class="mega-dest-col">
+                            <h6 class="mega-section-title mb-3">Trong nước</h6>
+                            <div class="mega-dest-grid">
+                                <a th:each="d : ${navDomestic}" th:href="@{/tour(diemDen=${d.thanhPho})}" class="mega-dest-card text-decoration-none">
+                                    <div class="mega-dest-img-wrapper">
+                                        <img th:src="${@nav.destinationThumb(d)}" alt="" class="mega-dest-img" loading="lazy">
+                                    </div>
+                                    <div class="mega-dest-info">
+                                        <span class="mega-dest-name" th:text="${d.thanhPho}"></span>
+                                        <span class="mega-dest-sub">Tìm hiểu tour →</span>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <h6 class="fw-bold mb-3" style="color: var(--bs-primary)">NƯỚC NGOÀI</h6>
-                            <div class="d-flex flex-column gap-1">
-                                <a th:href="@{/tour(quocGia='Thái Lan')}" class="dropdown-item rounded-3">Thái Lan</a>
-                                <a th:href="@{/tour(quocGia='Hàn Quốc')}" class="dropdown-item rounded-3">Hàn Quốc</a>
-                                <a th:href="@{/tour(quocGia='Pháp')}" class="dropdown-item rounded-3">Pháp</a>
+                        <div class="mega-dest-col">
+                            <h6 class="mega-section-title mb-3">Nước ngoài</h6>
+                            <div class="mega-dest-grid">
+                                <a th:each="d : ${navInternational}" th:href="@{/tour(diemDen=${d.thanhPho != null ? d.thanhPho : d.quocGia})}" class="mega-dest-card text-decoration-none">
+                                    <div class="mega-dest-img-wrapper">
+                                        <img th:src="${@nav.destinationThumb(d)}" alt="" class="mega-dest-img" loading="lazy">
+                                    </div>
+                                    <div class="mega-dest-info">
+                                        <span class="mega-dest-name" th:text="${d.thanhPho != null ? d.thanhPho : d.quocGia}"></span>
+                                        <span class="mega-dest-sub">Tìm hiểu tour →</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mega-dest-spotlight">
+                            <div class="mega-spotlight-card">
+                                <div class="mega-spotlight-badge"><i class="bi bi-star-fill"></i> XU HƯỚNG</div>
+                                <div class="mega-spotlight-content">
+                                    <span class="mega-spotlight-subtitle">Điểm đến mùa hè</span>
+                                    <h5 class="mega-spotlight-title">Vịnh Hạ Long</h5>
+                                    <p class="mega-spotlight-desc">Trải nghiệm du thuyền 5 sao đẳng cấp giữa kỳ quan thiên nhiên thế giới.</p>
+                                    <a th:href="@{/tour(diemDen='Hạ Long')}" class="mega-spotlight-btn">Đặt ngay <i class="bi bi-arrow-right-short"></i></a>
+                                </div>
+                                <div class="mega-spotlight-bg" th:style="|background-image:url('@{/anh/diemden/halong.jpg}')|"></div>
+                                <div class="mega-spotlight-overlay"></div>
                             </div>
                         </div>
                     </div>
+                    <div class="mega-dest-footer">
+                        <div class="mega-dest-footer-left">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>Hơn <strong>100+ tour</strong> nội địa &amp; quốc tế chất lượng cao đã sẵn sàng</span>
+                        </div>
+                        <a th:href="@{/tour}" class="btn mega-dest-footer-btn">Tìm tour phù hợp →</a>
+                    </div>
                 </div>
             </div>
-            <a class="nav-link" th:href="@{/tour}">Chuyến đi</a>
+            <div class="nav-item dropdown">
+                <button type="button" class="nav-link dropdown-toggle border-0 bg-transparent"
+                        data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">Tour</button>
+                <div class="dropdown-menu border-0 shadow-lg mega-menu mega-menu-tours">
+                    <div class="mega-tours-header">
+                        <span class="mega-tours-label">Khám phá theo loại hình</span>
+                        <a th:href="@{/tour}" class="mega-tours-viewall">Xem tất cả <i class="bi bi-arrow-right"></i></a>
+                    </div>
+                    <div class="mega-tours-body">
+                        <div class="mega-tours-cats">
+                            <a th:href="@{/tour(diemDen='Family')}" class="mega-cat-card mega-cat-card--gia-dinh">
+                                <span class="mega-cat-card__icon"><i class="bi bi-people-fill"></i></span>
+                                <div class="mega-cat-card__body">
+                                    <span class="mega-cat-card__title">Tour gia đình</span>
+                                    <span class="mega-cat-card__desc">Chuyến đi an toàn, phù hợp mọi thành viên</span>
+                                </div>
+                                <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
+                            </a>
+                            <a th:href="@{/tour(diemDen='Trek')}" class="mega-cat-card mega-cat-card--trekking">
+                                <span class="mega-cat-card__icon"><i class="bi bi-mountain"></i></span>
+                                <div class="mega-cat-card__body">
+                                    <span class="mega-cat-card__title">Trekking / mạo hiểm</span>
+                                    <span class="mega-cat-card__desc">Khám phá thiên nhiên, trải nghiệm mạo hiểm</span>
+                                </div>
+                                <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
+                            </a>
+                            <a th:href="@{/tour(diemDen='Resort')}" class="mega-cat-card mega-cat-card--nghi-duong">
+                                <span class="mega-cat-card__icon"><i class="bi bi-umbrella-beach"></i></span>
+                                <div class="mega-cat-card__body">
+                                    <span class="mega-cat-card__title">Tour nghỉ dưỡng</span>
+                                    <span class="mega-cat-card__desc">Biển xanh, resort sang trọng, thư giãn trọn vẹn</span>
+                                </div>
+                                <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
+                            </a>
+                            <a th:href="@{/tour(diemDen='Group')}" class="mega-cat-card mega-cat-card--ghep-doan">
+                                <span class="mega-cat-card__icon"><i class="bi bi-bus-front-fill"></i></span>
+                                <div class="mega-cat-card__body">
+                                    <span class="mega-cat-card__title">Tour ghép đoàn</span>
+                                    <span class="mega-cat-card__desc">Tiết kiệm chi phí, giao lưu cùng đoàn</span>
+                                </div>
+                                <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
+                            </a>
+                        </div>
+                        <div class="mega-tours-featured">
+                            <div class="mega-featured-badge"><i class="bi bi-fire"></i> HOT DEAL</div>
+                            <div class="mega-featured-title">Combo Du lịch<br/>Tiết kiệm đến 40%</div>
+                            <p class="mega-featured-desc">Đặt sớm — nhận ngay ưu đãi đặc biệt từ ZakiBooking cho các tour hè 2025.</p>
+                            <a th:href="@{/uu-dai}" class="mega-featured-cta">Xem ưu đãi <i class="bi bi-arrow-right-circle-fill"></i></a>
+                            <div class="mega-featured-bg-shapes" aria-hidden="true"><span></span><span></span><span></span></div>
+                        </div>
+                    </div>
+                    <div class="mega-tours-footer">
+                        <div class="mega-tours-footer-left"><i class="bi bi-telephone-fill"></i> Tư vấn miễn phí: <strong>+84 866 147 595</strong></div>
+                        <a th:href="@{/tour}" class="btn mega-tours-footer-btn">Xem tất cả tour →</a>
+                    </div>
+                </div>
+            </div>
+            <a class="nav-link nav-link-promo" th:href="@{/uu-dai}"><i class="bi bi-fire me-1"></i>Combo Hot</a>
             <a class="nav-link" th:href="@{/tin-tuc}">Tin tức</a>
+            <a class="nav-link" th:href="@{/ve-chung-toi}">Về chúng tôi</a>
             <a class="nav-link" th:href="@{/contact}">Liên hệ</a>
         </div>
 
-        <!-- Action Section (User/Search) -->
-        <div class="d-flex align-items-center gap-3">
-            <button type="button" class="btn p-0 border-0 nav-search-toggle" id="navSearchToggle" aria-label="Tìm kiếm tour" aria-expanded="false">
+        <div class="nav-utilities d-flex align-items-center gap-2 ms-auto flex-shrink-0">
+            <button type="button" class="btn p-0 border-0 nav-search-toggle" id="navSearchToggle"
+                    aria-label="Tìm kiếm tour" aria-expanded="false">
                 <i class="bi bi-search fs-5"></i>
             </button>
-            <!-- Nút Admin Panel - chỉ hiện với ROLE_ADMIN -->
-            <a th:href="@{/admin}"
-               sec:authorize="hasRole('ADMIN')"
-               class="btn btn-dark rounded-pill px-3 d-flex align-items-center gap-2 admin-quick-link"
-               style="font-size:0.85rem; font-weight:700;">
-                <i class="bi bi-shield-lock-fill"></i> <span>Admin</span>
+            <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')"
+               class="btn btn-dark rounded-pill px-3 d-flex align-items-center gap-2 nav-admin-btn">
+                <i class="bi bi-shield-lock-fill"></i>
+                <span class="d-none d-xl-inline">Quản trị</span>
             </a>
             <div class="dropdown" sec:authorize="isAuthenticated()">
-                <div class="user-profile-icon" data-bs-toggle="dropdown">
+                <div class="user-profile-icon" data-bs-toggle="dropdown" role="button">
                     <img th:if="${currentUser != null and currentUser.anhDaiDien != null}"
                          th:src="${currentUser.anhDaiDien}" class="w-100 h-100 rounded-circle object-cover" alt="Avatar">
                     <i th:if="${currentUser == null or currentUser.anhDaiDien == null}" class="bi bi-person"></i>
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3" style="border-radius: 16px;">
-                    <!-- Admin Panel - chỉ hiện với ROLE_ADMIN -->
                     <li sec:authorize="hasRole('ADMIN')">
                         <a class="dropdown-item fw-bold" th:href="@{/admin}" style="color: var(--bs-primary);">
-                            <i class="bi bi-shield-lock-fill me-2"></i>Admin Panel
+                            <i class="bi bi-shield-lock-fill me-2"></i>Bảng quản trị
                         </a>
                     </li>
                     <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" th:href="@{/user/profile}">Hồ sơ cá nhân</a></li>
                     <li><a class="dropdown-item" th:href="@{/user/bookings}">Đơn đặt chỗ</a></li>
+                    <li><a class="dropdown-item" th:href="@{/favorites/my-favorites}">Tour yêu thích</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
                         <form th:action="@{/logout}" method="post" class="m-0">
-                            <button type="submit" class="dropdown-item text-danger fw-bold">Đăng xuất</button>
+                            <button type="submit" class="dropdown-item text-danger">Đăng xuất</button>
                         </form>
                     </li>
                 </ul>
             </div>
-            <a th:href="@{/login}" class="btn btn-dark rounded-pill px-4" sec:authorize="isAnonymous()">Sign in</a>
-            <button class="btn p-0 border-0 ms-1" id="darkModeToggle" style="background:none; font-size: 1.2rem;">🌙</button>
+            <a th:href="@{/login}" class="btn btn-primary rounded-pill px-4 fw-bold" sec:authorize="isAnonymous()">Đăng nhập</a>
+            <button type="button" class="btn p-0 border-0" id="darkModeToggle" title="Đổi giao diện" aria-label="Đổi giao diện" style="background:none;font-size:1.2rem;">🌙</button>
             <button class="btn btn-dark rounded-circle d-lg-none mobile-menu-toggle" type="button"
-                    data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu"
-                    aria-label="Mở menu">
+                    data-bs-toggle="offcanvas" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-label="Mở menu">
                 <i class="bi bi-list fs-5"></i>
             </button>
+        </div>
         </div>
     </nav>
 
@@ -122,105 +215,76 @@
                 <img th:src="@{/favicon.icon}" alt="ZakiBooking" height="38" class="rounded-3">
                 <div>
                     <h5 class="offcanvas-title fw-bold mb-0" id="mobileMenuLabel">ZakiBooking</h5>
-                    <small class="text-muted">Đặt tour nhanh hơn trên điện thoại</small>
+                    <small class="text-muted">Đặt tour nhanh trên điện thoại</small>
                 </div>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
         </div>
         <div class="offcanvas-body">
             <div class="mobile-menu-section">
-                <a class="mobile-menu-link" th:href="@{/tour}">
-                    <i class="bi bi-compass"></i>
-                    <span>Tất cả tour</span>
+                <a class="mobile-menu-link mobile-menu-link-promo" th:href="@{/uu-dai}" data-bs-dismiss="offcanvas">
+                    <i class="bi bi-fire"></i><span>Combo Hot</span>
                 </a>
-                <a class="mobile-menu-link" th:href="@{/tin-tuc}">
-                    <i class="bi bi-newspaper"></i>
-                    <span>Tin tức</span>
-                </a>
-                <a class="mobile-menu-link" th:href="@{/contact}">
-                    <i class="bi bi-headset"></i>
-                    <span>Liên hệ hỗ trợ</span>
-                </a>
+                <a class="mobile-menu-link" th:href="@{/tour}" data-bs-dismiss="offcanvas"><i class="bi bi-compass"></i><span>Tất cả tour</span></a>
+                <a class="mobile-menu-link" th:href="@{/tin-tuc}" data-bs-dismiss="offcanvas"><i class="bi bi-newspaper"></i><span>Tin tức</span></a>
+                <a class="mobile-menu-link" th:href="@{/ve-chung-toi}" data-bs-dismiss="offcanvas"><i class="bi bi-building"></i><span>Về chúng tôi</span></a>
+                <a class="mobile-menu-link" th:href="@{/contact}" data-bs-dismiss="offcanvas"><i class="bi bi-headset"></i><span>Liên hệ</span></a>
             </div>
 
             <div class="mobile-menu-section">
-                <div class="mobile-menu-title">Điểm đến phổ biến</div>
+                <div class="mobile-menu-title">Trong nước</div>
                 <div class="mobile-destination-grid">
-                    <a th:href="@{/tour(thanhPho='Sapa')}">Sapa</a>
-                    <a th:href="@{/tour(thanhPho='Hạ Long')}">Hạ Long</a>
-                    <a th:href="@{/tour(thanhPho='Đà Nẵng')}">Đà Nẵng</a>
-                    <a th:href="@{/tour(thanhPho='Huế')}">Huế</a>
-                    <a th:href="@{/tour(quocGia='Thái Lan')}">Thái Lan</a>
-                    <a th:href="@{/tour(quocGia='Hàn Quốc')}">Hàn Quốc</a>
+                    <a th:each="d : ${navDomestic}" th:href="@{/tour(diemDen=${d.thanhPho})}"
+                       th:text="${d.thanhPho}" data-bs-dismiss="offcanvas"></a>
+                </div>
+            </div>
+            <div class="mobile-menu-section">
+                <div class="mobile-menu-title">Nước ngoài</div>
+                <div class="mobile-destination-grid">
+                    <a th:each="d : ${navInternational}" th:href="@{/tour(diemDen=${d.thanhPho != null ? d.thanhPho : d.quocGia})}"
+                       th:text="${d.thanhPho != null ? d.thanhPho : d.quocGia}" data-bs-dismiss="offcanvas"></a>
                 </div>
             </div>
 
-            <div class="mobile-menu-section" sec:authorize="isAuthenticated()">
-                <div class="mobile-menu-title">Tài khoản</div>
-                <a class="mobile-menu-link" th:href="@{/user/profile}">
-                    <i class="bi bi-person"></i>
-                    <span>Hồ sơ cá nhân</span>
-                </a>
-                <a class="mobile-menu-link" th:href="@{/user/bookings}">
-                    <i class="bi bi-luggage"></i>
-                    <span>Đơn đặt chỗ</span>
-                </a>
-                <a class="mobile-menu-link" th:href="@{/favorites/my-favorites}">
-                    <i class="bi bi-bookmark-heart"></i>
-                    <span>Tour yêu thích</span>
-                </a>
-            </div>
-
-            <div class="d-grid gap-2 mt-4">
-                <a th:href="@{/login}" sec:authorize="isAnonymous()" class="btn btn-primary rounded-pill py-3 fw-bold">
-                    Đăng nhập để đặt tour
-                </a>
-                <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" class="m-0">
-                    <button type="submit" class="btn btn-outline-danger rounded-pill py-3 fw-bold w-100">
-                        Đăng xuất
-                    </button>
-                </form>
+            <div class="mobile-menu-section">
+                <div class="mobile-menu-title">Loại tour</div>
+                <div class="mobile-destination-grid">
+                    <a th:href="@{/tour(diemDen='Family')}" data-bs-dismiss="offcanvas">Tour gia đình</a>
+                    <a th:href="@{/tour(diemDen='Trek')}" data-bs-dismiss="offcanvas">Trekking</a>
+                    <a th:href="@{/tour(diemDen='Resort')}" data-bs-dismiss="offcanvas">Nghỉ dưỡng</a>
+                    <a th:href="@{/tour(diemDen='Group')}" data-bs-dismiss="offcanvas">Ghép đoàn</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Nav search — dropdown gọn dưới navbar, không phủ full màn -->
+    <div class="nav-search-scrim" id="navSearchScrim" aria-hidden="true"></div>
     <div class="nav-search-dropdown" id="navSearchPanel" aria-hidden="true">
         <div class="nav-search-dropdown-inner">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <span class="fw-bold search-dropdown-title">Tìm tour</span>
-                <button type="button" class="btn-close nav-search-close" id="navSearchClose" aria-label="Đóng"></button>
-            </div>
-            <form class="search-card search-card--nav" method="get" th:action="@{/tour}" autocomplete="off">
-                <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label class="search-field-label"><i class="bi bi-geo-alt-fill"></i> Bạn muốn đi đâu?</label>
-                        <input type="text" class="form-control search-field-input" name="diemDen" placeholder="ví dụ: Đà Nẵng, Phú Quốc...">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="search-field-label"><i class="bi bi-calendar-event-fill"></i> Ngày đi</label>
-                        <input type="text" class="form-control search-field-input zaki-date" name="ngayDi"
-                               th:attr="data-min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" placeholder="dd/mm/yyyy" inputmode="numeric">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="search-field-label"><i class="bi bi-tag-fill"></i> Khoảng giá</label>
-                        <select class="form-select search-field-input search-field-select" name="khoangGia">
-                            <option value="">Tất cả mức giá</option>
-                            <option value="DUOI5">Dưới 5 triệu</option>
-                            <option value="5_10">5 - 10 triệu</option>
-                            <option value="TREN10">Trên 10 triệu</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100 py-3 fw-bold">TÌM KIẾM</button>
-                    </div>
+            <form class="row g-2 search-card--nav" method="get" th:action="@{/tour}" autocomplete="off">
+                <div class="col-md-5">
+                    <input class="form-control" name="diemDen" placeholder="Bạn muốn đi đâu?" id="navSearchDiemDen">
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control zaki-date" name="ngayDi" placeholder="Ngày đi (dd/mm/yyyy)"
+                           th:attr="data-min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" inputmode="numeric">
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select search-field-select" name="khoangGia">
+                        <option value="">Tất cả mức giá</option>
+                        <option value="DUOI5">Dưới 5 triệu</option>
+                        <option value="5_10">5 - 10 triệu</option>
+                        <option value="TREN10">Trên 10 triệu</option>
+                    </select>
+                </div>
+                <div class="col-md-1 d-grid">
+                    <button class="btn btn-primary fw-bold" type="submit">Tìm</button>
                 </div>
             </form>
         </div>
     </div>
-    <div class="nav-search-scrim" id="navSearchScrim" aria-hidden="true"></div>
 
-    <main class="pt-5 mt-4">
+    <main>
         <div class="container mt-3">
             <!-- Success message -->
             <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -239,21 +303,48 @@
         <div th:replace="${content}"></div>
     </main>
 
-    <section class="newsletter">
+    <footer class="site-footer py-5">
         <div class="container">
-            <h3>Đăng ký nhận tin khuyến mãi</h3>
-            <p>Nhận ngay ưu đãi du lịch mới nhất mỗi tuần từ ZakiBooking</p>
-            <form th:action="@{/register}" method="get" class="d-flex justify-content-center mt-3 mx-auto" style="max-width: 600px;">
-                <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn..." required />
-                <button type="submit" class="btn btn-primary ms-2">Đăng ký</button>
-            </form>
-        </div>
-    </section>
-
-    <footer class="bg-dark text-white py-4">
-        <div class="container text-center">
-            <p class="mb-1">&copy; 2025 ZakiBooking</p>
-            <p>Email: minhd4360@gmail.com | Hotline:+84 866147595</p>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <h6 class="footer-title">ZakiBooking</h6>
+                    <p class="footer-text small">Nền tảng đặt tour du lịch thông minh — khám phá trong nước &amp; quốc tế với giá minh bạch.</p>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h6 class="footer-title">Khám phá</h6>
+                    <ul class="footer-links list-unstyled">
+                        <li><a th:href="@{/tour}">Tất cả tour</a></li>
+                        <li><a th:href="@{/uu-dai}">Khuyến mãi / Combo Hot</a></li>
+                        <li><a th:href="@{/tin-tuc}">Tin tức</a></li>
+                        <li><a th:href="@{/ve-chung-toi}">Về chúng tôi</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h6 class="footer-title">Hỗ trợ</h6>
+                    <ul class="footer-links list-unstyled">
+                        <li><a th:href="@{/contact}">Liên hệ</a></li>
+                        <li><a th:href="@{/user/bookings}">Tra cứu đơn đặt</a></li>
+                        <li><a th:href="@{/login}">Đăng nhập / Đăng ký</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <h6 class="footer-title">Liên hệ</h6>
+                    <ul class="footer-links list-unstyled">
+                        <li><a href="mailto:minhd4360@gmail.com">minhd4360@gmail.com</a></li>
+                        <li><a href="tel:+84866147595" class="footer-hotline">+84 866 147 595</a></li>
+                    </ul>
+                    <div class="newsletter footer-newsletter mt-4">
+                        <h3>Đăng ký nhận tin khuyến mãi</h3>
+                        <p>Nhận ngay ưu đãi du lịch mới nhất mỗi tuần từ ZakiBooking</p>
+                        <form th:action="@{/register}" method="get">
+                            <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn..." required />
+                            <button type="submit" class="btn btn-primary">Đăng ký</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr class="footer-divider my-4">
+            <p class="text-center footer-copy mb-0 small">&copy; 2025 ZakiBooking. All rights reserved.</p>
         </div>
     </footer>
 
@@ -264,7 +355,7 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/vn.js"></script>
     <script th:src="@{/js/select-enhance.js(v=1)}"></script>
     <script th:src="@{/js/date-picker.js(v=1)}"></script>
-    <script th:src="@{/js/script.js(v=7)}"></script>
+    <script th:src="@{/js/script.js(v=8)}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.3/dist/js/splide.min.js"></script>
     <script th:src="@{/js/dark-mode.js}"></script>
 

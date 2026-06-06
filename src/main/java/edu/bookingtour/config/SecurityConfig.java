@@ -68,6 +68,8 @@ public class SecurityConfig {
                                                                 "/api/tour/**",
                                                                 "/tintuc",
                                                                 "/tin-tuc",
+                                                                "/uu-dai",
+                                                                "/ve-chung-toi",
                                                                 "/contact",
                                                                 "/payment/**",
                                                                 "/check-in/**",

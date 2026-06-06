@@ -8,9 +8,12 @@ import edu.bookingtour.service.MaGiamGiaService;
 import edu.bookingtour.service.BookingPricingService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
+import edu.bookingtour.service.NguoiDungService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -34,6 +37,9 @@ public class PromoApiController {
 
     @Autowired
     private BookingPricingService bookingPricingService;
+
+    @Autowired
+    private NguoiDungService nguoiDungService;
 
     @PostMapping("/validate")
     public ResponseEntity<Map<String, Object>> validate(@RequestBody Map<String, Object> body) {
@@ -66,7 +72,7 @@ public class PromoApiController {
                 tour, quote, soNguoiLon, soTreEm, soTreNho, soEmBe, soPhongDon
         );
         PromoApplyResult result = maGiamGiaService.validateAndApplyOnSubtotal(
-                ma, tourId, unitPrice, pricing.getSubtotal()
+                ma, tourId, unitPrice, pricing.getSubtotal(), resolveUserId(), nkh.getNgay()
         );
 
         Map<String, Object> resp = new HashMap<>();
@@ -80,6 +86,14 @@ public class PromoApiController {
             resp.put("total", result.getTotal());
         }
         return ResponseEntity.ok(resp);
+    }
+
+    private Integer resolveUserId() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated() || auth.getName() == null || "anonymousUser".equals(auth.getName())) {
+            return null;
+        }
+        return nguoiDungService.findByTenDangNhap(auth.getName()).map(u -> u.getId()).orElse(null);
     }
 
     private int parseInt(Object o, int def) {

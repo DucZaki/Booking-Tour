@@ -1,0 +1,77 @@
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layout/layout :: layout(~{::section})">
+<section class="promo-page">
+    <section class="promo-hero py-5">
+        <div class="container py-4">
+            <span class="promo-hero-badge"><i class="bi bi-fire me-1"></i>Combo Hot</span>
+            <h1 class="display-5 fw-bold text-white mb-3">Khuyến mãi &amp; ưu đãi tour</h1>
+            <p class="lead text-white-50 mb-0" style="max-width:600px">
+                Săn deal giá tốt, áp mã giảm giá khi đặt tour — tiết kiệm thêm cho chuyến đi mơ ước của bạn.
+            </p>
+        </div>
+    </section>
+
+    <section class="container py-5">
+        <h2 class="fw-bold mb-4"><i class="bi bi-ticket-perforated-fill text-danger me-2"></i>Mã giảm giá đang hiệu lực</h2>
+        <div th:if="${#lists.isEmpty(promos)}" class="alert alert-light border rounded-4 p-4">
+            <p class="mb-2 fw-semibold">Hiện chưa có mã công khai.</p>
+            <p class="mb-0 text-muted">Theo dõi bản tin hoặc liên hệ hotline để nhận ưu đãi riêng.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" th:each="p : ${promos}">
+                <div class="promo-card h-100">
+                    <div class="promo-card-value">
+                        <span th:if="${p.isAmountType()}"
+                              th:text="'Giảm ' + ${#numbers.formatDecimal(p.resolvedGiaTri(), 0, 'COMMA', 0, 'POINT')} + ' ₫'"></span>
+                        <span th:unless="${p.isAmountType()}"
+                              th:text="'Giảm ' + ${p.resolvedGiaTri()} + '%'"></span>
+                    </div>
+                    <div class="promo-card-code" th:text="${p.ma}">CODE</div>
+                    <p class="text-muted small mb-2" th:text="${p.moTa != null ? p.moTa : 'Áp dụng khi đặt tour trên ZakiBooking'}"></p>
+                    <p class="small mb-3" th:if="${p.ngayKetThuc != null}">
+                        <i class="bi bi-clock me-1"></i>
+                        Hết hạn: <span th:text="${#temporals.format(p.ngayKetThuc, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <a th:href="@{/tour}" class="btn btn-outline-danger btn-sm rounded-pill fw-bold">Chọn tour ngay</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-light py-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-1">Tour combo nổi bật</h2>
+                    <p class="text-muted mb-0">Các chuyến đi được yêu thích nhất — đặt sớm để giữ chỗ tốt nhất</p>
+                </div>
+                <a th:href="@{/tour(sort='priceAsc')}" class="btn btn-link text-danger fw-bold">Xem tour giá tốt <i class="bi bi-arrow-right"></i></a>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4" th:each="t : ${hotTours}">
+                    <a th:href="@{/tour/{id}(id=${t.id})}" class="text-decoration-none">
+                        <div class="card border-0 shadow-sm h-100 promo-tour-card overflow-hidden">
+                            <div class="position-relative">
+                                <img th:src="@{${t.hinhAnh}}" alt="" class="card-img-top promo-tour-img">
+                                <span class="badge bg-danger position-absolute top-0 start-0 m-3">HOT</span>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="fw-bold text-dark" th:text="${t.tieuDe}"></h5>
+                                <p class="text-danger fw-bold fs-5 mb-0"
+                                   th:text="${#numbers.formatDecimal(t.gia, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container py-5 text-center">
+        <h3 class="fw-bold mb-3">Cần tư vấn combo riêng?</h3>
+        <p class="text-muted mb-4">Đội ngũ ZakiBooking sẽ gợi ý tour phù hợp ngân sách và lịch trình của bạn.</p>
+        <a th:href="@{/contact}" class="btn btn-danger btn-lg rounded-pill px-5 fw-bold">
+            <i class="bi bi-telephone-fill me-2"></i>Đăng ký tư vấn miễn phí
+        </a>
+    </section>
+</section>
+</html>

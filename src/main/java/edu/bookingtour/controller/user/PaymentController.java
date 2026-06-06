@@ -209,11 +209,14 @@ public class PaymentController {
         }
 
         double unitPrice = quote.getUnitPrice();
+        Integer userId = datCho.getIdNguoiDung() != null ? datCho.getIdNguoiDung().getId() : null;
         PromoApplyResult promoResult = maGiamGiaService.validateAndApplyOnSubtotal(
                 maGiamGia,
                 tourId,
                 unitPrice,
-                pricing.getSubtotal()
+                pricing.getSubtotal(),
+                userId,
+                nkh.getNgay()
         );
         if (maGiamGia != null && !maGiamGia.isBlank() && !promoResult.isValid()) {
             redirectAttributes.addFlashAttribute("promoError", promoResult.getMessage());
@@ -415,6 +418,9 @@ public class PaymentController {
                 try {
                     DatCho updated = datChoService.findByIdWithDetails(Integer.parseInt(orderIdStr)).orElse(null);
                     if (updated != null) {
+                        if (updated.getIdMaGiamGia() != null) {
+                            maGiamGiaService.consumeUsage(updated.getIdMaGiamGia().getId());
+                        }
                         emailService.sendPaymentSuccess(updated);
                     }
                 } catch (Exception ignored) {
