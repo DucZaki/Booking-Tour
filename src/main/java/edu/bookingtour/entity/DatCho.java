@@ -93,6 +93,26 @@ public class DatCho {
     @Column(name = "checked_in_at")
     private LocalDateTime checkedInAt;
 
+    @Column(name = "checkin_status", length = 30, nullable = false)
+    private String checkinStatus = CheckInStatus.PENDING.name();
+
+    @Column(name = "so_giay_to", length = 50)
+    private String soGiayTo;
+
+    @Column(name = "so_ghe", length = 20)
+    private String soGhe;
+
+    @Column(name = "so_phong", length = 20)
+    private String soPhong;
+
+    public CheckInStatus getCheckinStatusEnum() {
+        return CheckInStatus.fromDb(checkinStatus);
+    }
+
+    public void setCheckinStatusEnum(CheckInStatus status) {
+        this.checkinStatus = status != null ? status.name() : CheckInStatus.PENDING.name();
+    }
+
     @OneToMany(mappedBy = "idDatCho", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChoXacNhan> choXacNhans;
 }

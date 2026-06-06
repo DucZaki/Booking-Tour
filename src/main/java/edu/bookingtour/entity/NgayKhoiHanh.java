@@ -62,6 +62,21 @@ public class NgayKhoiHanh {
     @Column(name = "suc_chua")
     private Integer sucChua;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "guide_id")
+    private NguoiDung guide;
+
+    @Column(name = "trang_thai_doan", length = 30, nullable = false)
+    private String trangThaiDoan = TrangThaiDoan.SCHEDULED.name();
+
+    public TrangThaiDoan getTrangThaiDoanEnum() {
+        return TrangThaiDoan.fromDb(trangThaiDoan);
+    }
+
+    public void setTrangThaiDoanEnum(TrangThaiDoan status) {
+        this.trangThaiDoan = status != null ? status.name() : TrangThaiDoan.SCHEDULED.name();
+    }
+
     // Tổng giá vé (đi + về)
     public double getTongGiaVe() {
         return (giaVeDi != null ? giaVeDi : 0) + (giaVeVe != null ? giaVeVe : 0);

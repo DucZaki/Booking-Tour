@@ -82,7 +82,7 @@
             </ul>
 
             <!-- Admin: xác nhận check-in -->
-            <form th:if="${paid and !checkedIn}" sec:authorize="hasRole('ADMIN')"
+            <form th:if="${paid and !checkedIn}" sec:authorize="hasAnyRole('ADMIN','GUIDE')"
                   th:action="@{/check-in/{token}/confirm(token=${token})}" method="post" class="mt-4">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn btn-warning w-100 fw-bold py-2">

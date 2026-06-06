@@ -6,6 +6,7 @@ import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.TourCapacityService;
+import edu.bookingtour.service.TourManifestService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,6 +37,9 @@ public class AdminNgayKhoiHanhController {
     @Autowired
     private TourCapacityService tourCapacityService;
 
+    @Autowired
+    private TourManifestService tourManifestService;
+
     /**
      * Danh sách ngày khởi hành của tour
      */
@@ -59,6 +63,7 @@ public class AdminNgayKhoiHanhController {
         model.addAttribute("danhSach", danhSach);
         model.addAttribute("diemDonByNkh", diemDonByNkh);
         model.addAttribute("capacityByNkh", tourCapacityService.snapshotsForDepartures(danhSach));
+        model.addAttribute("guides", tourManifestService.listGuides());
         return "admin/tour/ngay-khoi-hanh-list";
     }
 
@@ -156,6 +161,20 @@ public class AdminNgayKhoiHanhController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime activeFrom,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime activeTo) {
         ngayKhoiHanhDiemDonService.updateSchedule(rowId, activeFrom, activeTo);
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
+    }
+
+    @PostMapping("/{nkhId}/assign-guide")
+    public String assignGuide(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @RequestParam(required = false) Integer guideId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            tourManifestService.assignGuide(nkhId, guideId);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật HDV phụ trách.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
         return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
     }
 

@@ -175,6 +175,11 @@
                 <i class="bi bi-shield-lock-fill"></i>
                 <span class="d-none d-xl-inline">Quản trị</span>
             </a>
+            <a th:href="@{/staff}" sec:authorize="hasRole('GUIDE')"
+               class="btn btn-dark rounded-pill px-3 d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge-fill"></i>
+                <span class="d-none d-xl-inline">Điều hành</span>
+            </a>
             <div class="dropdown" sec:authorize="isAuthenticated()">
                 <div class="user-profile-icon" data-bs-toggle="dropdown" role="button">
                     <img th:if="${currentUser != null and currentUser.anhDaiDien != null}"

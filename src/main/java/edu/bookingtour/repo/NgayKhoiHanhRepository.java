@@ -27,4 +27,25 @@ public interface NgayKhoiHanhRepository extends JpaRepository<NgayKhoiHanh, Inte
 
     @Query("SELECT n FROM NgayKhoiHanh n JOIN FETCH n.chuyenDi WHERE n.id = :id")
     Optional<NgayKhoiHanh> findByIdWithChuyenDi(@Param("id") Integer id);
+
+    @Query("""
+            SELECT n FROM NgayKhoiHanh n
+            JOIN FETCH n.chuyenDi c
+            LEFT JOIN FETCH n.guide
+            WHERE n.id = :id
+            """)
+    Optional<NgayKhoiHanh> findByIdWithDetails(@Param("id") Integer id);
+
+    @Query("""
+            SELECT n FROM NgayKhoiHanh n
+            JOIN FETCH n.chuyenDi c
+            LEFT JOIN FETCH n.guide g
+            WHERE n.ngay >= :from AND n.ngay <= :to
+              AND (:guideId IS NULL OR g.id = :guideId)
+            ORDER BY n.ngay ASC, c.tieuDe ASC
+            """)
+    List<NgayKhoiHanh> findDeparturesInRange(
+            @Param("from") LocalDate from,
+            @Param("to") LocalDate to,
+            @Param("guideId") Integer guideId);
 }

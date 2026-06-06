@@ -46,7 +46,7 @@ public class CheckInController {
     }
 
     @PostMapping("/check-in/{token}/confirm")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GUIDE')")
     public String confirmCheckIn(@PathVariable String token, RedirectAttributes redirectAttributes) {
         CheckInService.CheckInResult result = checkInService.confirmCheckIn(token);
         redirectAttributes.addFlashAttribute("flashMessage", result.message());
@@ -67,7 +67,9 @@ public class CheckInController {
 
     private String populateModel(Model model, DatCho booking, String token, String flashMsg) {
         boolean paid = "PAID".equals(booking.getTrangThai());
-        boolean checkedIn = booking.getCheckedInAt() != null;
+        boolean checkedIn = booking.getCheckinStatusEnum() == edu.bookingtour.entity.CheckInStatus.CHECKED_IN
+                || booking.getCheckinStatusEnum() == edu.bookingtour.entity.CheckInStatus.LATE
+                || booking.getCheckedInAt() != null;
 
         model.addAttribute("valid", true);
         model.addAttribute("paid", paid);

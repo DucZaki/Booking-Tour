@@ -131,4 +131,6 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, Integer> {
             nativeQuery = true)
     Page<Object[]> searchUsersByNameAsc(@org.springframework.data.repository.query.Param("kw") String keyword,
             Pageable pageable);
+
+    List<NguoiDung> findByVaiTroOrderByHoTenAsc(String vaiTro);
 }

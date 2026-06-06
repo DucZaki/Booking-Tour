@@ -76,4 +76,29 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
                and d.trangThai <> 'CANCELLED'
             """)
     long countPromoUsageByUser(@Param("userId") Integer userId, @Param("promoId") Integer promoId);
+
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh nkh
+            LEFT JOIN FETCH nkh.chuyenDi t
+            LEFT JOIN FETCH t.idNoiLuuTru
+            WHERE d.idNgayKhoiHanh.id = :nkhId AND d.trangThai = 'PAID'
+            ORDER BY d.hoTen ASC
+            """)
+    List<DatCho> findPaidManifestByNgayKhoiHanh(@Param("nkhId") Integer nkhId);
+
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh nkh
+            LEFT JOIN FETCH nkh.chuyenDi t
+            LEFT JOIN FETCH t.idNoiLuuTru
+            WHERE d.idNgayKhoiHanh.id = :nkhId AND d.trangThai = 'PAID'
+              AND (LOWER(d.hoTen) LIKE LOWER(CONCAT('%', :q, '%'))
+                   OR d.soDienThoai LIKE CONCAT('%', :q, '%')
+                   OR CAST(d.id AS string) LIKE CONCAT('%', :q, '%'))
+            ORDER BY d.hoTen ASC
+            """)
+    List<DatCho> searchPaidManifestByNgayKhoiHanh(@Param("nkhId") Integer nkhId, @Param("q") String q);
 }

@@ -140,6 +140,19 @@
                                                 <span class="badge" th:classappend="${cap.remaining > 0 ? 'bg-success' : 'bg-danger'}"
                                                       th:text="${cap.remaining > 0 ? 'Còn ' + cap.remaining : 'Hết chỗ'}"></span>
                                             </span>
+                                            <span class="ms-3 small">
+                                                <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/' + ${nkh.id} + '/assign-guide'}"
+                                                      method="post" class="d-inline-flex align-items-center gap-1">
+                                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                                    <label class="text-muted mb-0">HDV:</label>
+                                                    <select name="guideId" class="form-select form-select-sm" style="width:auto;min-width:140px;">
+                                                        <option value="">— Chưa gán —</option>
+                                                        <option th:each="g : ${guides}" th:value="${g.id}" th:text="${g.hoTen}"
+                                                                th:selected="${nkh.guide != null and nkh.guide.id == g.id}"></option>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-outline-dark">Lưu</button>
+                                                </form>
+                                            </span>
                                             <span class="float-end">
                                                 <a th:href="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/edit/' + ${nkh.id}}"
                                                     class="btn btn-sm btn-outline-primary me-1">

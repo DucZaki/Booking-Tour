@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi"
+      th:replace="~{staff/layout :: staffLayout(~{::section})}">
+<section th:with="pageTitle='Check-in'">
+    <div th:if="${!valid}" class="card border-0 shadow-sm mx-auto" style="max-width:480px;">
+        <div class="card-body text-center py-5">
+            <i class="bi bi-x-circle text-danger display-4"></i>
+            <h1 class="h5 fw-bold mt-3">Vé không hợp lệ</h1>
+            <p class="text-muted" th:text="${message}">—</p>
+            <a th:href="@{/staff/scan}" class="btn btn-dark rounded-pill">Quét lại</a>
+        </div>
+    </div>
+
+    <div th:if="${valid}" class="card border-0 shadow-sm mx-auto" style="max-width:520px;">
+        <div class="card-body p-4">
+            <div class="text-center mb-3">
+                <span class="badge rounded-pill px-3 py-2"
+                      th:classappend="${checkedIn} ? 'bg-success' : (${paid} ? 'bg-warning text-dark' : 'bg-danger')"
+                      th:text="${checkinStatus.label}">—</span>
+            </div>
+            <h1 class="h5 fw-bold text-center" th:text="${tourTitle}">Tour</h1>
+            <p class="text-center text-muted small">Mã đơn <strong th:text="'#' + ${orderId}">#1</strong></p>
+
+            <ul class="list-unstyled small mb-0">
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Khách</span><strong th:text="${customerName}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">SĐT</span><strong th:text="${phone != null ? phone : '—'}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Số khách</span><strong th:text="${guestCount} + ' người'">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Điểm đón</span><strong th:text="${departurePoint}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Ngày đi</span><strong th:text="${departureDate}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Khách sạn</span><strong th:text="${hotelName}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Phòng</span><strong th:text="${roomInfo}">—</strong></li>
+                <li class="d-flex justify-content-between py-2"><span class="text-muted">Ghế / chuyến</span><strong th:text="${seatInfo}">—</strong></li>
+            </ul>
+
+            <div th:if="${paid and !checkedIn}" class="d-grid gap-2 mt-4">
+                <form th:action="@{/staff/check-in/{token}/confirm(token=${token})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="status" value="CHECKED_IN"/>
+                    <button type="submit" class="btn btn-success w-100 py-3 fw-bold rounded-pill">
+                        <i class="bi bi-check2-circle me-1"></i> Check-in / Đã lên xe
+                    </button>
+                </form>
+                <form th:action="@{/staff/check-in/{token}/confirm(token=${token})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="status" value="LATE"/>
+                    <button type="submit" class="btn btn-outline-info w-100 rounded-pill">Đến muộn</button>
+                </form>
+                <form th:action="@{/staff/check-in/{token}/confirm(token=${token})}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="status" value="NO_SHOW"/>
+                    <button type="submit" class="btn btn-outline-danger w-100 rounded-pill">Vắng mặt</button>
+                </form>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <a th:href="@{/staff/scan}" class="btn btn-outline-dark flex-grow-1 rounded-pill">Quét tiếp</a>
+                <a th:if="${booking.idNgayKhoiHanh != null}"
+                   th:href="@{/staff/departures/{id}/manifest(id=${booking.idNgayKhoiHanh.id})}"
+                   class="btn btn-dark flex-grow-1 rounded-pill">Manifest</a>
+            </div>
+        </div>
+    </div>
+</section>
+</html>

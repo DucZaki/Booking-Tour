@@ -142562,3 +142562,1386 @@ Hibernate:
             on dd1_1.id=dd1_0.diem_don_id 
     where
         dd1_0.chuyen_di_id=?
+2026-06-06T14:55:34.446+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2026-06-06T14:55:34.450+07:00  INFO 21848 --- [BookingTour] [     Thread-122] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:55:34.703+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:55:34.707+07:00  INFO 21848 --- [BookingTour] [     Thread-122] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:34.710+07:00  INFO 21848 --- [BookingTour] [     Thread-122] com.zaxxer.hikari.HikariDataSource       : HikariPool-31 - Shutdown initiated...
+2026-06-06T14:55:34.712+07:00  INFO 21848 --- [BookingTour] [     Thread-122] com.zaxxer.hikari.HikariDataSource       : HikariPool-31 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:55:34.872+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:55:34.872+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:55:35.180+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:55:35.214+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:55:35.346+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:55:35.347+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:55:35.347+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:55:35.363+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:55:35.364+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 488 ms
+2026-06-06T14:55:35.422+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-32 - Starting...
+2026-06-06T14:55:35.427+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-32 - Added connection com.mysql.cj.jdbc.ConnectionImpl@36e16e0
+2026-06-06T14:55:35.428+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-32 - Start completed.
+2026-06-06T14:55:35.432+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:55:35.435+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:35.440+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:55:35.451+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.014s).
+2026-06-06T14:55:35.455+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:35.464+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:55:35.468+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 11
+2026-06-06T14:55:35.474+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Migrating schema `booking_tour` to version "12 - guide operations"
+2026-06-06T14:55:35.854+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Successfully applied 1 migration to schema `booking_tour`, now at version v12 (execution time 00:00.361s)
+2026-06-06T14:55:35.881+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:55:35.885+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:55:35.899+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:55:35.903+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:55:35.904+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:55:35.904+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-32)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:55:36.055+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:55:36.063+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:36.232+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:55:36.490+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:55:36.504+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:55:36.604+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:55:36.801+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:55:36.813+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:55:36.820+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.988 seconds (process running for 3985.188)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:55:36.844+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:55:40.455+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 56 class path changes (0 additions, 0 deletions, 56 modifications)
+2026-06-06T14:55:40.457+07:00  INFO 21848 --- [BookingTour] [     Thread-126] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:55:40.529+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:55:40.532+07:00  INFO 21848 --- [BookingTour] [     Thread-126] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:40.533+07:00  INFO 21848 --- [BookingTour] [     Thread-126] com.zaxxer.hikari.HikariDataSource       : HikariPool-32 - Shutdown initiated...
+2026-06-06T14:55:40.535+07:00  INFO 21848 --- [BookingTour] [     Thread-126] com.zaxxer.hikari.HikariDataSource       : HikariPool-32 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:55:40.625+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:55:40.625+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:55:40.999+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:55:41.040+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:55:41.197+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:55:41.198+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:55:41.198+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:55:41.225+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:55:41.225+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 598 ms
+2026-06-06T14:55:41.284+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-33 - Starting...
+2026-06-06T14:55:41.288+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-33 - Added connection com.mysql.cj.jdbc.ConnectionImpl@721b465d
+2026-06-06T14:55:41.288+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-33 - Start completed.
+2026-06-06T14:55:41.290+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:55:41.294+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:41.300+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:55:41.307+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.012s).
+2026-06-06T14:55:41.313+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:41.319+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.007s)
+2026-06-06T14:55:41.319+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:55:41.319+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:55:41.341+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:55:41.347+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:55:41.352+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:55:41.353+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:55:41.354+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:55:41.354+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-33)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:55:41.501+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:55:41.511+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:42.305+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:55:42.640+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:55:42.660+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:55:42.774+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:55:42.953+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:55:42.970+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:55:42.974+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 2.368 seconds (process running for 3991.344)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:55:43.002+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:55:44.471+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 5 class path changes (0 additions, 0 deletions, 5 modifications)
+2026-06-06T14:55:44.474+07:00  INFO 21848 --- [BookingTour] [     Thread-130] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:55:44.546+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:55:44.551+07:00  INFO 21848 --- [BookingTour] [     Thread-130] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:44.551+07:00  INFO 21848 --- [BookingTour] [     Thread-130] com.zaxxer.hikari.HikariDataSource       : HikariPool-33 - Shutdown initiated...
+2026-06-06T14:55:44.551+07:00  INFO 21848 --- [BookingTour] [     Thread-130] com.zaxxer.hikari.HikariDataSource       : HikariPool-33 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:55:44.642+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:55:44.642+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:55:44.842+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:55:44.863+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:55:44.987+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:55:44.990+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:55:44.990+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:55:45.005+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:55:45.008+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 366 ms
+2026-06-06T14:55:45.051+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-34 - Starting...
+2026-06-06T14:55:45.062+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-34 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3df79e1f
+2026-06-06T14:55:45.062+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-34 - Start completed.
+2026-06-06T14:55:45.062+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:55:45.067+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:45.072+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:55:45.084+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.013s).
+2026-06-06T14:55:45.084+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:45.098+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.008s)
+2026-06-06T14:55:45.101+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:55:45.101+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:55:45.112+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:55:45.122+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:55:45.134+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:55:45.134+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:55:45.134+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:55:45.134+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-34)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:55:45.270+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:55:45.281+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:45.397+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:55:45.644+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:55:45.656+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:55:45.741+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:55:45.899+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:55:45.913+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:55:45.916+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.294 seconds (process running for 3994.287)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:55:45.939+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:55:50.615+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (2 additions, 0 deletions, 0 modifications)
+2026-06-06T14:55:50.619+07:00  INFO 21848 --- [BookingTour] [     Thread-134] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:55:50.695+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:55:50.695+07:00  INFO 21848 --- [BookingTour] [     Thread-134] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:50.700+07:00  INFO 21848 --- [BookingTour] [     Thread-134] com.zaxxer.hikari.HikariDataSource       : HikariPool-34 - Shutdown initiated...
+2026-06-06T14:55:50.702+07:00  INFO 21848 --- [BookingTour] [     Thread-134] com.zaxxer.hikari.HikariDataSource       : HikariPool-34 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:55:50.783+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:55:50.783+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:55:50.990+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:55:51.023+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 36 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:55:51.135+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:55:51.135+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:55:51.135+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:55:51.155+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:55:51.155+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 372 ms
+2026-06-06T14:55:51.206+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-35 - Starting...
+2026-06-06T14:55:51.206+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-35 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51df740b
+2026-06-06T14:55:51.206+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-35 - Start completed.
+2026-06-06T14:55:51.206+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:55:51.206+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:51.217+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:55:51.227+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.011s).
+2026-06-06T14:55:51.234+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:51.237+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:55:51.247+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:55:51.248+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:55:51.264+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:55:51.264+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:55:51.269+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:55:51.277+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:55:51.277+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:55:51.277+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-35)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:55:51.407+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:55:51.419+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:51.528+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:55:51.777+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:55:51.796+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:55:51.882+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:55:52.073+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:55:52.092+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:55:52.098+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.33 seconds (process running for 4000.466)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:55:52.127+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:55:55.122+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-06T14:55:55.131+07:00  INFO 21848 --- [BookingTour] [     Thread-138] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:55:55.222+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:55:55.223+07:00  INFO 21848 --- [BookingTour] [     Thread-138] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:55.223+07:00  INFO 21848 --- [BookingTour] [     Thread-138] com.zaxxer.hikari.HikariDataSource       : HikariPool-35 - Shutdown initiated...
+2026-06-06T14:55:55.223+07:00  INFO 21848 --- [BookingTour] [     Thread-138] com.zaxxer.hikari.HikariDataSource       : HikariPool-35 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:55:55.318+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:55:55.320+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:55:55.507+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:55:55.542+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:55:55.652+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:55:55.652+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:55:55.652+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:55:55.668+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:55:55.668+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 348 ms
+2026-06-06T14:55:55.715+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-36 - Starting...
+2026-06-06T14:55:55.725+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-36 - Added connection com.mysql.cj.jdbc.ConnectionImpl@51809123
+2026-06-06T14:55:55.725+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-36 - Start completed.
+2026-06-06T14:55:55.725+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:55:55.725+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:55.734+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:55:55.736+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.009s).
+2026-06-06T14:55:55.741+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:55:55.748+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:55:55.757+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:55:55.757+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:55:55.773+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:55:55.776+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:55:55.780+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:55:55.780+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:55:55.784+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:55:55.784+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-36)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:55:55.906+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:55:55.913+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:55:56.025+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:55:56.299+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:55:56.316+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:55:56.399+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:55:56.567+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:55:56.584+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:55:56.586+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.287 seconds (process running for 4004.957)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:55:56.615+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:06.584+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (1 addition, 0 deletions, 0 modifications)
+2026-06-06T14:56:06.590+07:00  INFO 21848 --- [BookingTour] [     Thread-142] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:06.686+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:06.686+07:00  INFO 21848 --- [BookingTour] [     Thread-142] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:06.686+07:00  INFO 21848 --- [BookingTour] [     Thread-142] com.zaxxer.hikari.HikariDataSource       : HikariPool-36 - Shutdown initiated...
+2026-06-06T14:56:06.692+07:00  INFO 21848 --- [BookingTour] [     Thread-142] com.zaxxer.hikari.HikariDataSource       : HikariPool-36 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:06.776+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:06.778+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:06.991+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:07.039+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:07.137+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:07.137+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:07.137+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:07.163+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:07.163+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 385 ms
+2026-06-06T14:56:07.209+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-37 - Starting...
+2026-06-06T14:56:07.209+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-37 - Added connection com.mysql.cj.jdbc.ConnectionImpl@77315abc
+2026-06-06T14:56:07.209+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-37 - Start completed.
+2026-06-06T14:56:07.209+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:07.209+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:07.222+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:07.231+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.013s).
+2026-06-06T14:56:07.238+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:07.243+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:56:07.243+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:07.251+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:07.262+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:07.262+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:07.271+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:07.271+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:07.271+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:07.271+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-37)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:07.399+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:07.409+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:07.525+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:07.768+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:07.790+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:07.884+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:08.037+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:08.047+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:08.050+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.297 seconds (process running for 4016.419)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:56:08.070+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:29.963+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-06T14:56:29.964+07:00  INFO 21848 --- [BookingTour] [     Thread-146] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:30.045+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:30.045+07:00  INFO 21848 --- [BookingTour] [     Thread-146] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:30.045+07:00  INFO 21848 --- [BookingTour] [     Thread-146] com.zaxxer.hikari.HikariDataSource       : HikariPool-37 - Shutdown initiated...
+2026-06-06T14:56:30.051+07:00  INFO 21848 --- [BookingTour] [     Thread-146] com.zaxxer.hikari.HikariDataSource       : HikariPool-37 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:30.136+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:30.136+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:30.338+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:30.382+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 40 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:30.530+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:30.531+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:30.531+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:30.550+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:30.550+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 408 ms
+2026-06-06T14:56:30.608+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-38 - Starting...
+2026-06-06T14:56:30.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-38 - Added connection com.mysql.cj.jdbc.ConnectionImpl@76f170a5
+2026-06-06T14:56:30.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-38 - Start completed.
+2026-06-06T14:56:30.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:30.612+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:30.619+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:30.631+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.012s).
+2026-06-06T14:56:30.637+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:30.643+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:56:30.649+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:30.649+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:30.674+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:30.682+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:30.694+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:30.701+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:30.702+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:30.703+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-38)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:30.859+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:30.866+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:30.961+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:31.217+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:31.233+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:31.341+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:31.530+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:31.541+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:31.541+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.417 seconds (process running for 4039.912)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:56:31.567+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:33.075+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-06T14:56:33.078+07:00  INFO 21848 --- [BookingTour] [     Thread-150] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:33.149+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:33.152+07:00  INFO 21848 --- [BookingTour] [     Thread-150] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:33.152+07:00  INFO 21848 --- [BookingTour] [     Thread-150] com.zaxxer.hikari.HikariDataSource       : HikariPool-38 - Shutdown initiated...
+2026-06-06T14:56:33.152+07:00  INFO 21848 --- [BookingTour] [     Thread-150] com.zaxxer.hikari.HikariDataSource       : HikariPool-38 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:33.238+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:33.238+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:33.423+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:33.451+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 28 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:33.548+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:33.548+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:33.548+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:33.565+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:33.566+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 328 ms
+2026-06-06T14:56:33.611+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-39 - Starting...
+2026-06-06T14:56:33.616+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-39 - Added connection com.mysql.cj.jdbc.ConnectionImpl@31d89f40
+2026-06-06T14:56:33.616+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-39 - Start completed.
+2026-06-06T14:56:33.616+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:33.620+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:33.623+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:33.630+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.010s).
+2026-06-06T14:56:33.637+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:33.645+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.007s)
+2026-06-06T14:56:33.647+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:33.647+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:33.664+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:33.667+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:33.673+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:33.674+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:33.674+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:33.674+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-39)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:33.794+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:33.804+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:33.936+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:34.419+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:34.450+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:34.712+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:35.266+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:35.299+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:35.304+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 2.078 seconds (process running for 4043.672)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:56:35.335+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:36.784+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-06T14:56:36.784+07:00  INFO 21848 --- [BookingTour] [     Thread-154] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:36.861+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:36.863+07:00  INFO 21848 --- [BookingTour] [     Thread-154] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:36.863+07:00  INFO 21848 --- [BookingTour] [     Thread-154] com.zaxxer.hikari.HikariDataSource       : HikariPool-39 - Shutdown initiated...
+2026-06-06T14:56:36.867+07:00  INFO 21848 --- [BookingTour] [     Thread-154] com.zaxxer.hikari.HikariDataSource       : HikariPool-39 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:36.959+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:36.960+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:37.207+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:37.238+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:37.334+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:37.334+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:37.334+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:37.352+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:37.352+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 391 ms
+2026-06-06T14:56:37.415+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-40 - Starting...
+2026-06-06T14:56:37.422+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-40 - Added connection com.mysql.cj.jdbc.ConnectionImpl@169500c9
+2026-06-06T14:56:37.422+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-40 - Start completed.
+2026-06-06T14:56:37.425+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:37.428+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:37.430+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:37.436+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.009s).
+2026-06-06T14:56:37.443+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:37.446+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.005s)
+2026-06-06T14:56:37.446+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:37.446+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:37.473+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:37.473+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:37.481+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:37.481+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:37.481+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:37.481+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-40)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:37.603+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:37.616+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:37.727+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:37.989+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:38.007+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:38.109+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:38.254+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:38.272+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:38.275+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.333 seconds (process running for 4046.645)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:56:38.299+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:41.972+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-06T14:56:41.973+07:00  INFO 21848 --- [BookingTour] [     Thread-158] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:42.037+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:42.040+07:00  INFO 21848 --- [BookingTour] [     Thread-158] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:42.040+07:00  INFO 21848 --- [BookingTour] [     Thread-158] com.zaxxer.hikari.HikariDataSource       : HikariPool-40 - Shutdown initiated...
+2026-06-06T14:56:42.042+07:00  INFO 21848 --- [BookingTour] [     Thread-158] com.zaxxer.hikari.HikariDataSource       : HikariPool-40 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:42.145+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:42.145+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:42.414+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:42.447+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:42.546+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:42.547+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:42.547+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:42.564+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:42.564+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 419 ms
+2026-06-06T14:56:42.618+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-41 - Starting...
+2026-06-06T14:56:42.621+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-41 - Added connection com.mysql.cj.jdbc.ConnectionImpl@1ef816b5
+2026-06-06T14:56:42.622+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-41 - Start completed.
+2026-06-06T14:56:42.624+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:42.626+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:42.630+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:42.638+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.010s).
+2026-06-06T14:56:42.642+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:42.649+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.005s)
+2026-06-06T14:56:42.652+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:42.653+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:42.670+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:42.673+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:42.682+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:42.683+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:42.683+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:42.683+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-41)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:42.817+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:42.826+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:42.956+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:43.243+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:43.250+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:43.350+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:43.490+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:43.501+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:43.506+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.385 seconds (process running for 4051.874)
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+2026-06-06T14:56:43.535+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:49.613+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 2 class path changes (0 additions, 0 deletions, 2 modifications)
+2026-06-06T14:56:49.613+07:00  INFO 21848 --- [BookingTour] [     Thread-162] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:49.687+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:49.696+07:00  INFO 21848 --- [BookingTour] [     Thread-162] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:49.696+07:00  INFO 21848 --- [BookingTour] [     Thread-162] com.zaxxer.hikari.HikariDataSource       : HikariPool-41 - Shutdown initiated...
+2026-06-06T14:56:49.698+07:00  INFO 21848 --- [BookingTour] [     Thread-162] com.zaxxer.hikari.HikariDataSource       : HikariPool-41 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:49.788+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:49.788+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:49.995+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:50.020+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 26 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:50.126+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:50.126+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:50.126+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:50.145+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:50.145+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 357 ms
+2026-06-06T14:56:50.214+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-42 - Starting...
+2026-06-06T14:56:50.218+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-42 - Added connection com.mysql.cj.jdbc.ConnectionImpl@165c314c
+2026-06-06T14:56:50.218+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-42 - Start completed.
+2026-06-06T14:56:50.223+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:50.227+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:50.230+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:50.240+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.011s).
+2026-06-06T14:56:50.245+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:50.249+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.006s)
+2026-06-06T14:56:50.257+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:50.257+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:50.275+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:50.276+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:50.284+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:50.286+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:50.286+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:50.286+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-42)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:50.432+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:50.443+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:50.599+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:50.961+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:50.978+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:51.102+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:51.331+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:51.343+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:51.346+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.573 seconds (process running for 4059.717)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:56:51.371+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:55.055+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-06T14:56:55.057+07:00  INFO 21848 --- [BookingTour] [     Thread-166] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:55.145+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:55.147+07:00  INFO 21848 --- [BookingTour] [     Thread-166] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:55.147+07:00  INFO 21848 --- [BookingTour] [     Thread-166] com.zaxxer.hikari.HikariDataSource       : HikariPool-42 - Shutdown initiated...
+2026-06-06T14:56:55.151+07:00  INFO 21848 --- [BookingTour] [     Thread-166] com.zaxxer.hikari.HikariDataSource       : HikariPool-42 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:55.267+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:55.267+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:55.655+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:55.699+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:55.955+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:55.955+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:55.955+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:55.983+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:55.985+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 711 ms
+2026-06-06T14:56:56.057+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-43 - Starting...
+2026-06-06T14:56:56.058+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-43 - Added connection com.mysql.cj.jdbc.ConnectionImpl@ffa611
+2026-06-06T14:56:56.058+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-43 - Start completed.
+2026-06-06T14:56:56.058+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:56.067+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:56.070+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:56.081+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.012s).
+2026-06-06T14:56:56.088+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:56.099+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.008s)
+2026-06-06T14:56:56.102+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:56.102+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:56.136+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:56.136+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:56.147+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:56.150+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:56.150+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:56.151+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-43)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:56.390+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:56.408+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:56.601+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:56:57.081+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:56:57.102+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:56:57.209+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:56:57.408+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:56:57.420+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:56:57.420+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 2.177 seconds (process running for 4065.794)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:56:57.457+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:56:58.912+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 129 class path changes (2 additions, 0 deletions, 127 modifications)
+2026-06-06T14:56:58.921+07:00  INFO 21848 --- [BookingTour] [     Thread-170] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:56:58.998+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:56:59.003+07:00  INFO 21848 --- [BookingTour] [     Thread-170] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:59.003+07:00  INFO 21848 --- [BookingTour] [     Thread-170] com.zaxxer.hikari.HikariDataSource       : HikariPool-43 - Shutdown initiated...
+2026-06-06T14:56:59.003+07:00  INFO 21848 --- [BookingTour] [     Thread-170] com.zaxxer.hikari.HikariDataSource       : HikariPool-43 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:56:59.096+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:56:59.096+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:56:59.325+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:56:59.365+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:56:59.496+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:56:59.496+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:56:59.496+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:56:59.507+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:56:59.507+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 406 ms
+2026-06-06T14:56:59.557+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-44 - Starting...
+2026-06-06T14:56:59.568+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-44 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2e700109
+2026-06-06T14:56:59.570+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-44 - Start completed.
+2026-06-06T14:56:59.574+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:56:59.574+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:59.584+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:56:59.598+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.019s).
+2026-06-06T14:56:59.601+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:56:59.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.007s)
+2026-06-06T14:56:59.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:56:59.612+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:56:59.644+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:56:59.644+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:56:59.654+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:56:59.654+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:56:59.654+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:56:59.654+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-44)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:56:59.787+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:56:59.801+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:56:59.920+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:57:00.212+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:57:00.223+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:57:00.312+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:57:00.488+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:57:00.502+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:57:00.503+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.423 seconds (process running for 4068.875)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:57:00.530+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-06T14:57:05.280+07:00  INFO 21848 --- [BookingTour] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-06-06T14:57:05.284+07:00  INFO 21848 --- [BookingTour] [     Thread-174] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-06T14:57:05.359+07:00  INFO 21848 --- [BookingTour] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-06T14:57:05.365+07:00  INFO 21848 --- [BookingTour] [     Thread-174] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:57:05.365+07:00  INFO 21848 --- [BookingTour] [     Thread-174] com.zaxxer.hikari.HikariDataSource       : HikariPool-44 - Shutdown initiated...
+2026-06-06T14:57:05.369+07:00  INFO 21848 --- [BookingTour] [     Thread-174] com.zaxxer.hikari.HikariDataSource       : HikariPool-44 - Shutdown completed.
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.6)
+
+2026-06-06T14:57:05.472+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Starting BookingTourApplication using Java 17.0.19 with PID 21848 (C:\Users\minhd\ansel\Booking-Tour-main\target\classes started by minhd in C:\Users\minhd\ansel\Booking-Tour-main)
+2026-06-06T14:57:05.472+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : The following 1 profile is active: "local"
+2026-06-06T14:57:05.673+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-06T14:57:05.707+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 15 JPA repository interfaces.
+2026-06-06T14:57:05.811+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-06T14:57:05.811+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-06T14:57:05.811+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-06-06T14:57:05.827+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
+2026-06-06T14:57:05.827+07:00  INFO 21848 --- [BookingTour] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 354 ms
+2026-06-06T14:57:05.873+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-45 - Starting...
+2026-06-06T14:57:05.876+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-45 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53558449
+2026-06-06T14:57:05.876+07:00  INFO 21848 --- [BookingTour] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-45 - Start completed.
+2026-06-06T14:57:05.879+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3306/booking_tour?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Ho_Chi_Minh (MySQL 9.4)
+2026-06-06T14:57:05.880+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:57:05.884+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.c.i.s.JdbcTableSchemaHistory         : Repair of failed migration in Schema History table `booking_tour`.`flyway_schema_history` not necessary. No failed migration detected.
+2026-06-06T14:57:05.888+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbRepair       : Successfully repaired schema history table `booking_tour`.`flyway_schema_history` (execution time 00:00.008s).
+2026-06-06T14:57:05.892+07:00  WARN 21848 --- [BookingTour] [  restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-06-06T14:57:05.900+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 13 migrations (execution time 00:00.005s)
+2026-06-06T14:57:05.903+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `booking_tour`: 12
+2026-06-06T14:57:05.903+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.f.core.internal.command.DbMigrate      : Schema `booking_tour` is up to date. No migration necessary.
+2026-06-06T14:57:05.913+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-06T14:57:05.918+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-06T14:57:05.925+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-06T14:57:05.925+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQL8Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-06T14:57:05.925+07:00  WARN 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000026: MySQL8Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2026-06-06T14:57:05.925+07:00  INFO 21848 --- [BookingTour] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-45)']
+	Database driver: undefined/unknown
+	Database version: 8.0
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-06-06T14:57:06.028+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-06T14:57:06.035+07:00  INFO 21848 --- [BookingTour] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-06T14:57:06.134+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.config.VNPayConfig       : VNPay TMN=UY4GZRYU, payUrl=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html, returnUrl=http://localhost:8080/payment/vnpay-callback, ipnUrl=http://localhost:8080/payment/vnpay-ipn
+2026-06-06T14:57:06.369+07:00  WARN 21848 --- [BookingTour] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-06T14:57:06.387+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-06-06T14:57:06.476+07:00  WARN 21848 --- [BookingTour] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-06-06T14:57:06.631+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-06T14:57:06.643+07:00  INFO 21848 --- [BookingTour] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-06T14:57:06.646+07:00  INFO 21848 --- [BookingTour] [  restartedMain] edu.bookingtour.BookingTourApplication   : Started BookingTourApplication in 1.195 seconds (process running for 4075.017)
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.ten=?
+Hibernate: 
+    select
+        dc1_0.id,
+        dc1_0.checked_in_at,
+        dc1_0.checkin_status,
+        dc1_0.created_at,
+        dc1_0.dia_chi,
+        dc1_0.email,
+        dc1_0.ghi_chu,
+        dc1_0.ho_ten,
+        dc1_0.id_chuyen_di,
+        dc1_0.id_diem_don,
+        dc1_0.id_ma_giam_gia,
+        dc1_0.id_ngay_khoi_hanh,
+        dc1_0.id_nguoi_dung,
+        dc1_0.ma_check_in,
+        dc1_0.ngay_dat,
+        dc1_0.phu_thu_phong_don,
+        dc1_0.so_dien_thoai,
+        dc1_0.so_em_be,
+        dc1_0.so_ghe,
+        dc1_0.so_giay_to,
+        dc1_0.so_luong,
+        dc1_0.so_nguoi_lon,
+        dc1_0.so_phong,
+        dc1_0.so_phong_don,
+        dc1_0.so_tre_em,
+        dc1_0.so_tre_nho,
+        dc1_0.tong_gia,
+        dc1_0.trang_thai 
+    from
+        dat_cho dc1_0
+2026-06-06T14:57:06.678+07:00  INFO 21848 --- [BookingTour] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged

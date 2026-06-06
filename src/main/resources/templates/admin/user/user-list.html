@@ -71,7 +71,7 @@
                                     <div class="text-muted small" th:text="${u.phone() != null ? u.phone() : '-'}"></div>
                                 </td>
                                 <td class="py-3 text-center">
-                                    <span th:classappend="${u.vaiTro() == 'ADMIN' ? 'bg-danger' : 'bg-primary'}"
+                                    <span th:classappend="${u.vaiTro() == 'ADMIN' ? 'bg-danger' : (u.vaiTro() == 'GUIDE' ? 'bg-success' : 'bg-primary')}"
                                           class="badge rounded-pill px-3 py-1" th:text="${u.vaiTro()}"></span>
                                 </td>
                                 <td class="py-3 text-center fw-bold" th:text="${u.paidBookings()}"></td>

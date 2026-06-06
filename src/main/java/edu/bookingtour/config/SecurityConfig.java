@@ -81,6 +81,9 @@ public class SecurityConfig {
                                                 // Admin only endpoints
                                                 .requestMatchers("/admin/**", "/api/dia-diem/**").hasRole("ADMIN")
 
+                                                // HDV / điều hành tour
+                                                .requestMatchers("/staff/**").hasAnyRole("GUIDE", "ADMIN")
+
                                                 // User and Admin endpoints
                                                 .requestMatchers("/user/**", "/booking/**").authenticated()
 
