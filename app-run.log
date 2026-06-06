@@ -137328,3 +137328,5237 @@ Hibernate:
     where
         dc1_0.id_ngay_khoi_hanh=? 
         and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.ngay_ket_thuc>? 
+    limit
+        ?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        count(cd1_0.id) 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.ngay_ket_thuc>?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        lt1_0.id,
+        lt1_0.hinh_anh,
+        lt1_0.hoat_dong_chinh,
+        lt1_0.ngay_thu,
+        lt1_0.nghi_dem,
+        lt1_0.noi_dung,
+        lt1_0.so_bua_an,
+        lt1_0.tieu_de,
+        lt1_0.tour_id 
+    from
+        lich_trinh lt1_0 
+    where
+        lt1_0.tour_id=? 
+    order by
+        lt1_0.ngay_thu
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        nlt1_0.id_diem_den,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0 
+    where
+        dd1_0.noi_bat=?
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.noi_bat=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        dg1_0.id,
+        dg1_0.binh_luan,
+        dg1_0.diem,
+        dg1_0.id_chuyen_di,
+        dg1_0.id_nguoi_dung,
+        dg1_0.ngay_danh_gia 
+    from
+        danh_gia dg1_0
+Hibernate: 
+    select
+        nd1_0.ho_ten 
+    from
+        nguoi_dung nd1_0
+2026-06-06T14:48:31.016+07:00  WARN 21848 --- [BookingTour] [nio-8080-exec-1] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-1][index] Deprecated unwrapped fragment expression "layout/layout :: layout(~{::section})" found in template index, line 2, col 43. Please use the complete syntax of fragment expressions instead ("~{layout/layout :: layout(~{::section})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0
+Hibernate: 
+    select
+        distinct cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    where
+        dd1_0.diem_don_id in (?) 
+        and (
+            cd1_0.ngay_ket_thuc is null 
+            or cd1_0.ngay_ket_thuc>=? 
+            or exists(select
+                1 
+            from
+                ngay_khoi_hanh nkh1_0 
+            where
+                nkh1_0.id_chuyen_di=cd1_0.id 
+                and nkh1_0.ngay>=?)
+        ) 
+    order by
+        cd1_0.noi_bat desc,
+        cd1_0.gia
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        mgg1_0.id,
+        mgg1_0.active,
+        mgg1_0.ap_dung_tat_ca,
+        mgg1_0.don_toi_thieu,
+        mgg1_0.gia_toi_thieu,
+        mgg1_0.gia_tri_giam,
+        mgg1_0.giam_toi_da,
+        mgg1_0.gioi_han_moi_user,
+        mgg1_0.kieu_chien_dich,
+        mgg1_0.loai_giam,
+        mgg1_0.ma,
+        mgg1_0.mo_ta,
+        mgg1_0.ngay_bat_dau,
+        mgg1_0.ngay_ket_thuc,
+        mgg1_0.phan_tram_giam,
+        mgg1_0.so_gio_last_minute,
+        mgg1_0.so_lan_da_dung,
+        mgg1_0.so_lan_dung_toi_da,
+        mgg1_0.so_ngay_dat_truoc 
+    from
+        ma_giam_gia mgg1_0 
+    where
+        mgg1_0.active=1 
+        and (
+            mgg1_0.ngay_bat_dau is null 
+            or mgg1_0.ngay_bat_dau<=?
+        ) 
+        and (
+            mgg1_0.ngay_ket_thuc is null 
+            or mgg1_0.ngay_ket_thuc>=?
+        ) 
+        and (
+            mgg1_0.so_lan_dung_toi_da is null 
+            or mgg1_0.so_lan_da_dung<mgg1_0.so_lan_dung_toi_da
+        ) 
+    order by
+        mgg1_0.id desc
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.noi_bat=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+2026-06-06T14:48:44.051+07:00  WARN 21848 --- [BookingTour] [nio-8080-exec-3] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-3][pages/uu-dai] Deprecated unwrapped fragment expression "layout/layout :: layout(~{::section})" found in template pages/uu-dai, line 1, col 43. Please use the complete syntax of fragment expressions instead ("~{layout/layout :: layout(~{::section})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+API Status: 200
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0 
+    where
+        dd1_0.noi_bat=?
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.noi_bat=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        dg1_0.id,
+        dg1_0.binh_luan,
+        dg1_0.diem,
+        dg1_0.id_chuyen_di,
+        dg1_0.id_nguoi_dung,
+        dg1_0.ngay_danh_gia 
+    from
+        danh_gia dg1_0
+Hibernate: 
+    select
+        nd1_0.ho_ten 
+    from
+        nguoi_dung nd1_0
+2026-06-06T14:49:19.404+07:00  WARN 21848 --- [BookingTour] [io-8080-exec-10] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-10][index] Deprecated unwrapped fragment expression "layout/layout :: layout(~{::section})" found in template index, line 2, col 43. Please use the complete syntax of fragment expressions instead ("~{layout/layout :: layout(~{::section})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0
+Hibernate: 
+    select
+        distinct cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    where
+        dd1_0.diem_don_id in (?) 
+        and (
+            cd1_0.ngay_ket_thuc is null 
+            or cd1_0.ngay_ket_thuc>=? 
+            or exists(select
+                1 
+            from
+                ngay_khoi_hanh nkh1_0 
+            where
+                nkh1_0.id_chuyen_di=cd1_0.id 
+                and nkh1_0.ngay>=?)
+        ) 
+    order by
+        cd1_0.noi_bat desc,
+        cd1_0.gia
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        mgg1_0.id,
+        mgg1_0.active,
+        mgg1_0.ap_dung_tat_ca,
+        mgg1_0.don_toi_thieu,
+        mgg1_0.gia_toi_thieu,
+        mgg1_0.gia_tri_giam,
+        mgg1_0.giam_toi_da,
+        mgg1_0.gioi_han_moi_user,
+        mgg1_0.kieu_chien_dich,
+        mgg1_0.loai_giam,
+        mgg1_0.ma,
+        mgg1_0.mo_ta,
+        mgg1_0.ngay_bat_dau,
+        mgg1_0.ngay_ket_thuc,
+        mgg1_0.phan_tram_giam,
+        mgg1_0.so_gio_last_minute,
+        mgg1_0.so_lan_da_dung,
+        mgg1_0.so_lan_dung_toi_da,
+        mgg1_0.so_ngay_dat_truoc 
+    from
+        ma_giam_gia mgg1_0 
+    where
+        mgg1_0.active=1 
+        and (
+            mgg1_0.ngay_bat_dau is null 
+            or mgg1_0.ngay_bat_dau<=?
+        ) 
+        and (
+            mgg1_0.ngay_ket_thuc is null 
+            or mgg1_0.ngay_ket_thuc>=?
+        ) 
+        and (
+            mgg1_0.so_lan_dung_toi_da is null 
+            or mgg1_0.so_lan_da_dung<mgg1_0.so_lan_dung_toi_da
+        ) 
+    order by
+        mgg1_0.id desc
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.noi_bat=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+2026-06-06T14:49:25.109+07:00  WARN 21848 --- [BookingTour] [nio-8080-exec-3] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-3][pages/uu-dai] Deprecated unwrapped fragment expression "layout/layout :: layout(~{::section})" found in template pages/uu-dai, line 1, col 43. Please use the complete syntax of fragment expressions instead ("~{layout/layout :: layout(~{::section})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+API Status: 200
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0 
+    where
+        dd1_0.noi_bat=?
+Hibernate: 
+    select
+        cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    where
+        cd1_0.noi_bat=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0 
+    where
+        dd1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        coalesce(avg(dg1_0.diem), 0) 
+    from
+        danh_gia dg1_0 
+    where
+        dg1_0.id_chuyen_di=?
+Hibernate: 
+    select
+        count(dg1_0.id) 
+    from
+        danh_gia dg1_0 
+    join
+        chuyen_di icd1_0 
+            on icd1_0.id=dg1_0.id_chuyen_di 
+    where
+        icd1_0.id=?
+Hibernate: 
+    select
+        count(dc1_0.id) 
+    from
+        dat_cho dc1_0 
+    left join
+        chuyen_di icd1_0 
+            on icd1_0.id=dc1_0.id_chuyen_di 
+    where
+        icd1_0.id=? 
+        and dc1_0.trang_thai in (?, ?)
+Hibernate: 
+    select
+        dg1_0.id,
+        dg1_0.binh_luan,
+        dg1_0.diem,
+        dg1_0.id_chuyen_di,
+        dg1_0.id_nguoi_dung,
+        dg1_0.ngay_danh_gia 
+    from
+        danh_gia dg1_0
+Hibernate: 
+    select
+        nd1_0.ho_ten 
+    from
+        nguoi_dung nd1_0
+2026-06-06T14:50:09.587+07:00  WARN 21848 --- [BookingTour] [nio-8080-exec-9] actStandardFragmentInsertionTagProcessor : [THYMELEAF][http-nio-8080-exec-9][index] Deprecated unwrapped fragment expression "layout/layout :: layout(~{::section})" found in template index, line 2, col 43. Please use the complete syntax of fragment expressions instead ("~{layout/layout :: layout(~{::section})}"). The old, unwrapped syntax for fragment expressions will be removed in future versions of Thymeleaf.
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        cd1_0.id,
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        idd2_0.id,
+        idd2_0.ten,
+        inlt1_0.id,
+        inlt1_0.dia_chi,
+        inlt1_0.gia,
+        inlt1_0.gia_phong_don,
+        idd3_0.id,
+        idd3_0.chau_luc,
+        idd3_0.hinh_anh,
+        idd3_0.mo_ta,
+        idd3_0.noi_bat,
+        idd3_0.quoc_gia,
+        idd3_0.thanh_pho,
+        inlt1_0.loai,
+        inlt1_0.ten,
+        ipt1_0.id,
+        ipt1_0.hang,
+        idd4_0.id,
+        idd4_0.chau_luc,
+        idd4_0.hinh_anh,
+        idd4_0.mo_ta,
+        idd4_0.noi_bat,
+        idd4_0.quoc_gia,
+        idd4_0.thanh_pho,
+        ipt1_0.loai,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    left join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    left join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=cd1_0.id_diem_den 
+    left join
+        diem_don idd2_0 
+            on idd2_0.id=cd1_0.id_diem_don 
+    left join
+        noi_luu_tru inlt1_0 
+            on inlt1_0.id=cd1_0.id_noi_luu_tru 
+    left join
+        diem_den idd3_0 
+            on idd3_0.id=inlt1_0.id_diem_den 
+    left join
+        phuong_tien ipt1_0 
+            on ipt1_0.id=cd1_0.id_phuong_tien 
+    left join
+        diem_den idd4_0 
+            on idd4_0.id=ipt1_0.id_diem_den 
+    where
+        cd1_0.id=?
+Hibernate: 
+    select
+        nd1_0.id,
+        nd1_0.anh_dai_dien,
+        nd1_0.email,
+        nd1_0.ho_ten,
+        nd1_0.mat_khau,
+        nd1_0.ngay_tao,
+        nd1_0.number,
+        nd1_0.provider,
+        nd1_0.ten_dang_nhap,
+        nd1_0.vai_tro 
+    from
+        nguoi_dung nd1_0 
+    where
+        nd1_0.ten_dang_nhap=?
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.chau_luc,
+        dd1_0.hinh_anh,
+        dd1_0.mo_ta,
+        dd1_0.noi_bat,
+        dd1_0.quoc_gia,
+        dd1_0.thanh_pho 
+    from
+        diem_den dd1_0
+Hibernate: 
+    select
+        dd1_0.id,
+        dd1_0.ten 
+    from
+        diem_don dd1_0
+Hibernate: 
+    select
+        distinct cd1_0.id,
+        cd1_0.gia,
+        cd1_0.highlight,
+        cd1_0.hinh_anh,
+        cd1_0.id_diem_den,
+        cd1_0.id_diem_don,
+        cd1_0.id_noi_luu_tru,
+        cd1_0.id_phuong_tien,
+        cd1_0.mo_ta,
+        cd1_0.ngay_ket_thuc,
+        cd1_0.ngay_khoi_hanh,
+        cd1_0.noi_bat,
+        cd1_0.suc_chua_mac_dinh,
+        cd1_0.tieu_de 
+    from
+        chuyen_di cd1_0 
+    join
+        chuyen_di_diem_don dd1_0 
+            on cd1_0.id=dd1_0.chuyen_di_id 
+    where
+        dd1_0.diem_don_id in (?) 
+        and (
+            cd1_0.ngay_ket_thuc is null 
+            or cd1_0.ngay_ket_thuc>=? 
+            or exists(select
+                1 
+            from
+                ngay_khoi_hanh nkh1_0 
+            where
+                nkh1_0.id_chuyen_di=cd1_0.id 
+                and nkh1_0.ngay>=?)
+        ) 
+    order by
+        cd1_0.noi_bat desc,
+        cd1_0.gia
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        nlt1_0.id,
+        nlt1_0.dia_chi,
+        nlt1_0.gia,
+        nlt1_0.gia_phong_don,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        nlt1_0.loai,
+        nlt1_0.ten 
+    from
+        noi_luu_tru nlt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=nlt1_0.id_diem_den 
+    where
+        nlt1_0.id=?
+Hibernate: 
+    select
+        pt1_0.id,
+        pt1_0.hang,
+        idd1_0.id,
+        idd1_0.chau_luc,
+        idd1_0.hinh_anh,
+        idd1_0.mo_ta,
+        idd1_0.noi_bat,
+        idd1_0.quoc_gia,
+        idd1_0.thanh_pho,
+        pt1_0.loai 
+    from
+        phuong_tien pt1_0 
+    left join
+        diem_den idd1_0 
+            on idd1_0.id=pt1_0.id_diem_den 
+    where
+        pt1_0.id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
+Hibernate: 
+    select
+        dd1_0.chuyen_di_id,
+        dd1_1.id,
+        dd1_1.ten 
+    from
+        chuyen_di_diem_don dd1_0 
+    join
+        diem_don dd1_1 
+            on dd1_1.id=dd1_0.diem_don_id 
+    where
+        dd1_0.chuyen_di_id=?
