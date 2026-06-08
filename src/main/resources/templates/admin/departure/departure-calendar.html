@@ -98,8 +98,9 @@
                                     <td th:unless="${capacityByNkh[nkh.id] != null}">—</td>
                                     <td>
                                         <span class="badge"
-                                              th:classappend="${nkh.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
-                                              th:text="${nkh.trangThaiDoanEnum.label}"></span>
+                                              th:with="depStatus=${T(edu.bookingtour.util.DepartureStatusUtil).effectiveStatus(nkh, T(java.time.LocalDateTime).now())}"
+                                              th:classappend="${T(edu.bookingtour.util.DepartureStatusUtil).badgeClass(depStatus)}"
+                                              th:text="${depStatus.label}"></span>
                                     </td>
                                     <td class="text-end">
                                         <a th:href="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/quan-ly(tid=${nkh.chuyenDi.id}, nid=${nkh.id})}"

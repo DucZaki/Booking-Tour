@@ -96,10 +96,11 @@ public class NgayKhoiHanhDiemDonService {
             row.setNgayKhoiHanh(nkh);
             row.setDiemDon(diemDon);
             row.setActive(true);
-            populateTransport(row, tour, nkh, true);
+            populateTransport(row, tour, nkh, false);
             row = repository.save(row);
         } else if (refresh) {
-            populateTransport(row, tour, nkh, true);
+            // User quote reads admin-managed ticket data only. Amadeus refresh is admin-only via refreshFlight().
+            populateTransport(row, tour, nkh, false);
             row = repository.save(row);
         }
 

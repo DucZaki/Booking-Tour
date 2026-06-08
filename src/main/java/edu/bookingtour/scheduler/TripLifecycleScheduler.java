@@ -20,8 +20,12 @@ public class TripLifecycleScheduler {
     }
 
     @Scheduled(cron = "${app.trip-lifecycle.completion-cron:0 */5 * * * *}")
-    public void completeDueDepartures() {
+    public void runLifecycleJobs() {
         try {
+            int started = tourManifestService.autoStartDueDepartures();
+            if (started > 0) {
+                log.info("Auto-started {} departure(s)", started);
+            }
             int completed = tourManifestService.completeDueDepartures();
             if (completed > 0) {
                 log.info("Auto-completed {} departure(s)", completed);

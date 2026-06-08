@@ -43,7 +43,7 @@
             <p class="text-muted small mb-0">
                 <span th:text="${#temporals.format(fromDate, 'dd/MM/yyyy')}">01/06/2026</span>
                 - <span th:text="${#temporals.format(toDate, 'dd/MM/yyyy')}">07/06/2026</span>
-                · Mở manifest để điểm danh, xem điểm đón và cập nhật trạng thái đoàn.
+                · Mở danh sách khách để điểm danh, xem điểm đón và cập nhật trạng thái đoàn.
             </p>
         </div>
         <a th:href="@{/staff/scan}" class="btn btn-guide rounded-pill px-4">
@@ -84,8 +84,9 @@
                         <div class="text-end">
                             <span th:if="${d.ngay.equals(today)}" class="badge rounded-pill text-bg-warning text-dark mb-1">Hôm nay</span>
                             <span class="badge rounded-pill status-pill d-block"
-                              th:classappend="${d.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${d.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
-                              th:text="${d.trangThaiDoanEnum.label}">Sắp khởi hành</span>
+                              th:with="depStatus=${T(edu.bookingtour.util.DepartureStatusUtil).effectiveStatus(d, T(java.time.LocalDateTime).now())}"
+                              th:classappend="${T(edu.bookingtour.util.DepartureStatusUtil).badgeClass(depStatus)}"
+                              th:text="${depStatus.label}">Sắp diễn ra</span>
                         </div>
                     </div>
                     <h3 class="h5 fw-bold mb-3" th:text="${d.chuyenDi.tieuDe}">Tour</h3>

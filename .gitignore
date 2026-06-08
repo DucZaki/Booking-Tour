@@ -36,6 +36,7 @@ build/
 application-local.properties
 railway.raw.env
 .env
+!.env.example
 *.db
 scripts/exports/
 .jdk/

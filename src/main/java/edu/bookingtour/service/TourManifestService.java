@@ -8,12 +8,12 @@ import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.DatChoRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
 import edu.bookingtour.repo.NguoiDungRepository;
+import edu.bookingtour.util.DepartureStatusUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,17 +109,64 @@ public class TourManifestService {
     }
 
     @Transactional
+    public NgayKhoiHanh startDeparture(NguoiDung actor, Integer nkhId) {
+        return updateDepartureStatus(actor, nkhId, TrangThaiDoan.IN_PROGRESS, false);
+    }
+
+    @Transactional
+    public NgayKhoiHanh completeDeparture(NguoiDung actor, Integer nkhId, boolean confirmEarlyEnd) {
+        return updateDepartureStatus(actor, nkhId, TrangThaiDoan.COMPLETED, confirmEarlyEnd);
+    }
+
+    @Transactional
     public NgayKhoiHanh updateDepartureStatus(NguoiDung actor, Integer nkhId, TrangThaiDoan status) {
+        return updateDepartureStatus(actor, nkhId, status, false);
+    }
+
+    @Transactional
+    public NgayKhoiHanh updateDepartureStatus(NguoiDung actor, Integer nkhId, TrangThaiDoan status,
+            boolean confirmEarlyEnd) {
         NgayKhoiHanh nkh = ngayKhoiHanhRepository.findByIdWithDetails(nkhId)
                 .orElseThrow(() -> new IllegalArgumentException("Ngày khởi hành không tồn tại"));
         if (!canAccessDeparture(actor, nkh)) {
             throw new IllegalArgumentException("Bạn không được phân công đoàn này");
         }
         TrangThaiDoan previous = nkh.getTrangThaiDoanEnum();
+        if (status == null) {
+            throw new IllegalArgumentException("Trạng thái không hợp lệ");
+        }
+        DepartureStatusUtil.assertForwardTransition(previous, status);
+
+        LocalDateTime now = LocalDateTime.now();
+        if (status == TrangThaiDoan.COMPLETED && !DepartureStatusUtil.isPastEnd(nkh, now) && !confirmEarlyEnd) {
+            throw new IllegalArgumentException(
+                    "Theo lịch trình tour vẫn đang diễn ra. Vui lòng xác nhận lần nữa nếu bạn chắc chắn muốn kết thúc sớm.");
+        }
+
         nkh.setTrangThaiDoanEnum(status);
+        if (status == TrangThaiDoan.IN_PROGRESS && nkh.getThoiDiemBatDau() == null) {
+            nkh.setThoiDiemBatDau(now);
+        }
         NgayKhoiHanh saved = ngayKhoiHanhRepository.save(nkh);
         handleLifecycleNotices(saved, previous, status);
         return saved;
+    }
+
+    @Transactional
+    public int autoStartDueDepartures() {
+        LocalDateTime now = LocalDateTime.now();
+        int started = 0;
+        for (NgayKhoiHanh nkh : ngayKhoiHanhRepository.findScheduledReadyForAutoStart(now.toLocalDate())) {
+            if (DepartureStatusUtil.isStartTimeReached(nkh, now)) {
+                TrangThaiDoan previous = nkh.getTrangThaiDoanEnum();
+                nkh.setTrangThaiDoanEnum(TrangThaiDoan.IN_PROGRESS);
+                nkh.setThoiDiemBatDau(now);
+                NgayKhoiHanh saved = ngayKhoiHanhRepository.save(nkh);
+                handleLifecycleNotices(saved, previous, TrangThaiDoan.IN_PROGRESS);
+                started++;
+            }
+        }
+        return started;
     }
 
     @Transactional
@@ -127,12 +174,11 @@ public class TourManifestService {
         LocalDateTime now = LocalDateTime.now();
         int completed = 0;
         for (NgayKhoiHanh nkh : ngayKhoiHanhRepository.findInProgressDueForCompletion(now.toLocalDate())) {
-            LocalDate endDate = nkh.getNgayVe() != null ? nkh.getNgayVe() : nkh.getNgay();
-            LocalTime endTime = parseTimeOrDefault(nkh.getGioDenVe(), LocalTime.of(23, 59));
-            if (endDate != null && !LocalDateTime.of(endDate, endTime).isAfter(now)) {
+            if (DepartureStatusUtil.isPastEnd(nkh, now)) {
+                TrangThaiDoan previous = nkh.getTrangThaiDoanEnum();
                 nkh.setTrangThaiDoanEnum(TrangThaiDoan.COMPLETED);
                 NgayKhoiHanh saved = ngayKhoiHanhRepository.save(nkh);
-                notifyTripCompleted(saved);
+                handleLifecycleNotices(saved, previous, TrangThaiDoan.COMPLETED);
                 completed++;
             }
         }
@@ -171,17 +217,6 @@ public class TourManifestService {
                     datChoRepository.save(booking);
                 }
             }
-        }
-    }
-
-    private LocalTime parseTimeOrDefault(String raw, LocalTime fallback) {
-        if (raw == null || raw.isBlank()) {
-            return fallback;
-        }
-        try {
-            return LocalTime.parse(raw.trim());
-        } catch (Exception ex) {
-            return fallback;
         }
     }
 

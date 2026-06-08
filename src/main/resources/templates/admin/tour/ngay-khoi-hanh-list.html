@@ -113,8 +113,8 @@
                         });
                     </script>
                     <small class="text-muted mt-3 d-block">
-                        <i class="bi bi-info-circle me-1"></i> Đối với tour Máy bay: hệ thống tự fetch giá Amadeus. Đối
-                        với tour Bus: giá mặc định 300,000đ.
+                        <i class="bi bi-info-circle me-1"></i> Giá vé tour Máy bay do Admin cấu hình trước cho đoàn
+                        (mặc định sức chứa 50 vé). User chỉ thấy giá vé đã cấu hình, không gọi API lấy giá vé.
                     </small>
                 </div>
             </div>
@@ -130,9 +130,9 @@
 
             <div class="d-flex justify-content-end mb-3" th:unless="${#lists.isEmpty(danhSach)}">
                 <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/sync-all'}" method="post"
-                    onsubmit="return confirm('Đồng bộ lại vé theo tất cả điểm đón? Có thể mất vài phút.');">
+                        onsubmit="return confirm('Đồng bộ lại cấu hình vé theo tất cả điểm đón?');">
                     <button type="submit" class="btn btn-outline-secondary btn-sm">
-                        <i class="bi bi-arrow-repeat"></i> Đồng bộ vé theo điểm đón
+                        <i class="bi bi-arrow-repeat"></i> Đồng bộ cấu hình vé theo điểm đón
                     </button>
                 </form>
             </div>
@@ -251,7 +251,7 @@
                                             </form>
                                             <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/diem-don/' + ${row.id} + '/refresh'}"
                                                 method="post" class="d-inline">
-                                                <button type="submit" class="btn btn-sm btn-outline-info" title="Làm mới Amadeus">
+                                                <button type="submit" class="btn btn-sm btn-outline-info" title="Admin làm mới giá vé">
                                                     <i class="bi bi-arrow-clockwise"></i>
                                                 </button>
                                             </form>

@@ -69,8 +69,10 @@
                                         <label class="form-label">Điểm xuất phát <span class="text-danger">*</span></label>
                                         <select class="form-select" name="departureId" id="departureIdSelect" required>
                                             <option th:each="dd : ${departureOptions}"
+                                                th:with="row=${departureQuoteRows != null ? departureQuoteRows[dd.id] : null}"
                                                 th:value="${dd.id}"
                                                 th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
+                                                th:attr="data-name=${dd.ten},data-ticket-outbound=${row != null and row.giaVeDi != null ? row.giaVeDi : 0},data-ticket-return=${row != null and row.giaVeVe != null ? row.giaVeVe : 0},data-code-outbound=${row != null and row.maChuyenBayDi != null ? row.maChuyenBayDi : (nkh.maChuyenBayDi != null ? nkh.maChuyenBayDi : 'N/A')},data-time-outbound=${row != null and row.gioBayDi != null ? row.gioBayDi : (nkh.gioBayDi != null ? nkh.gioBayDi : 'N/A')},data-time-outbound-arrive=${row != null and row.gioDenDi != null ? row.gioDenDi : (nkh.gioDenDi != null ? nkh.gioDenDi : 'N/A')},data-code-return=${row != null and row.maChuyenBayVe != null ? row.maChuyenBayVe : (nkh.maChuyenBayVe != null ? nkh.maChuyenBayVe : 'N/A')},data-time-return=${row != null and row.gioBayVe != null ? row.gioBayVe : (nkh.gioBayVe != null ? nkh.gioBayVe : 'N/A')},data-time-return-arrive=${row != null and row.gioDenVe != null ? row.gioDenVe : (nkh.gioDenVe != null ? nkh.gioDenVe : 'N/A')}"
                                                 th:text="${dd.ten}"></option>
                                         </select>
                                         <div id="departureError" class="small text-danger mt-1"
@@ -236,6 +238,10 @@
                                             <span class="dot"></span>
                                         </div>
                                         <div class="booking-flight-code" id="codeOutbound" th:text="${initialQuote != null and initialQuote.available ? initialQuote.maChuyenBayDi : (nkh.maChuyenBayDi ?: 'N/A')}"></div>
+                                        <div class="booking-flight-duration" id="durationOutbound"
+                                             th:text="${T(edu.bookingtour.util.DepartureTimeUtil).formatFlightDuration(
+                                                 initialQuote != null and initialQuote.available ? initialQuote.gioBayDi : nkh.gioBayDi,
+                                                 initialQuote != null and initialQuote.available ? initialQuote.gioDenDi : nkh.gioDenDi)}"></div>
                                     </div>
                                     <div class="booking-flight-point text-md-end">
                                         <div class="booking-flight-time" id="timeOutboundArrive" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioDenDi : (nkh.gioDenDi ?: 'N/A')}"></div>
@@ -268,6 +274,10 @@
                                             <span class="dot"></span>
                                         </div>
                                         <div class="booking-flight-code" id="codeReturn" th:text="${initialQuote != null and initialQuote.available ? initialQuote.maChuyenBayVe : (nkh.maChuyenBayVe ?: 'N/A')}"></div>
+                                        <div class="booking-flight-duration" id="durationReturn"
+                                             th:text="${T(edu.bookingtour.util.DepartureTimeUtil).formatFlightDuration(
+                                                 initialQuote != null and initialQuote.available ? initialQuote.gioBayVe : nkh.gioBayVe,
+                                                 initialQuote != null and initialQuote.available ? initialQuote.gioDenVe : nkh.gioDenVe)}"></div>
                                     </div>
                                     <div class="booking-flight-point text-md-end">
                                         <div class="booking-flight-time" id="timeReturnArrive" th:text="${initialQuote != null and initialQuote.available ? initialQuote.gioDenVe : (nkh.gioDenVe ?: 'N/A')}"></div>
@@ -515,6 +525,26 @@
                     if (el) el.textContent = value;
                 }
 
+                function formatFlightDuration(depart, arrive) {
+                    if (!depart || !arrive || depart === 'N/A' || arrive === 'N/A') return '';
+                    var parse = function (t) {
+                        var p = String(t).trim().match(/^(\d{1,2}):(\d{2})/);
+                        if (!p) return -1;
+                        return parseInt(p[1], 10) * 60 + parseInt(p[2], 10);
+                    };
+                    var d = parse(depart);
+                    var a = parse(arrive);
+                    if (d < 0 || a < 0) return '';
+                    var mins = a - d;
+                    if (mins < 0) mins += 24 * 60;
+                    if (mins <= 0) return '';
+                    var h = Math.floor(mins / 60);
+                    var m = mins % 60;
+                    if (h > 0 && m > 0) return h + 'g ' + m + 'p';
+                    if (h > 0) return h + 'g';
+                    return m + 'p';
+                }
+
                 function applyQuote(q) {
                     if (!q || !q.available) return;
                     unitPrice = q.unitPrice;
@@ -533,9 +563,11 @@
                     setText('timeOutboundGo', q.gioBayDi);
                     setText('timeOutboundArrive', q.gioDenDi);
                     setText('codeOutbound', q.maChuyenBayDi);
+                    setText('durationOutbound', formatFlightDuration(q.gioBayDi, q.gioDenDi));
                     setText('timeReturnGo', q.gioBayVe);
                     setText('timeReturnArrive', q.gioDenVe);
                     setText('codeReturn', q.maChuyenBayVe);
+                    setText('durationReturn', formatFlightDuration(q.gioBayVe, q.gioDenVe));
                     if (flightFromGo) flightFromGo.textContent = q.diemDonTen;
                     if (flightToBack) flightToBack.textContent = q.diemDonTen;
                     if (sidebarText) sidebarText.textContent = q.diemDonTen;
@@ -543,6 +575,27 @@
                     document.getElementById('discountLine').classList.add('d-none');
                     document.getElementById('promoMessage').textContent = '';
                     recalcTotal();
+                }
+
+                function quoteFromSelectedDeparture() {
+                    if (!depSelect || depSelect.selectedIndex < 0) return null;
+                    var opt = depSelect.options[depSelect.selectedIndex];
+                    var outbound = parseFloat(opt.getAttribute('data-ticket-outbound')) || 0;
+                    var ret = parseFloat(opt.getAttribute('data-ticket-return')) || 0;
+                    return {
+                        available: true,
+                        diemDonTen: opt.getAttribute('data-name') || opt.textContent,
+                        giaTour: tourPrice,
+                        giaVeDi: outbound,
+                        giaVeVe: ret,
+                        unitPrice: tourPrice + outbound + ret,
+                        maChuyenBayDi: opt.getAttribute('data-code-outbound') || 'N/A',
+                        gioBayDi: opt.getAttribute('data-time-outbound') || 'N/A',
+                        gioDenDi: opt.getAttribute('data-time-outbound-arrive') || 'N/A',
+                        maChuyenBayVe: opt.getAttribute('data-code-return') || 'N/A',
+                        gioBayVe: opt.getAttribute('data-time-return') || 'N/A',
+                        gioDenVe: opt.getAttribute('data-time-return-arrive') || 'N/A'
+                    };
                 }
 
                 function isVietnamAirlines() {
@@ -588,22 +641,8 @@
                 function loadQuote(refresh) {
                     if (!depSelect || !depSelect.value) return;
                     if (!validateDepartureSelection()) return;
-                    var url = '/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId
-                        + '&diemDonId=' + encodeURIComponent(depSelect.value)
-                        + (refresh ? '&refresh=true' : '');
-                    fetch(url)
-                        .then(function (r) { return r.json(); })
-                        .then(function (q) {
-                            if (q.available) {
-                                showDepartureError('');
-                                applyQuote(q);
-                            } else {
-                                showDepartureError(q.message || departureInvalidMsg);
-                            }
-                        })
-                        .catch(function () {
-                            showDepartureError('Lỗi tải thông tin vé');
-                        });
+                    showDepartureError('');
+                    applyQuote(quoteFromSelectedDeparture());
                 }
 
                 if (depSelect) {

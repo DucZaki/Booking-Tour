@@ -161,8 +161,10 @@
                                     <select id="summaryDepartureSelect" class="form-select form-select-sm"
                                             th:attr="data-tour-id=${id.id},data-nkh-id=${selectedNkh.id},data-gia-tour=${id.gia != null ? id.gia.doubleValue() : 0},data-airline=${id.idPhuongTien != null and id.idPhuongTien.hang != null ? id.idPhuongTien.hang : ''},data-domestic=${id.idDiemDen == null or id.idDiemDen.quocGia == null or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'việt') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'viet') or #strings.containsIgnoreCase(id.idDiemDen.quocGia, 'vn')},data-single-room=${singleRoomSurcharge}">
                                         <option th:each="dd : ${departureOptions}"
+                                                th:with="row=${departureQuoteRows != null ? departureQuoteRows[dd.id] : null}"
                                                 th:value="${dd.id}"
                                                 th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
+                                                th:attr="data-name=${dd.ten},data-ticket-outbound=${row != null and row.giaVeDi != null ? row.giaVeDi : 0},data-ticket-return=${row != null and row.giaVeVe != null ? row.giaVeVe : 0},data-code-outbound=${row != null and row.maChuyenBayDi != null ? row.maChuyenBayDi : (selectedNkh.maChuyenBayDi != null ? selectedNkh.maChuyenBayDi : 'N/A')},data-time-outbound=${row != null and row.gioBayDi != null ? row.gioBayDi : (selectedNkh.gioBayDi != null ? selectedNkh.gioBayDi : 'N/A')},data-time-outbound-arrive=${row != null and row.gioDenDi != null ? row.gioDenDi : (selectedNkh.gioDenDi != null ? selectedNkh.gioDenDi : 'N/A')},data-code-return=${row != null and row.maChuyenBayVe != null ? row.maChuyenBayVe : (selectedNkh.maChuyenBayVe != null ? selectedNkh.maChuyenBayVe : 'N/A')},data-time-return=${row != null and row.gioBayVe != null ? row.gioBayVe : (selectedNkh.gioBayVe != null ? selectedNkh.gioBayVe : 'N/A')},data-time-return-arrive=${row != null and row.gioDenVe != null ? row.gioDenVe : (selectedNkh.gioDenVe != null ? selectedNkh.gioDenVe : 'N/A')}"
                                                 th:text="${dd.ten}"></option>
                                     </select>
                                     <div id="departureError" class="small text-danger mt-1" style="display:none;"></div>
@@ -938,6 +940,26 @@
                         return Array.isArray(source) && source.indexOf(id) >= 0;
                     }
 
+                    function quoteFromSelectedDeparture() {
+                        const opt = departureSelect.options[departureSelect.selectedIndex];
+                        const outbound = parseFloat(opt.getAttribute('data-ticket-outbound') || '0');
+                        const ret = parseFloat(opt.getAttribute('data-ticket-return') || '0');
+                        return {
+                            available: true,
+                            diemDonTen: opt.getAttribute('data-name') || opt.textContent,
+                            giaTour: giaTour,
+                            giaVeDi: outbound,
+                            giaVeVe: ret,
+                            unitPrice: giaTour + outbound + ret,
+                            maChuyenBayDi: opt.getAttribute('data-code-outbound') || 'N/A',
+                            gioBayDi: opt.getAttribute('data-time-outbound') || 'N/A',
+                            gioDenDi: opt.getAttribute('data-time-outbound-arrive') || 'N/A',
+                            maChuyenBayVe: opt.getAttribute('data-code-return') || 'N/A',
+                            gioBayVe: opt.getAttribute('data-time-return') || 'N/A',
+                            gioDenVe: opt.getAttribute('data-time-return-arrive') || 'N/A'
+                        };
+                    }
+
                     function loadQuote() {
                         const departureId = departureSelect.value;
                         if (!departureId) return;
@@ -945,27 +967,8 @@
                             showDepartureError(departureInvalidMsg);
                             return;
                         }
-                        if (quoteCache[departureId]) {
-                            if (quoteCache[departureId].available) {
-                                showDepartureError('');
-                                applyQuote(quoteCache[departureId]);
-                            } else {
-                                showDepartureError(quoteCache[departureId].message || departureInvalidMsg);
-                            }
-                            return;
-                        }
-                        fetch('/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId + '&diemDonId=' + encodeURIComponent(departureId))
-                            .then(r => r.json())
-                            .then(q => {
-                                quoteCache[departureId] = q;
-                                if (q.available) {
-                                    showDepartureError('');
-                                    applyQuote(q);
-                                } else {
-                                    showDepartureError(q.message || departureInvalidMsg);
-                                }
-                            })
-                            .catch(() => showDepartureError('Lỗi tải thông tin vé'));
+                        showDepartureError('');
+                        applyQuote(quoteFromSelectedDeparture());
                     }
 
                     departureSelect.addEventListener('change', loadQuote);

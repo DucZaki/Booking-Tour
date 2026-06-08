@@ -6,6 +6,7 @@ import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.entity.TrangThaiDoan;
+import edu.bookingtour.util.DepartureStatusUtil;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.repo.DatChoRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
@@ -67,6 +68,7 @@ public class GuideDemoSeedRunner implements ApplicationRunner {
         };
 
         LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < guides.length; i++) {
             NguoiDung guide = upsertGuide(guides[i]);
             ChuyenDi tour = tours.get(i);
@@ -74,7 +76,13 @@ public class GuideDemoSeedRunner implements ApplicationRunner {
             NgayKhoiHanh departure = ngayKhoiHanhRepository.findByChuyenDiIdAndNgay(tour.getId(), today.plusDays(dayOffset))
                     .orElseGet(() -> createDeparture(tour, today.plusDays(dayOffset)));
             departure.setGuide(guide);
-            departure.setTrangThaiDoanEnum(TrangThaiDoan.IN_PROGRESS);
+            if (DepartureStatusUtil.isStartTimeReached(departure, now)) {
+                departure.setTrangThaiDoanEnum(TrangThaiDoan.IN_PROGRESS);
+                departure.setThoiDiemBatDau(now);
+            } else {
+                departure.setTrangThaiDoanEnum(TrangThaiDoan.SCHEDULED);
+                departure.setThoiDiemBatDau(null);
+            }
             departure = ngayKhoiHanhRepository.save(departure);
 
             if (datChoRepository.findPaidManifestByNgayKhoiHanh(departure.getId()).isEmpty()) {
@@ -113,7 +121,7 @@ public class GuideDemoSeedRunner implements ApplicationRunner {
         departure.setMaChuyenBayVe("VN" + (820 + date.getDayOfMonth()));
         departure.setGioBayVe("18:20");
         departure.setGioDenVe("20:05");
-        departure.setTrangThaiDoanEnum(TrangThaiDoan.IN_PROGRESS);
+        departure.setTrangThaiDoanEnum(TrangThaiDoan.SCHEDULED);
         return departure;
     }
 

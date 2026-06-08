@@ -8,6 +8,7 @@ import edu.bookingtour.entity.TrangThaiDoan;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Component("bookingView")
@@ -34,7 +35,7 @@ public class BookingViewHelper {
             return Optional.empty();
         }
         CheckInStatus checkIn = booking.getCheckinStatusEnum();
-        TrangThaiDoan tripStatus = nkh.getTrangThaiDoanEnum();
+        TrangThaiDoan tripStatus = DepartureStatusUtil.effectiveStatus(nkh, LocalDateTime.now());
         if (tripStatus == TrangThaiDoan.COMPLETED) {
             return Optional.of(TripOutcome.COMPLETED);
         }

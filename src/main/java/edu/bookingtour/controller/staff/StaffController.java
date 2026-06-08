@@ -9,6 +9,7 @@ import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.LichTrinhRepository;
 import edu.bookingtour.service.CheckInService;
 import edu.bookingtour.service.TourManifestService;
+import edu.bookingtour.util.DepartureStatusUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -59,11 +61,12 @@ public class StaffController {
         long todayDepartures = departures.stream()
                 .filter(d -> today.equals(d.getNgay()))
                 .count();
+        LocalDateTime now = LocalDateTime.now();
         long activeDepartures = departures.stream()
-                .filter(d -> d.getTrangThaiDoanEnum() == TrangThaiDoan.IN_PROGRESS)
+                .filter(d -> DepartureStatusUtil.effectiveStatus(d, now) == TrangThaiDoan.IN_PROGRESS)
                 .count();
         long upcomingDepartures = departures.stream()
-                .filter(d -> d.getTrangThaiDoanEnum() == TrangThaiDoan.SCHEDULED)
+                .filter(d -> DepartureStatusUtil.effectiveStatus(d, now) == TrangThaiDoan.SCHEDULED)
                 .count();
         model.addAttribute("guide", guide);
         model.addAttribute("departures", departures);
@@ -110,8 +113,9 @@ public class StaffController {
         model.addAttribute("keyword", q != null ? q : "");
         model.addAttribute("statuses", CheckInStatus.values());
         model.addAttribute("groupStatuses", TrangThaiDoan.values());
+        model.addAttribute("departureEndAt", DepartureStatusUtil.departureEndDateTime(nkh));
         model.addAttribute("activeOpsNav", "manifest");
-        model.addAttribute("pageTitle", "Manifest");
+        model.addAttribute("pageTitle", "Danh sách khách");
         return "staff/manifest";
     }
 
@@ -147,13 +151,22 @@ public class StaffController {
 
     @PostMapping("/departures/{nkhId}/status")
     public String updateGroupStatus(@PathVariable Integer nkhId,
-            @RequestParam TrangThaiDoan status,
+            @RequestParam String action,
+            @RequestParam(defaultValue = "false") boolean confirmEarlyEnd,
             @AuthenticationPrincipal UserDetails userDetails,
             RedirectAttributes redirectAttributes) {
         NguoiDung guide = requireGuide(userDetails);
         try {
-            tourManifestService.updateDepartureStatus(guide, nkhId, status);
-            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật trạng thái đoàn: " + status.getLabel());
+            TrangThaiDoan result;
+            if ("start".equalsIgnoreCase(action)) {
+                result = tourManifestService.startDeparture(guide, nkhId).getTrangThaiDoanEnum();
+                redirectAttributes.addFlashAttribute("successMessage", "Đã bắt đầu chuyến đi — trạng thái: " + result.getLabel());
+            } else if ("complete".equalsIgnoreCase(action)) {
+                result = tourManifestService.completeDeparture(guide, nkhId, confirmEarlyEnd).getTrangThaiDoanEnum();
+                redirectAttributes.addFlashAttribute("successMessage", "Đã kết thúc chuyến đi — trạng thái: " + result.getLabel());
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Thao tác không hợp lệ.");
+            }
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }

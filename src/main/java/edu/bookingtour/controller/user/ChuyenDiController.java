@@ -159,6 +159,7 @@ public class ChuyenDiController {
             if (selectedNkh != null) {
                 selectedDepartureId = ngayKhoiHanhDiemDonService.resolveDefaultDepartureId(departureOptions, selectedNkh.getId());
                 flightPrice = selectedNkh.getTongGiaVe();
+                model.addAttribute("departureQuoteRows", quoteRowsByDeparture(selectedNkh.getId()));
                 if (selectedDepartureId != null) {
                     edu.bookingtour.dto.FlightQuoteResponse initialQuote = ngayKhoiHanhDiemDonService
                             .getQuote(selectedNkh.getId(), selectedDepartureId, false);
@@ -280,6 +281,7 @@ public class ChuyenDiController {
         model.addAttribute("departureOptions", departureOptions);
         model.addAttribute("selectedDepartureId", selectedDepartureId);
         model.addAttribute("activeDepartureIds", activeDepartureIds);
+        model.addAttribute("departureQuoteRows", quoteRowsByDeparture(nkhId));
 
         // Tự điền thông tin user nếu đã đăng nhập
         if (principal != null) {
@@ -291,5 +293,18 @@ public class ChuyenDiController {
         }
 
         return "chuyendi/dat-tour";
+    }
+
+    private Map<Integer, NgayKhoiHanhDiemDon> quoteRowsByDeparture(Integer nkhId) {
+        Map<Integer, NgayKhoiHanhDiemDon> rows = new java.util.HashMap<>();
+        if (nkhId == null) {
+            return rows;
+        }
+        for (NgayKhoiHanhDiemDon row : ngayKhoiHanhDiemDonService.findByNgayKhoiHanhId(nkhId)) {
+            if (row.getDiemDon() != null && row.getDiemDon().getId() != null) {
+                rows.put(row.getDiemDon().getId(), row);
+            }
+        }
+        return rows;
     }
 }

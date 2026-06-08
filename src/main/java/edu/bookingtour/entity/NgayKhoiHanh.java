@@ -77,6 +77,10 @@ public class NgayKhoiHanh {
     @Column(name = "trang_thai_doan", length = 30, nullable = false)
     private String trangThaiDoan = TrangThaiDoan.SCHEDULED.name();
 
+    /** Thời điểm bắt đầu thực tế (staff/admin hoặc job tự động). */
+    @Column(name = "thoi_diem_bat_dau")
+    private LocalDateTime thoiDiemBatDau;
+
     public TrangThaiDoan getTrangThaiDoanEnum() {
         return TrangThaiDoan.fromDb(trangThaiDoan);
     }

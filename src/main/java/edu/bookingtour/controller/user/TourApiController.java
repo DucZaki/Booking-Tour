@@ -93,7 +93,7 @@ public class TourApiController {
         if (tour == null) {
             return ResponseEntity.notFound().build();
         }
-        FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, diemDonId, refresh);
+        FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, diemDonId, false);
         if (!quote.isAvailable()) {
             return ResponseEntity.badRequest().body(quote);
         }

@@ -1636,6 +1636,13 @@ a:hover {
     letter-spacing: 0.02em;
 }
 
+.booking-flight-duration {
+    margin-top: 4px;
+    font-size: 0.78rem;
+    color: rgba(26, 28, 30, 0.45);
+    font-weight: 700;
+}
+
 @media (max-width: 768px) {
     .booking-card-header {
         padding: 10px 12px;
@@ -1690,6 +1697,10 @@ a:hover {
 [data-theme="dark"] .booking-flight-place,
 [data-theme="dark"] .booking-flight-code {
     color: rgba(255, 255, 255, 0.62);
+}
+
+[data-theme="dark"] .booking-flight-duration {
+    color: rgba(255, 255, 255, 0.45);
 }
 
 [data-theme="dark"] .booking-flight-line .dot {

@@ -7,7 +7,7 @@ public enum TrangThaiDoan {
 
     public String getLabel() {
         return switch (this) {
-            case SCHEDULED -> "Sắp khởi hành";
+            case SCHEDULED -> "Sắp diễn ra";
             case IN_PROGRESS -> "Đang diễn ra";
             case COMPLETED -> "Đã hoàn thành";
         };

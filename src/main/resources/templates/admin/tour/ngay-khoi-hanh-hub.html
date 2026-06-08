@@ -23,7 +23,7 @@
                     <strong th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></strong>
                     <span class="mx-1">→</span>
                     <span th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : '—'}"></span>
-                    <span class="badge bg-dark ms-2" th:text="'Tập trung ' + ${nkh.gioTapTrung}"></span>
+                    <span class="badge bg-dark ms-2" th:text="${'Tập trung ' + nkh.gioTapTrung}"></span>
                     <span class="badge ms-1"
                           th:classappend="${nkh.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
                           th:text="${nkh.trangThaiDoanEnum.label}"></span>
@@ -73,7 +73,7 @@
             <div class="col-6 col-md-3">
                 <div class="card border-0 shadow-sm text-center py-3">
                     <div class="fs-4 fw-bold" th:if="${capacity != null}"
-                         th:text="${capacity.booked} + '/' + ${capacity.capacity}">0/50</div>
+                         th:text="${capacity.booked + '/' + capacity.capacity}">0/50</div>
                     <div class="small text-muted">Đã đặt / Sức chứa</div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                             <a th:href="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/quan-ly(tid=${tour.id}, nid=${nkh.id}, tab='khach')}"
                                class="btn btn-outline-dark btn-sm text-start"><i class="bi bi-people me-2"></i>Xem danh sách khách</a>
                             <a th:href="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/manifest.csv(tid=${tour.id}, nid=${nkh.id})}"
-                               class="btn btn-outline-dark btn-sm text-start"><i class="bi bi-download me-2"></i>Xuất manifest CSV</a>
+                               class="btn btn-outline-dark btn-sm text-start"><i class="bi bi-download me-2"></i>Xuất danh sách khách CSV</a>
                             <a th:href="@{/staff/departures/{nid}/manifest(nid=${nkh.id})}" target="_blank"
                                class="btn btn-outline-dark btn-sm text-start"><i class="bi bi-phone me-2"></i>Mở giao diện Staff</a>
                             <a th:href="@{/admin/tour/{tid}/ngay-khoi-hanh/edit/{nid}(tid=${tour.id}, nid=${nkh.id})}"
@@ -157,7 +157,7 @@
         <!-- TAB: Khách -->
         <div th:if="${tab == 'khach'}" class="card shadow-sm border-0">
             <div class="card-header bg-white border-0 d-flex flex-wrap justify-content-between align-items-center gap-2 pt-3">
-                <h5 class="fw-bold mb-0">Manifest khách</h5>
+                <h5 class="fw-bold mb-0">Danh sách khách</h5>
                 <form method="get" class="d-flex gap-2">
                     <input type="hidden" name="tab" value="khach"/>
                     <input type="search" name="q" class="form-control form-control-sm" placeholder="Tên, SĐT, mã đơn..."
@@ -183,7 +183,7 @@
                         </thead>
                         <tbody>
                         <tr th:each="b : ${bookings}">
-                            <td class="fw-bold" th:text="'#' + ${b.id}"></td>
+                            <td class="fw-bold" th:text="${'#' + b.id}"></td>
                             <td th:text="${b.hoTen}"></td>
                             <td th:text="${b.soDienThoai}"></td>
                             <td th:text="${b.soLuong}"></td>
@@ -224,7 +224,7 @@
                     <div class="card-body">
                         <img th:src="@{${tour.hinhAnh}}" class="img-fluid rounded mb-3 w-100" style="max-height:220px;object-fit:cover;" alt="">
                         <h5 class="fw-bold" th:text="${tour.tieuDe}"></h5>
-                        <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(tour.gia,0,'COMMA',0,'POINT')} + ' ₫'"></p>
+                        <p class="text-danger fw-bold" th:text="${#numbers.formatDecimal(tour.gia,0,'COMMA',0,'POINT') + ' ₫'}"></p>
                         <p class="small text-muted" th:text="${tour.moTa}"></p>
                         <a th:href="@{/admin/tour/detail/{id}(id=${tour.id})}" class="btn btn-sm btn-outline-primary">Sửa tour & lịch trình</a>
                         <a th:href="@{/tour/{id}(id=${tour.id})}" target="_blank" class="btn btn-sm btn-outline-secondary">Xem trang công khai</a>
@@ -235,8 +235,8 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="fw-bold mb-3">Lịch trình tour</h5>
-                        <div th:if="${#lists.isEmpty(itinerary)}" class="text-muted">Chưa có lịch trình.</div>
-                        <div th:each="lt : ${itinerary}" class="border rounded p-3 mb-2">
+                        <div th:if="${itinerary == null or #lists.isEmpty(itinerary)}" class="text-muted">Chưa có lịch trình.</div>
+                        <div th:each="lt : ${itinerary != null ? itinerary : T(java.util.Collections).emptyList()}" class="border rounded p-3 mb-2">
                             <div class="fw-bold text-primary">Ngày <span th:text="${lt.ngayThu}"></span> — <span th:text="${lt.tieuDe}"></span></div>
                             <div class="small text-muted" th:if="${lt.hoatDongChinh}" th:text="${lt.hoatDongChinh}"></div>
                             <div class="small" th:if="${lt.soBuaAn}"><i class="bi bi-cup-hot"></i> <span th:text="${lt.soBuaAn}"></span></div>
@@ -281,7 +281,7 @@
                         <h5 class="fw-bold mb-3">Khu vực Staff</h5>
                         <p class="small text-muted">HDV đăng nhập role GUIDE sẽ thấy đoàn này trên dashboard Staff nếu được phân công.</p>
                         <a th:href="@{/staff/departures/{nid}/manifest(nid=${nkh.id})}" target="_blank" class="btn btn-dark btn-sm">
-                            <i class="bi bi-box-arrow-up-right me-1"></i> Mở manifest Staff
+                            <i class="bi bi-box-arrow-up-right me-1"></i> Mở danh sách khách Staff
                         </a>
                     </div>
                 </div>
@@ -317,7 +317,7 @@
                             <td th:text="${row.gioBayDi != null ? row.gioBayDi : '—'}"></td>
                             <td th:text="${row.giaVeDi != null ? #numbers.formatDecimal(row.giaVeDi,0,'COMMA',0,'POINT') + ' ₫' : '—'}"></td>
                             <td th:text="${row.giaVeVe != null ? #numbers.formatDecimal(row.giaVeVe,0,'COMMA',0,'POINT') + ' ₫' : '—'}"></td>
-                            <td class="fw-bold" th:text="${#numbers.formatDecimal(row.tongGiaVe,0,'COMMA',0,'POINT')} + ' ₫'"></td>
+                            <td class="fw-bold" th:text="${#numbers.formatDecimal(row.tongGiaVe,0,'COMMA',0,'POINT') + ' ₫'}"></td>
                         </tr>
                         </tbody>
                     </table>

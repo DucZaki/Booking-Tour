@@ -85,4 +85,51 @@ public final class DepartureTimeUtil {
         LocalDate date = departureDate != null ? departureDate : LocalDate.now();
         return LocalDateTime.of(date, parseTime(gatheringTime));
     }
+
+    /** Parse HH:mm; trả null nếu N/A hoặc không hợp lệ (dùng hiển thị, không fallback 06:00). */
+    public static LocalTime parseTimeOrNull(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        String trimmed = raw.trim();
+        if ("N/A".equalsIgnoreCase(trimmed)) {
+            return null;
+        }
+        try {
+            if (HH_MM.matcher(trimmed).matches()) {
+                return LocalTime.parse(trimmed, HH_MM_FMT);
+            }
+            if (trimmed.length() >= 5 && trimmed.charAt(2) == ':') {
+                return LocalTime.parse(trimmed.substring(0, 5));
+            }
+        } catch (DateTimeParseException ignored) {
+            return null;
+        }
+        return null;
+    }
+
+    /** Thời lượng bay/xe giữa hai mốc HH:mm — ví dụ "2g 10p". */
+    public static String formatFlightDuration(String depart, String arrive) {
+        LocalTime d = parseTimeOrNull(depart);
+        LocalTime a = parseTimeOrNull(arrive);
+        if (d == null || a == null) {
+            return "";
+        }
+        int mins = a.toSecondOfDay() / 60 - d.toSecondOfDay() / 60;
+        if (mins < 0) {
+            mins += 24 * 60;
+        }
+        if (mins <= 0) {
+            return "";
+        }
+        int h = mins / 60;
+        int m = mins % 60;
+        if (h > 0 && m > 0) {
+            return h + "g " + m + "p";
+        }
+        if (h > 0) {
+            return h + "g";
+        }
+        return m + "p";
+    }
 }

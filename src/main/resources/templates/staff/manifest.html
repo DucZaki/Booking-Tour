@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
       th:replace="~{staff/layout :: staffLayout(~{::section})}">
-<section th:with="activeOpsNav='manifest', pageTitle='Manifest'">
+<section th:with="activeOpsNav='manifest', pageTitle='Danh sách khách'">
     <div class="mb-3">
         <a th:href="@{/staff}" class="btn btn-link btn-sm ps-0 text-decoration-none"><i class="bi bi-arrow-left"></i> Quay lại</a>
     </div>
@@ -11,8 +11,9 @@
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
                 <div>
                     <span class="badge status-pill mb-2"
-                          th:classappend="${nkh.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
-                          th:text="${nkh.trangThaiDoanEnum.label}">Sắp KH</span>
+                          th:with="depStatus=${T(edu.bookingtour.util.DepartureStatusUtil).effectiveStatus(nkh, T(java.time.LocalDateTime).now())}"
+                          th:classappend="${T(edu.bookingtour.util.DepartureStatusUtil).badgeClass(depStatus)}"
+                          th:text="${depStatus.label}">Sắp diễn ra</span>
                     <h1 class="h4 fw-bold mb-1" th:text="${nkh.chuyenDi.tieuDe}">Tour</h1>
                     <p class="text-muted small mb-0">
                         Ngày đi <strong th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}">—</strong>
@@ -21,16 +22,26 @@
                 </div>
                 <div class="d-flex flex-wrap gap-2 align-items-center">
                 <a th:href="@{/staff/departures/{id}/manifest.csv(id=${nkh.id})}" class="btn btn-sm btn-outline-dark rounded-pill">
-                    <i class="bi bi-download me-1"></i> Xuất manifest
+                    <i class="bi bi-download me-1"></i> Xuất danh sách khách
                 </a>
-                <form th:action="@{/staff/departures/{id}/status(id=${nkh.id})}" method="post" class="d-flex gap-2 align-items-center">
+                <form th:if="${nkh.trangThaiDoanEnum.name() == 'SCHEDULED'}"
+                      th:action="@{/staff/departures/{id}/status(id=${nkh.id})}" method="post" class="d-inline">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                    <select name="status" class="form-select form-select-sm" style="width:auto;">
-                        <option th:each="gs : ${groupStatuses}" th:value="${gs.name()}" th:text="${gs.label}"
-                                th:selected="${gs == nkh.trangThaiDoanEnum}"></option>
-                    </select>
-                    <button type="submit" class="btn btn-sm btn-guide"
-                            th:text="${nkh.trangThaiDoanEnum.name() == 'SCHEDULED'} ? 'Bắt đầu chuyến' : (${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'Cập nhật / kết thúc' : 'Cập nhật')">Cập nhật</button>
+                    <input type="hidden" name="action" value="start"/>
+                    <button type="submit" class="btn btn-sm btn-success rounded-pill">
+                        <i class="bi bi-play-fill me-1"></i> Bắt đầu chuyến
+                    </button>
+                </form>
+                <form th:if="${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'}"
+                      th:action="@{/staff/departures/{id}/status(id=${nkh.id})}" method="post" class="d-inline departure-end-form"
+                      th:attr="data-end-iso=${departureEndAt != null ? #temporals.format(departureEndAt, 'yyyy-MM-dd''T''HH:mm:ss') : ''}"
+                      onsubmit="return confirmEndDeparture(this);">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" name="action" value="complete"/>
+                    <input type="hidden" name="confirmEarlyEnd" value="false"/>
+                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
+                        <i class="bi bi-stop-fill me-1"></i> Kết thúc chuyến
+                    </button>
                 </form>
                 </div>
             </div>
@@ -45,7 +56,7 @@
                     <div class="row g-3 small">
                         <div class="col-md-6"><span class="text-muted d-block">Giờ tập trung</span><strong th:text="${nkh.gioTapTrung != null ? nkh.gioTapTrung : '06:00'}">06:00</strong></div>
                         <div class="col-md-6"><span class="text-muted d-block">Giờ bay / khởi hành</span><strong th:text="${nkh.gioBayDi != null ? nkh.gioBayDi : '—'}">07:30</strong></div>
-                        <div class="col-md-6"><span class="text-muted d-block">Điểm đón chính</span><strong th:text="${nkh.chuyenDi.idDiemDon != null ? nkh.chuyenDi.idDiemDon.ten : 'Theo manifest từng khách'}">—</strong></div>
+                        <div class="col-md-6"><span class="text-muted d-block">Điểm đón chính</span><strong th:text="${nkh.chuyenDi.idDiemDon != null ? nkh.chuyenDi.idDiemDon.ten : 'Theo danh sách từng khách'}">—</strong></div>
                         <div class="col-md-6"><span class="text-muted d-block">Chuyến đi / xe</span><strong th:text="${nkh.maChuyenBayDi != null ? nkh.maChuyenBayDi : (nkh.chuyenDi.idPhuongTien != null ? nkh.chuyenDi.idPhuongTien.loai : '—')}">—</strong></div>
                         <div class="col-md-6"><span class="text-muted d-block">Khách sạn</span><strong th:text="${nkh.chuyenDi.idNoiLuuTru != null ? nkh.chuyenDi.idNoiLuuTru.ten : '—'}">—</strong></div>
                         <div class="col-md-6"><span class="text-muted d-block">HDV phụ trách</span><strong th:text="${nkh.guide != null ? nkh.guide.hoTen : 'Chưa gán'}">—</strong></div>
@@ -59,7 +70,7 @@
                 <div class="card-body p-4">
                     <h2 class="h5 fw-bold mb-3"><i class="bi bi-clipboard2-check me-2 text-warning"></i>Checklist nhanh</h2>
                     <div class="d-flex flex-column gap-2 small">
-                        <div><i class="bi bi-check-circle text-success me-2"></i>Kiểm tra manifest trước giờ tập trung.</div>
+                        <div><i class="bi bi-check-circle text-success me-2"></i>Kiểm tra danh sách khách trước giờ tập trung.</div>
                         <div><i class="bi bi-check-circle text-success me-2"></i>Quét QR hoặc nhập mã khi khách đến.</div>
                         <div><i class="bi bi-check-circle text-success me-2"></i>Ghi chú sự cố: trễ, đổi ghế, đổi điểm đón.</div>
                         <div><i class="bi bi-check-circle text-success me-2"></i>Cập nhật đoàn sang hoàn thành cuối ngày.</div>
@@ -124,10 +135,10 @@
                 <tbody>
                 <th:block th:each="b : ${bookings}">
                 <tr>
-                    <td th:text="'#' + ${b.id}">#1</td>
+                    <td th:text="${'#' + b.id}">#1</td>
                     <td class="fw-semibold" th:text="${b.hoTen}">—</td>
                     <td class="text-center">
-                        <span class="badge rounded-pill text-bg-warning text-dark px-3 py-2" th:text="${b.soLuong} + ' khách'">1 khách</span>
+                        <span class="badge rounded-pill text-bg-warning text-dark px-3 py-2" th:text="${b.soLuong + ' khách'}">1 khách</span>
                     </td>
                     <td th:text="${b.idDiemDon != null ? b.idDiemDon.ten : '—'}">—</td>
                     <td><span class="badge rounded-pill bg-success" th:text="${b.trangThai}">PAID</span></td>
@@ -138,14 +149,14 @@
                     </td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-dark rounded-pill" type="button" data-bs-toggle="collapse"
-                                th:data-bs-target="'#booking-detail-' + ${b.id}" th:aria-controls="'booking-detail-' + ${b.id}">
+                                th:data-bs-target="${'#booking-detail-' + b.id}" th:aria-controls="${'booking-detail-' + b.id}">
                             Xem chi tiết <i class="bi bi-chevron-down ms-1"></i>
                         </button>
                     </td>
                 </tr>
                 <tr>
                     <td colspan="7" class="p-0 border-0">
-                        <div class="collapse" th:id="'booking-detail-' + ${b.id}">
+                        <div class="collapse" th:id="${'booking-detail-' + b.id}">
                             <div class="p-4 bg-light border-top">
                                 <div class="row g-3 mb-3 small">
                                     <div class="col-md-3"><span class="text-muted d-block">SĐT</span><strong th:text="${b.soDienThoai != null ? b.soDienThoai : '—'}">—</strong></div>
@@ -203,19 +214,19 @@
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-start gap-2 mb-3">
                     <div>
-                        <div class="small text-muted" th:text="'#' + ${b.id}">#1</div>
+                        <div class="small text-muted" th:text="${'#' + b.id}">#1</div>
                         <h2 class="h6 fw-bold mb-1" th:text="${b.hoTen}">—</h2>
-                        <span class="badge rounded-pill text-bg-warning text-dark" th:text="${b.soLuong} + ' khách book tour'">1 khách book tour</span>
+                        <span class="badge rounded-pill text-bg-warning text-dark" th:text="${b.soLuong + ' khách book tour'}">1 khách book tour</span>
                     </div>
                     <span class="badge rounded-pill"
                           th:classappend="${b.checkinStatusEnum.name() == 'CHECKED_IN'} ? 'bg-success' : (${b.checkinStatusEnum.name() == 'LATE'} ? 'bg-info' : (${b.checkinStatusEnum.name() == 'PENDING'} ? 'bg-secondary' : 'bg-danger'))"
                           th:text="${b.checkinStatusEnum.label}">—</span>
                 </div>
                 <button class="btn btn-outline-dark rounded-pill w-100" type="button" data-bs-toggle="collapse"
-                        th:data-bs-target="'#booking-mobile-detail-' + ${b.id}" th:aria-controls="'booking-mobile-detail-' + ${b.id}">
+                        th:data-bs-target="${'#booking-mobile-detail-' + b.id}" th:aria-controls="${'booking-mobile-detail-' + b.id}">
                     Xem thông tin chi tiết và check-in
                 </button>
-                <div class="collapse mt-3" th:id="'booking-mobile-detail-' + ${b.id}">
+                <div class="collapse mt-3" th:id="${'booking-mobile-detail-' + b.id}">
                     <div class="row g-2 small mb-3">
                         <div class="col-6"><span class="text-muted d-block">SĐT</span><strong th:text="${b.soDienThoai != null ? b.soDienThoai : '—'}">—</strong></div>
                         <div class="col-6"><span class="text-muted d-block">Điểm đón</span><strong th:text="${b.idDiemDon != null ? b.idDiemDon.ten : '—'}">—</strong></div>
@@ -268,19 +279,19 @@
         <div class="card-body p-4">
             <div class="d-flex justify-content-between align-items-center gap-2 mb-3">
                 <h2 class="h5 fw-bold mb-0"><i class="bi bi-journal-richtext me-2 text-warning"></i>Lịch trình tour</h2>
-                <span class="badge rounded-pill text-bg-light" th:text="${#lists.size(itinerary)} + ' ngày'">0 ngày</span>
+                <span class="badge rounded-pill text-bg-light" th:text="${#lists.size(itinerary) + ' ngày'}">0 ngày</span>
             </div>
             <div th:if="${#lists.isEmpty(itinerary)}" class="text-muted small">Chưa có lịch trình chi tiết cho tour này.</div>
             <div class="accordion" id="guideItinerary" th:if="${!#lists.isEmpty(itinerary)}">
                 <div class="accordion-item" th:each="item,iter : ${itinerary}">
                     <h3 class="accordion-header">
                         <button class="accordion-button" th:classappend="${iter.index > 0} ? 'collapsed' : ''" type="button" data-bs-toggle="collapse"
-                                th:data-bs-target="'#itinerary-' + ${item.id}" th:aria-expanded="${iter.index == 0}">
-                            <strong th:text="'Ngày ' + ${item.ngayThu}">Ngày 1</strong>
+                                th:data-bs-target="${'#itinerary-' + item.id}" th:aria-expanded="${iter.index == 0}">
+                            <strong th:text="${'Ngày ' + item.ngayThu}">Ngày 1</strong>
                             <span class="ms-2" th:text="${item.tieuDe}">Lịch trình</span>
                         </button>
                     </h3>
-                    <div class="accordion-collapse collapse" th:classappend="${iter.index == 0} ? 'show' : ''" th:id="'itinerary-' + ${item.id}" data-bs-parent="#guideItinerary">
+                    <div class="accordion-collapse collapse" th:classappend="${iter.index == 0} ? 'show' : ''" th:id="${'itinerary-' + item.id}" data-bs-parent="#guideItinerary">
                         <div class="accordion-body small">
                             <p class="fw-semibold" th:if="${item.hoatDongChinh != null}" th:text="${item.hoatDongChinh}">Hoạt động chính</p>
                             <ul class="mb-2">
@@ -294,5 +305,24 @@
             </div>
         </div>
     </div>
+    <script>
+        function confirmEndDeparture(form) {
+            const endIso = form.dataset.endIso;
+            if (!endIso) {
+                return confirm('Bạn có chắc muốn kết thúc chuyến đi này?');
+            }
+            const end = new Date(endIso);
+            const now = new Date();
+            if (now >= end) {
+                return confirm('Bạn có chắc muốn kết thúc chuyến đi này?');
+            }
+            const endLabel = end.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            const ok = confirm('Theo lịch trình tour vẫn đang diễn ra (dự kiến kết thúc ' + endLabel + ').\n\nBạn có chắc muốn kết thúc sớm? Hành động này không thể hoàn tác.');
+            if (ok) {
+                form.querySelector('[name=confirmEarlyEnd]').value = 'true';
+            }
+            return ok;
+        }
+    </script>
 </section>
 </html>
