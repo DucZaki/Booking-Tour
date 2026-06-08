@@ -8,6 +8,7 @@ import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.dto.FlightQuoteResponse;
 import edu.bookingtour.dto.PromoApplyResult;
 import edu.bookingtour.service.DatChoService;
+import edu.bookingtour.service.DepartureBookingPolicy;
 import edu.bookingtour.service.EmailService;
 import edu.bookingtour.service.MaGiamGiaService;
 import edu.bookingtour.service.BookingPricingService;
@@ -73,6 +74,9 @@ public class PaymentController {
     @Autowired
     private TourCapacityService tourCapacityService;
 
+    @Autowired
+    private DepartureBookingPolicy departureBookingPolicy;
+
     @PostMapping("/booking/submit")
     public String submitBooking(
             @RequestParam Integer tourId,
@@ -113,6 +117,13 @@ public class PaymentController {
             return "redirect:/tour";
         }
 
+        try {
+            departureBookingPolicy.assertBookingAllowed(nkh);
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("promoError", ex.getMessage());
+            return "redirect:/tour/" + tourId + "?bookingError=closed";
+        }
+
         // Require Gmail for booking notifications
         if (email == null || email.isBlank() || !email.trim().toLowerCase().endsWith("@gmail.com")) {
             redirectAttributes.addFlashAttribute("promoError", "Vui lòng nhập Gmail hợp lệ (@gmail.com) để nhận thông báo.");
@@ -149,7 +160,8 @@ public class PaymentController {
 
         FlightQuoteResponse quote = ngayKhoiHanhDiemDonService.getQuote(nkhId, departureId, false);
         if (!quote.isAvailable()) {
-            redirectAttributes.addFlashAttribute("promoError", quote.getMessage());
+            redirectAttributes.addFlashAttribute("promoError",
+                    quote.getMessage() != null ? quote.getMessage() : "Địa điểm xuất phát không hợp lệ");
             return "redirect:/tour/" + tourId + "/dat-tour?nkhId=" + nkhId;
         }
 
@@ -235,7 +247,13 @@ public class PaymentController {
         datCho.setSoPhongDon(pricing.getSingleRoomCount());
         datCho.setPhuThuPhongDon(pricing.getSingleRoomTotal());
         datCho.setTongGia(totalAmount);
-        datCho.setGhiChu(appendBookingBreakdownNote(ghiChu, pricing, normalizedAdultNames));
+        datCho.setGhiChu(appendBookingBreakdownNote(
+                ghiChu,
+                pricing,
+                normalizedAdultNames,
+                normalizeNames(childNames),
+                normalizeNames(smallChildNames),
+                normalizeNames(babyNames)));
 
         datCho = datChoService.save(datCho);
         try {
@@ -266,8 +284,11 @@ public class PaymentController {
     }
 
     private String appendBookingBreakdownNote(String rawNote,
-                                              BookingPricingService.BookingPriceBreakdown pricing,
-                                              List<String> adultNames) {
+                                               BookingPricingService.BookingPriceBreakdown pricing,
+                                               List<String> adultNames,
+                                               List<String> childNames,
+                                               List<String> smallChildNames,
+                                               List<String> babyNames) {
         String userNote = rawNote == null ? "" : rawNote.trim();
         String breakdown = String.format(
                 "Co cau hanh khach: NL=%d, TE(5-11)=%d, TN(2-4)=%d, EB(<2)=%d, phong don=%d, phu thu phong don=%.0f",
@@ -278,13 +299,23 @@ public class PaymentController {
                 pricing.getSingleRoomCount(),
                 pricing.getSingleRoomTotal()
         );
-        String adultInfo = adultNames == null || adultNames.isEmpty()
-                ? ""
-                : " | Nguoi lon: " + String.join(", ", adultNames);
+        String passengerInfo = passengerInfo("Nguoi lon", adultNames)
+                + passengerInfo("Tre em", childNames)
+                + passengerInfo("Tre nho", smallChildNames)
+                + passengerInfo("Em be", babyNames);
         if (userNote.isBlank()) {
-            return breakdown + adultInfo;
+            return breakdown + passengerInfo;
         }
-        return userNote + " | " + breakdown + adultInfo;
+        return userNote + " | " + breakdown + passengerInfo;
+    }
+
+    private List<String> normalizeNames(List<String> names) {
+        return names == null ? List.of()
+                : names.stream().map(s -> s == null ? "" : s.trim()).filter(s -> !s.isEmpty()).toList();
+    }
+
+    private String passengerInfo(String label, List<String> names) {
+        return names == null || names.isEmpty() ? "" : " | " + label + ": " + String.join(", ", names);
     }
 
     private boolean validatePassengerGroup(int expectedCount,

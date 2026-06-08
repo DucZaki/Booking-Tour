@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -16,6 +17,7 @@ import java.sql.Connection;
  * Nạp lịch trình mẫu cho tour 1–18 nếu DB còn thiếu dữ liệu demo.
  */
 @Component
+@Order(2)
 public class LichTrinhSeedRunner implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(LichTrinhSeedRunner.class);

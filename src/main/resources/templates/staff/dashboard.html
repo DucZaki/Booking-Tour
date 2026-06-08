@@ -2,45 +2,100 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
       th:replace="~{staff/layout :: staffLayout(~{::section})}">
 <section th:with="activeOpsNav='home', pageTitle='Đoàn của tôi'">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <div>
-            <h1 class="h4 fw-bold mb-1">Chuyến khởi hành sắp tới</h1>
-            <p class="text-muted small mb-0" th:if="${!isAdminView}">
-                Xin chào <strong th:text="${guide.hoTen}">HDV</strong> — chỉ hiển thị đoàn được phân công.
-            </p>
-            <p class="text-muted small mb-0" th:if="${isAdminView}">Chế độ Admin — xem tất cả đoàn trong 14 ngày tới.</p>
+    <div class="guide-hero mb-4">
+        <div class="row g-4 align-items-end position-relative" style="z-index: 1;">
+            <div class="col-lg-7">
+                <span class="badge rounded-pill text-bg-warning text-dark mb-3 px-3 py-2">Guide workspace</span>
+                <h1 class="display-6 fw-black fw-bold mb-2">Lịch đoàn của bạn</h1>
+                <p class="mb-0 text-white-50" th:if="${!isAdminView}">
+                    Xin chào <strong class="text-white" th:text="${guide.hoTen}">HDV</strong>, đây là các đoàn được phân công trong 14 ngày tới.
+                </p>
+                <p class="mb-0 text-white-50" th:if="${isAdminView}">Chế độ Admin: xem toàn bộ đoàn trong 14 ngày tới.</p>
+            </div>
+            <div class="col-lg-5">
+                <div class="row g-2">
+                    <div class="col-4">
+                        <div class="guide-stat">
+                            <div class="small text-white-50">Hôm nay</div>
+                            <div class="h3 fw-bold mb-0" th:text="${todayDepartures}">0</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="guide-stat">
+                            <div class="small text-white-50">Đang đi</div>
+                            <div class="h3 fw-bold mb-0" th:text="${activeDepartures}">0</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="guide-stat">
+                            <div class="small text-white-50">Sắp tới</div>
+                            <div class="h3 fw-bold mb-0" th:text="${upcomingDepartures}">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <a th:href="@{/staff/scan}" class="btn btn-dark rounded-pill px-4">
-            <i class="bi bi-qr-code-scan me-1"></i> Quét QR
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <h2 class="h5 fw-bold mb-1">Đoàn cần theo dõi</h2>
+            <p class="text-muted small mb-0">
+                <span th:text="${#temporals.format(fromDate, 'dd/MM/yyyy')}">01/06/2026</span>
+                - <span th:text="${#temporals.format(toDate, 'dd/MM/yyyy')}">07/06/2026</span>
+                · Mở manifest để điểm danh, xem điểm đón và cập nhật trạng thái đoàn.
+            </p>
+        </div>
+        <a th:href="@{/staff/scan}" class="btn btn-guide rounded-pill px-4">
+            <i class="bi bi-qr-code-scan me-1"></i> Quét vé ngay
         </a>
     </div>
 
-    <div th:if="${#lists.isEmpty(departures)}" class="card border-0 shadow-sm">
+    <div class="card guide-card mb-3">
+        <div class="card-body d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div class="btn-group" role="group" aria-label="Chọn khoảng lịch">
+                <a class="btn btn-sm rounded-pill me-2" th:classappend="${range == 'week'} ? 'btn-dark' : 'btn-outline-dark'"
+                   th:href="@{/staff(range='week',date=${anchorDate})}">Tuần</a>
+                <a class="btn btn-sm rounded-pill" th:classappend="${range == 'month'} ? 'btn-dark' : 'btn-outline-dark'"
+                   th:href="@{/staff(range='month',date=${anchorDate})}">Tháng</a>
+            </div>
+            <div class="d-flex gap-2 align-items-center flex-wrap">
+                <a class="btn btn-sm btn-outline-dark rounded-pill" th:href="@{/staff(range=${range},date=${prevDate})}"><i class="bi bi-chevron-left"></i></a>
+                <a class="btn btn-sm btn-guide rounded-pill" th:href="@{/staff(range=${range},date=${today})}">Hôm nay</a>
+                <a class="btn btn-sm btn-outline-dark rounded-pill" th:href="@{/staff(range=${range},date=${nextDate})}"><i class="bi bi-chevron-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(departures)}" class="card guide-card">
         <div class="card-body text-center py-5 text-muted">
-            <i class="bi bi-calendar-x display-4 d-block mb-3"></i>
-            Chưa có đoàn nào được phân công. Liên hệ Admin để gán HDV cho ngày khởi hành.
+            <i class="bi bi-compass display-4 d-block mb-3 text-warning"></i>
+            <h3 class="h5 fw-bold text-dark">Chưa có đoàn được phân công</h3>
+            <p class="mb-0">Liên hệ Admin để gán HDV cho ngày khởi hành.</p>
         </div>
     </div>
 
     <div class="row g-3" th:if="${!#lists.isEmpty(departures)}">
         <div class="col-md-6 col-lg-4" th:each="d : ${departures}">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <span class="badge rounded-pill mb-2"
-                          th:classappend="${d.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${d.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
-                          th:text="${d.trangThaiDoanEnum.label}">Sắp khởi hành</span>
-                    <h2 class="h6 fw-bold" th:text="${d.chuyenDi.tieuDe}">Tour</h2>
-                    <p class="small text-muted mb-2">
-                        <i class="bi bi-calendar3 me-1"></i>
-                        <span th:text="${#temporals.format(d.ngay, 'dd/MM/yyyy')}">01/06/2026</span>
-                    </p>
-                    <p class="small mb-3" th:if="${d.guide != null}">
-                        <i class="bi bi-person-badge me-1"></i>
-                        <span th:text="${d.guide.hoTen}">HDV</span>
-                    </p>
-                    <a th:href="@{/staff/departures/{id}/manifest(id=${d.id})}"
-                       class="btn btn-outline-dark btn-sm rounded-pill w-100">
-                        Danh sách hành khách →
+            <div class="card guide-card h-100 overflow-hidden" th:classappend="${d.ngay.equals(today)} ? ' border-warning border-2' : ''">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                        <span class="guide-icon"><i class="bi bi-signpost-split fs-5"></i></span>
+                        <div class="text-end">
+                            <span th:if="${d.ngay.equals(today)}" class="badge rounded-pill text-bg-warning text-dark mb-1">Hôm nay</span>
+                            <span class="badge rounded-pill status-pill d-block"
+                              th:classappend="${d.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${d.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
+                              th:text="${d.trangThaiDoanEnum.label}">Sắp khởi hành</span>
+                        </div>
+                    </div>
+                    <h3 class="h5 fw-bold mb-3" th:text="${d.chuyenDi.tieuDe}">Tour</h3>
+                    <div class="d-flex flex-column gap-2 small text-muted mb-4">
+                        <div><i class="bi bi-calendar3 me-2 text-dark"></i><span th:text="${#temporals.format(d.ngay, 'dd/MM/yyyy')}">01/06/2026</span></div>
+                        <div th:if="${d.maChuyenBayDi != null}"><i class="bi bi-airplane me-2 text-dark"></i><span th:text="${d.maChuyenBayDi}">VN123</span></div>
+                        <div th:if="${d.guide != null}"><i class="bi bi-person-badge me-2 text-dark"></i><span th:text="${d.guide.hoTen}">HDV</span></div>
+                    </div>
+                    <a th:href="@{/staff/departures/{id}/manifest(id=${d.id})}" class="btn btn-dark rounded-pill w-100">
+                        Mở danh sách khách <i class="bi bi-arrow-right ms-1"></i>
                     </a>
                 </div>
             </div>

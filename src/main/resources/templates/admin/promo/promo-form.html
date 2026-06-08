@@ -109,10 +109,8 @@
             </div>
 
             <div class="form-check mb-4">
-                <input type="hidden" name="active" value="false"/>
-                <input class="form-check-input" type="checkbox" name="active" value="true" id="promoActive"
-                       th:checked="${promo.active != false}">
-                <label class="form-check-label" for="promoActive">Đang kích hoạt</label>
+                <input class="form-check-input" type="checkbox" th:field="*{active}" id="promoActive">
+                <label class="form-check-label" for="promoActive">Đang kích hoạt (hiển thị trên trang Combo Hot)</label>
             </div>
 
             <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu mã</button>

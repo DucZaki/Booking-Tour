@@ -43,20 +43,31 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         // Determine unique username for lookup
         String tenDangNhap = (email != null) ? email : registrationId + "_" + providerId;
 
-        // Save or update user in database
-        nguoiDungService.findByTenDangNhap(tenDangNhap).orElseGet(() -> {
+        // Tìm user theo username hoặc email đã đăng ký trước đó
+        var userOpt = nguoiDungService.findByLogin(tenDangNhap);
+        if (userOpt.isEmpty() && email != null && !email.isBlank()) {
+            userOpt = nguoiDungService.findByLogin(email.trim());
+        }
+
+        NguoiDung saved = userOpt.orElseGet(() -> {
             NguoiDung nd = new NguoiDung();
             nd.setTenDangNhap(tenDangNhap);
-            nd.setEmail(email);
+            nd.setEmail(email != null ? email.toLowerCase() : null);
             nd.setHoTen(name);
             nd.setVaiTro("USER");
             nd.setProvider(provider);
             return nguoiDungService.save(nd);
         });
 
-        // Add the unique username to attributes so we can use it as the name attribute
-        // key
-        attributes.put("userNameKey", tenDangNhap);
+        if (saved.getProvider() == null || saved.getProvider().isBlank()) {
+            saved.setProvider(provider);
+            if (saved.getEmail() == null && email != null) {
+                saved.setEmail(email.toLowerCase());
+            }
+            nguoiDungService.save(saved);
+        }
+
+        attributes.put("userNameKey", saved.getTenDangNhap());
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),

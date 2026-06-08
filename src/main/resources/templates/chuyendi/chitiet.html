@@ -16,6 +16,10 @@
                 <span th:text="${capacityError}"></span>
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            <div th:if="${bookingError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${bookingError}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <div class="row" style="margin-top:30px;" th:with="
                 diemDonTen=${id.idDiemDon != null and id.idDiemDon.ten != null ? id.idDiemDon.ten : 'Hà Nội'},
                 diemDenTp=${id.idDiemDen != null ? id.idDiemDen.thanhPho : null},
@@ -77,7 +81,7 @@
 
                                     <th:block th:each="day : ${calendar}">
                                         <!-- Ngày khởi hành còn chỗ -->
-                                        <a th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and !day.soldOut}"
+                                        <a th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and !day.soldOut and !day.bookingClosed}"
                                             th:href="@{/tour/{id}(id=${id.id}, month=${currentMonth}, year=${currentYear}, selectedDate=${day.date})}"
                                             class="calendar-day text-decoration-none departure-day"
                                             th:classappend="${day.selected ? ' active-day' : ''}"
@@ -90,6 +94,13 @@
                                                 th:text="${#numbers.formatDecimal(day.flightPrice/1000, 0, 'POINT', 0, 'POINT') + 'K'}">
                                             </span>
                                         </a>
+                                        <!-- Đã qua hạn đặt vé (trước 24h) -->
+                                        <div th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and !day.soldOut and day.bookingClosed}"
+                                            class="calendar-day departure-day closed-booking-day"
+                                            th:attr="title=${'Đã đóng đặt vé — cần đặt trước ' + bookingCutoffHours + ' giờ'}">
+                                            <span class="day-num" th:text="${day.date.dayOfMonth}"></span>
+                                            <span class="departure-tag text-secondary">Đóng đặt</span>
+                                        </div>
                                         <!-- Ngày khởi hành hết chỗ -->
                                         <div th:if="${day.hasDeparture and !day.pastDay and day.currentMonth and day.soldOut}"
                                             class="calendar-day departure-day sold-out-day"
@@ -112,7 +123,9 @@
                                 </div>
 
                                 <p class="text-center text-danger mt-4 small italic">
-                                    <i class="bi bi-info-circle me-1"></i> Quý khách vui lòng chọn ngày phù hợp
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Đặt vé trước ít nhất <span th:text="${bookingCutoffHours}">24</span> giờ so với giờ tập trung.
+                                    Không đặt trong ngày khởi hành.
                                 </p>
                             </div>
                         </div>
@@ -152,6 +165,7 @@
                                                 th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
                                                 th:text="${dd.ten}"></option>
                                     </select>
+                                    <div id="departureError" class="small text-danger mt-1" style="display:none;"></div>
                                 </div>
                                 <h6 class="text-center fw-bold mb-3">Phương tiện di chuyển</h6>
                                 <div class="row g-0 small">
@@ -600,6 +614,10 @@
                                     <i class="bi bi-calendar3 me-1"></i> Ngày đi:
                                     <strong th:text="${#temporals.format(selectedNkh.ngay, 'dd/MM/yyyy')}"></strong>
                                 </p>
+                                <p class="small text-muted mb-2">
+                                    <i class="bi bi-clock me-1"></i> Giờ tập trung:
+                                    <strong th:text="${selectedNkh.gioTapTrung != null ? selectedNkh.gioTapTrung : '06:00'}"></strong>
+                                </p>
                                 <p class="small text-muted mb-3">
                                     <i class="bi bi-calendar3 me-1"></i> Ngày về:
                                     <strong th:text="${selectedNkh.ngayVe != null ? #temporals.format(selectedNkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></strong>
@@ -612,12 +630,16 @@
                                 </p>
 
                                 <!-- Nút ĐẶT NGAY -->
-                                <a th:if="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+                                <a th:if="${(selectedCapacity == null or selectedCapacity.remaining > 0) and (selectedBookingOpen == null or selectedBookingOpen)}"
                                     th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
                                     class="btn btn-danger w-100 mb-2 py-2 fw-bold text-decoration-none">
                                     <i class="bi bi-cart-check me-2"></i> ĐẶT NGAY
                                 </a>
-                                <button th:unless="${selectedCapacity == null or selectedCapacity.remaining > 0}" type="button"
+                                <button th:if="${selectedBookingOpen != null and !selectedBookingOpen}" type="button"
+                                    class="btn btn-secondary w-100 mb-2 py-2 fw-bold" disabled>
+                                    Đã đóng đặt vé
+                                </button>
+                                <button th:if="${(selectedBookingOpen == null or selectedBookingOpen) and not (selectedCapacity == null or selectedCapacity.remaining > 0)}" type="button"
                                     class="btn btn-secondary w-100 mb-2 py-2 fw-bold" disabled>
                                     Hết chỗ
                                 </button>
@@ -645,12 +667,14 @@
                 <div class="fw-bold text-danger"
                      th:text="${#numbers.formatDecimal((id.gia != null ? id.gia.doubleValue() : 0) + price, 0, 'COMMA', 0, 'POINT') + ' ₫'}"></div>
             </div>
-            <a th:if="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+            <a th:if="${(selectedCapacity == null or selectedCapacity.remaining > 0) and (selectedBookingOpen == null or selectedBookingOpen)}"
                th:href="@{/tour/{tourId}/dat-tour(tourId=${id.id}, nkhId=${selectedNkh.id})}"
                class="btn btn-danger text-decoration-none">
                 Đặt ngay
             </a>
-            <span th:unless="${selectedCapacity == null or selectedCapacity.remaining > 0}"
+            <span th:if="${selectedBookingOpen != null and !selectedBookingOpen}"
+                  class="btn btn-secondary disabled">Đóng đặt</span>
+            <span th:if="${(selectedBookingOpen == null or selectedBookingOpen) and not (selectedCapacity == null or selectedCapacity.remaining > 0)}"
                   class="btn btn-secondary disabled">Hết chỗ</span>
         </div>
 
@@ -803,6 +827,9 @@
 
                 const departureSelect = document.getElementById('summaryDepartureSelect');
                 if (departureSelect) {
+                    const activeDepartureIdsByNkh = /*[[${activeDepartureIdsByNkh}]]*/ {};
+                    const activeDepartureIds = /*[[${activeDepartureIds}]]*/ [];
+                    const departureInvalidMsg = 'Địa điểm xuất phát không hợp lệ';
                     const tourId = departureSelect.getAttribute('data-tour-id');
                     const nkhId = departureSelect.getAttribute('data-nkh-id');
                     const giaTour = parseFloat(departureSelect.getAttribute('data-gia-tour') || '0');
@@ -890,20 +917,55 @@
                         setText('summaryHotelPoint', hotelByDeparture(q.diemDonTen || ''));
                     }
 
+                    function showDepartureError(msg) {
+                        const el = document.getElementById('departureError');
+                        if (!el) return;
+                        if (msg) {
+                            el.textContent = msg;
+                            el.style.display = 'block';
+                        } else {
+                            el.textContent = '';
+                            el.style.display = 'none';
+                        }
+                    }
+
+                    function isDepartureActive(departureId) {
+                        const id = parseInt(departureId, 10);
+                        const activeForNkh = activeDepartureIdsByNkh && nkhId
+                            ? activeDepartureIdsByNkh[nkhId] || activeDepartureIdsByNkh[String(nkhId)]
+                            : null;
+                        const source = activeForNkh || activeDepartureIds || [];
+                        return Array.isArray(source) && source.indexOf(id) >= 0;
+                    }
+
                     function loadQuote() {
                         const departureId = departureSelect.value;
                         if (!departureId) return;
+                        if (!isDepartureActive(departureId)) {
+                            showDepartureError(departureInvalidMsg);
+                            return;
+                        }
                         if (quoteCache[departureId]) {
-                            applyQuote(quoteCache[departureId]);
+                            if (quoteCache[departureId].available) {
+                                showDepartureError('');
+                                applyQuote(quoteCache[departureId]);
+                            } else {
+                                showDepartureError(quoteCache[departureId].message || departureInvalidMsg);
+                            }
                             return;
                         }
                         fetch('/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId + '&diemDonId=' + encodeURIComponent(departureId))
                             .then(r => r.json())
                             .then(q => {
                                 quoteCache[departureId] = q;
-                                applyQuote(q);
+                                if (q.available) {
+                                    showDepartureError('');
+                                    applyQuote(q);
+                                } else {
+                                    showDepartureError(q.message || departureInvalidMsg);
+                                }
                             })
-                            .catch(() => {});
+                            .catch(() => showDepartureError('Lỗi tải thông tin vé'));
                     }
 
                     departureSelect.addEventListener('change', loadQuote);
@@ -968,6 +1030,12 @@
                 opacity: 0.65;
                 cursor: not-allowed;
                 background: #f8f9fa;
+            }
+            .closed-booking-day {
+                opacity: 0.7;
+                cursor: not-allowed;
+                background: #f1f3f5;
+                border: 1px dashed #adb5bd;
             }
             .departure-summary {
                 border-color: #0d6efd !important;

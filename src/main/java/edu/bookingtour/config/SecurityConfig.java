@@ -2,6 +2,7 @@ package edu.bookingtour.config;
 
 import edu.bookingtour.service.CustomOAuth2UserService;
 import edu.bookingtour.service.CustomUserDetailsService;
+import edu.bookingtour.repo.NguoiDungRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -20,21 +20,23 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
         private final CustomUserDetailsService userDetailsService;
+        private final NguoiDungRepository nguoiDungRepository;
+        private final LoginAuthenticationFailureHandler loginFailureHandler;
 
-        public SecurityConfig(CustomUserDetailsService userDetailsService) {
+        public SecurityConfig(CustomUserDetailsService userDetailsService,
+                              NguoiDungRepository nguoiDungRepository,
+                              LoginAuthenticationFailureHandler loginFailureHandler) {
                 this.userDetailsService = userDetailsService;
+                this.nguoiDungRepository = nguoiDungRepository;
+                this.loginFailureHandler = loginFailureHandler;
         }
 
         @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
-
-        @Bean
-        public DaoAuthenticationProvider authenticationProvider() {
-                DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
+                LegacyAwareDaoAuthenticationProvider authProvider =
+                        new LegacyAwareDaoAuthenticationProvider(nguoiDungRepository);
                 authProvider.setUserDetailsService(userDetailsService);
-                authProvider.setPasswordEncoder(passwordEncoder());
+                authProvider.setPasswordEncoder(passwordEncoder);
                 return authProvider;
         }
 
@@ -44,10 +46,12 @@ public class SecurityConfig {
         }
 
         @Bean
-        public SecurityFilterChain filterChain(HttpSecurity http, CustomOAuth2UserService customOAuth2UserService)
+        public SecurityFilterChain filterChain(HttpSecurity http,
+                                               CustomOAuth2UserService customOAuth2UserService,
+                                               DaoAuthenticationProvider authenticationProvider)
                         throws Exception {
                 http
-                                .authenticationProvider(authenticationProvider())
+                                .authenticationProvider(authenticationProvider)
                                 .csrf(csrf -> csrf
                                                 .ignoringRequestMatchers("/api/chat", "/api/promo/**", "/api/tour/**", "/payment/**"))
                                 .authorizeHttpRequests(authorize -> authorize
@@ -72,8 +76,8 @@ public class SecurityConfig {
                                                                 "/ve-chung-toi",
                                                                 "/contact",
                                                                 "/payment/**",
-                                                                "/check-in/**",
-                                                                "/slogan.png",
+                                                                 "/check-in/**",
+                                                                 "/slogan.png",
                                                                 "/favicon.ico",
                                                                 "/favicon.icon")
                                                 .permitAll()
@@ -96,7 +100,7 @@ public class SecurityConfig {
                                                 .usernameParameter("username")
                                                 .passwordParameter("password")
                                                 .defaultSuccessUrl("/redirect-after-login", true)
-                                                .failureUrl("/login?error=true")
+                                                .failureHandler(loginFailureHandler)
                                                 .permitAll()
                                 // .defaultSuccessUrl("/")
                                 )

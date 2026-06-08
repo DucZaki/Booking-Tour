@@ -357,6 +357,12 @@
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" th:href="@{/admin/departures}">
+              <i class="bi bi-calendar3-week me-2 text-primary"></i>
+              Quản lý đoàn theo ngày
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" th:href="@{/admin/tour/completed}">
               <i class="bi bi-check-circle me-2 text-secondary"></i>
               Tour đã kết thúc
@@ -398,7 +404,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/l10n/vn.js"></script>
   <script th:src="@{/js/select-enhance.js(v=1)}"></script>
-  <script th:src="@{/js/date-picker.js(v=1)}"></script>
+  <script th:src="@{/js/date-picker.js(v=2)}"></script>
 
   <script>
     (function() {

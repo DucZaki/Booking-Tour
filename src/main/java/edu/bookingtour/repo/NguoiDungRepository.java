@@ -13,7 +13,12 @@ import java.util.Optional;
 @Repository
 public interface NguoiDungRepository extends JpaRepository<NguoiDung, Integer> {
     Optional<NguoiDung> findByTenDangNhap(String tenDangNhap);
+    Optional<NguoiDung> findByTenDangNhapIgnoreCase(String tenDangNhap);
     Optional<NguoiDung> findByEmail(String email);
+    Optional<NguoiDung> findByEmailIgnoreCase(String email);
+    Optional<NguoiDung> findByTenDangNhapAndIdNot(String tenDangNhap, Integer id);
+    Optional<NguoiDung> findByTenDangNhapIgnoreCaseAndIdNot(String tenDangNhap, Integer id);
+    Optional<NguoiDung> findByEmailIgnoreCaseAndIdNot(String email, Integer id);
     @Query("SELECT n.hoTen FROM NguoiDung n")
     List<String> findTatCaHoTen();
     List<NguoiDung> findAll();

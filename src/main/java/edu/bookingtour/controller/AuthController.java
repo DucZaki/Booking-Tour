@@ -31,7 +31,7 @@ public class AuthController {
                 model.addAttribute("errorMessage", sessionError);
                 session.removeAttribute("error.message");
             } else {
-                model.addAttribute("errorMessage", "Tên đăng nhập hoặc mật khẩu không đúng!");
+                model.addAttribute("errorMessage", "Tên đăng nhập, email hoặc mật khẩu không đúng!");
             }
         }
         if (logout != null) {

@@ -31,10 +31,10 @@ public interface MaGiamGiaRepository extends JpaRepository<MaGiamGia, Integer> {
 
     @Query("""
             select m from MaGiamGia m
-             where m.active = true
+             where (m.active is null or m.active = true)
                and (m.ngayBatDau is null or m.ngayBatDau <= :today)
                and (m.ngayKetThuc is null or m.ngayKetThuc >= :today)
-               and (m.soLanDungToiDa is null or m.soLanDaDung < m.soLanDungToiDa)
+               and (m.soLanDungToiDa is null or m.soLanDaDung is null or m.soLanDaDung < m.soLanDungToiDa)
              order by m.id desc
             """)
     List<MaGiamGia> findActivePromos(@Param("today") LocalDate today);

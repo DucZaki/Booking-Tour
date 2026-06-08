@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -93,6 +94,15 @@ public class DatCho {
     @Column(name = "checked_in_at")
     private LocalDateTime checkedInAt;
 
+    @Column(name = "departure_reminder_sent_at")
+    private LocalDateTime departureReminderSentAt;
+
+    @Column(name = "trip_started_notice_sent_at")
+    private LocalDateTime tripStartedNoticeSentAt;
+
+    @Column(name = "trip_completed_notice_sent_at")
+    private LocalDateTime tripCompletedNoticeSentAt;
+
     @Column(name = "checkin_status", length = 30, nullable = false)
     private String checkinStatus = CheckInStatus.PENDING.name();
 
@@ -111,6 +121,57 @@ public class DatCho {
 
     public void setCheckinStatusEnum(CheckInStatus status) {
         this.checkinStatus = status != null ? status.name() : CheckInStatus.PENDING.name();
+    }
+
+    @Transient
+    public String getGuestBreakdownLabel() {
+        List<String> parts = new ArrayList<>();
+        if (soNguoiLon != null && soNguoiLon > 0) {
+            parts.add(soNguoiLon + " người lớn");
+        }
+        if (soTreEm != null && soTreEm > 0) {
+            parts.add(soTreEm + " trẻ em");
+        }
+        if (soTreNho != null && soTreNho > 0) {
+            parts.add(soTreNho + " trẻ nhỏ");
+        }
+        if (soEmBe != null && soEmBe > 0) {
+            parts.add(soEmBe + " em bé");
+        }
+        return parts.isEmpty() ? ((soLuong != null ? soLuong : 0) + " khách") : String.join(" · ", parts);
+    }
+
+    @Transient
+    public List<String> getPassengerNameLines() {
+        List<String> lines = new ArrayList<>();
+        addPassengerLine(lines, "Nguoi lon:", "Người lớn:");
+        addPassengerLine(lines, "Tre em:", "Trẻ em:");
+        addPassengerLine(lines, "Tre nho:", "Trẻ nhỏ:");
+        addPassengerLine(lines, "Em be:", "Em bé:");
+        if (lines.isEmpty() && hoTen != null && !hoTen.isBlank()) {
+            lines.add("Người đại diện: " + hoTen);
+        }
+        return lines;
+    }
+
+    private void addPassengerLine(List<String> lines, String rawLabel, String displayLabel) {
+        String value = extractNoteValue(rawLabel);
+        if (value != null && !value.isBlank()) {
+            lines.add(displayLabel + " " + value);
+        }
+    }
+
+    private String extractNoteValue(String label) {
+        if (ghiChu == null || ghiChu.isBlank()) {
+            return null;
+        }
+        int start = ghiChu.indexOf(label);
+        if (start < 0) {
+            return null;
+        }
+        start += label.length();
+        int end = ghiChu.indexOf(" | ", start);
+        return (end >= 0 ? ghiChu.substring(start, end) : ghiChu.substring(start)).trim();
     }
 
     @OneToMany(mappedBy = "idDatCho", cascade = CascadeType.ALL, orphanRemoval = true)

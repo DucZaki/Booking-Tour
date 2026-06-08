@@ -3,6 +3,7 @@ package edu.bookingtour.service;
 import edu.bookingtour.client.AmadeusClient;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.util.DepartureTimeUtil;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,17 +64,16 @@ public class NgayKhoiHanhService {
         tourCapacityService.applyDefaultCapacity(nkh, chuyenDi);
 
         // Kiểm tra phương tiện
-        boolean isBus = chuyenDi.getIdPhuongTien() != null
-                && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
+        boolean isBus = DepartureTimeUtil.isBusTour(chuyenDi);
 
         if (isBus) {
             applyDefaultTransportInfo(nkh, chuyenDi);
         } else {
             String from = edu.bookingtour.util.AirportUtil.iataFromDiemDon(chuyenDi.getIdDiemDon());
             String to = edu.bookingtour.util.AirportUtil.iataFromDestination(chuyenDi);
-            fetchFlightInfo(nkh, from, to, ngayDi, true);
+            fetchFlightInfo(nkh, chuyenDi, from, to, ngayDi, true);
             if (ngayVe != null) {
-                fetchFlightInfo(nkh, to, from, ngayVe, false);
+                fetchFlightInfo(nkh, chuyenDi, to, from, ngayVe, false);
             } else {
                 nkh.setGiaVeVe(0.0);
                 nkh.setMaChuyenBayVe("N/A");
@@ -81,6 +81,7 @@ public class NgayKhoiHanhService {
                 nkh.setGioDenVe("N/A");
             }
         }
+        DepartureTimeUtil.syncGatheringTime(nkh, chuyenDi);
 
         nkh = ngayKhoiHanhRepository.save(nkh);
         ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, true);
@@ -108,6 +109,7 @@ public class NgayKhoiHanhService {
         nkh.setNgayVe(ngayVe);
         tourCapacityService.applyDefaultCapacity(nkh, chuyenDi);
         applyDefaultTransportInfo(nkh, chuyenDi);
+        DepartureTimeUtil.syncGatheringTime(nkh, chuyenDi);
         nkh = ngayKhoiHanhRepository.save(nkh);
         ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, false);
         return nkh;
@@ -118,9 +120,16 @@ public class NgayKhoiHanhService {
         tourCapacityService.updateDepartureCapacity(id, sucChua);
     }
 
+    @Transactional
+    public void updateGatheringTime(Integer id, String gioTapTrung) {
+        NgayKhoiHanh nkh = ngayKhoiHanhRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ngày khởi hành không tồn tại"));
+        nkh.setGioTapTrung(DepartureTimeUtil.normalizeGatheringTime(gioTapTrung));
+        ngayKhoiHanhRepository.save(nkh);
+    }
+
     private void applyDefaultTransportInfo(NgayKhoiHanh nkh, ChuyenDi chuyenDi) {
-        boolean isBus = chuyenDi.getIdPhuongTien() != null
-                && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
+        boolean isBus = DepartureTimeUtil.isBusTour(chuyenDi);
 
         if (isBus) {
             nkh.setGiaVeDi(300000.0);
@@ -146,7 +155,7 @@ public class NgayKhoiHanhService {
     /**
      * Fetch thông tin vé máy bay từ Amadeus và gán vào NgayKhoiHanh
      */
-    private void fetchFlightInfo(NgayKhoiHanh nkh, String from, String to, LocalDate date, boolean isDeparture) {
+    private void fetchFlightInfo(NgayKhoiHanh nkh, ChuyenDi chuyenDi, String from, String to, LocalDate date, boolean isDeparture) {
         try {
             Map<String, Object> flight = amadeusClient.getCheapestFlight(from, to, date.toString());
 
@@ -165,6 +174,7 @@ public class NgayKhoiHanhService {
                     nkh.setMaChuyenBayDi(flightNumber);
                     nkh.setGioBayDi(gioBay);
                     nkh.setGioDenDi(gioDen);
+                    DepartureTimeUtil.syncGatheringTime(nkh, chuyenDi);
                 } else {
                     System.out.println("Fetched Return Flight: " + flightNumber + " Price: " + price);
                     nkh.setGiaVeVe(price);
@@ -211,9 +221,7 @@ public class NgayKhoiHanhService {
             throw new RuntimeException("Ngày khởi hành " + ngayDi + " đã tồn tại cho tour này");
         }
 
-        boolean isBus = chuyenDi.getIdPhuongTien() != null
-
-                && "Bus".equalsIgnoreCase(chuyenDi.getIdPhuongTien().getLoai());
+        boolean isBus = DepartureTimeUtil.isBusTour(chuyenDi);
 
         nkh.setNgay(ngayDi);
         nkh.setThang(ngayDi.getMonthValue());
@@ -226,9 +234,9 @@ public class NgayKhoiHanhService {
         } else {
             String from = edu.bookingtour.util.AirportUtil.iataFromDiemDon(chuyenDi.getIdDiemDon());
             String to = edu.bookingtour.util.AirportUtil.iataFromDestination(chuyenDi);
-            fetchFlightInfo(nkh, from, to, ngayDi, true);
+            fetchFlightInfo(nkh, chuyenDi, from, to, ngayDi, true);
             if (ngayVe != null) {
-                fetchFlightInfo(nkh, to, from, ngayVe, false);
+                fetchFlightInfo(nkh, chuyenDi, to, from, ngayVe, false);
             } else {
                 nkh.setGiaVeVe(0.0);
                 nkh.setMaChuyenBayVe("N/A");
@@ -236,6 +244,7 @@ public class NgayKhoiHanhService {
                 nkh.setGioDenVe("N/A");
             }
         }
+        DepartureTimeUtil.syncGatheringTime(nkh, chuyenDi);
 
         nkh = ngayKhoiHanhRepository.save(nkh);
         ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, true);

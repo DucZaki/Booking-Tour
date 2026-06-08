@@ -104,7 +104,7 @@ public class NgayKhoiHanhDiemDonService {
         }
 
         if (!row.isCurrentlyActive()) {
-            return FlightQuoteResponse.unavailable("Điểm đón này hiện không khả dụng cho ngày đã chọn");
+            return FlightQuoteResponse.unavailable("Địa điểm xuất phát không hợp lệ");
         }
 
         double tourPrice = tour.getGia() != null ? tour.getGia().doubleValue() : 0;
@@ -165,6 +165,49 @@ public class NgayKhoiHanhDiemDonService {
 
     public List<NgayKhoiHanhDiemDon> findByNgayKhoiHanhId(Integer nkhId) {
         return repository.findByNgayKhoiHanhIdOrderByDiemDonIdAsc(nkhId);
+    }
+
+    public boolean hasAnyActiveDeparturePoint(Integer nkhId) {
+        if (nkhId == null) {
+            return false;
+        }
+        return repository.findByNgayKhoiHanhIdOrderByDiemDonIdAsc(nkhId).stream()
+                .anyMatch(NgayKhoiHanhDiemDon::isCurrentlyActive);
+    }
+
+    public Set<Integer> getActiveDepartureIds(Integer nkhId) {
+        if (nkhId == null) {
+            return Set.of();
+        }
+        Set<Integer> ids = new LinkedHashSet<>();
+        for (NgayKhoiHanhDiemDon row : repository.findByNgayKhoiHanhIdOrderByDiemDonIdAsc(nkhId)) {
+            if (row.isCurrentlyActive() && row.getDiemDon() != null && row.getDiemDon().getId() != null) {
+                ids.add(row.getDiemDon().getId());
+            }
+        }
+        return ids;
+    }
+
+    public List<NgayKhoiHanh> filterBookableDepartures(List<NgayKhoiHanh> departures) {
+        if (departures == null || departures.isEmpty()) {
+            return List.of();
+        }
+        return departures.stream()
+                .filter(n -> hasAnyActiveDeparturePoint(n.getId()))
+                .toList();
+    }
+
+    public Integer resolveDefaultDepartureId(List<DiemDon> options, Integer nkhId) {
+        if (options == null || options.isEmpty() || nkhId == null) {
+            return null;
+        }
+        Set<Integer> activeIds = getActiveDepartureIds(nkhId);
+        return options.stream()
+                .map(DiemDon::getId)
+                .filter(Objects::nonNull)
+                .filter(activeIds::contains)
+                .findFirst()
+                .orElse(null);
     }
 
     public double resolveTicketTotal(Integer nkhId, Integer diemDonId) {
@@ -274,6 +317,7 @@ public class NgayKhoiHanhDiemDonService {
         nkh.setMaChuyenBayVe(pick.getMaChuyenBayVe());
         nkh.setGioBayVe(pick.getGioBayVe());
         nkh.setGioDenVe(pick.getGioDenVe());
+        edu.bookingtour.util.DepartureTimeUtil.syncGatheringTime(nkh, nkh.getChuyenDi());
         ngayKhoiHanhRepository.save(nkh);
     }
 

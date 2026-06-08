@@ -34,6 +34,24 @@ public class NguoiDungService {
         return nguoiDungRepository.findByTenDangNhap(tenDangNhap);
     }
 
+    /**
+     * Tìm user theo tên đăng nhập hoặc email (không phân biệt hoa thường với email).
+     */
+    public Optional<NguoiDung> findByLogin(String login) {
+        if (login == null || login.isBlank()) {
+            return Optional.empty();
+        }
+        String trimmed = login.trim();
+        Optional<NguoiDung> byUsername = nguoiDungRepository.findByTenDangNhap(trimmed);
+        if (byUsername.isPresent()) {
+            return byUsername;
+        }
+        if (trimmed.contains("@")) {
+            return nguoiDungRepository.findByEmailIgnoreCase(trimmed);
+        }
+        return nguoiDungRepository.findByEmailIgnoreCase(trimmed);
+    }
+
     public List<NguoiDung> findAll() {
         return nguoiDungRepository.findAll();
     }
@@ -42,15 +60,25 @@ public class NguoiDungService {
         return nguoiDungRepository.save(nguoiDung);
     }
 
+    public NguoiDung createUserByAdmin(NguoiDung nguoiDung) {
+        validateUserFields(nguoiDung, true, null);
+        nguoiDung.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
+        if (nguoiDung.getVaiTro() == null || nguoiDung.getVaiTro().isBlank()) {
+            nguoiDung.setVaiTro("USER");
+        }
+        return nguoiDungRepository.save(nguoiDung);
+    }
+
     public NguoiDung update(Integer id, NguoiDung nguoiDung) {
         NguoiDung user = nguoiDungRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
-        user.setTenDangNhap(nguoiDung.getTenDangNhap());
-        user.setEmail(nguoiDung.getEmail());
-        user.setHoTen(nguoiDung.getHoTen());
-        user.setNumber(nguoiDung.getNumber());
+        validateUserFields(nguoiDung, false, id);
+        user.setTenDangNhap(nguoiDung.getTenDangNhap().trim());
+        user.setEmail(nguoiDung.getEmail().trim());
+        user.setHoTen(nguoiDung.getHoTen().trim());
+        user.setNumber(nguoiDung.getNumber() != null ? nguoiDung.getNumber().trim() : null);
         user.setVaiTro(nguoiDung.getVaiTro());
-        if (nguoiDung.getMatKhau() != null && !nguoiDung.getMatKhau().isEmpty()) {
+        if (nguoiDung.getMatKhau() != null && !nguoiDung.getMatKhau().isBlank()) {
             user.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
         }
         return nguoiDungRepository.save(user);
@@ -94,12 +122,7 @@ public class NguoiDungService {
     }
 
     public NguoiDung registerNewUser(NguoiDung nguoiDung) {
-        if (nguoiDungRepository.findByTenDangNhap(nguoiDung.getTenDangNhap()).isPresent()) {
-            throw new RuntimeException("Tên đăng nhập đã tồn tại!");
-        }
-        if (nguoiDungRepository.findByEmail(nguoiDung.getEmail()).isPresent()) {
-            throw new RuntimeException("Email đã được sử dụng!");
-        }
+        validateUserFields(nguoiDung, true, null);
         nguoiDung.setMatKhau(passwordEncoder.encode(nguoiDung.getMatKhau()));
         if (nguoiDung.getVaiTro() == null || nguoiDung.getVaiTro().isEmpty()) {
             nguoiDung.setVaiTro("USER");
@@ -140,5 +163,77 @@ public class NguoiDungService {
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
         user.setAnhDaiDien(avatarPath);
         nguoiDungRepository.save(user);
+    }
+
+    private void validateUserFields(NguoiDung user, boolean isCreate, Integer excludeId) {
+        if (user == null) {
+            throw new IllegalArgumentException("Thông tin người dùng không hợp lệ.");
+        }
+
+        String username = user.getTenDangNhap() != null ? user.getTenDangNhap().trim() : "";
+        if (username.isEmpty()) {
+            throw new IllegalArgumentException("Tên đăng nhập không được để trống.");
+        }
+        if (username.length() < 3) {
+            throw new IllegalArgumentException("Tên đăng nhập phải có ít nhất 3 ký tự.");
+        }
+
+        String hoTen = user.getHoTen() != null ? user.getHoTen().trim() : "";
+        if (hoTen.isEmpty()) {
+            throw new IllegalArgumentException("Họ tên không được để trống.");
+        }
+
+        String email = user.getEmail() != null ? user.getEmail().trim() : "";
+        if (email.isEmpty()) {
+            throw new IllegalArgumentException("Email không được để trống.");
+        }
+        if (!email.toLowerCase().endsWith("@gmail.com")) {
+            throw new IllegalArgumentException("Email phải là Gmail (@gmail.com).");
+        }
+
+        String number = user.getNumber() != null ? user.getNumber().trim().replaceAll("\\s+", "") : "";
+        if (number.isEmpty()) {
+            throw new IllegalArgumentException("Số điện thoại không được để trống.");
+        }
+        if (!number.matches("^[0-9]{10}$")) {
+            throw new IllegalArgumentException("Số điện thoại phải đúng 10 chữ số.");
+        }
+
+        String role = user.getVaiTro() != null ? user.getVaiTro().trim().toUpperCase() : "";
+        if (!role.equals("USER") && !role.equals("GUIDE") && !role.equals("ADMIN")) {
+            throw new IllegalArgumentException("Vai trò không hợp lệ.");
+        }
+        user.setVaiTro(role);
+
+        String password = user.getMatKhau();
+        if (isCreate) {
+            if (password == null || password.isBlank()) {
+                throw new IllegalArgumentException("Mật khẩu không được để trống.");
+            }
+        }
+        if (password != null && !password.isBlank() && password.length() < 6) {
+            throw new IllegalArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        }
+
+        if (excludeId == null) {
+            if (nguoiDungRepository.findByTenDangNhapIgnoreCase(username).isPresent()) {
+                throw new IllegalArgumentException("Tên đăng nhập đã tồn tại, vui lòng chọn tên khác.");
+            }
+            if (nguoiDungRepository.findByEmailIgnoreCase(email).isPresent()) {
+                throw new IllegalArgumentException("Email đã được sử dụng.");
+            }
+        } else {
+            if (nguoiDungRepository.findByTenDangNhapIgnoreCaseAndIdNot(username, excludeId).isPresent()) {
+                throw new IllegalArgumentException("Tên đăng nhập đã tồn tại, vui lòng chọn tên khác.");
+            }
+            if (nguoiDungRepository.findByEmailIgnoreCaseAndIdNot(email, excludeId).isPresent()) {
+                throw new IllegalArgumentException("Email đã được sử dụng.");
+            }
+        }
+
+        user.setTenDangNhap(username);
+        user.setHoTen(hoTen);
+        user.setEmail(email.toLowerCase());
+        user.setNumber(number);
     }
 }

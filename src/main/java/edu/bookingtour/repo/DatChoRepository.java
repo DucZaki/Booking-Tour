@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,7 +22,20 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
     Integer sumGuestsByNgayKhoiHanhAndStatuses(
             @org.springframework.data.repository.query.Param("nkhId") Integer nkhId,
             @org.springframework.data.repository.query.Param("statuses") Collection<String> statuses);
-    List<DatCho> findByIdNguoiDungOrderByIdDesc(NguoiDung user);
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idChuyenDi t
+            LEFT JOIN FETCH t.idDiemDen
+            LEFT JOIN FETCH t.idDiemDon
+            LEFT JOIN FETCH t.idPhuongTien
+            LEFT JOIN FETCH t.idNoiLuuTru
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh nkh
+            LEFT JOIN FETCH nkh.guide
+            WHERE d.idNguoiDung = :user
+            ORDER BY d.id DESC
+            """)
+    List<DatCho> findByIdNguoiDungOrderByIdDesc(@Param("user") NguoiDung user);
 
     List<DatCho> findByIdNguoiDungAndIdChuyenDiAndTrangThai(NguoiDung user, ChuyenDi tour, String status);
 
@@ -101,4 +115,18 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
             ORDER BY d.hoTen ASC
             """)
     List<DatCho> searchPaidManifestByNgayKhoiHanh(@Param("nkhId") Integer nkhId, @Param("q") String q);
+
+    @Query("""
+            SELECT d FROM DatCho d
+            LEFT JOIN FETCH d.idChuyenDi t
+            LEFT JOIN FETCH t.idDiemDen
+            LEFT JOIN FETCH t.idPhuongTien
+            LEFT JOIN FETCH d.idDiemDon
+            LEFT JOIN FETCH d.idNgayKhoiHanh nkh
+            WHERE d.trangThai = 'PAID'
+              AND d.departureReminderSentAt IS NULL
+              AND nkh.ngay = :departureDate
+              AND d.email IS NOT NULL
+            """)
+    List<DatCho> findDueForDepartureReminder(@Param("departureDate") LocalDate departureDate);
 }

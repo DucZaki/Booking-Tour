@@ -1,22 +1,38 @@
 package edu.bookingtour.controller.admin;
 
 import edu.bookingtour.entity.ChuyenDi;
+import edu.bookingtour.entity.CheckInStatus;
+import edu.bookingtour.entity.DatCho;
+import edu.bookingtour.entity.LichTrinh;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
+import edu.bookingtour.entity.NguoiDung;
+import edu.bookingtour.entity.TrangThaiDoan;
+import edu.bookingtour.repo.LichTrinhRepository;
+import edu.bookingtour.repo.NgayKhoiHanhRepository;
+import edu.bookingtour.repo.NguoiDungRepository;
+import edu.bookingtour.service.CheckInService;
+import edu.bookingtour.service.LichTrinhService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
 import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourManifestService;
 import edu.bookingtour.service.TourService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +56,48 @@ public class AdminNgayKhoiHanhController {
     @Autowired
     private TourManifestService tourManifestService;
 
+    @Autowired
+    private NgayKhoiHanhRepository ngayKhoiHanhRepository;
+
+    @Autowired
+    private LichTrinhService lichTrinhService;
+
+    @Autowired
+    private LichTrinhRepository lichTrinhRepository;
+
+    @Autowired
+    private NguoiDungRepository nguoiDungRepository;
+
+    @Autowired
+    private CheckInService checkInService;
+
     /**
-     * Danh sách ngày khởi hành của tour
+     * Danh sách ngày khởi hành của tour (lọc theo tháng / trạng thái)
      */
     @GetMapping
-    public String list(@PathVariable Integer tourId, Model model) {
+    public String list(@PathVariable Integer tourId,
+            @RequestParam(required = false) Integer month,
+            @RequestParam(required = false) Integer year,
+            @RequestParam(required = false, defaultValue = "all") String filter,
+            Model model) {
         ChuyenDi tour = tourService.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
-        List<NgayKhoiHanh> danhSach = ngayKhoiHanhService.findByChuyenDiId(tourId);
+
+        LocalDate today = LocalDate.now();
+        int viewMonth = month != null ? month : today.getMonthValue();
+        int viewYear = year != null ? year : today.getYear();
+        YearMonth ym = YearMonth.of(viewYear, viewMonth);
+
+        List<NgayKhoiHanh> danhSach = ngayKhoiHanhRepository.findByTourAndDateRange(
+                tourId, ym.atDay(1), ym.atEndOfMonth());
+
+        if ("upcoming".equals(filter)) {
+            danhSach = danhSach.stream().filter(n -> !n.getNgay().isBefore(today)).toList();
+        } else if ("past".equals(filter)) {
+            danhSach = danhSach.stream().filter(n -> n.getNgay().isBefore(today)).toList();
+        } else if ("today".equals(filter)) {
+            danhSach = danhSach.stream().filter(n -> n.getNgay().equals(today)).toList();
+        }
 
         Map<Integer, List<NgayKhoiHanhDiemDon>> diemDonByNkh = new HashMap<>();
         for (NgayKhoiHanh nkh : danhSach) {
@@ -64,7 +114,157 @@ public class AdminNgayKhoiHanhController {
         model.addAttribute("diemDonByNkh", diemDonByNkh);
         model.addAttribute("capacityByNkh", tourCapacityService.snapshotsForDepartures(danhSach));
         model.addAttribute("guides", tourManifestService.listGuides());
+        model.addAttribute("viewMonth", viewMonth);
+        model.addAttribute("viewYear", viewYear);
+        model.addAttribute("filter", filter);
+        model.addAttribute("today", today);
         return "admin/tour/ngay-khoi-hanh-list";
+    }
+
+    /**
+     * Trung tâm quản lý một ngày khởi hành — khách, tour, HDV, vận hành.
+     */
+    @GetMapping("/{nkhId}/quan-ly")
+    public String manageDeparture(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @RequestParam(required = false, defaultValue = "overview") String tab,
+            @RequestParam(required = false) String q,
+            Model model) {
+        ChuyenDi tour = tourService.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
+        NgayKhoiHanh nkh = tourManifestService.getDeparture(nkhId)
+                .orElse(null);
+        if (nkh == null || nkh.getChuyenDi() == null || !tourId.equals(nkh.getChuyenDi().getId())) {
+            return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
+        }
+
+        List<NgayKhoiHanh> siblings = ngayKhoiHanhRepository.findByChuyenDiId(tourId);
+        Integer prevId = null;
+        Integer nextId = null;
+        for (int i = 0; i < siblings.size(); i++) {
+            if (siblings.get(i).getId().equals(nkhId)) {
+                if (i > 0) {
+                    prevId = siblings.get(i - 1).getId();
+                }
+                if (i < siblings.size() - 1) {
+                    nextId = siblings.get(i + 1).getId();
+                }
+                break;
+            }
+        }
+
+        List<DatCho> bookings = tourManifestService.manifest(nkh, q);
+        List<LichTrinh> itinerary = lichTrinhService.getByTour(tourId);
+        List<NgayKhoiHanhDiemDon> diemDonRows = ngayKhoiHanhDiemDonService.findByNgayKhoiHanhId(nkhId);
+        if (diemDonRows.isEmpty()) {
+            ngayKhoiHanhDiemDonService.syncForNgayKhoiHanh(nkh, false);
+            diemDonRows = ngayKhoiHanhDiemDonService.findByNgayKhoiHanhId(nkhId);
+        }
+
+        model.addAttribute("tour", tour);
+        model.addAttribute("nkh", nkh);
+        model.addAttribute("tab", tab);
+        model.addAttribute("bookings", bookings);
+        model.addAttribute("stats", tourManifestService.stats(bookings));
+        model.addAttribute("itinerary", itinerary);
+        model.addAttribute("diemDonRows", diemDonRows);
+        model.addAttribute("capacity", tourCapacityService.getSnapshot(nkhId));
+        model.addAttribute("guides", tourManifestService.listGuides());
+        model.addAttribute("groupStatuses", TrangThaiDoan.values());
+        model.addAttribute("checkinStatuses", CheckInStatus.values());
+        model.addAttribute("keyword", q != null ? q : "");
+        model.addAttribute("prevNkhId", prevId);
+        model.addAttribute("nextNkhId", nextId);
+        return "admin/tour/ngay-khoi-hanh-hub";
+    }
+
+    @GetMapping("/{nkhId}/manifest.csv")
+    public void exportManifest(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            HttpServletResponse response) throws IOException {
+        NgayKhoiHanh nkh = tourManifestService.getDeparture(nkhId).orElse(null);
+        if (nkh == null || nkh.getChuyenDi() == null || !tourId.equals(nkh.getChuyenDi().getId())) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        List<DatCho> bookings = tourManifestService.manifest(nkh, null);
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=manifest-" + nkhId + ".csv");
+        response.getWriter().println("\uFEFFMa don,Ho ten,So dien thoai,So khach,Diem don,Phong,Ghe,Thanh toan,Check-in,Ghi chu");
+        for (DatCho b : bookings) {
+            response.getWriter().println(String.join(",",
+                    csv("#" + b.getId()),
+                    csv(b.getHoTen()),
+                    csv(b.getSoDienThoai()),
+                    csv(String.valueOf(b.getSoLuong())),
+                    csv(b.getIdDiemDon() != null ? b.getIdDiemDon().getTen() : ""),
+                    csv(b.getSoPhong()),
+                    csv(b.getSoGhe()),
+                    csv(b.getTrangThai()),
+                    csv(b.getCheckinStatusEnum().getLabel()),
+                    csv(b.getGhiChu())));
+        }
+    }
+
+    @PostMapping("/{nkhId}/status")
+    public String updateGroupStatus(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @RequestParam TrangThaiDoan status,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        NguoiDung admin = resolveAdmin(userDetails);
+        try {
+            tourManifestService.updateDepartureStatus(admin, nkhId, status);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật trạng thái đoàn: " + status.getLabel());
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/" + nkhId + "/quan-ly?tab=overview";
+    }
+
+    @PostMapping("/{nkhId}/bookings/{bookingId}/checkin")
+    public String updateBookingCheckin(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @PathVariable Integer bookingId,
+            @RequestParam CheckInStatus status,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        NguoiDung admin = resolveAdmin(userDetails);
+        CheckInService.CheckInResult result = checkInService.updateStatusByBookingId(bookingId, status, admin);
+        redirectAttributes.addFlashAttribute(result.ok() ? "successMessage" : "errorMessage", result.message());
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/" + nkhId + "/quan-ly?tab=khach";
+    }
+
+    @PostMapping("/{nkhId}/bookings/{bookingId}/note")
+    public String updateBookingNote(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @PathVariable Integer bookingId,
+            @RequestParam(required = false) String note,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        NguoiDung admin = resolveAdmin(userDetails);
+        try {
+            tourManifestService.updateBookingNote(admin, bookingId, note);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã lưu ghi chú.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/" + nkhId + "/quan-ly?tab=khach";
+    }
+
+    private NguoiDung resolveAdmin(UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new IllegalStateException("Chưa đăng nhập");
+        }
+        return nguoiDungRepository.findByTenDangNhap(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalStateException("Không tìm thấy admin"));
+    }
+
+    private static String csv(String value) {
+        if (value == null) {
+            return "\"\"";
+        }
+        return "\"" + value.replace("\"", "\"\"") + "\"";
     }
 
     /**
@@ -111,17 +311,38 @@ public class AdminNgayKhoiHanhController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayDi,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate ngayVe,
             @RequestParam(required = false) Integer sucChua,
+            @RequestParam(required = false) String gioTapTrung,
             RedirectAttributes redirectAttributes) {
         try {
             ngayKhoiHanhService.updateDepartureDate(id, ngayDi, ngayVe);
             if (sucChua != null) {
                 ngayKhoiHanhService.updateCapacity(id, sucChua);
             }
+            if (gioTapTrung != null && !gioTapTrung.isBlank()) {
+                ngayKhoiHanhService.updateGatheringTime(id, gioTapTrung);
+            }
         } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/edit/" + id;
+        } catch (RuntimeException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
             return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/edit/" + id;
         }
         redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật ngày khởi hành.");
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
+    }
+
+    @PostMapping("/{nkhId}/gathering-time")
+    public String updateGatheringTime(@PathVariable Integer tourId,
+            @PathVariable Integer nkhId,
+            @RequestParam String gioTapTrung,
+            RedirectAttributes redirectAttributes) {
+        try {
+            ngayKhoiHanhService.updateGatheringTime(nkhId, gioTapTrung);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật thời gian xuất phát.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
         return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
     }
 
@@ -175,7 +396,7 @@ public class AdminNgayKhoiHanhController {
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
         }
-        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/" + nkhId + "/quan-ly?tab=staff";
     }
 
     @PostMapping("/sync-all")

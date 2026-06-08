@@ -25,13 +25,22 @@
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Ngày đi <span class="text-danger">*</span></label>
                                 <input type="text" name="ngayDi" class="form-control zaki-date"
-                                    th:value="${#temporals.format(nkh.ngay, 'yyyy-MM-dd')}" required placeholder="dd/mm/yyyy" inputmode="numeric">
+                                    th:value="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"
+                                    th:attr="data-value=${#temporals.format(nkh.ngay, 'yyyy-MM-dd')}"
+                                    required placeholder="dd/mm/yyyy" inputmode="numeric">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Ngày về <span class="text-danger">*</span></label>
                                 <input type="text" name="ngayVe" class="form-control zaki-date"
-                                    th:value="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'yyyy-MM-dd') : ''}"
+                                    th:value="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : ''}"
+                                    th:attr="data-value=${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'yyyy-MM-dd') : ''}"
                                     required placeholder="dd/mm/yyyy" inputmode="numeric">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Thời gian xuất phát (giờ tập trung)</label>
+                                <input type="time" name="gioTapTrung" class="form-control"
+                                    th:value="${nkh.gioTapTrung != null ? nkh.gioTapTrung : '06:00'}" required>
+                                <small class="text-muted">Giờ khách phải có mặt tại điểm đón. Mặc định tự tính từ giờ xe/bay khi thêm ngày mới.</small>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Sức chứa đợt này</label>

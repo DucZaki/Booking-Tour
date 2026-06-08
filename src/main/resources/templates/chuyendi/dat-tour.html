@@ -28,7 +28,8 @@
                 <p class="text-muted mb-0">Hãy đảm bảo tất cả thông tin chi tiết trên trang này đã chính xác trước khi tiến hành thanh toán.</p>
                 <div class="alert alert-info py-2 mt-2 mb-0 small" th:if="${capacity != null and capacity.remaining > 0}">
                     <i class="bi bi-people me-1"></i>
-                    Đợt <strong th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></strong>:
+                    Đợt <strong th:text="${#temporals.format(nkh.ngay, 'dd/MM/yyyy')}"></strong>
+                    · tập trung <strong th:text="${nkh.gioTapTrung != null ? nkh.gioTapTrung : '06:00'}"></strong>:
                     còn <strong th:text="${capacity.remaining}"></strong>/<span th:text="${capacity.capacity}"></span> chỗ
                     (đã đặt <span th:text="${capacity.booked}"></span>).
                 </div>
@@ -66,12 +67,15 @@
                                 <div class="row g-3">
                                     <div class="col-md-12">
                                         <label class="form-label">Điểm xuất phát <span class="text-danger">*</span></label>
-                                        <select class="form-select" name="departureId" required>
+                                        <select class="form-select" name="departureId" id="departureIdSelect" required>
                                             <option th:each="dd : ${departureOptions}"
                                                 th:value="${dd.id}"
                                                 th:selected="${selectedDepartureId != null and dd.id == selectedDepartureId}"
                                                 th:text="${dd.ten}"></option>
                                         </select>
+                                        <div id="departureError" class="small text-danger mt-1"
+                                             th:style="${promoError != null} ? 'display:block' : 'display:none'"
+                                             th:text="${promoError}"></div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="contact-panel">
@@ -411,7 +415,40 @@
                     showCapacityToast(flashCapacityRemaining);
                 }
 
-                var depSelect = document.querySelector('select[name="departureId"]');
+                var depSelect = document.getElementById('departureIdSelect') || document.querySelector('select[name="departureId"]');
+                var activeDepartureIds = /*[[${activeDepartureIds}]]*/ [];
+                var departureInvalidMsg = 'Địa điểm xuất phát không hợp lệ';
+
+                function showDepartureError(msg) {
+                    var el = document.getElementById('departureError');
+                    if (!el) return;
+                    if (msg) {
+                        el.textContent = msg;
+                        el.style.display = 'block';
+                    } else {
+                        el.textContent = '';
+                        el.style.display = 'none';
+                    }
+                }
+
+                function isDepartureActive(id) {
+                    if (!id) return false;
+                    var num = parseInt(id, 10);
+                    return Array.isArray(activeDepartureIds) && activeDepartureIds.indexOf(num) >= 0;
+                }
+
+                function validateDepartureSelection() {
+                    if (!depSelect || !depSelect.value) {
+                        showDepartureError('');
+                        return true;
+                    }
+                    if (!isDepartureActive(depSelect.value)) {
+                        showDepartureError(departureInvalidMsg);
+                        return false;
+                    }
+                    showDepartureError('');
+                    return true;
+                }
                 var sidebarText = document.getElementById('sidebarDepartureText');
                 var flightFromGo = document.getElementById('flightFromGo');
                 var flightToBack = document.getElementById('flightToBack');
@@ -550,6 +587,7 @@
 
                 function loadQuote(refresh) {
                     if (!depSelect || !depSelect.value) return;
+                    if (!validateDepartureSelection()) return;
                     var url = '/api/tour/' + tourId + '/flight-quote?nkhId=' + nkhId
                         + '&diemDonId=' + encodeURIComponent(depSelect.value)
                         + (refresh ? '&refresh=true' : '');
@@ -557,22 +595,26 @@
                         .then(function (r) { return r.json(); })
                         .then(function (q) {
                             if (q.available) {
+                                showDepartureError('');
                                 applyQuote(q);
                             } else {
-                                var msg = document.getElementById('promoMessage');
-                                msg.textContent = q.message || 'Không lấy được giá vé';
-                                msg.className = 'small mt-1 text-danger';
+                                showDepartureError(q.message || departureInvalidMsg);
                             }
                         })
                         .catch(function () {
-                            var msg = document.getElementById('promoMessage');
-                            msg.textContent = 'Lỗi tải thông tin vé';
-                            msg.className = 'small mt-1 text-danger';
+                            showDepartureError('Lỗi tải thông tin vé');
                         });
                 }
 
                 if (depSelect) {
-                    depSelect.addEventListener('change', function () { loadQuote(false); });
+                    depSelect.addEventListener('change', function () {
+                        validateDepartureSelection();
+                        loadQuote(false);
+                    });
+                    validateDepartureSelection();
+                    if (isDepartureActive(depSelect.value)) {
+                        loadQuote(false);
+                    }
                 }
 
                 function capturePassengerDraft() {
@@ -1023,6 +1065,10 @@
                 var bookingForm = document.getElementById('bookingForm');
                 if (bookingForm) {
                     bookingForm.addEventListener('submit', function (e) {
+                        if (!validateDepartureSelection()) {
+                            e.preventDefault();
+                            return;
+                        }
                         if (totalGuestCount() > maxRemainingGuests) {
                             e.preventDefault();
                             showCapacityToast(maxRemainingGuests);

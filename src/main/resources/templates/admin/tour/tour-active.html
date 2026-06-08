@@ -12,12 +12,12 @@
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h3 class="mb-3 fw-bold">Danh sách chuyến đi đang hoạt động</h3>
+      <h3 class="mb-0 fw-bold">Danh sách chuyến đi đang hoạt động</h3>
       <div class="d-flex gap-2">
-        <form th:action="@{/admin/tour/bootstrap/activate-all}" method="post">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-        </form>
-        <a th:href="@{/admin/tour/create}" class="btn btn-dark">
+        <a th:href="@{/admin/departures}" class="btn btn-primary btn-sm">
+          <i class="bi bi-calendar3-week"></i> Quản lý theo ngày
+        </a>
+        <a th:href="@{/admin/tour/create}" class="btn btn-dark btn-sm">
           <i class="bi bi-plus-circle"></i> Tạo chuyến đi mới
         </a>
       </div>
@@ -30,9 +30,13 @@
             <img th:src="@{${t.hinhAnh}}" class="card-img-top" style="height: 230px; object-fit: cover;" alt="Tour picture">
             <div class="card-body text-center">
               <h6 class="fw-bold mb-2" th:text="${t.tieuDe}"></h6>
-              <p class="text-danger fw-bold mb-0"
+              <p class="text-danger fw-bold mb-2"
                  th:text="${#numbers.formatDecimal(t.gia, 0, 'COMMA', 0, 'POINT')} + ' VND'">
               </p>
+              <a th:href="@{/admin/tour/{id}/ngay-khoi-hanh(id=${t.id})}"
+                 class="btn btn-sm btn-outline-dark" onclick="event.stopPropagation();">
+                <i class="bi bi-calendar-event"></i> Ngày KH
+              </a>
             </div>
           </div>
         </a>

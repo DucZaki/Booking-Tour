@@ -4,7 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import edu.bookingtour.util.DepartureTimeUtil;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -23,6 +27,10 @@ public class NgayKhoiHanh {
 
     @Column(name = "ngay", nullable = false)
     private LocalDate ngay;
+
+    /** Giờ tập trung tại điểm đón — dùng check-in muộn/đúng giờ (HH:mm). */
+    @Column(name = "gio_tap_trung", nullable = false, length = 5)
+    private String gioTapTrung = "06:00";
 
     @Column(name = "thang")
     private Integer thang;
@@ -75,6 +83,14 @@ public class NgayKhoiHanh {
 
     public void setTrangThaiDoanEnum(TrangThaiDoan status) {
         this.trangThaiDoan = status != null ? status.name() : TrangThaiDoan.SCHEDULED.name();
+    }
+
+    public LocalTime getGatheringTime() {
+        return DepartureTimeUtil.parseTime(gioTapTrung);
+    }
+
+    public LocalDateTime getGatheringDateTime() {
+        return DepartureTimeUtil.gatheringDateTime(ngay, gioTapTrung);
     }
 
     // Tổng giá vé (đi + về)

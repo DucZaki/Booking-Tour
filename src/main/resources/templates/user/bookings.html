@@ -149,6 +149,9 @@
                                                           (${booking.trangThai == 'PAID' ? 'bg-success' : 
                                                            (booking.trangThai == 'PENDING' ? 'bg-warning text-dark' : 'bg-danger')})"
                                                             th:text="${booking.trangThai}">PENDING</span>
+                                                        <span th:if="${@bookingView.hasTripStatus(booking)}"
+                                                            th:class="'badge rounded-pill px-3 py-2 ms-1 ' + ${@bookingView.tripStatusBadgeClass(booking)}"
+                                                            th:text="${@bookingView.tripStatusLabel(booking)}"></span>
                                                     </div>
                                                 </div>
 
@@ -157,6 +160,12 @@
                                                         <i class="bi bi-calendar-check me-1"></i> Ngày đặt:
                                                         <span
                                                             th:text="${#temporals.format(booking.ngayDat, 'dd/MM/yyyy')}"></span>
+                                                    </div>
+                                                    <div class="col-sm-6"
+                                                        th:if="${booking.idNgayKhoiHanh != null && booking.idNgayKhoiHanh.ngay != null}">
+                                                        <i class="bi bi-airplane me-1"></i> Ngày khởi hành:
+                                                        <span
+                                                            th:text="${#temporals.format(booking.idNgayKhoiHanh.ngay, 'dd/MM/yyyy')}"></span>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <i class="bi bi-people me-1"></i> Số lượng:
@@ -215,6 +224,8 @@
                                                         <button th:if="${booking.trangThai == 'PAID'}"
                                                             class="btn btn-info text-white rounded-pill btn-sm px-3"
                                                             th:data-tour-id="${booking.idChuyenDi.id}"
+                                                            th:data-ngay-khoi-hanh="${booking.idNgayKhoiHanh != null && booking.idNgayKhoiHanh.ngay != null ? #temporals.format(booking.idNgayKhoiHanh.ngay, 'dd/MM/yyyy') : ''}"
+                                                            th:data-diem-don="${booking.idDiemDon != null ? booking.idDiemDon.ten : ''}"
                                                             onclick="showItinerary(this)">
                                                             <i class="bi bi-map me-1"></i>Lịch trình
                                                         </button>
@@ -449,8 +460,18 @@
                 return d.innerHTML;
             }
 
+            /** yyyy-MM-dd → dd/MM/yyyy (tránh lệch múi giờ khi dùng new Date). */
+            function formatIsoDateVi(iso) {
+                if (!iso) return '';
+                const parts = String(iso).substring(0, 10).split('-');
+                if (parts.length !== 3) return '';
+                return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            }
+
             async function showItinerary(btn) {
                 const tourId = btn.dataset.tourId;
+                const bookingDeparture = btn.dataset.ngayKhoiHanh;
+                const bookingPickup = btn.dataset.diemDon;
                 const modal = new bootstrap.Modal(document.getElementById('itineraryModal'));
                 const loading = document.getElementById('itineraryLoading');
                 const content = document.getElementById('itineraryContent');
@@ -467,15 +488,11 @@
                     
                     const data = await response.json();
                     
-                    // Update header info
-                    if (data.ngayKhoiHanh) {
-                        const date = new Date(data.ngayKhoiHanh);
-                        document.getElementById('modalNgayKhoiHanh').textContent = date.toLocaleDateString('vi-VN');
-                    } else {
-                        document.getElementById('modalNgayKhoiHanh').textContent = 'Chưa cập nhật';
-                    }
-                    
-                    document.getElementById('modalDiemDon').textContent = data.diemDon || 'Chưa cập nhật';
+                    // Ngày KH / điểm đón lấy từ đơn đặt (đúng lịch khách chọn), không dùng ngày mặc định của tour
+                    document.getElementById('modalNgayKhoiHanh').textContent =
+                        bookingDeparture || formatIsoDateVi(data.ngayKhoiHanh) || 'Chưa cập nhật';
+                    document.getElementById('modalDiemDon').textContent =
+                        bookingPickup || data.diemDon || 'Chưa cập nhật';
                     document.getElementById('modalNotes').innerHTML = data.notes || 'Không có lưu ý đặc biệt cho tour này.';
                     
                     // Build timeline

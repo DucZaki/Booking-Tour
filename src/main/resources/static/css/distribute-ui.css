@@ -182,16 +182,22 @@
     justify-content: center;
 }
 .btn-nav-cta {
-    background: linear-gradient(135deg, #e85d04, #dc2f02) !important;
-    color: #fff !important;
+    background: linear-gradient(135deg, #FECF2F 0%, #f5b800 100%) !important;
+    color: #1A1C1E !important;
     border: none !important;
     font-size: 0.78rem;
     padding: 0.45rem 1rem;
     white-space: nowrap;
 }
+
+.premium-nav-dock .btn-nav-cta.nav-login-btn {
+    padding-block: 0 !important;
+    padding-inline: 14px !important;
+    line-height: 1 !important;
+}
 .btn-nav-cta:hover {
-    filter: brightness(1.05);
-    color: #fff !important;
+    filter: brightness(1.04);
+    color: #1A1C1E !important;
 }
 .btn-nav-cta-outline {
     border: 2px solid #e85d04 !important;

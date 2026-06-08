@@ -3,8 +3,11 @@ package edu.bookingtour.controller.user;
 import edu.bookingtour.dto.FlightQuoteResponse;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.LichTrinh;
+import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.service.DepartureBookingPolicy;
 import edu.bookingtour.service.LichTrinhService;
 import edu.bookingtour.service.NgayKhoiHanhDiemDonService;
+import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +38,26 @@ public class TourApiController {
     @Autowired
     private TourCapacityService tourCapacityService;
 
+    @Autowired
+    private NgayKhoiHanhService ngayKhoiHanhService;
+
+    @Autowired
+    private DepartureBookingPolicy departureBookingPolicy;
+
     @GetMapping("/departure/{nkhId}/capacity")
     public ResponseEntity<Map<String, Object>> departureCapacity(@PathVariable Integer nkhId) {
         TourCapacityService.CapacitySnapshot snap = tourCapacityService.getSnapshot(nkhId);
+        NgayKhoiHanh nkh = ngayKhoiHanhService.findById(nkhId);
         Map<String, Object> body = new HashMap<>();
         body.put("nkhId", nkhId);
         body.put("capacity", snap.getCapacity());
         body.put("booked", snap.getBooked());
         body.put("remaining", snap.getRemaining());
         body.put("soldOut", snap.isSoldOut());
+        body.put("bookingClosed", nkh != null && !departureBookingPolicy.isBookingOpen(nkh));
+        if (nkh != null) {
+            body.put("gatheringTime", nkh.getGioTapTrung());
+        }
         return ResponseEntity.ok(body);
     }
 

@@ -4,6 +4,7 @@ import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.repo.DatChoRepository;
 import edu.bookingtour.repo.NguoiDungRepository;
+import edu.bookingtour.service.CheckInService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,9 @@ public class UserController {
 
     @Autowired
     private DatChoRepository datChoRepository;
+
+    @Autowired
+    private CheckInService checkInService;
 
     @Value("${avatar.path}")
     private String avatarPath;
@@ -125,6 +129,9 @@ public class UserController {
         }
         NguoiDung user = resolveUser(authentication);
         List<DatCho> bookings = datChoRepository.findByIdNguoiDungOrderByIdDesc(user);
+        bookings.stream()
+                .filter(b -> "PAID".equals(b.getTrangThai()))
+                .forEach(checkInService::ensureCheckInToken);
         Double total = datChoRepository.sumTongGiaByUser(user);
         double totalSpending = (total != null) ? total : 0.0;
         LocalDateTime currentTime = LocalDateTime.now();

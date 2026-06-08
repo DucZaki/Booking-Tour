@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi"
       th:replace="~{staff/layout :: staffLayout(~{::section})}">
 <section th:with="pageTitle='Check-in'">
-    <div th:if="${!valid}" class="card border-0 shadow-sm mx-auto" style="max-width:480px;">
+    <div th:if="${!valid}" class="card guide-card mx-auto" style="max-width:480px;">
         <div class="card-body text-center py-5">
             <i class="bi bi-x-circle text-danger display-4"></i>
             <h1 class="h5 fw-bold mt-3">Vé không hợp lệ</h1>
@@ -11,26 +11,38 @@
         </div>
     </div>
 
-    <div th:if="${valid}" class="card border-0 shadow-sm mx-auto" style="max-width:520px;">
-        <div class="card-body p-4">
-            <div class="text-center mb-3">
-                <span class="badge rounded-pill px-3 py-2"
+    <div th:if="${valid}" class="card guide-card mx-auto overflow-hidden" style="max-width:560px;">
+        <div class="card-body p-0">
+            <div class="p-4 text-center text-white" style="background: linear-gradient(135deg, #15120a, #302913);">
+                <span class="badge rounded-pill px-3 py-2 mb-3"
                       th:classappend="${checkedIn} ? 'bg-success' : (${paid} ? 'bg-warning text-dark' : 'bg-danger')"
                       th:text="${checkinStatus.label}">—</span>
+                <h1 class="h5 fw-bold mb-2" th:text="${tourTitle}">Tour</h1>
+                <p class="text-white-50 small mb-0">Mã đơn <strong class="text-white" th:text="'#' + ${orderId}">#1</strong></p>
             </div>
-            <h1 class="h5 fw-bold text-center" th:text="${tourTitle}">Tour</h1>
-            <p class="text-center text-muted small">Mã đơn <strong th:text="'#' + ${orderId}">#1</strong></p>
+            <div class="p-4">
+            <div class="text-center mb-3">
+                <div class="guide-icon mx-auto"><i class="bi bi-ticket-perforated fs-5"></i></div>
+            </div>
 
             <ul class="list-unstyled small mb-0">
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Khách</span><strong th:text="${customerName}">—</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">SĐT</span><strong th:text="${phone != null ? phone : '—'}">—</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Số khách</span><strong th:text="${guestCount} + ' người'">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Cơ cấu khách</span><strong th:text="${booking.guestBreakdownLabel}">—</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Điểm đón</span><strong th:text="${departurePoint}">—</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Ngày đi</span><strong th:text="${departureDate}">—</strong></li>
+                <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Giờ tập trung</span><strong th:text="${gatheringTime}">06:00</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Khách sạn</span><strong th:text="${hotelName}">—</strong></li>
                 <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Phòng</span><strong th:text="${roomInfo}">—</strong></li>
                 <li class="d-flex justify-content-between py-2"><span class="text-muted">Ghế / chuyến</span><strong th:text="${seatInfo}">—</strong></li>
             </ul>
+            <div class="mt-3 p-3 bg-light rounded-3">
+                <div class="small text-muted fw-semibold mb-1">Tên khách trong vé</div>
+                <ul class="small mb-0 ps-3">
+                    <li th:each="line : ${booking.passengerNameLines}" th:text="${line}">Người đại diện</li>
+                </ul>
+            </div>
 
             <div th:if="${paid and !checkedIn}" class="d-grid gap-2 mt-4">
                 <form th:action="@{/staff/check-in/{token}/confirm(token=${token})}" method="post">
@@ -57,6 +69,7 @@
                 <a th:if="${booking.idNgayKhoiHanh != null}"
                    th:href="@{/staff/departures/{id}/manifest(id=${booking.idNgayKhoiHanh.id})}"
                    class="btn btn-dark flex-grow-1 rounded-pill">Manifest</a>
+            </div>
             </div>
         </div>
     </div>

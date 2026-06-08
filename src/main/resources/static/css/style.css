@@ -37,31 +37,31 @@ h6 {
 /* ===================== PREMIUM NAVIGATION DOCK (sync distribute_project) ===================== */
 .tour-list-heading,
 .news-page-shell {
-    padding-top: 11.5rem !important;
+    padding-top: 7.25rem !important;
     margin-top: 0 !important;
 }
 
 @media (max-width: 991.98px) {
     .tour-list-heading,
     .news-page-shell {
-        padding-top: 9rem !important;
+        padding-top: 5.75rem !important;
     }
 }
 
 .premium-nav-dock {
     position: fixed;
-    top: 12px;
-    left: 82px;
-    right: 82px;
+    top: 10px;
+    left: 48px;
+    right: 48px;
     width: auto;
-    max-width: 1368px;
+    max-width: 1280px;
     margin: 0 auto;
     transform: none;
     background: var(--nav-glass-bg) !important;
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-radius: var(--pill-radius);
-    padding: 12px 34px !important;
+    border-radius: 999px;
+    padding: 6px 20px !important;
     box-shadow: var(--nav-shadow);
     z-index: 1050;
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -69,8 +69,8 @@ h6 {
 }
 
 .premium-nav-dock.scrolled {
-    top: 8px;
-    padding: 8px 34px !important;
+    top: 6px;
+    padding: 5px 18px !important;
     background: rgba(255, 255, 255, 0.9) !important;
 }
 
@@ -84,19 +84,19 @@ h6 {
 }
 
 .premium-nav-dock .nav-brand-logo {
-    height: 92px;
+    height: 52px;
     width: auto;
-    max-width: min(340px, 44vw);
+    max-width: min(220px, 36vw);
     object-fit: contain;
     display: block;
 }
 
 .premium-nav-dock.scrolled .nav-brand-logo {
-    height: 78px;
+    height: 46px;
 }
 
 .nav-dock-inner {
-    gap: 16px;
+    gap: 10px;
     min-width: 0;
 }
 
@@ -111,11 +111,11 @@ h6 {
 .nav-main-links .nav-link {
     font-family: var(--font-heading);
     font-weight: 800;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.055em;
+    letter-spacing: 0.045em;
     color: rgba(26, 28, 30, 0.65) !important;
-    padding: 10px 12px !important;
+    padding: 6px 10px !important;
     border-radius: 999px;
     white-space: nowrap;
     transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
@@ -129,15 +129,15 @@ h6 {
 }
 
 .premium-nav-dock .user-profile-icon {
-    width: 46px;
-    height: 46px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--bs-dark);
-    font-size: 1.25rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.05);
@@ -147,21 +147,69 @@ h6 {
     transform: scale(1.05);
     background: var(--bs-primary);
 }
-.mt-3 {
-    margin-top: 0 !important;
+
+.premium-nav-dock .dropdown-menu.mt-3 {
+    margin-top: 0.75rem !important;
 }
-.premium-nav-dock .btn.rounded-pill {
-    min-height: 46px;
-    padding: 0 22px !important;
-    font-size: 1rem;
+
+.nav-utilities {
+    gap: 6px !important;
+}
+
+.premium-nav-dock .btn.rounded-pill:not(.nav-login-btn) {
+    min-height: 36px;
+    padding: 0 14px !important;
+    font-size: 0.82rem;
     font-weight: 800;
 }
 
+.premium-nav-dock .nav-login-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0;
+    white-space: nowrap;
+    line-height: 1 !important;
+    height: 36px;
+    min-height: 36px;
+    max-height: 36px;
+    padding: 0 18px !important;
+    font-size: 0.82rem !important;
+    font-weight: 800;
+    vertical-align: middle;
+    background-color: var(--bs-primary) !important;
+    color: var(--bs-dark) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.premium-nav-dock .nav-login-btn:hover {
+    transform: translateY(-1px);
+    background-color: var(--primary-hover) !important;
+    color: var(--bs-dark) !important;
+    box-shadow: 0 6px 18px rgba(254, 207, 47, 0.35) !important;
+}
+
+.premium-nav-dock .nav-login-btn:focus,
+.premium-nav-dock .nav-login-btn:focus-visible,
+.premium-nav-dock .nav-login-btn:active {
+    background-color: var(--bs-primary) !important;
+    color: var(--bs-dark) !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(254, 207, 47, 0.4) !important;
+}
+
 .premium-nav-dock #darkModeToggle,
-.premium-nav-dock .mobile-menu-toggle {
-    width: 46px;
-    height: 46px;
-    font-size: 1.25rem;
+.premium-nav-dock .mobile-menu-toggle,
+.premium-nav-dock .nav-search-toggle {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    font-size: 1.05rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Removal of old navbar styles that conflict */
@@ -600,7 +648,7 @@ footer {
     text-align: center;
     overflow: hidden;
     position: relative;
-    padding: 148px 0 84px;
+    padding: 100px 0 72px;
     box-sizing: border-box;
 }
 
@@ -635,7 +683,7 @@ footer {
 @media (max-width: 768px) {
     .hero-section {
         min-height: auto;
-        padding: 128px 0 72px;
+        padding: 88px 0 64px;
     }
 
     #typing-text {
@@ -1208,7 +1256,7 @@ a:hover {
 
 .nav-search-dropdown {
     position: fixed;
-    top: 88px;
+    top: 64px;
     left: 50%;
     transform: translateX(-50%) translateY(-12px);
     width: min(920px, calc(100vw - 32px));
@@ -1823,44 +1871,48 @@ a:hover {
 
 @media (max-width: 991.98px) {
     .premium-nav-dock {
-        top: 12px;
-        left: 12px;
-        right: 12px;
+        top: 8px;
+        left: 10px;
+        right: 10px;
         width: auto;
-        padding: 8px 12px !important;
-        border-radius: 24px;
+        padding: 5px 10px !important;
+        border-radius: 22px;
     }
 
     .premium-nav-dock .nav-brand-logo {
-        height: 58px;
-        max-width: 200px;
+        height: 44px;
+        max-width: 168px;
     }
 
     .premium-nav-dock.scrolled .nav-brand-logo {
-        height: 52px;
+        height: 40px;
     }
 
     .premium-nav-dock .btn.rounded-pill {
-        padding-left: 14px !important;
-        padding-right: 14px !important;
-        min-height: 40px;
-        font-size: 0.9rem;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        min-height: 34px;
+        font-size: 0.78rem;
+    }
+
+    .premium-nav-dock .nav-login-btn {
+        min-height: 34px;
+        padding: 0 12px !important;
+        font-size: 0.74rem !important;
     }
 
     .premium-nav-dock .user-profile-icon,
     .premium-nav-dock #darkModeToggle,
-    .premium-nav-dock .mobile-menu-toggle {
-        width: 40px;
-        height: 40px;
-        font-size: 1.1rem;
-    }
-
-    .nav-search-toggle {
-        font-size: 1.25rem;
+    .premium-nav-dock .mobile-menu-toggle,
+    .premium-nav-dock .nav-search-toggle {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        font-size: 1rem;
     }
 
     .nav-search-dropdown {
-        top: 74px;
+        top: 58px;
         width: calc(100vw - 20px);
     }
 
@@ -2191,35 +2243,41 @@ a:hover {
 
 @media (max-width: 576px) {
     .premium-nav-dock {
-        top: 8px;
-        left: 8px;
-        right: 8px;
-        gap: 5px;
-        padding: 6px 8px !important;
-        border-radius: 22px;
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        gap: 4px;
+        padding: 4px 8px !important;
+        border-radius: 20px;
     }
 
     .premium-nav-dock .nav-brand-logo {
-        height: 46px;
-        max-width: 160px;
+        height: 38px;
+        max-width: 132px;
     }
 
     .premium-nav-dock.scrolled .nav-brand-logo {
-        height: 42px;
+        height: 34px;
     }
 
     .nav-utilities {
-        gap: 6px !important;
+        gap: 4px !important;
         flex-shrink: 0;
+    }
+
+    .premium-nav-dock .nav-login-btn {
+        min-height: 34px;
+        padding: 0 14px !important;
+        font-size: 0.78rem !important;
     }
 
     .premium-nav-dock .user-profile-icon,
     .mobile-menu-toggle,
     #darkModeToggle,
     .nav-search-toggle {
-        width: 36px !important;
-        height: 36px !important;
-        min-width: 36px;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -2517,5 +2575,5 @@ a:hover {
     border-color: rgba(255, 255, 255, 0.08) !important;
 }
 .public-page-offset {
-    margin-top: 100px;
+    margin-top: 72px;
 }

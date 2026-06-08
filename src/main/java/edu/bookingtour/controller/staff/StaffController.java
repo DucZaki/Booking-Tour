@@ -2,11 +2,14 @@ package edu.bookingtour.controller.staff;
 
 import edu.bookingtour.entity.CheckInStatus;
 import edu.bookingtour.entity.DatCho;
+import edu.bookingtour.entity.LichTrinh;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.entity.TrangThaiDoan;
+import edu.bookingtour.repo.LichTrinhRepository;
 import edu.bookingtour.service.CheckInService;
 import edu.bookingtour.service.TourManifestService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,7 +19,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -30,20 +35,51 @@ public class StaffController {
 
     private final TourManifestService tourManifestService;
     private final CheckInService checkInService;
+    private final LichTrinhRepository lichTrinhRepository;
 
-    public StaffController(TourManifestService tourManifestService, CheckInService checkInService) {
+    public StaffController(TourManifestService tourManifestService, CheckInService checkInService,
+            LichTrinhRepository lichTrinhRepository) {
         this.tourManifestService = tourManifestService;
         this.checkInService = checkInService;
+        this.lichTrinhRepository = lichTrinhRepository;
     }
 
     @GetMapping
-    public String dashboard(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String dashboard(@RequestParam(defaultValue = "week") String range,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
         NguoiDung guide = requireGuide(userDetails);
         LocalDate today = LocalDate.now();
-        List<NgayKhoiHanh> departures = tourManifestService.listDeparturesForGuide(guide, today, today.plusDays(14));
+        LocalDate anchor = date != null ? date : today;
+        boolean monthView = "month".equalsIgnoreCase(range);
+        LocalDate from = monthView ? anchor.withDayOfMonth(1) : anchor.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
+        LocalDate to = monthView ? anchor.withDayOfMonth(anchor.lengthOfMonth()) : from.plusDays(6);
+        List<NgayKhoiHanh> departures = tourManifestService.listDeparturesForGuide(guide, from, to);
+        long todayDepartures = departures.stream()
+                .filter(d -> today.equals(d.getNgay()))
+                .count();
+        long activeDepartures = departures.stream()
+                .filter(d -> d.getTrangThaiDoanEnum() == TrangThaiDoan.IN_PROGRESS)
+                .count();
+        long upcomingDepartures = departures.stream()
+                .filter(d -> d.getTrangThaiDoanEnum() == TrangThaiDoan.SCHEDULED)
+                .count();
         model.addAttribute("guide", guide);
         model.addAttribute("departures", departures);
+        model.addAttribute("range", monthView ? "month" : "week");
+        model.addAttribute("anchorDate", anchor);
+        model.addAttribute("fromDate", from);
+        model.addAttribute("toDate", to);
+        model.addAttribute("prevDate", monthView ? anchor.minusMonths(1) : anchor.minusWeeks(1));
+        model.addAttribute("nextDate", monthView ? anchor.plusMonths(1) : anchor.plusWeeks(1));
+        model.addAttribute("today", today);
+        model.addAttribute("todayDepartures", todayDepartures);
+        model.addAttribute("activeDepartures", activeDepartures);
+        model.addAttribute("upcomingDepartures", upcomingDepartures);
         model.addAttribute("isAdminView", TourManifestService.isAdmin(guide));
+        model.addAttribute("activeOpsNav", "home");
+        model.addAttribute("pageTitle", "Đoàn của tôi");
         return "staff/dashboard";
     }
 
@@ -64,13 +100,49 @@ public class StaffController {
             return "redirect:/staff";
         }
         List<DatCho> bookings = tourManifestService.manifest(nkh, q);
+        List<LichTrinh> itinerary = nkh.getChuyenDi() != null
+                ? lichTrinhRepository.findByTourIdOrderByNgayThuAsc(nkh.getChuyenDi().getId())
+                : List.of();
         model.addAttribute("nkh", nkh);
         model.addAttribute("bookings", bookings);
+        model.addAttribute("itinerary", itinerary);
         model.addAttribute("stats", tourManifestService.stats(bookings));
         model.addAttribute("keyword", q != null ? q : "");
         model.addAttribute("statuses", CheckInStatus.values());
         model.addAttribute("groupStatuses", TrangThaiDoan.values());
+        model.addAttribute("activeOpsNav", "manifest");
+        model.addAttribute("pageTitle", "Manifest");
         return "staff/manifest";
+    }
+
+    @GetMapping("/departures/{nkhId}/manifest.csv")
+    public void exportManifest(@PathVariable Integer nkhId,
+            @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletResponse response) throws IOException {
+        NguoiDung guide = requireGuide(userDetails);
+        NgayKhoiHanh nkh = tourManifestService.getDeparture(nkhId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy chuyến khởi hành."));
+        if (!tourManifestService.canAccessDeparture(guide, nkh)) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        List<DatCho> bookings = tourManifestService.manifest(nkh, null);
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=manifest-" + nkhId + ".csv");
+        response.getWriter().println("Ma don,Ho ten,So dien thoai,So khach,Diem don,Phong,Ghe,Thanh toan,Check-in,Ghi chu");
+        for (DatCho b : bookings) {
+            response.getWriter().println(String.join(",",
+                    csv("#" + b.getId()),
+                    csv(b.getHoTen()),
+                    csv(b.getSoDienThoai()),
+                    csv(String.valueOf(b.getSoLuong())),
+                    csv(b.getIdDiemDon() != null ? b.getIdDiemDon().getTen() : ""),
+                    csv(b.getSoPhong()),
+                    csv(b.getSoGhe()),
+                    csv(b.getTrangThai()),
+                    csv(b.getCheckinStatusEnum().getLabel()),
+                    csv(b.getGhiChu())));
+        }
     }
 
     @PostMapping("/departures/{nkhId}/status")
@@ -100,8 +172,26 @@ public class StaffController {
         return "redirect:/staff/departures/" + nkhId + "/manifest";
     }
 
+    @PostMapping("/bookings/{id}/note")
+    public String updateBookingNote(@PathVariable Integer id,
+            @RequestParam Integer nkhId,
+            @RequestParam(required = false) String note,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        NguoiDung guide = requireGuide(userDetails);
+        try {
+            tourManifestService.updateBookingNote(guide, id, note);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã lưu ghi chú booking.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+        return "redirect:/staff/departures/" + nkhId + "/manifest";
+    }
+
     @GetMapping("/scan")
-    public String scanPage() {
+    public String scanPage(Model model) {
+        model.addAttribute("activeOpsNav", "scan");
+        model.addAttribute("pageTitle", "Quét QR");
         return "staff/scan";
     }
 
@@ -130,15 +220,19 @@ public class StaffController {
         if (bookingOpt.isEmpty()) {
             model.addAttribute("valid", false);
             model.addAttribute("message", "Mã QR không hợp lệ.");
+            model.addAttribute("pageTitle", "Check-in");
             return "staff/check-in";
         }
         DatCho booking = bookingOpt.get();
         NgayKhoiHanh nkh = booking.getIdNgayKhoiHanh();
         if (nkh != null && !tourManifestService.canAccessDeparture(guide, nkh)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Vé thuộc đoàn bạn không phụ trách.");
-            return "redirect:/staff";
+            model.addAttribute("valid", false);
+            model.addAttribute("message", "Vé này thuộc đoàn khác, bạn không có quyền check-in.");
+            model.addAttribute("pageTitle", "Check-in");
+            return "staff/check-in";
         }
         populateCheckInModel(model, booking, token);
+        model.addAttribute("pageTitle", "Check-in");
         return "staff/check-in";
     }
 
@@ -189,6 +283,10 @@ public class StaffController {
                 booking.getIdNgayKhoiHanh() != null && booking.getIdNgayKhoiHanh().getNgay() != null
                         ? booking.getIdNgayKhoiHanh().getNgay().format(DATE_FMT)
                         : "—");
+        model.addAttribute("gatheringTime",
+                booking.getIdNgayKhoiHanh() != null && booking.getIdNgayKhoiHanh().getGioTapTrung() != null
+                        ? booking.getIdNgayKhoiHanh().getGioTapTrung()
+                        : "06:00");
         model.addAttribute("hotelName",
                 booking.getIdChuyenDi() != null && booking.getIdChuyenDi().getIdNoiLuuTru() != null
                         ? booking.getIdChuyenDi().getIdNoiLuuTru().getTen()
@@ -197,5 +295,12 @@ public class StaffController {
                 : (booking.getSoPhongDon() != null && booking.getSoPhongDon() > 0 ? "Phòng đơn x" + booking.getSoPhongDon() : "—"));
         model.addAttribute("seatInfo", booking.getSoGhe() != null ? booking.getSoGhe()
                 : (booking.getIdNgayKhoiHanh() != null ? booking.getIdNgayKhoiHanh().getMaChuyenBayDi() : "—"));
+    }
+
+    private String csv(String value) {
+        if (value == null) {
+            return "\"\"";
+        }
+        return "\"" + value.replace("\"", "\"\"") + "\"";
     }
 }

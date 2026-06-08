@@ -52,10 +52,56 @@ public class EmailService {
                 BookingEmailTemplate.successText(datCho));
     }
 
-    private void sendHtml(String to, String subject, String html, String plainText) {
+    /** Nhắc khách trước ngày khởi hành — gửi một lần. */
+    public boolean sendDepartureReminder(DatCho datCho) {
+        if (!hasRecipient(datCho)) {
+            return false;
+        }
+        return sendHtml(
+                datCho.getEmail(),
+                BookingEmailTemplate.reminderSubject(datCho),
+                BookingEmailTemplate.reminderHtml(datCho, mailBaseUrl),
+                BookingEmailTemplate.reminderText(datCho));
+    }
+
+    /** Email xác nhận khi nhân viên/HDV check-in khách thành công. */
+    public boolean sendCheckInSuccess(DatCho datCho) {
+        if (!hasRecipient(datCho)) {
+            return false;
+        }
+        return sendHtml(
+                datCho.getEmail(),
+                BookingEmailTemplate.checkInSubject(datCho),
+                BookingEmailTemplate.checkInHtml(datCho, mailBaseUrl),
+                BookingEmailTemplate.checkInText(datCho));
+    }
+
+    public boolean sendTripStartedNotice(DatCho datCho) {
+        if (!hasRecipient(datCho)) {
+            return false;
+        }
+        return sendHtml(
+                datCho.getEmail(),
+                BookingEmailTemplate.tripStartedSubject(datCho),
+                BookingEmailTemplate.tripStartedHtml(datCho, mailBaseUrl),
+                BookingEmailTemplate.tripStartedText(datCho));
+    }
+
+    public boolean sendTripCompletedNotice(DatCho datCho) {
+        if (!hasRecipient(datCho)) {
+            return false;
+        }
+        return sendHtml(
+                datCho.getEmail(),
+                BookingEmailTemplate.tripCompletedSubject(datCho),
+                BookingEmailTemplate.tripCompletedHtml(datCho, mailBaseUrl),
+                BookingEmailTemplate.tripCompletedText(datCho));
+    }
+
+    private boolean sendHtml(String to, String subject, String html, String plainText) {
         if (from == null || from.isBlank()) {
             log.warn("Skip email to {} — app.mail.from chưa cấu hình", to);
-            return;
+            return false;
         }
         try {
             MimeMessage message = mailSender.createMimeMessage();
@@ -66,8 +112,10 @@ public class EmailService {
             helper.setText(plainText, html);
             mailSender.send(message);
             log.info("Sent {} email to {}", BRAND_NAME, to);
+            return true;
         } catch (Exception e) {
             log.warn("Send mail failed to {}: {}", to, e.getMessage());
+            return false;
         }
     }
 

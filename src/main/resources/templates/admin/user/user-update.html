@@ -11,11 +11,12 @@
                 <h4>Edit User</h4>
             </div>
             <div class="card-body">
+                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
                 <form th:action="@{'/admin/user/update/' + ${user.id}}" method="post" enctype="multipart/form-data" th:object="${user}" autocomplete="off">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label">Tên dăng nhập</label>
-                            <input type="text" th:field="*{tenDangNhap}" class="form-control" required>
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" th:field="*{tenDangNhap}" class="form-control" required minlength="3">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Họ và tên</label>
@@ -32,7 +33,9 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Số điện thoại</label>
-                            <input type="text" th:field="*{number}" class="form-control" required>
+                            <input type="tel" th:field="*{number}" class="form-control" required
+                                   pattern="[0-9]{10}" maxlength="10" inputmode="numeric"
+                                   title="Số điện thoại phải đúng 10 chữ số">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Quyền</label>

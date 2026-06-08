@@ -16,10 +16,15 @@ public class CheckInService {
 
     private final DatChoRepository datChoRepository;
     private final TourManifestService tourManifestService;
+    private final EmailService emailService;
+    private final DepartureBookingPolicy departureBookingPolicy;
 
-    public CheckInService(DatChoRepository datChoRepository, TourManifestService tourManifestService) {
+    public CheckInService(DatChoRepository datChoRepository, TourManifestService tourManifestService,
+            EmailService emailService, DepartureBookingPolicy departureBookingPolicy) {
         this.datChoRepository = datChoRepository;
         this.tourManifestService = tourManifestService;
+        this.emailService = emailService;
+        this.departureBookingPolicy = departureBookingPolicy;
     }
 
     public Optional<DatCho> findByToken(String token) {
@@ -77,17 +82,23 @@ public class CheckInService {
         if (!"PAID".equals(booking.getTrangThai())) {
             return CheckInResult.invalid("Đơn chưa thanh toán — không thể check-in.");
         }
+        CheckInStatus previousStatus = booking.getCheckinStatusEnum();
         if (status == CheckInStatus.CHECKED_IN || status == CheckInStatus.LATE) {
             if (booking.getCheckinStatusEnum() == CheckInStatus.CHECKED_IN
                     && status == CheckInStatus.CHECKED_IN) {
                 return CheckInResult.ofAlreadyCheckedIn(booking);
             }
-            booking.setCheckinStatusEnum(status);
+            LocalDateTime checkInAt = booking.getCheckedInAt() != null ? booking.getCheckedInAt() : LocalDateTime.now();
+            CheckInStatus resolved = resolveArrivalStatus(booking, status, checkInAt);
+            booking.setCheckinStatusEnum(resolved);
             if (booking.getCheckedInAt() == null) {
-                booking.setCheckedInAt(LocalDateTime.now());
+                booking.setCheckedInAt(checkInAt);
             }
             datChoRepository.save(booking);
-            String msg = status == CheckInStatus.LATE ? "Đã ghi nhận khách đến muộn." : "Check-in thành công!";
+            if (previousStatus != CheckInStatus.CHECKED_IN && previousStatus != CheckInStatus.LATE) {
+                emailService.sendCheckInSuccess(booking);
+            }
+            String msg = resolved == CheckInStatus.LATE ? "Đã ghi nhận khách đến muộn." : "Check-in thành công!";
             return CheckInResult.ofSuccess(booking, msg);
         }
         if (status == CheckInStatus.NO_SHOW || status == CheckInStatus.CANCELLED_LAST_MINUTE) {
@@ -102,6 +113,17 @@ public class CheckInService {
             return CheckInResult.ofSuccess(booking, "Đã đặt lại trạng thái chưa đến.");
         }
         return CheckInResult.invalid("Trạng thái không hợp lệ.");
+    }
+
+    private CheckInStatus resolveArrivalStatus(DatCho booking, CheckInStatus requested, LocalDateTime checkInAt) {
+        if (requested == CheckInStatus.LATE) {
+            return CheckInStatus.LATE;
+        }
+        if (requested == CheckInStatus.CHECKED_IN && booking.getIdNgayKhoiHanh() != null
+                && departureBookingPolicy.isLateArrival(booking.getIdNgayKhoiHanh(), checkInAt)) {
+            return CheckInStatus.LATE;
+        }
+        return requested;
     }
 
     public record CheckInResult(

@@ -33,6 +33,8 @@ public class ChuyenDiController {
     private BookingPricingService bookingPricingService;
     @Autowired
     private TourCapacityService tourCapacityService;
+    @Autowired
+    private DepartureBookingPolicy departureBookingPolicy;
     @GetMapping("/tour")
     public String viewDiemDenPage(@RequestParam(required = false) String thanhPho,
             @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen,
@@ -63,10 +65,21 @@ public class ChuyenDiController {
             @RequestParam(required = false) Integer year,
             Principal principal,
             @RequestParam(required = false) String selectedDate,
-            @RequestParam(required = false) String capacityError) throws Exception {
+            @RequestParam(required = false) String capacityError,
+            @RequestParam(required = false) String bookingError) throws Exception {
 
         if ("full".equals(capacityError)) {
             model.addAttribute("capacityError", "Đợt tour này đã hết chỗ. Vui lòng chọn ngày khác.");
+        }
+        if ("closed".equals(bookingError)) {
+            model.addAttribute("bookingError",
+                    "Chuyến đi đã đóng đặt vé. Vui lòng đặt trước ít nhất "
+                            + departureBookingPolicy.getCutoffHours()
+                            + " giờ so với giờ tập trung (không đặt trong ngày khởi hành).");
+        }
+        if ("unavailable".equals(bookingError)) {
+            model.addAttribute("bookingError",
+                    "Ngày khởi hành này hiện không còn điểm xuất phát khả dụng. Vui lòng chọn ngày khác.");
         }
 
         // Tính 3 tháng bắt đầu từ tháng hiện tại
@@ -101,26 +114,35 @@ public class ChuyenDiController {
         tourService.normalizeTourDepartureOptions(chuyenDi);
         List<DiemDon> departureOptions = new java.util.ArrayList<>(chuyenDi.getDiemDons());
         departureOptions.sort(java.util.Comparator.comparing(DiemDon::getId));
-        Integer selectedDepartureId = null;
-        if (chuyenDi.getIdDiemDon() != null && chuyenDi.getIdDiemDon().getId() != null) {
-            selectedDepartureId = chuyenDi.getIdDiemDon().getId();
-        } else if (!departureOptions.isEmpty()) {
-            selectedDepartureId = departureOptions.get(0).getId();
+        // Lấy ngày khởi hành do admin đã set cho tháng hiện tại (chỉ ngày còn điểm xuất phát bật)
+        List<NgayKhoiHanh> departureDates = ngayKhoiHanhService.getDepartureDates(id, viewMonth, viewYear);
+        departureDates = new java.util.ArrayList<>(ngayKhoiHanhDiemDonService.filterBookableDepartures(departureDates));
+
+        java.util.Map<Integer, java.util.Set<Integer>> activeDepartureIdsByNkh = new java.util.HashMap<>();
+        for (NgayKhoiHanh nkh : departureDates) {
+            activeDepartureIdsByNkh.put(nkh.getId(), ngayKhoiHanhDiemDonService.getActiveDepartureIds(nkh.getId()));
         }
 
-        // Lấy ngày khởi hành do admin đã set cho tháng hiện tại
-        List<NgayKhoiHanh> departureDates = ngayKhoiHanhService.getDepartureDates(id, viewMonth, viewYear);
+        Integer selectedDepartureId = null;
 
         // Tạo calendar với thông tin ngày khởi hành
         List<Calendar> calendar = tourService.getCalendar(viewMonth, viewYear, selectedDate, departureDates);
         Map<Integer, TourCapacityService.CapacitySnapshot> capacityByNkh =
                 tourCapacityService.snapshotsForDepartures(departureDates);
+        Map<Integer, NgayKhoiHanh> nkhById = new java.util.HashMap<>();
+        for (NgayKhoiHanh nkh : departureDates) {
+            nkhById.put(nkh.getId(), nkh);
+        }
         for (Calendar day : calendar) {
             if (day.getNgayKhoiHanhId() != null) {
                 TourCapacityService.CapacitySnapshot snap = capacityByNkh.get(day.getNgayKhoiHanhId());
                 if (snap != null) {
                     day.setRemainingGuests(snap.getRemaining());
                     day.setSoldOut(snap.isSoldOut());
+                }
+                NgayKhoiHanh nkh = nkhById.get(day.getNgayKhoiHanhId());
+                if (nkh != null && !departureBookingPolicy.isBookingOpen(nkh)) {
+                    day.setBookingClosed(true);
                 }
             }
         }
@@ -131,7 +153,11 @@ public class ChuyenDiController {
         if (selectedDate != null && !selectedDate.isEmpty()) {
             LocalDate localDate = LocalDate.parse(selectedDate);
             selectedNkh = ngayKhoiHanhService.findByChuyenDiAndNgay(id, localDate);
+            if (selectedNkh != null && !ngayKhoiHanhDiemDonService.hasAnyActiveDeparturePoint(selectedNkh.getId())) {
+                selectedNkh = null;
+            }
             if (selectedNkh != null) {
+                selectedDepartureId = ngayKhoiHanhDiemDonService.resolveDefaultDepartureId(departureOptions, selectedNkh.getId());
                 flightPrice = selectedNkh.getTongGiaVe();
                 if (selectedDepartureId != null) {
                     edu.bookingtour.dto.FlightQuoteResponse initialQuote = ngayKhoiHanhDiemDonService
@@ -153,11 +179,18 @@ public class ChuyenDiController {
             model.addAttribute("selectedNkh", selectedNkh);
             if (selectedNkh != null) {
                 model.addAttribute("selectedCapacity", tourCapacityService.getSnapshot(selectedNkh.getId()));
+                model.addAttribute("selectedBookingOpen", departureBookingPolicy.isBookingOpen(selectedNkh));
             }
             model.addAttribute("capacityByNkh", capacityByNkh);
+            model.addAttribute("bookingCutoffHours", departureBookingPolicy.getCutoffHours());
             model.addAttribute("price", flightPrice);
             model.addAttribute("departureOptions", departureOptions);
             model.addAttribute("selectedDepartureId", selectedDepartureId);
+            model.addAttribute("activeDepartureIdsByNkh", activeDepartureIdsByNkh);
+            if (selectedNkh != null) {
+                model.addAttribute("activeDepartureIds",
+                        activeDepartureIdsByNkh.getOrDefault(selectedNkh.getId(), java.util.Set.of()));
+            }
             model.addAttribute("singleRoomSurcharge", bookingPricingService.getSingleRoomSurcharge(chuyenDi));
 
             // 3 tháng cho sidebar
@@ -206,13 +239,20 @@ public class ChuyenDiController {
         if (capacity.isSoldOut()) {
             return "redirect:/tour/" + tourId + "?capacityError=full";
         }
+        if (!departureBookingPolicy.isBookingOpen(nkh)) {
+            return "redirect:/tour/" + tourId + "?bookingError=closed";
+        }
+        if (!ngayKhoiHanhDiemDonService.hasAnyActiveDeparturePoint(nkhId)) {
+            return "redirect:/tour/" + tourId + "?bookingError=unavailable";
+        }
 
         tourService.normalizeTourDepartureOptions(chuyenDi);
         java.util.List<DiemDon> departureOptions = chuyenDi.getDiemDons() == null
                 ? new java.util.ArrayList<>()
                 : new java.util.ArrayList<>(chuyenDi.getDiemDons());
         departureOptions.sort(java.util.Comparator.comparing(DiemDon::getId));
-        Integer selectedDepartureId = departureOptions.isEmpty() ? null : departureOptions.get(0).getId();
+        Integer selectedDepartureId = ngayKhoiHanhDiemDonService.resolveDefaultDepartureId(departureOptions, nkhId);
+        java.util.Set<Integer> activeDepartureIds = ngayKhoiHanhDiemDonService.getActiveDepartureIds(nkhId);
 
         edu.bookingtour.dto.FlightQuoteResponse initialQuote = null;
         double baseTourPrice = chuyenDi.getGia() != null ? chuyenDi.getGia().doubleValue() : 0d;
@@ -239,6 +279,7 @@ public class ChuyenDiController {
 
         model.addAttribute("departureOptions", departureOptions);
         model.addAttribute("selectedDepartureId", selectedDepartureId);
+        model.addAttribute("activeDepartureIds", activeDepartureIds);
 
         // Tự điền thông tin user nếu đã đăng nhập
         if (principal != null) {

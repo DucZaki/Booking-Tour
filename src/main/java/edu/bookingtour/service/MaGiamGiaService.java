@@ -275,6 +275,12 @@ public class MaGiamGiaService {
         if (entity.getActive() == null) {
             entity.setActive(true);
         }
+        if (entity.getNgayBatDau() == null) {
+            entity.setNgayBatDau(LocalDate.now());
+        }
+        if (entity.getNgayKetThuc() == null) {
+            entity.setNgayKetThuc(LocalDate.now().plusMonths(3));
+        }
     }
 
     private static String formatMoney(double v) {

@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,9 +49,17 @@ public class AdminUserController {
     }
 
     @PostMapping("/save")
-    public String saveUser(NguoiDung user) {
-        nguoiDungService.save(user);
-        return "redirect:/admin/user";
+    public String saveUser(@ModelAttribute("users") NguoiDung user, Model model,
+                           RedirectAttributes redirectAttributes) {
+        try {
+            nguoiDungService.createUserByAdmin(user);
+            redirectAttributes.addFlashAttribute("successMessage", "Thêm người dùng thành công.");
+            return "redirect:/admin/user";
+        } catch (IllegalArgumentException ex) {
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("users", user);
+            return "admin/user/user-create";
+        }
     }
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable Integer id, Model model) {
@@ -59,9 +68,18 @@ public class AdminUserController {
         return "admin/user/user-update";
     }
     @PostMapping("/update/{id}")
-    public String updateUser(@PathVariable Integer id, NguoiDung user) {
-        nguoiDungService.update(id, user);
-        return "redirect:/admin/user/" + id;
+    public String updateUser(@PathVariable Integer id, @ModelAttribute("user") NguoiDung user, Model model,
+                             RedirectAttributes redirectAttributes) {
+        try {
+            nguoiDungService.update(id, user);
+            redirectAttributes.addFlashAttribute("successMessage", "Cập nhật người dùng thành công.");
+            return "redirect:/admin/user/" + id;
+        } catch (IllegalArgumentException ex) {
+            user.setId(id);
+            model.addAttribute("errorMessage", ex.getMessage());
+            model.addAttribute("user", user);
+            return "admin/user/user-update";
+        }
     }
 
     @GetMapping("/delete/{id}")

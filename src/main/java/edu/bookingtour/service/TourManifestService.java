@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +23,16 @@ public class TourManifestService {
     private final NgayKhoiHanhRepository ngayKhoiHanhRepository;
     private final DatChoRepository datChoRepository;
     private final NguoiDungRepository nguoiDungRepository;
+    private final EmailService emailService;
 
     public TourManifestService(NgayKhoiHanhRepository ngayKhoiHanhRepository,
             DatChoRepository datChoRepository,
-            NguoiDungRepository nguoiDungRepository) {
+            NguoiDungRepository nguoiDungRepository,
+            EmailService emailService) {
         this.ngayKhoiHanhRepository = ngayKhoiHanhRepository;
         this.datChoRepository = datChoRepository;
         this.nguoiDungRepository = nguoiDungRepository;
+        this.emailService = emailService;
     }
 
     public Optional<NguoiDung> findGuideUser(String username) {
@@ -69,15 +74,20 @@ public class TourManifestService {
 
     public ManifestStats stats(List<DatCho> bookings) {
         int totalGuests = bookings.stream().mapToInt(b -> b.getSoLuong() != null ? b.getSoLuong() : 0).sum();
-        long checkedIn = bookings.stream()
+        int checkedIn = bookings.stream()
                 .filter(b -> b.getCheckinStatusEnum() == CheckInStatus.CHECKED_IN
                         || b.getCheckinStatusEnum() == CheckInStatus.LATE)
-                .count();
-        long pending = bookings.stream().filter(b -> b.getCheckinStatusEnum() == CheckInStatus.PENDING).count();
-        long absent = bookings.stream()
+                .mapToInt(b -> b.getSoLuong() != null ? b.getSoLuong() : 0)
+                .sum();
+        int pending = bookings.stream()
+                .filter(b -> b.getCheckinStatusEnum() == CheckInStatus.PENDING)
+                .mapToInt(b -> b.getSoLuong() != null ? b.getSoLuong() : 0)
+                .sum();
+        int absent = bookings.stream()
                 .filter(b -> b.getCheckinStatusEnum() == CheckInStatus.NO_SHOW
                         || b.getCheckinStatusEnum() == CheckInStatus.CANCELLED_LAST_MINUTE)
-                .count();
+                .mapToInt(b -> b.getSoLuong() != null ? b.getSoLuong() : 0)
+                .sum();
         return new ManifestStats(bookings.size(), totalGuests, checkedIn, pending, absent);
     }
 
@@ -105,8 +115,85 @@ public class TourManifestService {
         if (!canAccessDeparture(actor, nkh)) {
             throw new IllegalArgumentException("Bạn không được phân công đoàn này");
         }
+        TrangThaiDoan previous = nkh.getTrangThaiDoanEnum();
         nkh.setTrangThaiDoanEnum(status);
-        return ngayKhoiHanhRepository.save(nkh);
+        NgayKhoiHanh saved = ngayKhoiHanhRepository.save(nkh);
+        handleLifecycleNotices(saved, previous, status);
+        return saved;
+    }
+
+    @Transactional
+    public int completeDueDepartures() {
+        LocalDateTime now = LocalDateTime.now();
+        int completed = 0;
+        for (NgayKhoiHanh nkh : ngayKhoiHanhRepository.findInProgressDueForCompletion(now.toLocalDate())) {
+            LocalDate endDate = nkh.getNgayVe() != null ? nkh.getNgayVe() : nkh.getNgay();
+            LocalTime endTime = parseTimeOrDefault(nkh.getGioDenVe(), LocalTime.of(23, 59));
+            if (endDate != null && !LocalDateTime.of(endDate, endTime).isAfter(now)) {
+                nkh.setTrangThaiDoanEnum(TrangThaiDoan.COMPLETED);
+                NgayKhoiHanh saved = ngayKhoiHanhRepository.save(nkh);
+                notifyTripCompleted(saved);
+                completed++;
+            }
+        }
+        return completed;
+    }
+
+    private void handleLifecycleNotices(NgayKhoiHanh nkh, TrangThaiDoan previous, TrangThaiDoan current) {
+        if (previous == current) {
+            return;
+        }
+        if (current == TrangThaiDoan.IN_PROGRESS) {
+            notifyTripStarted(nkh);
+        } else if (current == TrangThaiDoan.COMPLETED) {
+            notifyTripCompleted(nkh);
+        }
+    }
+
+    private void notifyTripStarted(NgayKhoiHanh nkh) {
+        for (DatCho booking : datChoRepository.findPaidManifestByNgayKhoiHanh(nkh.getId())) {
+            CheckInStatus status = booking.getCheckinStatusEnum();
+            boolean notCheckedIn = status != CheckInStatus.CHECKED_IN && status != CheckInStatus.LATE;
+            if (notCheckedIn && booking.getTripStartedNoticeSentAt() == null) {
+                if (emailService.sendTripStartedNotice(booking)) {
+                    booking.setTripStartedNoticeSentAt(LocalDateTime.now());
+                    datChoRepository.save(booking);
+                }
+            }
+        }
+    }
+
+    private void notifyTripCompleted(NgayKhoiHanh nkh) {
+        for (DatCho booking : datChoRepository.findPaidManifestByNgayKhoiHanh(nkh.getId())) {
+            if (booking.getTripCompletedNoticeSentAt() == null) {
+                if (emailService.sendTripCompletedNotice(booking)) {
+                    booking.setTripCompletedNoticeSentAt(LocalDateTime.now());
+                    datChoRepository.save(booking);
+                }
+            }
+        }
+    }
+
+    private LocalTime parseTimeOrDefault(String raw, LocalTime fallback) {
+        if (raw == null || raw.isBlank()) {
+            return fallback;
+        }
+        try {
+            return LocalTime.parse(raw.trim());
+        } catch (Exception ex) {
+            return fallback;
+        }
+    }
+
+    @Transactional
+    public void updateBookingNote(NguoiDung actor, Integer bookingId, String note) {
+        DatCho booking = datChoRepository.findByIdWithDetails(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy booking"));
+        if (!canAccessDeparture(actor, booking.getIdNgayKhoiHanh())) {
+            throw new IllegalArgumentException("Bạn không được phân công booking này");
+        }
+        booking.setGhiChu(note != null && !note.isBlank() ? note.trim() : null);
+        datChoRepository.save(booking);
     }
 
     public static boolean isAdmin(NguoiDung user) {
@@ -117,6 +204,6 @@ public class TourManifestService {
         return user != null && "GUIDE".equals(user.getVaiTro());
     }
 
-    public record ManifestStats(int bookingCount, int guestCount, long checkedIn, long pending, long absent) {
+    public record ManifestStats(int bookingCount, int guestCount, int checkedIn, int pending, int absent) {
     }
 }

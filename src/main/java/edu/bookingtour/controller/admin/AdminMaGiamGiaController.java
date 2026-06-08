@@ -99,6 +99,8 @@ public class AdminMaGiamGiaController {
         m.setLoaiGiam(MaGiamGia.LOAI_PHAN_TRAM);
         m.setApDungTatCa(true);
         m.setActive(true);
+        m.setNgayBatDau(LocalDate.now());
+        m.setNgayKetThuc(LocalDate.now().plusMonths(3));
         m.setGioiHanMoiUser(1);
         m.setKieuChienDich(MaGiamGia.KIEU_STANDARD);
         m.setSoNgayDatTruoc(30);

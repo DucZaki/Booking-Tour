@@ -607,8 +607,14 @@
 
 [data-theme="dark"] .premium-nav-dock .user-profile-icon {
     background: #2a2d31;
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.08);
     color: #fff;
+}
+
+[data-theme="dark"] .premium-nav-dock .nav-login-btn {
+    background-color: var(--bs-primary) !important;
+    color: #1A1C1E !important;
+    box-shadow: none;
 }
 
 [data-theme="dark"] #darkModeToggle {

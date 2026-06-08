@@ -28,6 +28,22 @@ public final class BookingEmailTemplate {
         return BRAND + " — Đơn đặt tour #" + booking.getId() + " đang chờ thanh toán";
     }
 
+    public static String reminderSubject(DatCho booking) {
+        return BRAND + " — Nhắc nhở chuyến đi sắp khởi hành #" + booking.getId();
+    }
+
+    public static String checkInSubject(DatCho booking) {
+        return BRAND + " — Bạn đã được check-in thành công #" + booking.getId();
+    }
+
+    public static String tripStartedSubject(DatCho booking) {
+        return BRAND + " — Chuyến đi đã khởi hành #" + booking.getId();
+    }
+
+    public static String tripCompletedSubject(DatCho booking) {
+        return BRAND + " — Chuyến đi đã kết thúc, cảm ơn bạn #" + booking.getId();
+    }
+
     public static String successHtml(DatCho booking) {
         return successHtml(booking, "http://localhost:8080");
     }
@@ -91,6 +107,141 @@ public final class BookingEmailTemplate {
         b.append("Tong thanh toan: ").append(info.totalPrice).append("\n\n");
         b.append("Cam on ban da su dung ").append(BRAND).append("!\n");
         return b.toString();
+    }
+
+    public static String reminderHtml(DatCho booking, String baseUrl) {
+        BookingInfo info = BookingInfo.from(booking, baseUrl);
+        StringBuilder rows = new StringBuilder();
+        row(rows, "Mã đơn hàng", "#" + info.orderId);
+        row(rows, "Chuyến đi", info.tourTitle);
+        row(rows, "Ngày khởi hành", "<strong style=\"color:#856404;font-size:16px;\">" + info.departureDate + "</strong>");
+        row(rows, "Điểm đón", info.departurePoint);
+        row(rows, "Điểm đến", info.destination);
+        row(rows, "Số khách", info.guestCount);
+        row(rows, "Liên hệ", info.phone);
+
+        String qrBlock = "";
+        if (info.checkInQrUrl != null) {
+            qrBlock = """
+                    <tr><td colspan="2" style="padding:20px 16px;text-align:center;background:#fff8e1;">
+                      <p style="margin:0 0 12px;font-weight:700;color:#856404;">Mã QR check-in</p>
+                      <img src="%s" alt="QR check-in" width="160" height="160" style="border:1px solid #ffc107;border-radius:8px;padding:8px;background:#fff;">
+                      <p style="margin:12px 0 0;font-size:12px;color:#6c757d;">Quét khi lên tour · <a href="%s" style="color:#856404;">Mở vé online</a></p>
+                    </td></tr>
+                    """.formatted(info.checkInQrUrl, esc(info.checkInPageUrl));
+        }
+
+        return wrap(
+                "Chuyến đi sắp khởi hành!",
+                "Xin chào <strong>" + esc(info.customerName) + "</strong>, chuyến đi của bạn tại <strong>"
+                        + BRAND + "</strong> sẽ khởi hành vào ngày <strong>" + esc(info.departureDate)
+                        + "</strong>. Vui lòng chuẩn bị giấy tờ và có mặt đúng giờ tại điểm đón.",
+                rows.toString() + qrBlock,
+                "Nếu bạn cần hỗ trợ, hãy liên hệ hotline trên website. Hẹn gặp bạn!",
+                ACCENT,
+                "🔔 Nhắc nhở chuyến đi");
+    }
+
+    public static String reminderText(DatCho booking) {
+        BookingInfo info = BookingInfo.from(booking);
+        return BRAND + " — Nhac nho chuyen di #" + info.orderId + "\n"
+                + "Chuyen di: " + info.tourTitle + "\n"
+                + "Ngay khoi hanh: " + info.departureDate + "\n"
+                + "Diem don: " + info.departurePoint + "\n"
+                + "So khach: " + info.guestCount + "\n";
+    }
+
+    public static String checkInHtml(DatCho booking, String baseUrl) {
+        BookingInfo info = BookingInfo.from(booking, baseUrl);
+        StringBuilder rows = new StringBuilder();
+        row(rows, "Mã đơn hàng", "#" + info.orderId);
+        row(rows, "Khách hàng", info.customerName);
+        row(rows, "Chuyến đi", info.tourTitle);
+        row(rows, "Ngày khởi hành", info.departureDate);
+        row(rows, "Điểm đón", info.departurePoint);
+        row(rows, "Số khách", info.guestCount);
+        row(rows, "Trạng thái", "<strong style=\"color:#198754;\">Đã check-in</strong>");
+
+        return wrap(
+                "Check-in thành công!",
+                "Xin chào <strong>" + esc(info.customerName) + "</strong>, nhân viên <strong>"
+                        + BRAND + "</strong> đã xác nhận check-in cho vé của bạn. Vui lòng giữ liên lạc và làm theo hướng dẫn của HDV.",
+                rows.toString(),
+                "Chúc bạn có một chuyến đi an toàn và nhiều trải nghiệm đáng nhớ cùng ZakiBooking.",
+                "#198754",
+                "✓ Đã check-in");
+    }
+
+    public static String checkInText(DatCho booking) {
+        BookingInfo info = BookingInfo.from(booking);
+        return BRAND + " — Ban da duoc check-in thanh cong #" + info.orderId + "\n"
+                + "Khach hang: " + info.customerName + "\n"
+                + "Chuyen di: " + info.tourTitle + "\n"
+                + "Ngay khoi hanh: " + info.departureDate + "\n"
+                + "Diem don: " + info.departurePoint + "\n"
+                + "So khach: " + info.guestCount + "\n";
+    }
+
+    public static String tripStartedHtml(DatCho booking, String baseUrl) {
+        BookingInfo info = BookingInfo.from(booking, baseUrl);
+        StringBuilder rows = new StringBuilder();
+        row(rows, "Mã đơn hàng", "#" + info.orderId);
+        row(rows, "Khách hàng", info.customerName);
+        row(rows, "Chuyến đi", info.tourTitle);
+        row(rows, "Ngày khởi hành", info.departureDate);
+        row(rows, "Điểm đón", info.departurePoint);
+        row(rows, "Số khách", info.guestCount);
+        row(rows, "Trạng thái vé", "<strong style=\"color:#6c757d;\">Đã quá hạn check-in</strong>");
+
+        return wrap(
+                "Chuyến đi đã khởi hành",
+                "Xin chào <strong>" + esc(info.customerName) + "</strong>, chuyến đi của bạn tại <strong>"
+                        + BRAND + "</strong> đã bắt đầu khởi hành. Hệ thống ghi nhận vé của bạn chưa được check-in đúng thời điểm.",
+                rows.toString(),
+                "Nếu bạn đang trên đường đến muộn hoặc cần hỗ trợ, vui lòng liên hệ ngay HDV/nhân viên ZakiBooking.",
+                "#6c757d",
+                "Đã khởi hành");
+    }
+
+    public static String tripStartedText(DatCho booking) {
+        BookingInfo info = BookingInfo.from(booking);
+        return BRAND + " — Chuyen di da khoi hanh #" + info.orderId + "\n"
+                + "Khach hang: " + info.customerName + "\n"
+                + "Chuyen di: " + info.tourTitle + "\n"
+                + "Ngay khoi hanh: " + info.departureDate + "\n"
+                + "Diem don: " + info.departurePoint + "\n"
+                + "Trang thai ve: Da qua han check-in\n";
+    }
+
+    public static String tripCompletedHtml(DatCho booking, String baseUrl) {
+        BookingInfo info = BookingInfo.from(booking, baseUrl);
+        StringBuilder rows = new StringBuilder();
+        row(rows, "Mã đơn hàng", "#" + info.orderId);
+        row(rows, "Khách hàng", info.customerName);
+        row(rows, "Chuyến đi", info.tourTitle);
+        row(rows, "Ngày khởi hành", info.departureDate);
+        row(rows, "Ngày kết thúc", info.returnDate);
+        row(rows, "Số khách", info.guestCount);
+        row(rows, "Trạng thái", "<strong style=\"color:#198754;\">Chuyến đi đã kết thúc</strong>");
+
+        return wrap(
+                "Cảm ơn bạn đã đồng hành!",
+                "Xin chào <strong>" + esc(info.customerName) + "</strong>, chuyến đi của bạn cùng <strong>"
+                        + BRAND + "</strong> đã kết thúc. Cảm ơn bạn đã tin tưởng lựa chọn dịch vụ của chúng tôi.",
+                rows.toString(),
+                "ZakiBooking rất mong tiếp tục được đồng hành cùng bạn trong những hành trình tiếp theo.",
+                "#198754",
+                "✓ Chuyến đi kết thúc");
+    }
+
+    public static String tripCompletedText(DatCho booking) {
+        BookingInfo info = BookingInfo.from(booking);
+        return BRAND + " — Chuyen di da ket thuc #" + info.orderId + "\n"
+                + "Khach hang: " + info.customerName + "\n"
+                + "Chuyen di: " + info.tourTitle + "\n"
+                + "Ngay khoi hanh: " + info.departureDate + "\n"
+                + "Ngay ket thuc: " + info.returnDate + "\n"
+                + "Cam on ban da dong hanh cung " + BRAND + ".\n";
     }
 
     public static String pendingHtml(DatCho booking) {
