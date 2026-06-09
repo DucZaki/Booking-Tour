@@ -278,6 +278,16 @@ public class StaffController {
         CheckInStatus st = booking.getCheckinStatusEnum();
         boolean checkedIn = st == CheckInStatus.CHECKED_IN || st == CheckInStatus.LATE;
 
+        NgayKhoiHanh nkh = booking.getIdNgayKhoiHanh();
+        TrangThaiDoan effective = nkh != null
+                ? DepartureStatusUtil.effectiveStatus(nkh, LocalDateTime.now())
+                : null;
+        boolean tripStarted = effective == TrangThaiDoan.IN_PROGRESS || effective == TrangThaiDoan.COMPLETED;
+        LocalDateTime gatheringAt = DepartureStatusUtil.departureStartDateTime(nkh);
+        model.addAttribute("tripStarted", tripStarted);
+        model.addAttribute("gatheringDateTimeLabel",
+                gatheringAt != null ? gatheringAt.format(DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy")) : null);
+
         model.addAttribute("valid", true);
         model.addAttribute("paid", paid);
         model.addAttribute("checkedIn", checkedIn);

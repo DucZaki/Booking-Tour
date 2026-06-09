@@ -44,7 +44,14 @@
                 </ul>
             </div>
 
-            <div th:if="${paid and !checkedIn}" class="d-grid gap-2 mt-4">
+            <div th:if="${paid and !checkedIn and !tripStarted}" class="alert alert-warning mt-4 mb-0 small">
+                <i class="bi bi-clock-history me-1"></i>
+                Đoàn chưa đến giờ tập trung
+                <span th:if="${gatheringDateTimeLabel != null}" th:text="'(' + ${gatheringDateTimeLabel} + ')'">()</span>
+                — chưa thể check-in. Khi đến giờ khởi hành đoàn sẽ chuyển sang "Đang diễn ra" và mở check-in.
+            </div>
+
+            <div th:if="${paid and !checkedIn and tripStarted}" class="d-grid gap-2 mt-4">
                 <form th:action="@{/staff/check-in/{token}/confirm(token=${token})}" method="post">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                     <input type="hidden" name="status" value="CHECKED_IN"/>

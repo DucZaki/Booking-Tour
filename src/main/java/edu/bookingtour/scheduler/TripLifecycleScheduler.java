@@ -22,6 +22,10 @@ public class TripLifecycleScheduler {
     @Scheduled(cron = "${app.trip-lifecycle.completion-cron:0 */5 * * * *}")
     public void runLifecycleJobs() {
         try {
+            int cancelled = tourManifestService.cancelEmptyDeparturesPastBookingDeadline();
+            if (cancelled > 0) {
+                log.info("Auto-cancelled {} empty departure(s) past booking deadline", cancelled);
+            }
             int started = tourManifestService.autoStartDueDepartures();
             if (started > 0) {
                 log.info("Auto-started {} departure(s)", started);

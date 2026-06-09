@@ -33,6 +33,10 @@ public class ChuyenDi {
     @Column(name = "mo_ta")
     private String moTa;
 
+    /** Loại hình tour: GIA_DINH, TREKKING, NGHI_DUONG, GHEP_DOAN. */
+    @Column(name = "loai_hinh", length = 20)
+    private String loaiHinh;
+
     @Column(name = "gia", precision = 10, scale = 2)
     private BigDecimal gia;
 

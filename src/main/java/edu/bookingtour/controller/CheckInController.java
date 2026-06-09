@@ -1,13 +1,17 @@
 package edu.bookingtour.controller;
 
 import edu.bookingtour.entity.DatCho;
+import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.service.CheckInService;
 import edu.bookingtour.service.QrCodeService;
+import edu.bookingtour.service.TourManifestService;
 import edu.bookingtour.util.TourCodeUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +28,16 @@ public class CheckInController {
 
     private final CheckInService checkInService;
     private final QrCodeService qrCodeService;
+    private final TourManifestService tourManifestService;
 
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
-    public CheckInController(CheckInService checkInService, QrCodeService qrCodeService) {
+    public CheckInController(CheckInService checkInService, QrCodeService qrCodeService,
+            TourManifestService tourManifestService) {
         this.checkInService = checkInService;
         this.qrCodeService = qrCodeService;
+        this.tourManifestService = tourManifestService;
     }
 
     /** Trang mở ra khi quét QR — xem thông tin vé & admin check-in. */
@@ -47,8 +54,13 @@ public class CheckInController {
 
     @PostMapping("/check-in/{token}/confirm")
     @PreAuthorize("hasAnyRole('ADMIN', 'GUIDE')")
-    public String confirmCheckIn(@PathVariable String token, RedirectAttributes redirectAttributes) {
-        CheckInService.CheckInResult result = checkInService.confirmCheckIn(token);
+    public String confirmCheckIn(@PathVariable String token,
+            @AuthenticationPrincipal UserDetails userDetails,
+            RedirectAttributes redirectAttributes) {
+        NguoiDung actor = userDetails != null
+                ? tourManifestService.findGuideUser(userDetails.getUsername()).orElse(null)
+                : null;
+        CheckInService.CheckInResult result = checkInService.confirmCheckIn(token, actor);
         redirectAttributes.addFlashAttribute("flashMessage", result.message());
         redirectAttributes.addFlashAttribute("flashSuccess", result.ok());
         return "redirect:/check-in/" + token;

@@ -3,6 +3,7 @@ package edu.bookingtour.service;
 import edu.bookingtour.client.AmadeusClient;
 import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.util.DepartureTimeUtil;
 import edu.bookingtour.repo.ChuyenDiRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
@@ -37,7 +38,9 @@ public class NgayKhoiHanhService {
      * Lấy danh sách ngày khởi hành của tour theo tháng/năm (do admin set)
      */
     public List<NgayKhoiHanh> getDepartureDates(Integer chuyenDiId, int month, int year) {
-        return ngayKhoiHanhRepository.findByChuyenDiIdAndThangAndNam(chuyenDiId, month, year);
+        return ngayKhoiHanhRepository.findByChuyenDiIdAndThangAndNam(chuyenDiId, month, year).stream()
+                .filter(n -> n.getTrangThaiDoanEnum() != TrangThaiDoan.CANCELLED)
+                .toList();
     }
 
     /**

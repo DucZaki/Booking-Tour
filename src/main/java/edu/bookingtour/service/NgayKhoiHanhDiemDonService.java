@@ -6,6 +6,7 @@ import edu.bookingtour.entity.ChuyenDi;
 import edu.bookingtour.entity.DiemDon;
 import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
+import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.DiemDonRepository;
 import edu.bookingtour.repo.NgayKhoiHanhDiemDonRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
@@ -194,6 +195,7 @@ public class NgayKhoiHanhDiemDonService {
             return List.of();
         }
         return departures.stream()
+                .filter(n -> n.getTrangThaiDoanEnum() != TrangThaiDoan.CANCELLED)
                 .filter(n -> hasAnyActiveDeparturePoint(n.getId()))
                 .toList();
     }

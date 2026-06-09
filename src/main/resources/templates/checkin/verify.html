@@ -81,6 +81,16 @@
                 </li>
             </ul>
 
+            <!-- Khách hàng: mã QR để nhân viên quét khi lên tour -->
+            <div th:if="${paid and !checkedIn and qrUrl != null}" sec:authorize="!hasAnyRole('ADMIN','GUIDE')"
+                 class="text-center mt-4">
+                <img th:src="${qrUrl}" alt="QR check-in" width="200" height="200"
+                     class="border rounded-3 p-2 bg-white">
+                <p class="text-muted small mt-3 mb-0">
+                    <i class="bi bi-info-circle me-1"></i> Đưa mã QR này cho nhân viên ZakiBooking để check-in.
+                </p>
+            </div>
+
             <!-- Admin: xác nhận check-in -->
             <form th:if="${paid and !checkedIn}" sec:authorize="hasAnyRole('ADMIN','GUIDE')"
                   th:action="@{/check-in/{token}/confirm(token=${token})}" method="post" class="mt-4">
@@ -89,11 +99,6 @@
                     <i class="bi bi-qr-code-scan me-1"></i> Xác nhận check-in
                 </button>
             </form>
-
-            <p th:if="${paid and !checkedIn}" sec:authorize="!hasRole('ADMIN')"
-               class="text-muted small text-center mt-3 mb-0">
-                <i class="bi bi-info-circle me-1"></i> Đưa màn hình này cho nhân viên ZakiBooking để check-in.
-            </p>
         </div>
     </div>
 </div>

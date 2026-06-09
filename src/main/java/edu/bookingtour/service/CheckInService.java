@@ -2,17 +2,23 @@ package edu.bookingtour.service;
 
 import edu.bookingtour.entity.CheckInStatus;
 import edu.bookingtour.entity.DatCho;
+import edu.bookingtour.entity.NgayKhoiHanh;
 import edu.bookingtour.entity.NguoiDung;
+import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.DatChoRepository;
+import edu.bookingtour.util.DepartureStatusUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class CheckInService {
+
+    private static final DateTimeFormatter GATHER_FMT = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 
     private final DatChoRepository datChoRepository;
     private final TourManifestService tourManifestService;
@@ -56,6 +62,11 @@ public class CheckInService {
     }
 
     @Transactional
+    public CheckInResult confirmCheckIn(String token, NguoiDung actor) {
+        return updateStatusByToken(token, CheckInStatus.CHECKED_IN, actor);
+    }
+
+    @Transactional
     public CheckInResult updateStatusByToken(String token, CheckInStatus status, NguoiDung actor) {
         DatCho booking = datChoRepository.findByMaCheckInWithDetails(token.trim()).orElse(null);
         if (booking == null) {
@@ -81,6 +92,13 @@ public class CheckInService {
     private CheckInResult applyStatus(DatCho booking, CheckInStatus status, NguoiDung actor) {
         if (!"PAID".equals(booking.getTrangThai())) {
             return CheckInResult.invalid("Đơn chưa thanh toán — không thể check-in.");
+        }
+        boolean arrival = status == CheckInStatus.CHECKED_IN || status == CheckInStatus.LATE;
+        if (arrival) {
+            CheckInResult guard = guardArrivalCheckIn(booking, actor);
+            if (guard != null) {
+                return guard;
+            }
         }
         CheckInStatus previousStatus = booking.getCheckinStatusEnum();
         if (status == CheckInStatus.CHECKED_IN || status == CheckInStatus.LATE) {
@@ -113,6 +131,36 @@ public class CheckInService {
             return CheckInResult.ofSuccess(booking, "Đã đặt lại trạng thái chưa đến.");
         }
         return CheckInResult.invalid("Trạng thái không hợp lệ.");
+    }
+
+    /**
+     * Ràng buộc quét QR check-in khách:
+     *  - Guide chỉ được check-in đoàn mình phụ trách.
+     *  - Đoàn chưa đến giờ tập trung (còn "Sắp diễn ra") thì chưa được check-in.
+     * Admin được bỏ qua để xử lý/sửa thủ công. Trả về null nếu hợp lệ.
+     */
+    private CheckInResult guardArrivalCheckIn(DatCho booking, NguoiDung actor) {
+        if (actor == null || TourManifestService.isAdmin(actor)) {
+            return null;
+        }
+        NgayKhoiHanh nkh = booking.getIdNgayKhoiHanh();
+        if (nkh == null) {
+            return null;
+        }
+        if (!tourManifestService.canAccessDeparture(actor, nkh)) {
+            return CheckInResult.invalid("Vé thuộc đoàn bạn không phụ trách — không thể check-in.");
+        }
+        TrangThaiDoan effective = DepartureStatusUtil.effectiveStatus(nkh, LocalDateTime.now());
+        if (effective == TrangThaiDoan.CANCELLED) {
+            return CheckInResult.invalid("Đoàn đã bị hủy — không thể check-in.");
+        }
+        if (effective == TrangThaiDoan.SCHEDULED) {
+            LocalDateTime start = DepartureStatusUtil.departureStartDateTime(nkh);
+            String when = start != null ? " (" + GATHER_FMT.format(start) + ")" : "";
+            return CheckInResult.invalid(
+                    "Chưa đến giờ tập trung" + when + " — đoàn chưa diễn ra, chưa thể check-in.");
+        }
+        return null;
     }
 
     private CheckInStatus resolveArrivalStatus(DatCho booking, CheckInStatus requested, LocalDateTime checkInAt) {

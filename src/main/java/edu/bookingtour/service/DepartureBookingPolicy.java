@@ -1,6 +1,7 @@
 package edu.bookingtour.service;
 
 import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.util.DepartureTimeUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class DepartureBookingPolicy {
     public void assertBookingAllowed(NgayKhoiHanh nkh) {
         if (nkh == null || nkh.getNgay() == null) {
             throw new IllegalArgumentException("Ngày khởi hành không hợp lệ.");
+        }
+        if (nkh.getTrangThaiDoanEnum() == TrangThaiDoan.CANCELLED) {
+            throw new IllegalArgumentException("Chuyến đi này đã bị hủy do không có khách đặt.");
         }
         if (!isBookingOpen(nkh)) {
             throw new IllegalArgumentException(closureMessage(nkh));

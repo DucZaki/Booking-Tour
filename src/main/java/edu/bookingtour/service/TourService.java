@@ -82,6 +82,7 @@ public class TourService {
         ChuyenDi tour = chuyenDiRepository.findById(id).orElseThrow(() -> new RuntimeException("ChuyenDi not found"));
         tour.setTieuDe(chuyenDi.getTieuDe());
         tour.setMoTa(chuyenDi.getMoTa());
+        tour.setLoaiHinh(chuyenDi.getLoaiHinh());
         tour.setGia(chuyenDi.getGia());
         tour.setHinhAnh(chuyenDi.getHinhAnh());
         tour.setNgayKhoiHanh(chuyenDi.getNgayKhoiHanh());
@@ -229,6 +230,11 @@ public class TourService {
 
     public Page<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String khoangGia,
             String ngayDi, String sort, int page, int size) {
+        return filterAndSort(thanhPho, quocGia, diemDen, null, khoangGia, ngayDi, sort, page, size);
+    }
+
+    public Page<ChuyenDi> filterAndSort(String thanhPho, String quocGia, String diemDen, String loaiHinh,
+            String khoangGia, String ngayDi, String sort, int page, int size) {
         LocalDate date = (ngayDi == null || ngayDi.isBlank()) ? null : LocalDate.parse(ngayDi);
         BigDecimal minGia = null;
         BigDecimal maxGia = null;
@@ -257,8 +263,8 @@ public class TourService {
             sortOption = Sort.by("gia").descending();
         }
         Pageable pageable = PageRequest.of(page, size, sortOption);
-        return chuyenDiRepository.filterTour(emptyToNull(thanhPho), emptyToNull(quocGia), emptyToNull(diemDen), date,
-                minGia, maxGia, pageable);
+        return chuyenDiRepository.filterTour(emptyToNull(thanhPho), emptyToNull(quocGia), emptyToNull(diemDen),
+                emptyToNull(loaiHinh), date, minGia, maxGia, pageable);
     }
 
     private String emptyToNull(String s) {

@@ -30,11 +30,12 @@ public interface ChuyenDiRepository extends JpaRepository<ChuyenDi, Integer>,
             AND (:quocGia IS NULL OR LOWER(dd.quocGia) = LOWER(:quocGia))
             AND (:diemDen IS NULL OR LOWER(dd.thanhPho) LIKE LOWER(CONCAT('%', :diemDen, '%'))
                 OR LOWER(dd.quocGia) LIKE LOWER(CONCAT('%', :diemDen, '%')))
+            AND (:loaiHinh IS NULL OR cd.loaiHinh = :loaiHinh)
             AND (:ngayDi IS NULL OR cd.ngayKhoiHanh >= :ngayDi)
             AND (:minGia IS NULL OR :maxGia IS NULL OR cd.gia BETWEEN :minGia AND :maxGia)
             """)
-    Page<ChuyenDi> filterTour(String thanhPho, String quocGia, String diemDen, LocalDate ngayDi, BigDecimal minGia,
-            BigDecimal maxGia, Pageable pageable);
+    Page<ChuyenDi> filterTour(String thanhPho, String quocGia, String diemDen, String loaiHinh, LocalDate ngayDi,
+            BigDecimal minGia, BigDecimal maxGia, Pageable pageable);
 
     Page<ChuyenDi> findByNgayKetThucAfter(LocalDate today, Pageable pageable);
 

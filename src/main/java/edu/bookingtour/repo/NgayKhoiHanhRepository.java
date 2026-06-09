@@ -102,4 +102,13 @@ public interface NgayKhoiHanhRepository extends JpaRepository<NgayKhoiHanh, Inte
             ORDER BY n.ngay ASC, c.tieuDe ASC
             """)
     List<NgayKhoiHanh> findScheduledReadyForAutoStart(@Param("date") LocalDate date);
+
+    @Query("""
+            SELECT n FROM NgayKhoiHanh n
+            JOIN FETCH n.chuyenDi c
+            LEFT JOIN FETCH n.guide
+            WHERE n.trangThaiDoan = 'SCHEDULED'
+            ORDER BY n.ngay ASC, c.tieuDe ASC
+            """)
+    List<NgayKhoiHanh> findAllScheduled();
 }

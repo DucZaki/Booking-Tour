@@ -18,6 +18,7 @@ import edu.bookingtour.service.NgayKhoiHanhService;
 import edu.bookingtour.service.TourCapacityService;
 import edu.bookingtour.service.TourManifestService;
 import edu.bookingtour.service.TourService;
+import edu.bookingtour.util.DepartureStatusUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,25 +80,39 @@ public class AdminNgayKhoiHanhController {
     public String list(@PathVariable Integer tourId,
             @RequestParam(required = false) Integer month,
             @RequestParam(required = false) Integer year,
-            @RequestParam(required = false, defaultValue = "all") String filter,
+            @RequestParam(required = false, defaultValue = "in_progress") String phase,
             Model model) {
         ChuyenDi tour = tourService.findById(tourId)
                 .orElseThrow(() -> new RuntimeException("Tour không tồn tại"));
 
         LocalDate today = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         int viewMonth = month != null ? month : today.getMonthValue();
         int viewYear = year != null ? year : today.getYear();
         YearMonth ym = YearMonth.of(viewYear, viewMonth);
 
-        List<NgayKhoiHanh> danhSach = ngayKhoiHanhRepository.findByTourAndDateRange(
+        List<NgayKhoiHanh> allInMonth = ngayKhoiHanhRepository.findByTourAndDateRange(
                 tourId, ym.atDay(1), ym.atEndOfMonth());
 
-        if ("upcoming".equals(filter)) {
-            danhSach = danhSach.stream().filter(n -> !n.getNgay().isBefore(today)).toList();
-        } else if ("past".equals(filter)) {
-            danhSach = danhSach.stream().filter(n -> n.getNgay().isBefore(today)).toList();
-        } else if ("today".equals(filter)) {
-            danhSach = danhSach.stream().filter(n -> n.getNgay().equals(today)).toList();
+        List<NgayKhoiHanh> danhSach;
+        List<NgayKhoiHanh> inProgressList = List.of();
+        List<NgayKhoiHanh> upcomingList = List.of();
+        List<NgayKhoiHanh> completedList = List.of();
+        List<NgayKhoiHanh> cancelledList = List.of();
+        boolean showGrouped = "all".equals(phase);
+
+        if (showGrouped) {
+            inProgressList = filterByEffectiveStatus(allInMonth, TrangThaiDoan.IN_PROGRESS, now);
+            upcomingList = filterByEffectiveStatus(allInMonth, TrangThaiDoan.SCHEDULED, now);
+            completedList = filterByEffectiveStatus(allInMonth, TrangThaiDoan.COMPLETED, now);
+            cancelledList = filterByEffectiveStatus(allInMonth, TrangThaiDoan.CANCELLED, now);
+            danhSach = new ArrayList<>();
+            danhSach.addAll(inProgressList);
+            danhSach.addAll(upcomingList);
+            danhSach.addAll(completedList);
+            danhSach.addAll(cancelledList);
+        } else {
+            danhSach = filterByPhase(allInMonth, phase, now);
         }
 
         Map<Integer, List<NgayKhoiHanhDiemDon>> diemDonByNkh = new HashMap<>();
@@ -111,14 +127,39 @@ public class AdminNgayKhoiHanhController {
 
         model.addAttribute("tour", tour);
         model.addAttribute("danhSach", danhSach);
+        model.addAttribute("showGrouped", showGrouped);
+        model.addAttribute("inProgressList", inProgressList);
+        model.addAttribute("upcomingList", upcomingList);
+        model.addAttribute("completedList", completedList);
+        model.addAttribute("cancelledList", cancelledList);
         model.addAttribute("diemDonByNkh", diemDonByNkh);
         model.addAttribute("capacityByNkh", tourCapacityService.snapshotsForDepartures(danhSach));
         model.addAttribute("guides", tourManifestService.listGuides());
         model.addAttribute("viewMonth", viewMonth);
         model.addAttribute("viewYear", viewYear);
-        model.addAttribute("filter", filter);
+        model.addAttribute("phase", phase);
         model.addAttribute("today", today);
         return "admin/tour/ngay-khoi-hanh-list";
+    }
+
+    private static List<NgayKhoiHanh> filterByPhase(List<NgayKhoiHanh> departures, String phase, LocalDateTime now) {
+        TrangThaiDoan target = switch (phase) {
+            case "upcoming" -> TrangThaiDoan.SCHEDULED;
+            case "completed" -> TrangThaiDoan.COMPLETED;
+            case "all" -> null;
+            default -> TrangThaiDoan.IN_PROGRESS;
+        };
+        if (target == null) {
+            return departures;
+        }
+        return filterByEffectiveStatus(departures, target, now);
+    }
+
+    private static List<NgayKhoiHanh> filterByEffectiveStatus(
+            List<NgayKhoiHanh> departures, TrangThaiDoan target, LocalDateTime now) {
+        return departures.stream()
+                .filter(n -> DepartureStatusUtil.effectiveStatus(n, now) == target)
+                .toList();
     }
 
     /**
@@ -214,7 +255,7 @@ public class AdminNgayKhoiHanhController {
             RedirectAttributes redirectAttributes) {
         NguoiDung admin = resolveAdmin(userDetails);
         try {
-            tourManifestService.updateDepartureStatus(admin, nkhId, status);
+            tourManifestService.adminSetDepartureStatus(admin, nkhId, status);
             redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật trạng thái đoàn: " + status.getLabel());
         } catch (IllegalArgumentException ex) {
             redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());

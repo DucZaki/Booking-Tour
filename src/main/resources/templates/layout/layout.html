@@ -112,7 +112,7 @@
                     </div>
                     <div class="mega-tours-body">
                         <div class="mega-tours-cats">
-                            <a th:href="@{/tour(diemDen='Family')}" class="mega-cat-card mega-cat-card--gia-dinh">
+                            <a th:href="@{/tour(loaiHinh='GIA_DINH')}" class="mega-cat-card mega-cat-card--gia-dinh">
                                 <span class="mega-cat-card__icon"><i class="bi bi-people-fill"></i></span>
                                 <div class="mega-cat-card__body">
                                     <span class="mega-cat-card__title">Tour gia đình</span>
@@ -120,7 +120,7 @@
                                 </div>
                                 <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
                             </a>
-                            <a th:href="@{/tour(diemDen='Trek')}" class="mega-cat-card mega-cat-card--trekking">
+                            <a th:href="@{/tour(loaiHinh='TREKKING')}" class="mega-cat-card mega-cat-card--trekking">
                                 <span class="mega-cat-card__icon"><i class="bi bi-mountain"></i></span>
                                 <div class="mega-cat-card__body">
                                     <span class="mega-cat-card__title">Trekking / mạo hiểm</span>
@@ -128,7 +128,7 @@
                                 </div>
                                 <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
                             </a>
-                            <a th:href="@{/tour(diemDen='Resort')}" class="mega-cat-card mega-cat-card--nghi-duong">
+                            <a th:href="@{/tour(loaiHinh='NGHI_DUONG')}" class="mega-cat-card mega-cat-card--nghi-duong">
                                 <span class="mega-cat-card__icon"><i class="bi bi-umbrella-beach"></i></span>
                                 <div class="mega-cat-card__body">
                                     <span class="mega-cat-card__title">Tour nghỉ dưỡng</span>
@@ -136,7 +136,7 @@
                                 </div>
                                 <i class="bi bi-chevron-right mega-cat-card__arrow"></i>
                             </a>
-                            <a th:href="@{/tour(diemDen='Group')}" class="mega-cat-card mega-cat-card--ghep-doan">
+                            <a th:href="@{/tour(loaiHinh='GHEP_DOAN')}" class="mega-cat-card mega-cat-card--ghep-doan">
                                 <span class="mega-cat-card__icon"><i class="bi bi-bus-front-fill"></i></span>
                                 <div class="mega-cat-card__body">
                                     <span class="mega-cat-card__title">Tour ghép đoàn</span>
@@ -255,10 +255,10 @@
             <div class="mobile-menu-section">
                 <div class="mobile-menu-title">Loại tour</div>
                 <div class="mobile-destination-grid">
-                    <a th:href="@{/tour(diemDen='Family')}" data-bs-dismiss="offcanvas">Tour gia đình</a>
-                    <a th:href="@{/tour(diemDen='Trek')}" data-bs-dismiss="offcanvas">Trekking</a>
-                    <a th:href="@{/tour(diemDen='Resort')}" data-bs-dismiss="offcanvas">Nghỉ dưỡng</a>
-                    <a th:href="@{/tour(diemDen='Group')}" data-bs-dismiss="offcanvas">Ghép đoàn</a>
+                    <a th:href="@{/tour(loaiHinh='GIA_DINH')}" data-bs-dismiss="offcanvas">Tour gia đình</a>
+                    <a th:href="@{/tour(loaiHinh='TREKKING')}" data-bs-dismiss="offcanvas">Trekking</a>
+                    <a th:href="@{/tour(loaiHinh='NGHI_DUONG')}" data-bs-dismiss="offcanvas">Nghỉ dưỡng</a>
+                    <a th:href="@{/tour(loaiHinh='GHEP_DOAN')}" data-bs-dismiss="offcanvas">Ghép đoàn</a>
                 </div>
             </div>
         </div>

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
- * Trạng thái vận hành đoàn: chỉ tiến (SCHEDULED → IN_PROGRESS → COMPLETED).
+ * Trạng thái vận hành đoàn: SCHEDULED → IN_PROGRESS → COMPLETED; SCHEDULED → CANCELLED (tự động).
  */
 public final class DepartureStatusUtil {
 
@@ -65,6 +65,9 @@ public final class DepartureStatusUtil {
             return TrangThaiDoan.SCHEDULED;
         }
         TrangThaiDoan stored = nkh.getTrangThaiDoanEnum();
+        if (stored == TrangThaiDoan.CANCELLED) {
+            return TrangThaiDoan.CANCELLED;
+        }
         if (stored == TrangThaiDoan.COMPLETED || isPastEnd(nkh, now)) {
             return TrangThaiDoan.COMPLETED;
         }
@@ -84,6 +87,7 @@ public final class DepartureStatusUtil {
         return switch (status) {
             case COMPLETED -> "bg-secondary";
             case IN_PROGRESS -> "bg-success";
+            case CANCELLED -> "bg-danger";
             case SCHEDULED -> "bg-warning text-dark";
         };
     }
@@ -93,6 +97,9 @@ public final class DepartureStatusUtil {
             return;
         }
         if (from == TrangThaiDoan.SCHEDULED && to == TrangThaiDoan.IN_PROGRESS) {
+            return;
+        }
+        if (from == TrangThaiDoan.SCHEDULED && to == TrangThaiDoan.CANCELLED) {
             return;
         }
         if (from == TrangThaiDoan.IN_PROGRESS && to == TrangThaiDoan.COMPLETED) {

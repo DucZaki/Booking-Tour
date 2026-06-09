@@ -19,6 +19,17 @@
                         <label class="form-label fw-bold">Tiêu đề</label>
                         <input type="text" th:field="*{tieuDe}" class="form-control" required>
                     </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Loại hình</label>
+                        <select th:field="*{loaiHinh}" class="form-select">
+                            <option value="">-- Chọn loại hình --</option>
+                            <option value="GIA_DINH">Tour gia đình</option>
+                            <option value="TREKKING">Trekking / mạo hiểm</option>
+                            <option value="NGHI_DUONG">Tour nghỉ dưỡng</option>
+                            <option value="GHEP_DOAN">Tour ghép đoàn</option>
+                        </select>
+                    </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Giá cả</label>
                         <input type="text" th:field="*{gia}" class="form-control" required>

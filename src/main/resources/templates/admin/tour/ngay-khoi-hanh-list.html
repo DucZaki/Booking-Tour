@@ -15,10 +15,11 @@
                 <h4 class="fw-bold mb-0" th:text="'Ngày khởi hành — ' + ${tour.tieuDe}"></h4>
             </div>
 
-            <!-- Bộ lọc tháng / trạng thái -->
+            <!-- Bộ lọc tháng -->
             <div class="card mb-3 shadow-sm border-0">
                 <div class="card-body py-3">
                     <form method="get" class="row g-2 align-items-end">
+                        <input type="hidden" name="phase" th:value="${phase}"/>
                         <div class="col-md-2">
                             <label class="form-label small mb-0">Tháng</label>
                             <select name="month" class="form-select form-select-sm">
@@ -33,20 +34,11 @@
                                         th:selected="${y == viewYear}" th:text="${y}"></option>
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label small mb-0">Lọc</label>
-                            <select name="filter" class="form-select form-select-sm">
-                                <option value="all" th:selected="${filter == 'all'}">Tất cả trong tháng</option>
-                                <option value="upcoming" th:selected="${filter == 'upcoming'}">Sắp tới</option>
-                                <option value="today" th:selected="${filter == 'today'}">Hôm nay</option>
-                                <option value="past" th:selected="${filter == 'past'}">Đã qua</option>
-                            </select>
-                        </div>
                         <div class="col-md-2">
-                            <button type="submit" class="btn btn-sm btn-dark w-100">Áp dụng</button>
+                            <button type="submit" class="btn btn-sm btn-dark w-100">Áp dụng tháng</button>
                         </div>
-                        <div class="col-md-2 text-end">
-                            <a th:href="@{/admin/departures}" class="btn btn-sm btn-outline-primary w-100">
+                        <div class="col-md-6 text-end">
+                            <a th:href="@{/admin/departures}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-calendar3"></i> Lịch tổng
                             </a>
                         </div>
@@ -128,9 +120,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
-            <div class="d-flex justify-content-end mb-3" th:unless="${#lists.isEmpty(danhSach)}">
-                <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/sync-all'}" method="post"
-                        onsubmit="return confirm('Đồng bộ lại cấu hình vé theo tất cả điểm đón?');">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <form method="get" class="d-flex align-items-center gap-2 ms-auto">
+                    <input type="hidden" name="month" th:value="${viewMonth}"/>
+                    <input type="hidden" name="year" th:value="${viewYear}"/>
+                    <label class="small text-muted mb-0 fw-semibold">Trạng thái đoàn:</label>
+                    <select name="phase" class="form-select form-select-sm" style="width:auto;min-width:11rem;" onchange="this.form.submit()">
+                        <option value="in_progress" th:selected="${phase == 'in_progress'}">Đang diễn ra</option>
+                        <option value="upcoming" th:selected="${phase == 'upcoming'}">Sắp diễn ra</option>
+                        <option value="completed" th:selected="${phase == 'completed'}">Đã kết thúc</option>
+                        <option value="all" th:selected="${phase == 'all'}">Tất cả</option>
+                    </select>
+                </form>
+                <form th:if="${!#lists.isEmpty(danhSach)}"
+                      th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/sync-all'}" method="post"
+                      onsubmit="return confirm('Đồng bộ lại cấu hình vé theo tất cả điểm đón?');">
                     <button type="submit" class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-arrow-repeat"></i> Đồng bộ cấu hình vé theo điểm đón
                     </button>
@@ -142,15 +146,88 @@
                 <div class="card-body">
                     <div th:if="${#lists.isEmpty(danhSach)}" class="text-center text-muted py-4">
                         <i class="bi bi-calendar-x fs-1"></i>
-                        <p class="mt-2">Chưa có ngày khởi hành nào. Hãy thêm ở trên.</p>
+                        <p class="mt-2 mb-0" th:switch="${phase}">
+                            <span th:case="'in_progress'">Không có chuyến đi đang diễn ra trong tháng này.</span>
+                            <span th:case="'upcoming'">Không có chuyến sắp diễn ra trong tháng này.</span>
+                            <span th:case="'completed'">Không có chuyến đã kết thúc trong tháng này.</span>
+                            <span th:case="*">Chưa có ngày khởi hành nào trong tháng này.</span>
+                        </p>
                     </div>
-                    <div th:unless="${#lists.isEmpty(danhSach)}" class="table-responsive">
+
+                    <!-- Xem theo nhóm khi chọn Tất cả -->
+                    <div th:if="${showGrouped and !#lists.isEmpty(danhSach)}">
+                        <div class="mb-4" th:if="${!#lists.isEmpty(inProgressList)}">
+                            <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-success border-2">
+                                <span class="badge bg-success">Đang diễn ra</span>
+                                <span class="small text-muted" th:text="${inProgressList.size()} + ' chuyến'"></span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light"><tr>
+                                        <th>Ngày đi / về</th><th>Điểm đón</th><th>Bán vé</th><th>Mã CB đi</th><th>Giờ bay đi</th><th>Giá đi</th><th>Mã CB về</th><th>Giờ bay về</th><th>Giá về</th><th>Tổng vé</th><th></th>
+                                    </tr></thead>
+                                    <tbody th:replace="~{:: departureTbody(${inProgressList})}"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mb-4" th:if="${!#lists.isEmpty(upcomingList)}">
+                            <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-warning border-2">
+                                <span class="badge bg-warning text-dark">Sắp diễn ra</span>
+                                <span class="small text-muted" th:text="${upcomingList.size()} + ' chuyến'"></span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light"><tr>
+                                        <th>Ngày đi / về</th><th>Điểm đón</th><th>Bán vé</th><th>Mã CB đi</th><th>Giờ bay đi</th><th>Giá đi</th><th>Mã CB về</th><th>Giờ bay về</th><th>Giá về</th><th>Tổng vé</th><th></th>
+                                    </tr></thead>
+                                    <tbody th:replace="~{:: departureTbody(${upcomingList})}"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mb-4" th:if="${!#lists.isEmpty(completedList)}">
+                            <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-secondary border-2">
+                                <span class="badge bg-secondary">Đã kết thúc</span>
+                                <span class="small text-muted" th:text="${completedList.size()} + ' chuyến'"></span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light"><tr>
+                                        <th>Ngày đi / về</th><th>Điểm đón</th><th>Bán vé</th><th>Mã CB đi</th><th>Giờ bay đi</th><th>Giá đi</th><th>Mã CB về</th><th>Giờ bay về</th><th>Giá về</th><th>Tổng vé</th><th></th>
+                                    </tr></thead>
+                                    <tbody th:replace="~{:: departureTbody(${completedList})}"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mb-0" th:if="${!#lists.isEmpty(cancelledList)}">
+                            <div class="d-flex align-items-center gap-2 mb-2 pb-2 border-bottom border-danger border-2">
+                                <span class="badge bg-danger">Đã hủy</span>
+                                <span class="small text-muted" th:text="${cancelledList.size()} + ' chuyến'"></span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light"><tr>
+                                        <th>Ngày đi / về</th><th>Điểm đón</th><th>Bán vé</th><th>Mã CB đi</th><th>Giờ bay đi</th><th>Giá đi</th><th>Mã CB về</th><th>Giờ bay về</th><th>Giá về</th><th>Tổng vé</th><th></th>
+                                    </tr></thead>
+                                    <tbody th:replace="~{:: departureTbody(${cancelledList})}"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lọc đơn: đang diễn ra / sắp diễn ra / đã kết thúc -->
+                    <div th:if="${!showGrouped and !#lists.isEmpty(danhSach)}" class="table-responsive">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge"
+                                  th:classappend="${phase == 'in_progress'} ? 'bg-success' : (${phase == 'upcoming'} ? 'bg-warning text-dark' : 'bg-secondary')"
+                                  th:text="${phase == 'in_progress'} ? 'Đang diễn ra' : (${phase == 'upcoming'} ? 'Sắp diễn ra' : 'Đã kết thúc')"></span>
+                            <span class="small text-muted" th:text="${danhSach.size()} + ' chuyến'"></span>
+                        </div>
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
                                     <th>Ngày đi / về</th>
                                     <th>Điểm đón</th>
-                                    <th>Trạng thái</th>
+                                    <th>Bán vé</th>
                                     <th>Mã CB đi</th>
                                     <th>Giờ bay đi</th>
                                     <th>Giá đi</th>
@@ -161,8 +238,14 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <th:block th:each="nkh : ${danhSach}">
+                            <tbody th:replace="~{:: departureTbody(${danhSach})}"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <tbody th:fragment="departureTbody(list)">
+                                <th:block th:each="nkh : ${list}">
                                     <tr class="table-secondary">
                                         <td colspan="11" class="fw-bold">
                                             <i class="bi bi-calendar-event me-1"></i>
@@ -178,6 +261,10 @@
                                             </form>
                                             <span class="text-muted mx-1">→</span>
                                             <span th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : 'N/A'}"></span>
+                                            <span class="badge ms-2"
+                                                  th:with="depStatus=${T(edu.bookingtour.util.DepartureStatusUtil).effectiveStatus(nkh, T(java.time.LocalDateTime).now())}"
+                                                  th:classappend="${T(edu.bookingtour.util.DepartureStatusUtil).badgeClass(depStatus)}"
+                                                  th:text="${depStatus.label}"></span>
                                             <span class="ms-3" th:if="${capacityByNkh != null and capacityByNkh[nkh.id] != null}"
                                                   th:with="cap=${capacityByNkh[nkh.id]}">
                                                 <span class="badge bg-secondary" th:text="'Sức chứa: ' + ${cap.capacity}"></span>
@@ -185,7 +272,7 @@
                                                 <span class="badge" th:classappend="${cap.remaining > 0 ? 'bg-success' : 'bg-danger'}"
                                                       th:text="${cap.remaining > 0 ? 'Còn ' + cap.remaining : 'Hết chỗ'}"></span>
                                             </span>
-                                            <span class="ms-3 small">
+                                            <span class="ms-3 small" th:unless="${nkh.trangThaiDoanEnum.name() == 'CANCELLED'}">
                                                 <form th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/' + ${nkh.id} + '/assign-guide'}"
                                                       method="post" class="d-inline-flex align-items-center gap-1">
                                                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
@@ -263,11 +350,7 @@
                                         </td>
                                     </tr>
                                 </th:block>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            </tbody>
         </div>
     </div>
     <footer th:replace="~{layout/admin_layout :: footer()}"></footer>

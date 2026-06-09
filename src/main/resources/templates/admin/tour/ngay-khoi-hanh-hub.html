@@ -25,8 +25,9 @@
                     <span th:text="${nkh.ngayVe != null ? #temporals.format(nkh.ngayVe, 'dd/MM/yyyy') : '—'}"></span>
                     <span class="badge bg-dark ms-2" th:text="${'Tập trung ' + nkh.gioTapTrung}"></span>
                     <span class="badge ms-1"
-                          th:classappend="${nkh.trangThaiDoanEnum.name() == 'COMPLETED'} ? 'bg-secondary' : (${nkh.trangThaiDoanEnum.name() == 'IN_PROGRESS'} ? 'bg-success' : 'bg-warning text-dark')"
-                          th:text="${nkh.trangThaiDoanEnum.label}"></span>
+                          th:with="depStatus=${T(edu.bookingtour.util.DepartureStatusUtil).effectiveStatus(nkh, T(java.time.LocalDateTime).now())}"
+                          th:classappend="${T(edu.bookingtour.util.DepartureStatusUtil).badgeClass(depStatus)}"
+                          th:text="${depStatus.label}"></span>
                 </p>
             </div>
             <div class="d-flex flex-wrap gap-2">
@@ -123,7 +124,10 @@
                             <div class="col-md-6"><span class="text-muted d-block">Điểm đến</span><strong th:text="${tour.idDiemDen != null ? tour.idDiemDen.thanhPho : '—'}">—</strong></div>
                         </div>
                         <hr>
-                        <form th:action="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/status(tid=${tour.id}, nid=${nkh.id})}" method="post" class="d-flex flex-wrap gap-2 align-items-center">
+                        <form th:action="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/status(tid=${tour.id}, nid=${nkh.id})}" method="post"
+                              class="d-flex flex-wrap gap-2 align-items-center"
+                              th:data-current="${nkh.trangThaiDoanEnum.label}"
+                              onsubmit="return confirmGroupStatus(this);">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <label class="small fw-bold mb-0">Trạng thái đoàn:</label>
                             <select name="status" class="form-select form-select-sm" style="width:auto;">
@@ -132,6 +136,17 @@
                             </select>
                             <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
                         </form>
+                        <script>
+                            function confirmGroupStatus(form) {
+                                const select = form.querySelector('select[name="status"]');
+                                const newLabel = select.options[select.selectedIndex].text;
+                                const current = form.dataset.current;
+                                if (newLabel === current) {
+                                    return confirm('Trạng thái đoàn đang là "' + current + '". Bạn có muốn cập nhật lại?');
+                                }
+                                return confirm('Đổi trạng thái đoàn từ "' + current + '" sang "' + newLabel + '"?');
+                            }
+                        </script>
                     </div>
                 </div>
             </div>
@@ -253,7 +268,11 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h5 class="fw-bold mb-3"><i class="bi bi-person-badge me-2"></i>Phân công HDV</h5>
-                        <form th:action="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/assign-guide(tid=${tour.id}, nid=${nkh.id})}" method="post">
+                        <div th:if="${nkh.trangThaiDoanEnum.name() == 'CANCELLED'}" class="alert alert-danger small mb-0">
+                            Chuyến đi đã hủy do không có khách đặt trước hạn. HDV đã được gỡ phân công.
+                        </div>
+                        <form th:unless="${nkh.trangThaiDoanEnum.name() == 'CANCELLED'}"
+                              th:action="@{/admin/tour/{tid}/ngay-khoi-hanh/{nid}/assign-guide(tid=${tour.id}, nid=${nkh.id})}" method="post">
                             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                             <div class="mb-3">
                                 <label class="form-label small fw-bold">Chọn HDV phụ trách đoàn</label>

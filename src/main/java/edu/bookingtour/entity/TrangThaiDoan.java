@@ -3,13 +3,15 @@ package edu.bookingtour.entity;
 public enum TrangThaiDoan {
     SCHEDULED,
     IN_PROGRESS,
-    COMPLETED;
+    COMPLETED,
+    CANCELLED;
 
     public String getLabel() {
         return switch (this) {
             case SCHEDULED -> "Sắp diễn ra";
             case IN_PROGRESS -> "Đang diễn ra";
             case COMPLETED -> "Đã hoàn thành";
+            case CANCELLED -> "Đã hủy";
         };
     }
 

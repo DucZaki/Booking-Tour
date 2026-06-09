@@ -38,14 +38,16 @@ public class ChuyenDiController {
     @GetMapping("/tour")
     public String viewDiemDenPage(@RequestParam(required = false) String thanhPho,
             @RequestParam(required = false) String quocGia, @RequestParam(required = false) String diemDen,
+            @RequestParam(required = false) String loaiHinh,
             @RequestParam(required = false) String khoangGia, @RequestParam(required = false) String sort,
             @RequestParam(required = false) String ngayDi, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size, Model model) {
-        Page<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, khoangGia, ngayDi, sort, page,
-                size);
+        Page<ChuyenDi> dschuyendi = tourService.filterAndSort(thanhPho, quocGia, diemDen, loaiHinh, khoangGia, ngayDi,
+                sort, page, size);
         model.addAttribute("dschuyendi", dschuyendi);
         model.addAttribute("dem", dschuyendi.getTotalElements());
         model.addAttribute("diemDenSelected", diemDen);
+        model.addAttribute("loaiHinhSelected", loaiHinh);
         model.addAttribute("khoangGiaSelected", khoangGia);
         model.addAttribute("sortSelected", sort);
         model.addAttribute("ngayDiSelected", ngayDi);
@@ -154,6 +156,9 @@ public class ChuyenDiController {
             LocalDate localDate = LocalDate.parse(selectedDate);
             selectedNkh = ngayKhoiHanhService.findByChuyenDiAndNgay(id, localDate);
             if (selectedNkh != null && !ngayKhoiHanhDiemDonService.hasAnyActiveDeparturePoint(selectedNkh.getId())) {
+                selectedNkh = null;
+            }
+            if (selectedNkh != null && selectedNkh.getTrangThaiDoanEnum() == edu.bookingtour.entity.TrangThaiDoan.CANCELLED) {
                 selectedNkh = null;
             }
             if (selectedNkh != null) {
