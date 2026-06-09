@@ -81,10 +81,8 @@ public class CheckInService {
         if (booking == null) {
             return CheckInResult.ofNotFound();
         }
-        if (booking.getIdNgayKhoiHanh() != null
-                && actor != null
-                && !tourManifestService.canAccessDeparture(actor, booking.getIdNgayKhoiHanh())) {
-            return CheckInResult.invalid("Bạn không được phân công đoàn này.");
+        if (actor != null && !tourManifestService.canAccessBooking(actor, booking)) {
+            return CheckInResult.invalid("Khách này thuộc điểm xuất phát bạn không phụ trách.");
         }
         return applyStatus(booking, status, actor);
     }
@@ -147,8 +145,8 @@ public class CheckInService {
         if (nkh == null) {
             return null;
         }
-        if (!tourManifestService.canAccessDeparture(actor, nkh)) {
-            return CheckInResult.invalid("Vé thuộc đoàn bạn không phụ trách — không thể check-in.");
+        if (!tourManifestService.canAccessBooking(actor, booking)) {
+            return CheckInResult.invalid("Khách này thuộc điểm xuất phát bạn không phụ trách — không thể check-in.");
         }
         TrangThaiDoan effective = DepartureStatusUtil.effectiveStatus(nkh, LocalDateTime.now());
         if (effective == TrangThaiDoan.CANCELLED) {

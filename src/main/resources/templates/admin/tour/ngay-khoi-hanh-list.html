@@ -304,7 +304,21 @@
                                     </tr>
                                     <tr th:each="row : ${diemDonByNkh[nkh.id]}">
                                         <td></td>
-                                        <td th:text="${row.diemDon.ten}"></td>
+                                        <td>
+                                            <div class="fw-semibold" th:text="${row.diemDon.ten}"></div>
+                                            <form th:unless="${nkh.trangThaiDoanEnum.name() == 'CANCELLED'}"
+                                                  th:action="@{'/admin/tour/' + ${tour.id} + '/ngay-khoi-hanh/diem-don/' + ${row.id} + '/assign-guide'}"
+                                                  method="post" class="d-inline-flex align-items-center gap-1 mt-1">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                                <i class="bi bi-person-badge text-muted small"></i>
+                                                <select name="guideId" class="form-select form-select-sm" style="width:auto;min-width:130px;"
+                                                        onchange="this.form.submit()">
+                                                    <option value="">— Chưa gán HDV —</option>
+                                                    <option th:each="g : ${guides}" th:value="${g.id}" th:text="${g.hoTen}"
+                                                            th:selected="${row.guide != null and row.guide.id == g.id}"></option>
+                                                </select>
+                                            </form>
+                                        </td>
                                         <td>
                                             <span th:if="${row.currentlyActive}" class="badge bg-success">Đang bán</span>
                                             <span th:unless="${row.currentlyActive}" class="badge bg-secondary">Tắt</span>

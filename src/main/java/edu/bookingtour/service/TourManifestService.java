@@ -3,9 +3,11 @@ package edu.bookingtour.service;
 import edu.bookingtour.entity.CheckInStatus;
 import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.DatChoRepository;
+import edu.bookingtour.repo.NgayKhoiHanhDiemDonRepository;
 import edu.bookingtour.repo.NgayKhoiHanhRepository;
 import edu.bookingtour.repo.NguoiDungRepository;
 import edu.bookingtour.util.DepartureStatusUtil;
@@ -24,6 +26,7 @@ public class TourManifestService {
     private static final DateTimeFormatter DEPARTURE_DT_FMT = DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy");
 
     private final NgayKhoiHanhRepository ngayKhoiHanhRepository;
+    private final NgayKhoiHanhDiemDonRepository ngayKhoiHanhDiemDonRepository;
     private final DatChoRepository datChoRepository;
     private final NguoiDungRepository nguoiDungRepository;
     private final EmailService emailService;
@@ -31,12 +34,14 @@ public class TourManifestService {
     private final TourCapacityService tourCapacityService;
 
     public TourManifestService(NgayKhoiHanhRepository ngayKhoiHanhRepository,
+            NgayKhoiHanhDiemDonRepository ngayKhoiHanhDiemDonRepository,
             DatChoRepository datChoRepository,
             NguoiDungRepository nguoiDungRepository,
             EmailService emailService,
             DepartureBookingPolicy departureBookingPolicy,
             TourCapacityService tourCapacityService) {
         this.ngayKhoiHanhRepository = ngayKhoiHanhRepository;
+        this.ngayKhoiHanhDiemDonRepository = ngayKhoiHanhDiemDonRepository;
         this.datChoRepository = datChoRepository;
         this.nguoiDungRepository = nguoiDungRepository;
         this.emailService = emailService;
@@ -73,7 +78,43 @@ public class TourManifestService {
         if (!isGuide(actor)) {
             return false;
         }
-        return nkh.getGuide() != null && actor.getId().equals(nkh.getGuide().getId());
+        // Guide cấp ngày khởi hành (legacy) hoặc được gán cho ít nhất một điểm xuất phát của đoàn này
+        if (nkh.getGuide() != null && actor.getId().equals(nkh.getGuide().getId())) {
+            return true;
+        }
+        return ngayKhoiHanhDiemDonRepository.existsByNgayKhoiHanhIdAndGuideId(nkh.getId(), actor.getId());
+    }
+
+    /** HDV chịu trách nhiệm cho 1 booking: ưu tiên guide của điểm xuất phát, fallback guide cấp đoàn. */
+    public NguoiDung guideForBooking(DatCho booking) {
+        if (booking == null || booking.getIdNgayKhoiHanh() == null) {
+            return null;
+        }
+        Integer nkhId = booking.getIdNgayKhoiHanh().getId();
+        Integer diemDonId = booking.getIdDiemDon() != null ? booking.getIdDiemDon().getId() : null;
+        if (diemDonId != null) {
+            NgayKhoiHanhDiemDon row = ngayKhoiHanhDiemDonRepository
+                    .findByNgayKhoiHanhIdAndDiemDonId(nkhId, diemDonId).orElse(null);
+            if (row != null && row.getGuide() != null) {
+                return row.getGuide();
+            }
+        }
+        return booking.getIdNgayKhoiHanh().getGuide();
+    }
+
+    /** Quyền check-in 1 booking: admin, hoặc đúng HDV phụ trách điểm xuất phát của booking đó. */
+    public boolean canAccessBooking(NguoiDung actor, DatCho booking) {
+        if (actor == null || booking == null) {
+            return false;
+        }
+        if (isAdmin(actor)) {
+            return true;
+        }
+        if (!isGuide(actor)) {
+            return false;
+        }
+        NguoiDung responsible = guideForBooking(booking);
+        return responsible != null && actor.getId().equals(responsible.getId());
     }
 
     public List<DatCho> manifest(NgayKhoiHanh nkh, String keyword) {
@@ -81,6 +122,31 @@ public class TourManifestService {
             return datChoRepository.findPaidManifestByNgayKhoiHanh(nkh.getId());
         }
         return datChoRepository.searchPaidManifestByNgayKhoiHanh(nkh.getId(), keyword.trim());
+    }
+
+    /** Manifest đã lọc theo HDV: guide chỉ thấy khách của điểm xuất phát mình phụ trách; admin thấy tất cả. */
+    public List<DatCho> manifestForActor(NguoiDung actor, NgayKhoiHanh nkh, String keyword) {
+        List<DatCho> bookings = manifest(nkh, keyword);
+        if (isAdmin(actor)) {
+            return bookings;
+        }
+        return bookings.stream()
+                .filter(b -> {
+                    NguoiDung responsible = guideForBooking(b);
+                    return responsible != null && actor.getId().equals(responsible.getId());
+                })
+                .toList();
+    }
+
+    /** Các điểm xuất phát guide đang phụ trách trong khoảng thời gian (cho dashboard). */
+    public List<NgayKhoiHanhDiemDon> listAssignmentsForGuide(NguoiDung guide, LocalDate from, LocalDate to) {
+        if (guide == null || guide.getId() == null) {
+            return List.of();
+        }
+        return ngayKhoiHanhDiemDonRepository.findAssignmentsForGuideInRange(guide.getId(), from, to).stream()
+                .filter(dd -> dd.getNgayKhoiHanh() != null
+                        && dd.getNgayKhoiHanh().getTrangThaiDoanEnum() != TrangThaiDoan.CANCELLED)
+                .toList();
     }
 
     public ManifestStats stats(List<DatCho> bookings) {
@@ -120,6 +186,28 @@ public class TourManifestService {
             nkh.setGuide(guide);
         }
         ngayKhoiHanhRepository.save(nkh);
+    }
+
+    /** Gán HDV cho riêng một điểm xuất phát (dòng ngay_khoi_hanh_diem_don). */
+    @Transactional
+    public void assignGuideToDiemDon(Integer rowId, Integer guideId) {
+        NgayKhoiHanhDiemDon row = ngayKhoiHanhDiemDonRepository.findById(rowId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy điểm xuất phát"));
+        NgayKhoiHanh nkh = row.getNgayKhoiHanh();
+        if (nkh != null && nkh.getTrangThaiDoanEnum() == TrangThaiDoan.CANCELLED) {
+            throw new IllegalArgumentException("Chuyến đi đã hủy — không thể phân công HDV.");
+        }
+        if (guideId == null) {
+            row.setGuide(null);
+        } else {
+            NguoiDung guide = nguoiDungRepository.findById(guideId)
+                    .orElseThrow(() -> new IllegalArgumentException("HDV không tồn tại"));
+            if (!"GUIDE".equals(guide.getVaiTro())) {
+                throw new IllegalArgumentException("Tài khoản không phải HDV");
+            }
+            row.setGuide(guide);
+        }
+        ngayKhoiHanhDiemDonRepository.save(row);
     }
 
     /** Hủy các đoàn quá hạn đặt vé mà chưa có khách giữ chỗ / thanh toán. */

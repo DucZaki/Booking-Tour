@@ -4,6 +4,7 @@ import edu.bookingtour.entity.CheckInStatus;
 import edu.bookingtour.entity.DatCho;
 import edu.bookingtour.entity.LichTrinh;
 import edu.bookingtour.entity.NgayKhoiHanh;
+import edu.bookingtour.entity.NgayKhoiHanhDiemDon;
 import edu.bookingtour.entity.NguoiDung;
 import edu.bookingtour.entity.TrangThaiDoan;
 import edu.bookingtour.repo.LichTrinhRepository;
@@ -52,24 +53,38 @@ public class StaffController {
             @AuthenticationPrincipal UserDetails userDetails,
             Model model) {
         NguoiDung guide = requireGuide(userDetails);
+        boolean adminView = TourManifestService.isAdmin(guide);
         LocalDate today = LocalDate.now();
         LocalDate anchor = date != null ? date : today;
         boolean monthView = "month".equalsIgnoreCase(range);
         LocalDate from = monthView ? anchor.withDayOfMonth(1) : anchor.with(TemporalAdjusters.previousOrSame(java.time.DayOfWeek.MONDAY));
         LocalDate to = monthView ? anchor.withDayOfMonth(anchor.lengthOfMonth()) : from.plusDays(6);
-        List<NgayKhoiHanh> departures = tourManifestService.listDeparturesForGuide(guide, from, to);
-        long todayDepartures = departures.stream()
-                .filter(d -> today.equals(d.getNgay()))
-                .count();
         LocalDateTime now = LocalDateTime.now();
-        long activeDepartures = departures.stream()
-                .filter(d -> DepartureStatusUtil.effectiveStatus(d, now) == TrangThaiDoan.IN_PROGRESS)
-                .count();
-        long upcomingDepartures = departures.stream()
-                .filter(d -> DepartureStatusUtil.effectiveStatus(d, now) == TrangThaiDoan.SCHEDULED)
-                .count();
+
+        List<GuideTripCard> cards = new java.util.ArrayList<>();
+        if (adminView) {
+            for (NgayKhoiHanh n : tourManifestService.listDeparturesForGuide(guide, from, to)) {
+                cards.add(GuideTripCard.fromDeparture(n, DepartureStatusUtil.effectiveStatus(n, now), today));
+            }
+        } else {
+            for (NgayKhoiHanhDiemDon dd : tourManifestService.listAssignmentsForGuide(guide, from, to)) {
+                NgayKhoiHanh n = dd.getNgayKhoiHanh();
+                cards.add(GuideTripCard.fromAssignment(dd, DepartureStatusUtil.effectiveStatus(n, now), today));
+            }
+        }
+        cards.sort(java.util.Comparator.comparing(GuideTripCard::ngay,
+                java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())));
+
+        List<GuideTripCard> inProgress = cards.stream().filter(c -> c.status() == TrangThaiDoan.IN_PROGRESS).toList();
+        List<GuideTripCard> upcoming = cards.stream().filter(c -> c.status() == TrangThaiDoan.SCHEDULED).toList();
+        List<GuideTripCard> completed = cards.stream().filter(c -> c.status() == TrangThaiDoan.COMPLETED).toList();
+        long todayCount = cards.stream().filter(c -> today.equals(c.ngay())).count();
+
         model.addAttribute("guide", guide);
-        model.addAttribute("departures", departures);
+        model.addAttribute("inProgress", inProgress);
+        model.addAttribute("upcoming", upcoming);
+        model.addAttribute("completed", completed);
+        model.addAttribute("hasAny", !cards.isEmpty());
         model.addAttribute("range", monthView ? "month" : "week");
         model.addAttribute("anchorDate", anchor);
         model.addAttribute("fromDate", from);
@@ -77,10 +92,11 @@ public class StaffController {
         model.addAttribute("prevDate", monthView ? anchor.minusMonths(1) : anchor.minusWeeks(1));
         model.addAttribute("nextDate", monthView ? anchor.plusMonths(1) : anchor.plusWeeks(1));
         model.addAttribute("today", today);
-        model.addAttribute("todayDepartures", todayDepartures);
-        model.addAttribute("activeDepartures", activeDepartures);
-        model.addAttribute("upcomingDepartures", upcomingDepartures);
-        model.addAttribute("isAdminView", TourManifestService.isAdmin(guide));
+        model.addAttribute("todayDepartures", todayCount);
+        model.addAttribute("activeDepartures", inProgress.size());
+        model.addAttribute("upcomingDepartures", upcoming.size());
+        model.addAttribute("completedDepartures", completed.size());
+        model.addAttribute("isAdminView", adminView);
         model.addAttribute("activeOpsNav", "home");
         model.addAttribute("pageTitle", "Đoàn của tôi");
         return "staff/dashboard";
@@ -102,7 +118,7 @@ public class StaffController {
             redirectAttributes.addFlashAttribute("errorMessage", "Bạn không được phân công đoàn này.");
             return "redirect:/staff";
         }
-        List<DatCho> bookings = tourManifestService.manifest(nkh, q);
+        List<DatCho> bookings = tourManifestService.manifestForActor(guide, nkh, q);
         List<LichTrinh> itinerary = nkh.getChuyenDi() != null
                 ? lichTrinhRepository.findByTourIdOrderByNgayThuAsc(nkh.getChuyenDi().getId())
                 : List.of();
@@ -130,7 +146,7 @@ public class StaffController {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        List<DatCho> bookings = tourManifestService.manifest(nkh, null);
+        List<DatCho> bookings = tourManifestService.manifestForActor(guide, nkh, null);
         response.setContentType("text/csv; charset=UTF-8");
         response.setHeader("Content-Disposition", "attachment; filename=manifest-" + nkhId + ".csv");
         response.getWriter().println("Ma don,Ho ten,So dien thoai,So khach,Diem don,Phong,Ghe,Thanh toan,Check-in,Ghi chu");
@@ -237,10 +253,9 @@ public class StaffController {
             return "staff/check-in";
         }
         DatCho booking = bookingOpt.get();
-        NgayKhoiHanh nkh = booking.getIdNgayKhoiHanh();
-        if (nkh != null && !tourManifestService.canAccessDeparture(guide, nkh)) {
+        if (!tourManifestService.canAccessBooking(guide, booking)) {
             model.addAttribute("valid", false);
-            model.addAttribute("message", "Vé này thuộc đoàn khác, bạn không có quyền check-in.");
+            model.addAttribute("message", "Khách này thuộc điểm xuất phát bạn không phụ trách.");
             model.addAttribute("pageTitle", "Check-in");
             return "staff/check-in";
         }
@@ -256,12 +271,9 @@ public class StaffController {
             RedirectAttributes redirectAttributes) {
         NguoiDung guide = requireGuide(userDetails);
         Optional<DatCho> bookingOpt = checkInService.findByToken(token);
-        if (bookingOpt.isPresent()) {
-            NgayKhoiHanh nkh = bookingOpt.get().getIdNgayKhoiHanh();
-            if (nkh != null && !tourManifestService.canAccessDeparture(guide, nkh)) {
-                redirectAttributes.addFlashAttribute("errorMessage", "Vé thuộc đoàn bạn không phụ trách.");
-                return "redirect:/staff";
-            }
+        if (bookingOpt.isPresent() && !tourManifestService.canAccessBooking(guide, bookingOpt.get())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Khách này thuộc điểm xuất phát bạn không phụ trách.");
+            return "redirect:/staff";
         }
         CheckInService.CheckInResult result = checkInService.updateStatusByToken(token, status, guide);
         redirectAttributes.addFlashAttribute(result.ok() ? "successMessage" : "errorMessage", result.message());
@@ -325,5 +337,30 @@ public class StaffController {
             return "\"\"";
         }
         return "\"" + value.replace("\"", "\"\"") + "\"";
+    }
+
+    /** Thẻ hiển thị 1 đầu việc của HDV trên dashboard (1 điểm xuất phát của 1 ngày khởi hành). */
+    public record GuideTripCard(
+            Integer nkhId, String tourTitle, String diemDonTen,
+            LocalDate ngay, LocalDate ngayVe, String gioTapTrung,
+            String maChuyenBayDi, TrangThaiDoan status, boolean today) {
+
+        static GuideTripCard fromDeparture(NgayKhoiHanh n, TrangThaiDoan status, LocalDate todayDate) {
+            return new GuideTripCard(n.getId(),
+                    n.getChuyenDi() != null ? n.getChuyenDi().getTieuDe() : "—",
+                    null,
+                    n.getNgay(), n.getNgayVe(), n.getGioTapTrung(), n.getMaChuyenBayDi(),
+                    status, todayDate.equals(n.getNgay()));
+        }
+
+        static GuideTripCard fromAssignment(NgayKhoiHanhDiemDon dd, TrangThaiDoan status, LocalDate todayDate) {
+            NgayKhoiHanh n = dd.getNgayKhoiHanh();
+            return new GuideTripCard(n.getId(),
+                    n.getChuyenDi() != null ? n.getChuyenDi().getTieuDe() : "—",
+                    dd.getDiemDon() != null ? dd.getDiemDon().getTen() : null,
+                    n.getNgay(), n.getNgayVe(), n.getGioTapTrung(),
+                    dd.getMaChuyenBayDi() != null ? dd.getMaChuyenBayDi() : n.getMaChuyenBayDi(),
+                    status, todayDate.equals(n.getNgay()));
+        }
     }
 }

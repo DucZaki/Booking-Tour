@@ -25,6 +25,11 @@ public class NgayKhoiHanhDiemDon {
     @JoinColumn(name = "diem_don_id", nullable = false)
     private DiemDon diemDon;
 
+    /** HDV phụ trách riêng cho điểm xuất phát này (ưu tiên hơn guide cấp ngày khởi hành). */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "guide_id")
+    private NguoiDung guide;
+
     @Column(name = "active", nullable = false)
     private boolean active = true;
 

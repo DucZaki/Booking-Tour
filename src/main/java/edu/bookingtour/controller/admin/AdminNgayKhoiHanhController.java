@@ -440,6 +440,20 @@ public class AdminNgayKhoiHanhController {
         return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh/" + nkhId + "/quan-ly?tab=staff";
     }
 
+    @PostMapping("/diem-don/{rowId}/assign-guide")
+    public String assignGuideToDiemDon(@PathVariable Integer tourId,
+            @PathVariable Integer rowId,
+            @RequestParam(required = false) Integer guideId,
+            RedirectAttributes redirectAttributes) {
+        try {
+            tourManifestService.assignGuideToDiemDon(rowId, guideId);
+            redirectAttributes.addFlashAttribute("successMessage", "Đã cập nhật HDV cho điểm xuất phát.");
+        } catch (IllegalArgumentException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+        }
+        return "redirect:/admin/tour/" + tourId + "/ngay-khoi-hanh";
+    }
+
     @PostMapping("/sync-all")
     public String syncAll(@PathVariable Integer tourId, RedirectAttributes redirectAttributes) {
         List<NgayKhoiHanh> danhSach = ngayKhoiHanhService.findByChuyenDiId(tourId);
