@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -22,6 +23,21 @@ public interface DatChoRepository extends JpaRepository<DatCho, Integer> {
     Integer sumGuestsByNgayKhoiHanhAndStatuses(
             @org.springframework.data.repository.query.Param("nkhId") Integer nkhId,
             @org.springframework.data.repository.query.Param("statuses") Collection<String> statuses);
+
+    /**
+     * Số khách thực sự giữ chỗ: đơn đã thanh toán (PAID) luôn tính;
+     * đơn PENDING chỉ tính khi còn trong cửa sổ thanh toán (created_at >= cutoff),
+     * tránh đơn bỏ dở/trùng giữ chỗ vĩnh viễn làm phồng "Đã đặt".
+     */
+    @Query("""
+            SELECT COALESCE(SUM(d.soLuong), 0) FROM DatCho d
+            WHERE d.idNgayKhoiHanh.id = :nkhId
+              AND (d.trangThai = 'PAID'
+                   OR (d.trangThai = 'PENDING' AND d.createdAt IS NOT NULL AND d.createdAt >= :pendingCutoff))
+            """)
+    Integer sumActiveGuestsByNgayKhoiHanh(
+            @Param("nkhId") Integer nkhId,
+            @Param("pendingCutoff") LocalDateTime pendingCutoff);
     @Query("""
             SELECT d FROM DatCho d
             LEFT JOIN FETCH d.idChuyenDi t

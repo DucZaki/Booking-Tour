@@ -16,6 +16,8 @@ import java.util.stream.Collectors;
 public class TourCapacityService {
 
     public static final List<String> HOLD_STATUSES = List.of("PENDING", "PAID");
+    /** Cửa sổ giữ chỗ cho đơn chưa thanh toán (phút) — khớp với hạn repay 15 phút. */
+    public static final int PENDING_HOLD_MINUTES = 15;
     public static final int DEFAULT_CAPACITY = 50;
     public static final int MIN_CAPACITY = 1;
     public static final int MAX_CAPACITY = 500;
@@ -94,7 +96,8 @@ public class TourCapacityService {
         if (nkhId == null) {
             return 0;
         }
-        Integer sum = datChoRepository.sumGuestsByNgayKhoiHanhAndStatuses(nkhId, HOLD_STATUSES);
+        java.time.LocalDateTime pendingCutoff = java.time.LocalDateTime.now().minusMinutes(PENDING_HOLD_MINUTES);
+        Integer sum = datChoRepository.sumActiveGuestsByNgayKhoiHanh(nkhId, pendingCutoff);
         return sum == null ? 0 : sum;
     }
 
