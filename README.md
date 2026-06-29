@@ -57,8 +57,8 @@ Dashboard thống kê doanh thu và đơn đặt · CRUD tour (ảnh, lịch tr�
                              │
               ┌──────────────┼──────────────┐
               ▼              ▼              ▼
-           VNPay        Amadeus       Groq / Gemini
-         News API       OAuth2          (Chatbot)
+           VNPay        Amadeus         Chatbot
+         News API       OAuth2          
 ```
 
 | Thành phần | Công nghệ |
