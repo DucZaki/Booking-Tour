@@ -1,6 +1,6 @@
 # ZakiBooking
 
-**Website đặt tour du lịch trực tuyến** — đồ án tốt nghiệp, xây dựng bằng Java Spring Boot.
+**Website đặt tour du lịch trực tuyến** 
 
 Trong bối cảnh du lịch chuyển sang số, người dùng cần tra cứu tour, so sánh giá và thanh toán nhanh trên một nền tảng thống nhất; doanh nghiệp cần công cụ quản lý tour, đơn đặt và doanh thu tập trung. **ZakiBooking** ra đời để giải quyết hai nhu cầu đó trong một hệ thống web hoàn chỉnh: giao diện thân thiện cho khách hàng và khu vực quản trị cho admin.
 ---
