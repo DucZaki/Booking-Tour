@@ -1,82 +1,142 @@
 # ZakiBooking
 
-**Website đặt tour du lịch trực tuyến** 
+Dự án cá nhân — website đặt tour du lịch, viết bằng Java Spring Boot.
 
-Trong bối cảnh du lịch chuyển sang số, người dùng cần tra cứu tour, so sánh giá và thanh toán nhanh trên một nền tảng thống nhất; doanh nghiệp cần công cụ quản lý tour, đơn đặt và doanh thu tập trung. **ZakiBooking** ra đời để giải quyết hai nhu cầu đó trong một hệ thống web hoàn chỉnh: giao diện thân thiện cho khách hàng và khu vực quản trị cho admin.
+Khách vào xem tour, đặt chỗ, thanh toán VNPay. Admin quản lý tour, đơn, user. HDV (role GUIDE) vào `/staff` xem đoàn, check-in khách bằng QR.
+
 ---
-## Mô tả dự án
 
-ZakiBooking là ứng dụng web full-stack theo mô hình **MVC phân tầng** (Controller → Service → Repository → Entity). Giao diện render phía server bằng **Thymeleaf + Bootstrap 5**; dữ liệu lưu trên **MySQL** (18 bảng, quản lý schema qua **Flyway V1–V7**). Bảo mật bằng **Spring Security**: đăng nhập form, phân quyền USER/ADMIN, OAuth2 Google và Facebook.
+## Mục lục
 
-Hệ thống triển khai **18 use-case** — 11 luồng phía khách hàng và 7 luồng quản trị — bao phủ toàn bộ vòng đời từ xem tour → đặt chỗ → thanh toán → check-in → quản trị nội dung.
+- [Giới thiệu nhanh](#giới-thiệu-nhanh)
+- [3 role trong hệ thống](#3-role-trong-hệ-thống)
+- [Chức năng](#chức-năng)
+- [Phần code mất công nhất](#phần-code-mất-công-nhất)
+- [Tech stack](#tech-stack)
+- [Chạy local](#chạy-local)
+- [Liên hệ](#liên-hệ)
 
-### Luồng nghiệp vụ chính
+---
+
+## Giới thiệu nhanh
+
+Backend Spring Boot 3, frontend Thymeleaf + Bootstrap, database MySQL (Flyway migrate schema).
+
+Có thêm VNPay, OAuth2 Google/Facebook, báo giá vé qua Amadeus, chatbot AI (Groq / OpenRouter / Gemini), gửi mail xác nhận.
+
+Luồng cơ bản:
 
 ```
-Khách hàng:  Trang chủ → Tìm/Lọc tour → Chi tiết → Đặt tour → VNPay → Email xác nhận + QR check-in
-Admin:       Dashboard → CRUD tour → Quản lý đơn / user / mã giảm giá / liên hệ
+USER:   Xem tour → Đặt → VNPay → Nhận email + QR check-in
+ADMIN:  Quản lý tour, ngày KH, đơn, user, mã giảm giá
+GUIDE:  Xem đoàn được giao → Manifest → Check-in → Cập nhật trạng thái chuyến
 ```
 
-### Điểm khác biệt so với nền tảng thương mại
+---
 
-- Tùy biến nghiệp vụ theo mô hình tour Việt Nam: **điểm đón**, **ngày khởi hành**, **giá vé theo từng điểm đón**
-- Tích hợp **VNPay Sandbox** với callback/IPN cập nhật trạng thái tự động
-- **Chatbot AI Zaki** tư vấn tour dựa trên dữ liệu thật trong CSDL (RAG-lite)
-- **Chuyến đi gần bạn** — gợi ý tour theo vị trí địa lý (Geolocation + Haversine)
-- **QR check-in** sau thanh toán, hỗ trợ xác nhận tại điểm tập trung
-- Mã nguồn mở, có thể mở rộng và triển khai tự host (Railway, VPS…)
+## 3 role trong hệ thống
+
+| Role | Vào đâu | Làm gì |
+|------|---------|--------|
+| **USER** | `/`, `/user/**`, `/booking/**` | Khách: xem tour, đặt, thanh toán, đánh giá |
+| **ADMIN** | `/admin/**` | Quản trị toàn bộ |
+| **GUIDE** | `/staff/**` | HDV: đoàn được phân công, check-in khách |
+
+Login xong redirect theo role: admin → `/admin`, guide → `/staff`, còn lại về trang chủ.
+
+Admin cũng vào được `/staff` nếu cần xem vận hành.
 
 ---
 
 ## Chức năng
 
-### Phía khách hàng
+### USER
 
-| Nhóm | Mô tả |
-|------|--------|
-| Xác thực | Đăng ký, đăng nhập (tên đăng nhập, BCrypt), OAuth2 Google/Facebook |
-| Tour | Danh sách, lọc theo điểm đến/giá/ngày/phương tiện, chi tiết lịch trình |
-| Đặt tour | Chọn ngày KH, điểm đón, số khách; áp mã giảm giá (PERCENT / FIXED) |
-| Thanh toán | VNPay Sandbox; email xác nhận qua SMTP |
-| Sau đặt | QR check-in, lịch sử đơn, yêu thích, đánh giá |
-| Bổ trợ | Chatbot AI, chuyến đi gần bạn, tin tức (News API), báo giá vé (Amadeus) |
+- Đăng ký / đăng nhập (BCrypt), login Google/Facebook
+- Lọc tour: điểm đến, giá, ngày, phương tiện
+- Chi tiết tour: lịch 3 tháng, chọn ngày KH, chọn **điểm xuất phát**, xem giá theo điểm đón
+- Đặt tour: nhập hành khách theo độ tuổi, phòng đơn, mã giảm giá
+- Thanh toán VNPay; đơn PENDING còn 15 phút để trả lại
+- QR check-in, lịch sử đơn, yêu thích, đánh giá
+- Tour gần bạn (GPS), chatbot Zaki, tin tức
 
-### Phía quản trị (`/admin`)
+### ADMIN
 
-Dashboard thống kê doanh thu và đơn đặt · CRUD tour (ảnh, lịch trình, ngày KH, điểm đón) · Quản lý đơn đặt · Quản lý người dùng · Mã giảm giá · Liên hệ từ form khách hàng
+- Dashboard doanh thu, biểu đồ
+- CRUD tour, lịch trình, ảnh, ngày khởi hành
+- Gán HDV cho đoàn hoặc từng điểm xuất phát
+- Quản lý đơn (PENDING / PAID / FAILED), user, mã giảm giá, liên hệ
 
----
+### GUIDE
 
-## Kiến trúc & công nghệ
-
-```
-┌─────────────┐     ┌──────────────────┐     ┌─────────────┐
-│  Thymeleaf  │────▶│  Spring Boot 3   │────▶│   MySQL     │
-│  Bootstrap  │     │  Security + JPA  │     │   Flyway    │
-└─────────────┘     └────────┬─────────┘     └─────────────┘
-                             │
-              ┌──────────────┼──────────────┐
-              ▼              ▼              ▼
-           VNPay        Amadeus         Chatbot
-         News API       OAuth2          
-```
-
-| Thành phần | Công nghệ |
-|------------|-----------|
-| Backend | Java 17, Spring Boot 3.5.6, Spring MVC, Spring Data JPA |
-| Bảo mật | Spring Security, BCrypt, OAuth2 Client |
-| Frontend | Thymeleaf, Bootstrap 5, JavaScript |
-| CSDL | MySQL 8.x+, Flyway migration |
-| Tích hợp | VNPay, Amadeus, News API, Gmail SMTP, LLM APIs |
-| Build / Deploy | Maven, Railway (tùy chọn) |
-
-**Cấu trúc package:** `controller` · `service` · `repo` · `entity` · `dto` · `config` · `client` · `util`
+- Dashboard đoàn theo tuần/tháng
+- Manifest khách đã thanh toán (chỉ thấy điểm đón mình phụ trách)
+- Check-in qua QR hoặc nhập tay
+- Bắt đầu / kết thúc chuyến, xuất CSV manifest
 
 ---
 
-## Cài đặt nhanh
+## Phần code mất công nhất
 
-**Yêu cầu:** JDK 17+, MySQL 8+, Git
+Những chỗ dưới đây tốn thời gian nhất lúc làm, không phải mấy form CRUD thuần.
+
+### Nhiều điểm xuất phát, giá khác nhau
+
+Một tour có thể đón khách ở HN, SG... Mỗi ngày KH, mỗi điểm đón có giá vé riêng (gọi Amadeus lấy giá máy bay).
+
+Làm qua bảng `ngay_khoi_hanh_diem_don`, service `NgayKhoiHanhDiemDonService` — sync điểm đón, `getQuote()` trả giá lúc khách chọn trên form.
+
+### Chống đặt quá chỗ
+
+Hai người cùng lúc đặt tour còn 1 chỗ thì dễ lỗi. Dùng `TourCapacityService.assertCanBook()` với lock dòng (`SELECT FOR UPDATE`), đếm cả đơn PAID và PENDING (trong 15 phút, trùng hạn thanh toán VNPay).
+
+### Tính giá phức tạp
+
+Không phải nhân đơn giá × số người. Tách người lớn / trẻ / em bé, phụ thu phòng đơn, vé trẻ em tính khác theo hãng bay. Gom trong `BookingPricingService`, validate hành khách ở `PaymentController`.
+
+### VNPay
+
+Callback browser + IPN server có thể gọi 2 lần. Verify chữ ký HMAC, so số tiền, `txnRef` dạng `{id}_{timestamp}` để repay không bị trùng. Đơn đã PAID thì bỏ qua, không update lại.
+
+### HDV chỉ thấy khách của mình
+
+Một ngày KH có nhiều điểm đón, mỗi điểm có HDV riêng. `TourManifestService` gán guide theo điểm đón hoặc cả đoàn, lọc manifest và quyền check-in cho đúng người.
+
+### Trạng thái chuyến đi
+
+Đoàn có SCHEDULED → IN_PROGRESS → COMPLETED (hoặc CANCELLED nếu không ai đặt). Có scheduler tự chuyển trạng thái, gửi mail khi tour bắt đầu/kết thúc.
+
+### Chatbot
+
+LLM hay bịa tour không có. `ChatService` nhét danh sách tour thật + mã giảm giá vào prompt, thử Groq rồi OpenRouter rồi Gemini nếu lỗi.
+
+### Mã giảm giá
+
+Có loại Early Bird (đặt trước X ngày), Last-minute (sát giờ KH), giới hạn số lần dùng. Validate trong `MaGiamGiaService`, trừ lượt dùng bằng câu UPDATE có điều kiện.
+
+### Hạn đặt vé
+
+Không cho đặt quá sát giờ tập trung. `DepartureBookingPolicy` tính deadline, calendar tour hiện ngày đã đóng booking.
+
+---
+
+## Tech stack
+
+| | |
+|---|---|
+| Backend | Java 17, Spring Boot 3.5.6, JPA |
+| Frontend | Thymeleaf, Bootstrap 5, JS |
+| DB | MySQL, Flyway |
+| Auth | Spring Security, OAuth2 |
+| Thanh toán / API | VNPay, Amadeus, News API, Gmail SMTP, LLM |
+
+Package: `controller` (user / admin / staff) · `service` · `repo` · `entity` · `dto` · `config` · `client` · `util`
+
+---
+
+## Chạy local
+
+**Cần:** JDK 17+, MySQL 8+
 
 ```bash
 git clone https://github.com/DucZaki/Booking-Tour.git
@@ -87,63 +147,23 @@ cd Booking-Tour
 CREATE DATABASE booking_tour CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
-### 1. Cấu hình (khuyến nghị dùng `.env`)
+Copy env:
 
-Dự án đọc cấu hình từ **biến môi trường** (xem `src/main/resources/application.properties`). Khi chạy local, bạn có thể tạo file `.env` ở thư mục gốc (file này đã được `.gitignore`, không commit).
+```bash
+cp .env.example .env
+```
 
-Ví dụ `.env` tối thiểu để chạy local:
+Sửa tối thiểu:
 
 ```env
 SPRING_PROFILES_ACTIVE=local
-
-# MySQL local
 SPRING_DATASOURCE_PASSWORD=your_mysql_password
-
-# Base URL dùng cho QR/check-in/link trong email (nếu dùng ngrok, thay bằng https://....ngrok-free.app)
 APP_BASE_URL=http://localhost:8080
 ```
 
-Nếu bạn muốn bật đầy đủ các tích hợp, thêm các biến sau (để trống nếu chưa dùng tính năng đó):
+Các key khác (VNPay, OAuth, mail...): xem file `.env.example`.
 
-```env
-# OAuth2
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-FACEBOOK_CLIENT_ID=
-FACEBOOK_CLIENT_SECRET=
-
-# VNPay (Sandbox)
-VNP_TMN_CODE=
-VNP_HASH_SECRET=
-VNP_PAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-VNP_API_URL=https://sandbox.vnpayment.vn/merchant_webapi/api/transaction
-# Tuỳ chọn (mặc định trỏ local)
-VNP_RETURN_URL=http://localhost:8080/payment/vnpay-callback
-VNP_IPN_URL=http://localhost:8080/payment/vnpay-ipn
-
-# Amadeus / News
-AMADEUS_API_KEY=
-AMADEUS_API_SECRET=
-NEWS_API_TOKEN=
-
-# Chatbot AI (ưu tiên: Groq -> OpenRouter -> Gemini)
-GROQ_API_KEY=
-GROQ_MODEL=llama-3.1-8b-instant
-OPENROUTER_API_KEY=
-OPENROUTER_MODEL=google/gemini-2.0-flash-exp:free
-GEMINI_API_KEY=
-
-# SMTP (Gmail)
-MAIL_USERNAME=
-MAIL_PASSWORD=
-MAIL_FROM=
-MAIL_ENABLED=true
-```
-
-Ghi chú:
-
-- MySQL mặc định dùng `root@127.0.0.1:3306/booking_tour` (xem `application.properties`). Nếu máy bạn không dùng user `root` hoặc khác host/port, hãy tạo `src/main/resources/application-local.properties` để override (file này đã được `.gitignore`).
-- Flyway sẽ tự migrate schema khi khởi động.
+Chạy:
 
 ```powershell
 # Windows
@@ -151,52 +171,32 @@ Ghi chú:
 ```
 
 ```bash
-# macOS/Linux
+# macOS / Linux
 ./mvnw spring-boot:run
 ```
 
-Truy cập **http://localhost:8080** · Admin: **http://localhost:8080/admin**
+Mở http://localhost:8080
 
-| Tài khoản seed | Username | Password |
-|----------------|----------|----------|
-| Admin | `admin` | `admin123` |
+| Role | URL | Account |
+|------|-----|---------|
+| Admin | /admin | `admin` / `admin123` |
+| Guide | /staff | Tạo user role GUIDE trong admin, hoặc bật `guide.demo.seed.enabled=true` |
+| User | / | Đăng ký mới |
 
-### 2. Build / Test
+Build:
 
 ```bash
-# Chạy test
-./mvnw test
-
-# Build JAR
 ./mvnw clean package
-
-# Chạy JAR (sau khi build)
 java -jar target/*.jar
 ```
-
-### 3. Deploy Railway (tuỳ chọn)
-
-- File mẫu biến môi trường: `railway.env.example` (copy vào Railway Variables -> Raw Editor).
-- Đồng bộ dữ liệu MySQL local lên Railway: `scripts/SYNC-DB-TO-RAILWAY.md`.
-- Khi deploy, nhớ đặt `APP_BASE_URL` là domain Railway để link QR/VNPay/email đúng.
-
----
-
-## Troubleshooting
-
-| Lỗi / Triệu chứng | Nguyên nhân thường gặp | Cách xử lý |
-|---|---|---|
-| Không kết nối được MySQL | Sai mật khẩu / MySQL chưa chạy | Kiểm tra MySQL service, đặt `SPRING_DATASOURCE_PASSWORD`, tạo DB `booking_tour` |
-| Flyway báo checksum / validation failed | Bạn sửa file migration đã chạy | Không sửa migration cũ; tạo migration mới (V8, V9...) hoặc reset DB dev |
-| OAuth2 redirect_uri_mismatch | Callback URL khác cấu hình trên Google/Facebook Console | Cập nhật Authorized redirect URI đúng domain/port hiện tại |
-| VNPay callback/IPN không cập nhật | `VNP_HASH_SECRET` sai hoặc URL callback/IPN không public | Kiểm tra env VNPay; khi test ngoài local dùng ngrok và đặt `APP_BASE_URL`, `VNP_RETURN_URL`, `VNP_IPN_URL` |
-| Không gửi được email | Gmail chặn đăng nhập hoặc thiếu `MAIL_USERNAME/PASSWORD` | Dùng App Password Gmail và bật `MAIL_ENABLED=true` |
 
 ---
 
 ## Liên hệ
-**Nguyễn Minh Đức** · minhd4360@gmail.com · [GitHub Issues](https://github.com/DucZaki/Booking-Tour/issues)
 
----
+**Nguyễn Minh Đức**
 
-*Dự án phục vụ mục đích học tập — đồ án liên ngành. Liên hệ tác giả trước khi sử dụng thương mại.*
+- Email: minhd4360@gmail.com
+- GitHub: [@DucZaki](https://github.com/DucZaki)
+
+Dự án làm cho học tập / portfolio. Liên hệ trước nếu muốn dùng cho mục đích khác.
