@@ -1,6 +1,6 @@
 # ZakiBooking
 
-Dự án cá nhân — website đặt tour du lịch, viết bằng Java Spring Boot.
+Dự án cá nhân — website đặt tour du lịch
 
 Khách vào xem tour, đặt chỗ, thanh toán VNPay. Admin quản lý tour, đơn, user. HDV (role GUIDE) vào `/staff` xem đoàn, check-in khách bằng QR.
 
@@ -11,9 +11,9 @@ Khách vào xem tour, đặt chỗ, thanh toán VNPay. Admin quản lý tour, đ
 - [Giới thiệu nhanh](#giới-thiệu-nhanh)
 - [3 role trong hệ thống](#3-role-trong-hệ-thống)
 - [Chức năng](#chức-năng)
-- [Phần code mất công nhất](#phần-code-mất-công-nhất)
+- [Vấn đề phức tạp của dự án](#phần-code-mất-công-nhất)
 - [Tech stack](#tech-stack)
-- [Chạy local](#chạy-local)
+- [Chạy dự án](#chạy-dự-án)
 - [Liên hệ](#liên-hệ)
 
 ---
@@ -76,10 +76,7 @@ Admin cũng vào được `/staff` nếu cần xem vận hành.
 
 ---
 
-## Phần code mất công nhất
-
-Những chỗ dưới đây tốn thời gian nhất lúc làm, không phải mấy form CRUD thuần.
-
+## Vấn đề phức tạp của dự án 
 ### Nhiều điểm xuất phát, giá khác nhau
 
 Một tour có thể đón khách ở HN, SG... Mỗi ngày KH, mỗi điểm đón có giá vé riêng (gọi Amadeus lấy giá máy bay).
@@ -108,7 +105,7 @@ Một ngày KH có nhiều điểm đón, mỗi điểm có HDV riêng. `TourMan
 
 ### Chatbot
 
-LLM hay bịa tour không có. `ChatService` nhét danh sách tour thật + mã giảm giá vào prompt, thử Groq rồi OpenRouter rồi Gemini nếu lỗi.
+ `ChatService` nhét danh sách tour thật + mã giảm giá vào prompt, thử Groq rồi OpenRouter rồi Gemini nếu lỗi.
 
 ### Mã giảm giá
 
@@ -134,7 +131,7 @@ Package: `controller` (user / admin / staff) · `service` · `repo` · `entity` 
 
 ---
 
-## Chạy local
+## Chạy dự án 
 
 **Cần:** JDK 17+, MySQL 8+
 
@@ -199,4 +196,3 @@ java -jar target/*.jar
 - Email: minhd4360@gmail.com
 - GitHub: [@DucZaki](https://github.com/DucZaki)
 
-Dự án làm cho học tập / portfolio. Liên hệ trước nếu muốn dùng cho mục đích khác.
