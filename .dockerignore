@@ -1,0 +1,12 @@
+target/
+.git
+.gitignore
+*.log
+*.db
+.DS_Store
+.env
+.env.*
+!.env.example
+railway.raw.env
+HELP.md
+run-windows.ps1
